@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.YouHuiJuanListActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/nb_myOrderDetail_return"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/jiantou_big"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:onClick="myOrderDetailOnClick"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:text="订单详情"
+            android:textSize="17sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/orderDetailType_tv"
+            android:layout_width="match_parent"
+            android:text="订单类型"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/lightBlue"
+            android:layout_height="40dp" />
+        <include layout="@layout/divid_line_layout"></include>
+        <LinearLayout
+            android:id="@+id/lessonOrder_rl"
+            android:background="@color/light_Gray"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textSize="16sp"
+                    android:text="主课程名称:"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:padding="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/yhj_testName_tv"
+                    android:text="aaaa"
+                    android:layout_width="match_parent"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:padding="3dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/yhj_testPrice_tv"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/useYhj_tv"
+                android:text="使用优惠卷:"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/yhjName_click_tv"
+                android:layout_toRightOf="@id/useYhj_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:maxLines="1"
+                android:onClick="youHuiJuanOnClick"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                />
+            <ImageView
+                android:src="@mipmap/icon_xia1"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="60dp">
+        <TextView
+            android:id="@+id/yhj_goPay__tv"
+            android:layout_width="90dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_ling_yellow"
+            android:layout_margin="10dp"
+            android:text="去支付"
+            android:textSize="16sp"
+            android:textColor="@color/yellowbgLing"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/yhj_cancleOrder_tv"
+            android:layout_width="90dp"
+            android:layout_toLeftOf="@+id/goPay_orderDetail_tv"
+            android:background="@drawable/bg_line_gray_ranctangle"
+            android:layout_margin="10dp"
+            android:text="取消订单"
+            android:textSize="16sp"
+            android:textColor="@color/test_black_tv"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</RelativeLayout>

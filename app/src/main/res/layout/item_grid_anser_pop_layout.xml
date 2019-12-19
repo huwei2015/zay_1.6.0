@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <com.example.administrator.zahbzayxy.myviews.MyGridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/resultGridView"
+            android:background="@android:color/white"
+            android:numColumns="5"></com.example.administrator.zahbzayxy.myviews.MyGridView>
+
+    </LinearLayout>
+</LinearLayout>

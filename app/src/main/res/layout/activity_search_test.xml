@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.administrator.zahbzayxy.activities.SearchTestActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/bg"
+            android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/close_search_iv"
+                android:layout_width="wrap_content"
+                android:src="@mipmap/jiantou_big"
+                android:layout_marginTop="10dp"
+                android:layout_height="20dp" />
+            <TextView
+                android:layout_centerInParent="true"
+                android:textColor="@color/white"
+                android:text="搜题宝"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp">-->
+        <!--<ImageView-->
+            <!--android:id="@+id/close_search_iv"-->
+            <!--android:src="@mipmap/close_x"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<TextView-->
+            <!--android:text="搜题宝"-->
+            <!--android:textSize="16sp"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+
+    <!--</RelativeLayout>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@mipmap/blue_search_bg"
+        android:layout_height="160dp">
+    <RelativeLayout
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_white_rctangle"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="58dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="45dp">
+        <Button
+            android:id="@+id/btn_serarch"
+            android:layout_width="wrap_content"
+            android:drawableEnd="@mipmap/search"
+            android:background="@null"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            />
+        <EditText
+            android:id="@+id/et_search"
+            android:hint="请输入关键字"
+            android:layout_marginStart="10dp"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/btn_serarch"/>
+
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/history_iv"
+            android:src="@mipmap/history_icon"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_toEndOf="@+id/history_iv"
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="历史记录"/>
+
+
+        <TextView
+            android:id="@+id/tv_deleteAll"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            android:text="清空历史记录"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
+
+    </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</LinearLayout>

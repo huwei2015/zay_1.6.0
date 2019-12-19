@@ -1,0 +1,169 @@
+apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'com.android.application'
+//apply plugin: 'android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.objectbox' // after applying Android plugin
+android {
+    compileSdkVersion 28
+    buildToolsVersion "26.0.3"
+    defaultConfig {
+        applicationId "com.example.administrator.zahbzayxy"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 158
+        versionName "1.5.8"
+        multiDexEnabled true
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
+        flavorDimensions "versionCode"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+                arguments = [ eventBusIndex : 'com.bandeng.MyEventBusIndex' ]
+            }
+        }
+        packagingOptions {
+            exclude 'lib/mips64/*.so'
+            exclude 'lib/mips/*.so'
+        }
+    }
+//    productFlavors {
+//        default_channel {}
+//        wandoujia {}
+//        _360 {}
+//        yingyongbao {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        jifeng {}
+//        Vivo {
+//        }
+//        Oppo {
+//        }
+//        Meizu {
+//        }
+//    }
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+//            def outputFile = output.outputFile
+//            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                File outputDirectory = new File(outputFile.parent)
+//                def fileName
+//                if (variant.buildType.name == "release") {
+//                    fileName = "zayxy_${variant.productFlavors[0].name}.apk"
+//                } else {
+//                    fileName = "zayxy_${variant.productFlavors[0].name}_beta.apk"
+//                }
+//                output.outputFile = new File(outputDirectory, fileName)
+//            }
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        sit {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+    lintOptions {
+        disable "ResourceType"
+    }
+
+    //配置keystore签名
+    signingConfigs {
+        debug{
+            storeFile file("../keyStorePath.jks")
+            storePassword "123456"
+            keyAlias "zayxy"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("../keyStorePath.jks")
+            storePassword "123456"
+            keyAlias "zayxy"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':androidautoscrollviewpager')
+    implementation project(':pullToRefresh_Library')
+//    compile files('C:/Youxun/MyApplication/eventbus-3.0.0.jar')
+    implementation files('libs/alipaySdk-20170309.jar')
+//    compile files('libs/eventbus-3.0.0.jar')
+    compile files('libs/SocialSDK_QQ_Simplify.jar')
+    compile files('libs/SocialSDK_Sina_Simplify.jar')
+    compile files('libs/SocialSDK_WeChat_Simplify.jar')
+    compile files('libs/umeng_social_api.jar')
+    compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_shareview.jar')
+    compile files('libs/umeng_social_tool.jar')
+    compile files('libs/libs/hellocharts-library-1.5.8.jar')
+    compile files('libs/libs/achartengine-1.0.0.jar')
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    implementation 'com.android.support:appcompat-v7:23.4.0'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    implementation 'com.android.support:support-v4:23.4.0'
+    implementation 'com.android.support:design:23.4.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+    //greenDao数据库
+    implementation 'org.greenrobot:greendao:3.2.0'
+    implementation 'com.android.support:cardview-v7:23.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+//    annotationProcessor  'org.greenrobot:eventbus-annotation-processor:3.0.1'
+    annotationProcessor  'com.jakewharton:butterknife-compiler:8.4.0'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    implementation 'com.github.moduth:blockcanary-android:1.2.1'
+    implementation 'com.github.barteksc:pdfium-android:1.7.0'
+    implementation 'de.halfbit:pinned-section-listview:1.0.0'
+    compile files('libs/ijkjava.jar')
+    compile files('libs/ccsdk.jar')
+    //权限
+    implementation 'pub.devrel:easypermissions:1.0.0'
+    //compile 'com.lovedise:permissiongen:0.0.6'
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation 'com.androidkun:XTabLayout:1.1.4'
+    implementation project(':faceplatform-ui')
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    //打印Log
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+    implementation "com.android.support:multidex:1.0.3"
+
+    //上拉加载下拉刷新
+    implementation 'com.androidkun:pulltorefreshrecyclerview:1.1.0'
+    implementation 'com.alibaba:fastjson:1.2.47'
+    /*兼容webview*/
+}
+//apt {
+//    arguments {
+//        eventBusIndex "com.bandeng.MyEventBusIndex"
+//    }
+//}

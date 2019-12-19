@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_login"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.LoginActivity">
+    <!--登录的界面-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:scaleType="fitXY"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/back_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
+            android:drawableLeft="@mipmap/return_icon"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:text="中安云教育"
+            android:textColor="@color/white"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/name_rg"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="40dp"
+            android:alpha="0.3"
+            android:background="@drawable/register_bg_shape"
+            android:hint="帐号"
+            android:maxLength="11"
+            android:inputType="phone"
+            android:paddingLeft="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <EditText
+            android:id="@+id/pw_rg"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="12dp"
+            android:alpha="0.3"
+            android:background="@drawable/register_bg_shape"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:paddingLeft="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <Button
+            android:id="@+id/login_bt"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/login_bg_shape"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/free_register_bt"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/register_nologin_shape"
+            android:gravity="center"
+            android:text="免费注册"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/forgetPw_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="12dp"
+            android:text="忘记密码?"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <!--注册的界面-->
+    <include
+        android:id="@+id/regester_layout"
+        layout="@layout/regester_layout"
+        android:visibility="gone"/>
+
+    <!--微信登录-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/login_bg_shape"
+        android:gravity="center"
+        android:onClick="weChatOnClick"
+        android:padding="5dp"
+        android:text="微信登录"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <!--游客模式-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/youke_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="游客模式"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/youke_tv"
+            android:src="@mipmap/jiantou" />
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+

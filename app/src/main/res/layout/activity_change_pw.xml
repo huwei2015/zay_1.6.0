@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.ChangePWActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bg">
+
+        <ImageView
+            android:id="@+id/changePW_back_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@mipmap/jiantou_big" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="修改密码"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="原密码"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/oldPW_et"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="请输入原密码"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="新密码"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/newPW_et"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="新密码"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="再次输入"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/aginNewPW_et"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="再次输入"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/pWQD_bt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="40dp"
+        android:background="@drawable/queren_blue_bg"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+</LinearLayout>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.SearcTestDetailActivity">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/search_test_detail_top_rl"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp">-->
+        <!--<ImageView-->
+            <!--android:id="@+id/search_test_detail_close_iv"-->
+            <!--android:src="@mipmap/close_x"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:padding="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<TextView-->
+            <!--android:text="题目详情"-->
+            <!--android:textSize="16sp"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+    <!--</RelativeLayout>-->
+
+    <RelativeLayout
+        android:id="@+id/search_test_detail_top_rl"
+        android:background="@color/baseNavigationColor"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/search_test_detail_close_iv"
+            android:src="@mipmap/jiantou_big"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="45dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="题目详情"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_below="@+id/search_test_detail_top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <com.example.administrator.zahbzayxy.myviews.MyRecyclerView
+                android:id="@+id/search_test_detail_rv"
+                android:layout_below="@+id/toolbartop"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="80dp"
+               />
+
+        </LinearLayout>
+    </ScrollView>
+<FrameLayout
+    android:layout_alignParentBottom="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@color/light_gray"
+        android:orientation="horizontal"
+        android:layout_height="60dp">
+<ImageView
+    android:id="@+id/search_test_detail_left_iv"
+    android:src="@mipmap/left_slid"
+    android:layout_marginLeft="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" />
+        <TextView
+            android:text="上一题"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <View
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:text="下一题"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/search_test_detail_right_iv"
+            android:src="@mipmap/right_slide"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+<ImageView
+    android:id="@+id/search_test_detail_back_list_iv"
+    android:src="@mipmap/back_search_list"
+    android:layout_gravity="center|top"
+    android:paddingBottom="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+</FrameLayout>
+</RelativeLayout>

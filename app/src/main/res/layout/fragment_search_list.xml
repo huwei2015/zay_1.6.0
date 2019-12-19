@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.fragments.SearchListSingleFragment">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/searchList_smr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchList_rv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</FrameLayout>

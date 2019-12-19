@@ -1,0 +1,31 @@
+apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'com.android.library'
+
+android {
+//    compileSdkVersion 23
+//    buildToolsVersion "19.1.0"
+    compileSdkVersion 21
+   buildToolsVersion '26.0.2'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 14
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        sit {
+            debuggable true
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:23.+'
+    compile 'org.greenrobot:greendao:3.2.0'
+}

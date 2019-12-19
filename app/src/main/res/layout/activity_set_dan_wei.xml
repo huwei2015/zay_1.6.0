@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_Gray"
+    android:orientation="vertical"
+
+    tools:context="com.example.administrator.zahbzayxy.activities.SetHangYeActivity">
+    <RelativeLayout
+    android:id="@+id/setName_toolbar"
+    android:background="@color/bg"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+    <ImageView
+        android:id="@+id/dW_back_iv"
+        android:src="@mipmap/jiantou_big"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="所在行业"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:layout_height="match_parent" />
+</RelativeLayout>
+
+    <ListView
+        android:id="@+id/hangye_lv"
+        android:divider="@null"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_below="@+id/setName_toolbar"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="@color/white"-->
+        <!--android:layout_height="50dp">-->
+        <!--<TextView-->
+            <!--android:text="所在单位"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="18sp"-->
+            <!--android:singleLine="true"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<EditText-->
+            <!--android:id="@+id/danWei_et"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@null"-->
+            <!--android:hint="请填写所在单位"-->
+            <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+    <!--<Button-->
+        <!--android:id="@+id/qDDanWei_bt"-->
+        <!--android:layout_below="@+id/idPW_layout"-->
+        <!--android:layout_marginTop="40dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:background="@drawable/queren_blue_bg"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:text="确定"-->
+
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="20sp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_height="50dp" />-->
+
+</LinearLayout>

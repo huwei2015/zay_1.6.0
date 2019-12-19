@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.SearchListActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/close_searchResult_iv"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/jiantou_big"
+            android:layout_marginTop="10dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="搜索结果"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:background="@color/light_Gray_New"
+    android:layout_height="60dp">
+    <com.androidkun.xtablayout.XTabLayout
+        android:id="@+id/xTablayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:xTabDividerWidthWidthText="true"
+        app:xTabMode="scrollable"
+        app:xTabIndicatorColor="@color/testBlueTv"
+        app:xTabIndicatorHeight="2dp"
+        app:xTabSelectedTextColor="@color/testBlueTv"
+        app:xTabTextColor="#000"
+        app:xTabTextSize="18sp"
+        app:xTabDisplayNum="4"
+        app:xTabSelectedTextSize="19sp"
+        app:xTabDividerWidth="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:xTabDividerHeight="40dp"
+        app:xTabDividerColor="@color/gray"/>
+</RelativeLayout>
+</LinearLayout>

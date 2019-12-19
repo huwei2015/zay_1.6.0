@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.PaySuccessActivity">
+<ImageView
+    android:id="@+id/paySuccess_iv"
+    android:src="@mipmap/paysuccess_iv"
+    android:layout_width="match_parent"
+    android:layout_height="260dp" />
+
+
+    <TextView
+        android:text="您的订单，支付成功"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/account_payMoney_tv"
+            android:text="支付金额:200元"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        android:layout_height="35dp">
+        <Button
+            android:id="@+id/account_detail_bt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="detailOnClick"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/buycar_bg_shape"
+            android:text="查看订单详情"
+            android:textColor="@color/white"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/accont_home_bt"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/buy_bg_shape"
+            android:textColor="@color/white"
+            android:text="返回首页"
+            android:onClick="homeOnClick"
+            android:layout_marginRight="60dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

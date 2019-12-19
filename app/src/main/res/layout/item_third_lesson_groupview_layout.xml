@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:descendantFocusability="blocksDescendants">
+    <TextView
+        android:id="@+id/zLessonNum_tv"
+        android:text="本课程8学时"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:padding="5dp"
+        android:background="@color/white"
+        android:textColor="#68a5d9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/lesson_group_name_tv"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/zLessonNum_tv"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:padding="5dp"
+        android:background="@color/light_Gray"
+        android:text="aaaaaaaaaaaaaaaaaa"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/lesson_group_name_tv"
+        android:layout_marginBottom="20dp"
+        android:textSize="10sp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_yellow_rctangle"
+        android:id="@+id/bt"
+        android:visibility="invisible"
+        android:text="加入购物车"
+        />
+    <ImageView
+        android:id="@+id/group_lesson_navagation_iv"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_alignTop="@+id/bt"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

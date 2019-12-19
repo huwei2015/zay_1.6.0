@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:id="@+id/item_ly"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/test_liberary_bg"
+    android:layout_height="110dp">
+    <ImageView
+        android:id="@+id/test_list_iv"
+        android:layout_width="90dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/default_ic"
+        android:layout_height="90dp" />
+<TextView
+    android:id="@+id/testName_tv"
+    android:layout_toRightOf="@id/test_list_iv"
+    android:layout_toLeftOf="@+id/divide_line_ll"
+    android:textColor="@color/black"
+    android:layout_marginTop="15dp"
+    android:textSize="16sp"
+    android:lines="2"
+    android:ellipsize="end"
+    android:layout_width="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:text="2016年5月云南开班开"
+    android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/testNum_list_tv"
+        android:layout_below="@id/testName_tv"
+        android:layout_toRightOf="@id/test_list_iv"
+        android:text="921题"
+        android:visibility="gone"
+        android:textColor="@color/greenRightTv"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/testList_price_tv"
+        android:layout_below="@id/testName_tv"
+        android:text="58"
+        android:layout_toRightOf="@id/testNum_list_tv"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/yellowbgLing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/testDate_tv"
+        android:layout_alignParentRight="true"
+        android:text="2016年5月一日"
+        android:layout_marginTop="30dp"
+        android:textSize="14sp"
+        android:lines="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/testDate_tv"
+        android:text="点击进入"
+        android:layout_marginTop="15dp"
+        android:textSize="14sp"
+        android:lines="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+<LinearLayout
+    android:id="@+id/divide_line_ll"
+    android:layout_width="1dp"
+    android:orientation="vertical"
+    android:layout_toLeftOf="@+id/testDate_tv"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="15dp"
+    android:background="@color/light_Gray_New"
+    android:layout_height="80dp"></LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <!-- <TextView
+        android:layout_toRightOf="@+id/test_list_iv"
+        android:id="@+id/testDate_tv"
+        android:layout_below="@+id/testName_tv"
+        android:text="2016年5月一日"
+        android:layout_marginTop="5dp"
+        android:textSize="14sp"
+        android:lines="1"
+        android:layout_marginLeft="5dp"
+        android:ellipsize="end"
+        android:layout_marginRight="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/testAndBuy_bt"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:textSize="16sp"
+        android:button="@null"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/test_liberary_bt_bg"
+        android:layout_height="match_parent" />-->
+
+</RelativeLayout>

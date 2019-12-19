@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/pMyRenZhengDetailBack_iv"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/jiantou_big"
+            android:layout_marginTop="15dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="我的证书"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progressbar" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>

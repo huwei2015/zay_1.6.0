@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.TestDetailActivity">
+
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_evaluating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/bg">
+
+                <ImageView
+                    android:id="@+id/back_testDetail_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@mipmap/jiantou_big" />
+
+                <TextView
+                    android:id="@+id/testLiberaryTitle_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="试卷购买详情"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="10dp">
+
+                <RelativeLayout
+                    android:id="@+id/iv_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/testLiberaryBg_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="120dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:src="@mipmap/loading_png" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/testDetailName_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_rl"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="2016年5月云南开班培训71名矿山救护新兵"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:layout_below="@+id/testDetailName_tv"
+                    android:layout_alignLeft="@+id/testDetailName_tv"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_gray_rectangle"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:text="价格" />
+
+                    <TextView
+                        android:id="@+id/price_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/red"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/taocanA_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@mipmap/bg_taocan"
+                    android:button="@null"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/taocanB_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_line_gray_ranctangle"
+                    android:button="@null"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/taocanC_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_line_gray_ranctangle"
+                    android:button="@null"
+                    android:text="套餐C"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/taocanD_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_line_gray_ranctangle"
+                    android:button="@null"
+                    android:text="套餐D"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/taoCan_chart_iv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/light_Gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="题库简介"
+                android:textColor="@color/test_black_tv"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/light_Gray_New"/>
+
+            <TextView
+                android:id="@+id/tiku_introduce_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/noBuy_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_Gray"
+        android:visibility="visible">
+
+        <Button
+            android:id="@+id/testBuyNow_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@mipmap/test_buy_bg"
+            android:text="立即购买"
+            android:textColor="@color/whitesmoke"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/haveBuy_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/mediumblue"
+                android:onClick="practiceOnclick"
+                android:text="练习模式"
+                android:textColor="@color/whitesmoke"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/goTest_bt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ff6537"
+                android:onClick="testOnclick"
+                android:text="考试模式"
+                android:textColor="@color/whitesmoke"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

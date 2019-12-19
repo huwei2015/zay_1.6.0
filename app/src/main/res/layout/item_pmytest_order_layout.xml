@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:text="订单编号;1111223344"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="16sp"
+            android:id="@+id/pMyTestOrderNum_tv"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/testPayStatus_tv"
+            android:text="未支付"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <include layout="@layout/divid_line_layout"></include>
+    <RelativeLayout
+        android:id="@+id/content_myTestOrder_rl"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="100dp">
+
+          <ImageView
+              android:id="@+id/pMyTestOrder_iv"
+              android:layout_width="180dp"
+              android:scaleType="fitXY"
+              android:src="@mipmap/default_ic"
+              android:layout_height="100dp" />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_toRightOf="@+id/pMyTestOrder_iv"
+              android:orientation="vertical"
+              android:layout_marginLeft="5dp"
+              android:layout_height="match_parent">
+          <TextView
+              android:id="@+id/pMyTestName_tv"
+              android:layout_width="wrap_content"
+              android:textSize="16sp"
+              android:lines="2"
+              android:ellipsize="end"
+              android:text="危险化学品培训课程生产经营单位初训"
+              android:layout_marginLeft="3dp"
+              android:textColor="@color/black"
+              android:layout_weight="1"
+              android:layout_height="0dp" />
+          <TextView
+              android:id="@+id/pMyTestOrderPrice_tv"
+              android:layout_below="@+id/pMyLessonName_tv"
+              android:text="单价:80"
+              android:textSize="15sp"
+              android:layout_marginLeft="3dp"
+              android:layout_marginBottom="10dp"
+              android:layout_marginTop="30dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+          </LinearLayout>
+    </RelativeLayout>
+  <LinearLayout
+      android:background="@color/light_Gray"
+      android:layout_marginTop="2dp"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"></LinearLayout>
+    <RelativeLayout
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/pMyTestOrderCreateTime_tv"
+            android:text="创建时间"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/pMyTestOrderQuXiao_bt"
+            android:text="取消订单"
+            android:button="@null"
+            android:background="@drawable/buy_bg_shape"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/pMyTestOrderziFu_bt"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/white"
+            android:layout_width="70dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:layout_height="26dp" />
+        <Button
+            android:id="@+id/pMyTestOrderziFu_bt"
+            android:text="去支付"
+            android:button="@null"
+            android:background="@drawable/add_buycar_bg"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="70dp"
+            android:layout_height="26dp" />
+        <Button
+            android:id="@+id/pMyTestOrderDelete_bt"
+            android:text="删除订单"
+            android:button="@null"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:background="@drawable/buy_bg_shape"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="70dp"
+            android:layout_height="26dp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_paper_name"
+        android:text="企业主要负责人"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="40dp">
+        <LinearLayout
+            android:id="@+id/blue"
+            android:orientation="vertical"
+            android:layout_width="3dp"
+            android:visibility="gone"
+            android:background="@color/lightBlue"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/test_useTime_tv"
+            android:layout_toEndOf="@+id/blue"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/grade_tv"
+            android:text="80分"
+            android:textColor="@color/greenRightTv"
+            android:layout_toStartOf="@+id/test_total_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/test_total_tv"
+            android:text="/满分100分"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <include layout="@layout/divid_new_gray_layout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/testDetail_rl"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/testDate_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_toStartOf="@+id/detail_tv"
+            android:layout_marginEnd="5dp"
+            android:src="@mipmap/icon_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/detail_tv"
+            android:layout_alignParentEnd="true"
+            android:text="详情"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+<View
+    android:layout_width="match_parent"
+    android:layout_height="5dp"
+    android:background="@color/light_Gray_New" />
+</LinearLayout>

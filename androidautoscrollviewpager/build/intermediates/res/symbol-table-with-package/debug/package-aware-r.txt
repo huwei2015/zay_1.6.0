@@ -1,0 +1,1 @@
+cn.trinea.android.view.autoscrollviewpager

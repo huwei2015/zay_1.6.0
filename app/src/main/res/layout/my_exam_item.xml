@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_exam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="烟花爆竹经营单位主要负责人"
+            android:textColor="#040404"
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="有效期:"
+                android:textSize="14dp"
+                android:textColor="#757575" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginStart="16dp"
+                android:textSize="14dp"
+                android:textColor="#757575" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="有效次数:"/>
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/redBuy"
+                    android:visibility="gone"
+                    android:text="1"/>
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/redBuy"
+                    android:text="1"/>
+                <TextView
+                    android:id="@+id/tv_xie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/redBuy"
+                    android:text="/"/>
+                <TextView
+                    android:id="@+id/tv_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/redBuy"
+                    android:text="3"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#eeeeee" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="26dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/exam"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/unsel"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:text="去考试"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_exam_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/unsel"
+                android:gravity="center"
+                android:text="考试记录"
+                android:layout_marginStart="10dp"
+                android:textColor="#fff"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="25dp"
+        android:background="#eeeeee"/>
+</LinearLayout>

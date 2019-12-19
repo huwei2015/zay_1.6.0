@@ -1,0 +1,185 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_Gray"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.fragments.ForgetPWFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/forgetPWBack_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/jiantou_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="找回密码"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/white_tangle_bg">
+
+        <TextView
+            android:id="@+id/p_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="手机号"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/phone_et_forgetPw"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/p_tv"
+            android:background="@null"
+            android:button="@null"
+            android:maxLength="11"
+            android:inputType="phone"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/white_tangle_bg">
+
+            <TextView
+                android:id="@+id/id_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="验证码"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/getCode_et_forgetPw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/id_tv"
+                android:background="@null"
+                android:inputType="phone"
+                android:maxLength="6"
+                android:gravity="center"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/getCode_bt_forgetPw"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/login_bg_shape"
+            android:button="@null"
+            android:text="获取验证码"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/white_tangle_bg">
+
+        <TextView
+            android:id="@+id/pwx_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="设置新密码"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/setPW_et_forgetPw"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/pwx_tv"
+            android:background="@null"
+            android:button="@null"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/white_tangle_bg">
+
+        <TextView
+            android:id="@+id/pwx2_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="确认密码"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/againPW_et_forgetPw"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/pwx2_tv"
+            android:background="@null"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/check_bt_forgetPw"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/buycar_bg_shape"
+        android:text="确认"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+
+</LinearLayout>

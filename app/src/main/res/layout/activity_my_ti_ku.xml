@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.MyTiKuActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:orientation="vertical"
+        android:layout_marginBottom="58dp"
+        android:layout_height="match_parent">
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_evaluating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="invisible"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/baseNavigationColor"
+        android:layout_height="45dp">
+        <ImageView
+            android:id="@+id/pMyTikuBack_iv"
+            android:src="@mipmap/jiantou_big"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_height="18dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:text="我的题库"
+            android:textSize="18sp"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pMyTiKu_lv"
+        android:layout_width="match_parent"
+        android:divider="#eeeeee"
+        android:dividerHeight="18dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        android:background="@color/white"
+        ></com.handmark.pulltorefresh.library.PullToRefreshListView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_rl"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:onClick="addTikuOnClick"
+        android:background="@color/white"
+        android:layout_height="58dp">
+        <ImageView
+            android:layout_toLeftOf="@+id/add_tiku_tv"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/add_tiku"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_width="match_parent"
+            android:background="@color/light_Gray_New"
+            android:layout_height="1dp"></LinearLayout>
+        <TextView
+            android:id="@+id/add_tiku_tv"
+            android:text="购买更多题库"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/lightBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

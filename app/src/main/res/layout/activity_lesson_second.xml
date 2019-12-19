@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.LessonSecondActivity">
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_evaluating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="40dp">
+      <ImageView
+          android:id="@+id/lessonSecond_back"
+          android:src="@mipmap/jiantou_big"
+          android:layout_width="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginTop="10dp"
+          android:layout_marginLeft="5dp"
+          android:layout_height="20dp" />
+        <TextView
+            android:id="@+id/lessonName_daoHang_tv"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/lessonSecond_back"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+        android:id="@+id/lessonSecond_gv"
+        android:layout_width="match_parent"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="10dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:scrollbars="none"
+        android:background="@color/white"
+        android:numColumns="2"></com.handmark.pulltorefresh.library.PullToRefreshGridView>
+</LinearLayout>

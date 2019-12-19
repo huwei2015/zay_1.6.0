@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.QustionActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/practice_toolBar"
+        android:background="@color/mediumblue"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/return_big"
+            android:layout_height="match_parent" />
+        <TextView
+            android:text="危险化学品生产经营单位主要负责人考试卷"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+<com.example.administrator.zahbzayxy.myviews.MyRecyclerView
+    android:layout_below="@+id/practice_toolBar"
+    android:layout_marginTop="5dp"
+    android:id="@+id/qustionMove_rclv"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</com.example.administrator.zahbzayxy.myviews.MyRecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_Gray"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="1sp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:onClick="leftButton"
+            android:drawableTop="@mipmap/left_slid"/>
+        <TextView
+            android:id="@+id/answerCard_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="答题卡"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:onClick="textButton"
+            android:drawableTop="@mipmap/introduce"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="1sp"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:onClick="rightButton"
+            android:drawableTop="@mipmap/right_slide"/>
+    </LinearLayout>
+</RelativeLayout>

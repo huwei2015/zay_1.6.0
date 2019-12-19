@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20px"
+        android:layout_marginEnd="20px"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/pRenZhengName_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#040404"
+        android:textSize="17sp"
+        android:text=""/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:text="取证时间:"/>
+            <TextView
+                android:id="@+id/lessonNum_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16px"
+                android:textSize="14sp"
+                android:text="2019-08-02 15:48:08"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/tv_to_view"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginEnd="20px"
+            android:background="@drawable/text_border"
+            android:layout_marginTop="23dp"
+            android:textColor="#4a9bef"
+            android:text="查看"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="46px"
+            android:background="#a7a7a7"/>
+    </LinearLayout>
+
+
+
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/top_rl"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp">-->
+        <!--<TextView-->
+            <!--android:id="@+id/pRenZhengName_tv"-->
+            <!--android:text="低压电工业"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:maxLines="1"-->
+            <!--android:ellipsize="end"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="16sp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="35dp" />-->
+    <!--</RelativeLayout>-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/divid_gray"-->
+        <!--android:layout_below="@+id/top_rl"-->
+        <!--android:background="@color/light_Gray"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp" />-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_below="@+id/divid_gray"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="35dp">-->
+        <!--<TextView-->
+            <!--android:id="@+id/renZhengNum_tv"-->
+            <!--android:text="课程学时"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textSize="15sp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<TextView-->
+            <!--android:id="@+id/daBiaoNum_tv"-->
+            <!--android:text="课程学时"-->
+            <!--android:visibility="gone"-->
+            <!--android:textSize="15sp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<TextView-->
+            <!--android:id="@+id/haveStudyNum_tv"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:text="课程学时"-->
+            <!--android:textSize="15sp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<Button-->
+            <!--android:id="@+id/cerStatus_bt"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:text="学习中"-->
+            <!--android:textSize="15sp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/bg_blue"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="25dp" />-->
+
+    <!--</LinearLayout>-->
+</RelativeLayout>

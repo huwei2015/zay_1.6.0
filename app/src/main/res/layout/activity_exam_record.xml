@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/bg">
+
+        <ImageView
+            android:id="@+id/nb_order_return"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/jiantou_big" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="考试记录"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <com.androidkun.PullToRefreshRecyclerView
+        android:id="@+id/recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <include
+        layout="@layout/layout_empty_view"/>
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="16dp"
+    android:layout_height="70dp">
+
+    <TextView
+        android:id="@+id/item_lesson_chaptName_tv"
+        android:text="注册消防工程师"
+        android:textColor="@color/black"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_marginStart="10dp"
+        android:id="@+id/item_lesson_clock_iv"
+        android:layout_below="@+id/item_lesson_chaptName_tv"
+        android:src="@mipmap/clock"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="12sp"
+        android:layout_width="16dp"
+        android:layout_height="16dp" />
+    <TextView
+        android:id="@+id/item_lesson_time_tv"
+        android:layout_toEndOf="@+id/item_lesson_clock_iv"
+        android:layout_alignTop="@+id/item_lesson_clock_iv"
+        android:text="00:50:02"
+        android:textColor="@color/black"
+        android:layout_marginStart="10dp"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/item_lesson_study_percent_tv"
+        android:text="学习进度:80%"
+        android:layout_alignTop="@+id/item_lesson_time_tv"
+        android:layout_toEndOf="@+id/item_lesson_time_tv"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:layout_marginStart="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/item_lessson_chapt_downLoad_iv"
+        android:src="@mipmap/icon_download_big"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="#f8f8f8"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:button="@drawable/rb_buycar_selector2"
+            android:padding="5dp"/>
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/lesson_name1"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="烟花爆竹主要经营单位主要负责人培训课程（）"
+                android:textColor="@android:color/black"
+                android:id="@+id/tvtv12"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:text="1111111"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:id="@+id/tvtv22"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

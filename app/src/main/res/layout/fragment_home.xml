@@ -1,0 +1,144 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.fragments.HomeFragment">
+    <!-- TODO: Update blank fragment layout -->
+
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/load_bar_layout_evaluating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:background="@color/white"
+            android:layout_height="match_parent"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
+                        android:id="@+id/shouye_viewpager"
+                        android:layout_width="match_parent"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_height="180dp">
+                    </cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager>
+                    <include layout="@layout/divid_line_layout"></include>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentBottom="true"
+                        android:id="@+id/dot_container"
+                        android:paddingBottom="5dp"
+                        ></LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                     android:layout_width="match_parent"
+                     android:background="@color/light_Gray"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="7dp"></LinearLayout>
+                <!-- 课程分类-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+                    >
+                    <ImageView
+                        android:layout_toLeftOf="@+id/lesson_fenLei_tv"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_width="wrap_content"
+                        android:src="@mipmap/home_lesson_fenlei"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/lesson_fenLei_tv"
+                        android:layout_width="wrap_content"
+                        android:text="课程分类"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content">
+                    <com.example.administrator.zahbzayxy.myviews.MyGridView
+                        android:id="@+id/home_lesson_fenLei_gv"
+                        android:layout_width="match_parent"
+                        android:numColumns="3"
+                        android:horizontalSpacing="5dp"
+                        android:verticalSpacing="5dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_height="match_parent"></com.example.administrator.zahbzayxy.myviews.MyGridView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/light_Gray"
+                    android:layout_height="7dp"></LinearLayout>
+                <!-- 课程分类-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_height="wrap_content"
+                    >
+                    <ImageView
+                        android:layout_toLeftOf="@+id/jingXuan_fenLei_tv"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_width="wrap_content"
+                        android:src="@mipmap/jingxuan_fenlei"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/jingXuan_fenLei_tv"
+                        android:layout_width="wrap_content"
+                        android:text="精选课程"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:src="@mipmap/home_dividline1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!--课程分类详情-->
+                <com.example.administrator.zahbzayxy.myviews.MyListView
+                    android:id="@+id/home_lesson_class_detail_gv"
+                    android:layout_width="match_parent"
+                    android:divider="@mipmap/home_dividline1"
+                    android:horizontalSpacing="5dp"
+                    android:verticalSpacing="5dp"
+                    android:layout_marginLeft="7dp"
+                    android:scrollbars="none"
+                    android:focusableInTouchMode="true"
+                    android:descendantFocusability="blocksDescendants"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_height="match_parent"></com.example.administrator.zahbzayxy.myviews.MyListView>
+                <!--最新课程-->
+            </LinearLayout>
+        </ScrollView>
+</FrameLayout>

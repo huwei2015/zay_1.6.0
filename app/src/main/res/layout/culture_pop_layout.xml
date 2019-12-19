@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="文化程度"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+<!--    <include layout="@layout/divid_line_layout"/>-->
+    <RadioGroup
+        android:id="@+id/rg_chengdu"
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_marginStart="16dp"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/middle_school"
+            android:text="初中"
+            android:background="@color/white"
+            android:layout_marginTop="1dp"
+            android:paddingStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <RadioButton
+            android:id="@+id/high_school"
+            android:text="中专或高中"
+            android:background="@color/white"
+            android:paddingStart="16dp"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <RadioButton
+            android:id="@+id/college"
+            android:text="大专"
+            android:paddingStart="16dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <RadioButton
+            android:id="@+id/course"
+            android:text="本科"
+            android:background="@color/white"
+            android:paddingStart="16dp"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <RadioButton
+            android:id="@+id/degree"
+            android:text="硕士"
+            android:paddingStart="16dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <RadioButton
+            android:id="@+id/dr"
+            android:text="博士"
+            android:background="@color/white"
+            android:paddingStart="16dp"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+    </RadioGroup>
+    <include layout="@layout/divid_line_layout"/>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_height="10dp"/>
+    <TextView
+        android:id="@+id/dissmess_chengdu"
+        android:text="取消"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+</LinearLayout>

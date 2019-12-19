@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.NewMyOrderActivity">
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:background="@color/bg"
+    android:layout_height="40dp">
+    <ImageView
+        android:id="@+id/nb_order_return"
+        android:layout_width="wrap_content"
+        android:src="@mipmap/jiantou_big"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:onClick="myOrderBackOnClick"
+        android:layout_height="20dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="我的订单"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/rl_below_info"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_height="0dp">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/nB_order_tab"
+            app:tabIndicatorColor="@color/lightBlue"
+            app:tabSelectedTextColor="@color/lightBlue"
+            app:tabTextColor="@color/black"
+            android:textSize="16sp"
+            style="@style/MyCustomTabLayout"
+            app:tabGravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+        </android.support.design.widget.TabLayout>
+        <include layout="@layout/line_gray_layout"></include>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/nB_order_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+</LinearLayout>

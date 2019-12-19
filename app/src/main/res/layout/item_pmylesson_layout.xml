@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/pMyLessonNum_tv"
+        android:text="1"
+        android:layout_marginStart="10dp"
+        android:gravity="center|top"
+        android:textColor="@color/white"
+        android:background="@mipmap/lesson_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/pMyLessonName_tv"
+        android:layout_toRightOf="@+id/pMyLessonNum_tv"
+        android:text="防爆电气执业资格培训"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/medium_layout"
+        android:layout_below="@+id/pMyLessonName_tv"
+        android:layout_width="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="100dp">
+        <ImageView
+            android:id="@+id/pMyLesson_iv"
+            android:src="@mipmap/lesson_name1"
+            android:layout_width="130dp"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/pMyLesson_iv"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/pStudyNum_tv"
+                android:text="学时:20"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/pMyLessonPrice_tv"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/pMyStudyTime_tv"
+                android:layout_width="match_parent"
+                android:text="学习时间:2017_1_2017_11"
+                android:layout_weight="3"
+                android:layout_height="0dp" />
+        </LinearLayout>
+    </RelativeLayout>
+    <Button
+        android:id="@+id/pBeginStudy_bt"
+        android:layout_width="80dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/buycar_bg_shape"
+        android:text="开始学习"
+        android:layout_marginBottom="10dp"
+        android:button="@null"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/medium_layout"
+        android:layout_height="35dp" />
+
+</RelativeLayout>

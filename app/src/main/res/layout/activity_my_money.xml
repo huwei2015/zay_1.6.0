@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_Gray"
+    android:orientation="vertical"
+    tools:context=".activities.MyAccountActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/myAccount_iv"
+            android:src="@mipmap/jiantou_big"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_height="18dp" />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:text="账户余额"
+            android:textSize="18sp"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="60dp">
+        <TextView
+            android:id="@+id/myAccount_tv"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/myMoney_plv"
+        android:layout_below="@+id/table_layout"
+        android:layout_marginTop="15dp"
+        android:divider="@color/light_Gray"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:dividerHeight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    </LinearLayout>
+<include layout="@layout/layout_empty_view"/>
+</LinearLayout>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_Gray"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.ResetActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/bg">
+
+            <ImageView
+                android:id="@+id/myChengJiBack_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="12dp"
+                android:src="@mipmap/jiantou_big" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <!--个人信息-->
+        <RelativeLayout
+            android:id="@+id/rl_info"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="16dp"
+                android:text="个人信息"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--账号安全-->
+        <RelativeLayout
+            android:id="@+id/rl_account"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="账户安全"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--消息提醒-->
+        <RelativeLayout
+            android:id="@+id/rl_msg"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="消息提醒"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switch_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:checked="true"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--开课提醒-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/lessonSuggest"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="开课提醒"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/lessonStart_st"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:checked="true"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--仅Wifi模式下观看-->
+        <RelativeLayout
+            android:id="@+id/wifi"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="仅Wifi模式下观看"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/onlyWifi_st"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:checked="true"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--清除缓存-->
+        <RelativeLayout
+            android:id="@+id/clearCache_rl"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/clearSave"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="清除缓存"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/showCache_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:gravity="center" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--服务协议-->
+        <RelativeLayout
+            android:id="@+id/rl_service"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="服务协议"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--隐私协议-->
+        <RelativeLayout
+            android:id="@+id/rl_privacy"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="隐私协议"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--关于我们-->
+        <RelativeLayout
+            android:id="@+id/aboutUs_rl"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="关于我们"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/us_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+        <!--更新版本-->
+        <RelativeLayout
+            android:id="@+id/app_version_rl"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            android:onClick="appVersionOnClick">
+
+            <TextView
+                android:id="@+id/update"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="更新版本"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/curenntClass"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:text="v1.5.5"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/existLogin_bt"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom"
+        android:background="@color/bg"
+        android:text="退出登录"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</RelativeLayout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.NewMyChengJiActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="45dp">
+        <ImageView
+            android:id="@+id/myChengJiBack_iv"
+            android:layout_marginTop="12dp"
+            android:src="@mipmap/jiantou_big"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+        <TextView
+            android:text="模考记录"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <!--下拉弹出框listView-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/tv_text_age"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            />
+        <ImageView
+            android:src="@mipmap/icon_xia1"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <include layout="@layout/divid_new_gray_layout"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+
+<!--折线图-->
+        <LinearLayout
+            android:id="@+id/guangzhexian"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" />
+        <com.example.administrator.zahbzayxy.myviews.MyListView
+            android:id="@+id/myChengji_detail_lv"
+            android:divider="@color/light_Gray"
+            android:dividerHeight="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

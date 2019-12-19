@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/nb_order_return"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/jiantou_big"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="离线视频"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/download_tab"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:tabIndicatorColor="#7cc1ff"
+        app:tabSelectedTextColor="#7cc1ff"
+        app:tabTextColor="@color/black"
+        style="@style/MyCustomTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.design.widget.TabLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:text="温馨提示:观看离线课程的时长不被记录在学时中,请慎重使用."
+        android:padding="10dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="match_parent">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/download_vp"
+            android:background="@drawable/bg_gray_rectangle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,3 @@
+include ':app', ':androidautoscrollviewpager', ':pullToRefresh_Library'
+include ':faceplatform-ui'
+include ':faceplatform'

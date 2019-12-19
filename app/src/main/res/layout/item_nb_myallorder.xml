@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/nb_orderType_tv"
+            android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/nb_myAllOrder_cancel_bt"
+                android:layout_width="wrap_content"
+                android:text="取消订单"
+                android:button="@null"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:background="@drawable/white_bg_retangle"
+                android:layout_marginRight="10dp"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/nb_myAllOrder_goPay_bt"
+                android:layout_width="wrap_content"
+                android:text="去支付"
+                android:button="@null"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:background="@drawable/white_bg_retangle"
+                android:layout_marginRight="10dp"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/nb_myAllOrder_delete_bt"
+            android:layout_width="wrap_content"
+            android:text="删除订单"
+            android:button="@null"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_gray_rectangle"
+            android:layout_marginRight="10dp"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <include layout="@layout/divid_line_layout"></include>
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="90dp">
+       <LinearLayout
+           android:id="@+id/left_layout1"
+           android:layout_width="100dp"
+           android:orientation="vertical"
+           android:layout_marginTop="10dp"
+           android:layout_marginBottom="10dp"
+           android:layout_height="match_parent">
+           <TextView
+               android:id="@+id/nb_order_payMoney_tv"
+               android:layout_width="match_parent"
+               android:textColor="@color/yellowBuyCar"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:layout_height="0dp" />
+           <TextView
+               android:layout_width="match_parent"
+               android:text="订单金额"
+               android:gravity="center"
+               android:layout_weight="1"
+               android:layout_height="0dp" />
+       </LinearLayout>
+       <LinearLayout
+           android:id="@+id/divid_ll"
+           android:layout_width="1dp"
+           android:background="@color/light_Gray"
+           android:layout_toRightOf="@+id/left_layout1"
+           android:layout_margin="10dp"
+           android:orientation="vertical"
+           android:layout_height="match_parent"></LinearLayout>
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_toRightOf="@+id/divid_ll"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginBottom="10dp"
+                   android:orientation="vertical"
+                   android:layout_height="match_parent">
+                   <TextView
+                       android:id="@+id/nb_all_order_time_tv"
+                       android:layout_width="match_parent"
+                       android:layout_weight="1"
+                       android:layout_height="0dp" />
+                   <TextView
+                       android:id="@+id/orderNum_tv"
+                       android:layout_width="match_parent"
+                       android:layout_weight="1"
+                       android:layout_height="0dp" />
+       </LinearLayout>
+       <TextView
+           android:id="@+id/nb_allOrderStatus_tv"
+           android:maxEms="4"
+           android:maxLines="1"
+           android:gravity="center"
+           android:layout_width="wrap_content"
+           android:background="@drawable/white_bg_retangle"
+           android:layout_alignParentRight="true"
+           android:layout_alignParentBottom="true"
+           android:layout_margin="20dp"
+           android:padding="5dp"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="20dp" />
+   </RelativeLayout>
+    <include layout="@layout/divid_line_layout"></include>
+
+    <LinearLayout
+        android:id="@+id/nb_zhuLessonName_ll"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"></LinearLayout>
+    <include layout="@layout/divid_line_layout"></include>
+    <TextView
+        android:id="@+id/nb_orderDetail_tv"
+        android:text="订单详情"
+        android:background="@drawable/white_bg_retangle"
+        android:padding="7dp"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

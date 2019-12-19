@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.example.administrator.zahbzayxy.fragments.DirectoryFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <ExpandableListView
+        android:id="@+id/thirdLesson_eplv"
+        android:layout_width="match_parent"
+        android:scrollbars="none"
+        android:background="@drawable/bg_gray_rectangle"
+        android:layout_marginBottom="60dp"
+        android:layout_height="match_parent"
+        />
+    <RelativeLayout
+        android:id="@+id/buy_rl"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_Gray"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="50dp">
+        <Button
+            android:id="@+id/buy_bt"
+            android:background="@drawable/buy_bg_shape"
+            android:text="立即购买"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_margin="13dp"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/addBuyCart_bt"
+            android:text="加入购物车"
+            android:textColor="@color/white"
+            android:layout_toLeftOf="@+id/buy_bt"
+            android:layout_margin="13dp"
+            android:background="@drawable/buycar_bg_shape"
+            android:layout_width="100dp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/suggestBuy_tv"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="@color/red"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

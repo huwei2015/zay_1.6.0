@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/navigationName_lesson_tv"
+        android:textSize="14sp"
+        android:lines="2"
+        android:paddingTop="5dp"
+        android:ellipsize="end"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

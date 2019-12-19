@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.fragments.NewTestFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_evaluating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="题库分类"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/shoppingCart_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:src="@mipmap/shopping_icon1"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <com.example.administrator.zahbzayxy.utils.FixedIndicatorView
+        android:id="@+id/singleTab_fixedIndicatorView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <GridView
+        android:id="@+id/testNavigation_gv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:visibility="gone"/>
+
+    <ExpandableListView
+        android:id="@+id/test_eplv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:divider="#eeeeee"
+        android:dividerHeight="5dp"
+        android:footerDividersEnabled="false"
+        android:groupIndicator="@null"
+        android:scrollbars="none"/>
+</LinearLayout>

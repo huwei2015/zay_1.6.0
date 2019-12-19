@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/bg">
+
+        <ImageView
+            android:id="@+id/exam_archives_back"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/jiantou_big" />
+
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="消息"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tab_unread_message"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:background="@drawable/shape_unread_message_bg"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_toEndOf="@+id/tv_msg"
+            android:textColor="@android:color/white"
+            android:textSize="8sp"
+            android:text="2"
+            android:layout_gravity="top|right"
+            android:visibility="visible"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="40dp"
+        android:id="@+id/activity_rlview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

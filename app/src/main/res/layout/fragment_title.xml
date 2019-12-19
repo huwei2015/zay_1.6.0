@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.DetailFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/detail_title_tv"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:drawableLeft="@mipmap/icon_introduce_big"
+                android:layout_margin="10dp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:text="课程简介" />
+      <TextView
+        android:id="@+id/detail_introduce_wv"
+        android:layout_width="match_parent"
+        android:textSize="14sp" android:textColor="@color/black"
+        android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

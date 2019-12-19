@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">中安云学院</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="download">离线下载</string>
+    <string name="play">播放</string>
+    <string name="upload_video_info">视频信息</string>
+    <string name="download_list">离线列表</string>
+    <string name="screensize">画面尺寸</string>
+    <string name="definition">清晰度</string>
+    <string name="subtitle">字幕</string>
+    <string name="account_info">账户信息</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="speed">倍速</string>
+
+    <!--*******************FHS Start***************-->
+    <string name="upload_portrait_prompt">您还未上传人脸对比照片，为不影响您的学习请前往个人中心--个人信息中上传人脸对比照片。</string>
+    <string name="get_user_info_err">用户信息获取失败，请重新登录。</string>
+    <string name="btn_go_to_upload">立即前往</string>
+    <string name="btn_confirm">确定</string>
+    <string name="title_face_recognition">人脸对比照片</string>
+    <string name="title_Portrait_compare">人像对比照</string>
+    <string name="prompt_Portrait_compare">模糊的人像对比照将会导致学习过程中人脸识别认证失败，若上传照片模糊请联系管理员重新上传</string>
+    <string name="title_confirm_upload">确认上传</string>
+    <string name="content_confirm_upload">确认上传该照片吗?如图片五官不清晰请点击取消重新获取图片，否则将导致人脸识别验证失败</string>
+    <string name="prompt_Portrait_not_exist">人像不存在，请进入个人中心重新上传人脸照片</string>
+    <!--*******************FHS End***************-->
+</resources>

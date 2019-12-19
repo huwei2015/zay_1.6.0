@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.fragments.PLessonDetailFragment">
+    <TextView
+        android:id="@+id/detail_title_tv"
+        android:layout_width="match_parent"
+        android:textSize="15sp"
+        android:drawableLeft="@mipmap/icon_introduce_big"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:text="课程简介" />
+    <TextView
+        android:id="@+id/detail_introduce_wv"
+        android:layout_width="match_parent"
+        android:textSize="14sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/detail_title_tv"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

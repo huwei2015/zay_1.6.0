@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_Gray"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.zahbzayxy.activities.PayUiActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/bg"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/payui_back"
+            android:src="@mipmap/jiantou_big"
+           android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+        <TextView
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="收银台"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/studyCard_tv"
+            android:layout_width="wrap_content"
+            android:text="使用学习卡"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/bg_white_line"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_margin="10dp"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_height="50dp">
+
+        <TextView
+            android:text="订单金额:"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/testPrice_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:textColor="#ff8812"
+            android:textSize="16sp"
+            android:layout_marginRight="10dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_height="1dp"></LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/weChat_rl"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/wx_iv"
+            android:src="@mipmap/wechat"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_toRightOf="@+id/wx_iv"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/wx_tv1"
+                android:text="微信支付"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="推荐安装微信5.0及以上的版本使用"
+                android:layout_width="wrap_content"
+                android:layout_alignLeft="@+id/wx_tv1"
+                android:layout_below="@+id/wx_tv1"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/weChat_cb"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:button="@drawable/rb_buycar_selector"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/zfb_rl"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_marginTop="1dp"
+        android:layout_height="80dp">
+        <ImageView
+            android:src="@mipmap/zfb"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/zfb_iv"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp" />
+        <RelativeLayout
+            android:layout_toRightOf="@+id/zfb_iv"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/zfb_tv1"
+            android:text="支付宝支付"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="推荐有支付宝账户的用户使用"
+            android:layout_width="wrap_content"
+            android:layout_alignLeft="@+id/zfb_tv1"
+            android:layout_below="@+id/zfb_tv1"
+            android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <CheckBox
+            android:id="@+id/zfb_cb"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:button="@drawable/rb_buycar_selector"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_height="1dp"></LinearLayout>
+    <RelativeLayout
+        android:id="@+id/haveMoney_rl"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/money_iv"
+            android:src="@mipmap/yue1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_toRightOf="@+id/money_iv"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/money_tv1"
+                android:text="余额支付"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <CheckBox
+            android:id="@+id/myMoney_cb"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:button="@drawable/rb_buycar_selector"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_height="1dp"></LinearLayout>
+    <RelativeLayout
+        android:id="@+id/studyCard_rl"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/studyCard_iv"
+            android:src="@mipmap/study_card"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_toRightOf="@+id/studyCard_iv"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/studyCard_tv1"
+                android:text="学习卡支付"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <CheckBox
+            android:id="@+id/studyCard_cb"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:button="@drawable/rb_buycar_selector"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/suggestBuyTest_tv"
+        android:visibility="gone"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/red"
+        android:padding="10dp"
+        android:text="想要购买题库学习卡，请联系本地培训机构!"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />    <Button
+    android:layout_marginTop="30dp"
+    android:id="@+id/quRenPay_bt"
+    android:button="@null"
+    android:background="@drawable/buycar_bg_shape"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:textColor="@color/white"
+    android:text="确认支付"
+    android:textSize="18sp"
+    android:layout_width="match_parent"
+    android:layout_height="50dp" />
+
+</LinearLayout>

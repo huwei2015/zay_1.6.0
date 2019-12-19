@@ -1,0 +1,39 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:1-14:12
+	package
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:3:5-57
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:6:5-32
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+uses-sdk
+ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+	android:targetSdkVersion
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:5-44
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:8:15-41
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+		INJECTED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml
+application
+ADDED from /Users/huwei/zahb/zaysy_v1.5.5/androidautoscrollviewpager/src/main/AndroidManifest.xml:10:5-12:19

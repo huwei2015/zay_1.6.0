@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/pMyTiKuName_tv"
+        android:textSize="16sp"
+        android:text="危险化学品经营单位培训课程"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+       <LinearLayout
+           android:id="@+id/blue_line"
+           android:layout_width="3dp"
+           android:background="@color/lightBlue"
+           android:layout_margin="10dp"
+           android:orientation="vertical"
+           android:layout_height="match_parent">
+       </LinearLayout>
+        <TextView
+            android:layout_toRightOf="@id/blue_line"
+            android:id="@+id/tiku_taocanType_tv"
+            android:gravity="center"
+            android:text="A套餐"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <include layout="@layout/divid_line_layout"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/haveTestNum_tv"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/noTestNum_tv"
+            android:layout_toRightOf="@+id/haveTestNum_tv"
+            android:layout_marginLeft="40dp"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+        <TextView
+            android:id="@+id/pKaoshi_bt"
+            android:layout_width="match_parent"
+            android:background="@mipmap/bg_mnks"
+            android:layout_margin="10dp"
+            android:textColor="@color/white"
+            android:text="模拟考试"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_height="wrap_content" />
+</LinearLayout>

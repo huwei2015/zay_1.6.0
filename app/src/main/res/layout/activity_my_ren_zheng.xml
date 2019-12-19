@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_Gray"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.zahbzayxy.activities.MyRenZhengActivity">
+
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/bg">
+
+        <ImageView
+            android:id="@+id/pMyRenZhengBack_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/jiantou_big" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="我的认证"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pMyRenZhengMuLu_plv"
+        android:layout_below="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:divider="@color/light_Gray"
+        android:dividerHeight="10dp"
+        android:scrollbars="none" />
+    <include
+        layout ="@layout/layout_empty_view"/>
+</RelativeLayout>

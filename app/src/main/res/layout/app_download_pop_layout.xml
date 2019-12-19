@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/tk"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cha_iv"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/cha1"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_below="@+id/cha_iv"
+            android:layout_marginTop="40dp"
+            android:text="有新的版本,是否立即下载"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/downloadNow_tv"
+            android:layout_width="match_parent"
+            android:layout_marginTop="100dp"
+            android:text="立即下载"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_yellow_rctangle"
+            android:gravity="center"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/noDownloadNow_tv"
+            android:layout_marginTop="150dp"
+            android:text="暂不下载"
+            android:textColor="@color/black"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

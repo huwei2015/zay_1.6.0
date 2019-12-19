@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="性别"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <include layout="@layout/divid_line_layout"/>
+    <RadioGroup
+        android:id="@+id/sexChoice_rg"
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_marginStart="16dp"
+        android:layout_height="wrap_content">
+
+    <RadioButton
+        android:id="@+id/women_sex"
+        android:text="女"
+        android:background="@color/white"
+        android:paddingStart="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <RadioButton
+        android:id="@+id/man_sex"
+        android:text="男"
+        android:background="@color/white"
+        android:paddingStart="16dp"
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    </RadioGroup>
+    <include layout="@layout/divid_line_layout"></include>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:background="@color/light_Gray"
+        android:layout_height="10dp"/>
+    <TextView
+        android:id="@+id/dissmess_sex"
+        android:text="取消"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+
+</LinearLayout>
