@@ -355,6 +355,7 @@ public class MainActivity extends BaseActivity {
     private void hideAndShow(int position) {
 
         FragmentTransaction transaction = manager.beginTransaction();
+        Log.i("=======================","进来了....."+fragmentList.get(position).isAdded());
         if (fragmentList.get(position).isAdded()) {
             transaction.hide(fragmentList.get(prePosition)).show(fragmentList.get(position)).commit();
 
