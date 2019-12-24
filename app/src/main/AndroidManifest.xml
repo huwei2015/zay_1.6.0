@@ -307,7 +307,7 @@
         <!-- HYY 添加 推荐-->
         <activity android:name=".activities.RecommendCourseActivity"/>
         <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleBottom" />
-
+        <activity android:name=".activities.OnlineCourseActivity"/>
     </application>
 
 </manifest>

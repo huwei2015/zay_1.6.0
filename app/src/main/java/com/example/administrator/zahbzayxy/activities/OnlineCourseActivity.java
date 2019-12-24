@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
+import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
+import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
+import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
-import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -33,37 +37,56 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
-public class RecommendCourseActivity extends BaseActivity{
+public class OnlineCourseActivity extends BaseActivity{
 
     private ImageView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
-    private TextView zuixinTV;
-    private TextView isrecommendTV;
     private ProgressBarLayout mLoadingBar;
+    private RecyclerView gundongRV;
 
-    private List<RecommendCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<CourseCatesBean.DataBean.Cates> catesList = new ArrayList<>();
+
     private static String token;
-    PMyRecommendAdapter adapter;
+    OnlineCourseAdapter adapter;
+    Lv1CateAdapter cateAdapter;
     private int pageSize = 10;
     private int pager = 1;
-    private String dividePrice;
+    private Integer cateId=null;
+    private Integer isRecommend;
+    private Integer isTrailers;
+    private Integer isNew;
+    private TextView zuixinTV;
+    private TextView isrecmmendTV;
+    private TextView shikanTV;
+
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommend_course);
+        setContentView(R.layout.activity_online_course);
         initView();
         getSP();
-        adapter = new PMyRecommendAdapter(totalList, RecommendCourseActivity.this, token, handler);
+        adapter = new OnlineCourseAdapter(totalList, OnlineCourseActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
+        LinearLayoutManager ms= new LinearLayoutManager(this);
+        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
+        gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
+
+        cateAdapter=new Lv1CateAdapter(catesList,OnlineCourseActivity.this);//初始化适配器
+        gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
+        downLoadCatesData();
     }
 
     private void initPullToRefreshLv() {
@@ -96,11 +119,11 @@ public class RecommendCourseActivity extends BaseActivity{
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.recommendCourseList(pager, pageSize,null,null,token).enqueue(new Callback<RecommendCourseBean>() {
+        aClass.onlineCourseList(1,10,token,cateId,isRecommend, isTrailers,isNew).enqueue(new Callback<OnlineCourseBean>() {
             @Override
-            public void onResponse(Call<RecommendCourseBean> call, Response<RecommendCourseBean> response) {
+            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 int code1 = response.code();
-                RecommendCourseBean body = response.body();
+                OnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
@@ -108,41 +131,40 @@ public class RecommendCourseActivity extends BaseActivity{
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OnlineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
                             hideLoadingBar();
-                            List<RecommendCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(RecommendCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(OnlineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
                 }else{
                     if(totalList==null || totalList.size()==0) {
-                        initViewVisible(false);
+                        initViewVisible(true);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<RecommendCourseBean> call, Throwable t) {
+            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -159,6 +181,51 @@ public class RecommendCourseActivity extends BaseActivity{
         }
     }
 
+    private void downLoadCatesData() {
+        IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
+        aClass.getCourseCates(1,token).enqueue(new Callback<CourseCatesBean>() {
+            @Override
+            public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                int code1 = response.code();
+                CourseCatesBean body = response.body();
+                String s = new Gson().toJson(body);
+                Log.e("lessonSSss", s);
+                if (body != null && body.getData().getCates().size() > 0) {
+                    String code = body.getCode();
+                    if (!TextUtils.isEmpty(code)) {
+                        if (code.equals("00003")) {
+                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
+                            SharedPreferences.Editor edit = sp.edit();
+                            edit.putBoolean("isLogin", false);
+                            edit.commit();
+                        } else if (dbIsLogin() == false) {
+                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                        } else if (code.equals("99999")) {
+                            Toast.makeText(OnlineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                        } else if (code.equals("00000")) {
+                            List<CourseCatesBean.DataBean.Cates> cates = body.getData().getCates();
+                            catesList.addAll(cates);
+                            cateAdapter.notifyDataSetChanged();
+                        } else {
+                            Object errMsg = body.getErrMsg();
+                            if (errMsg != null) {
+                                Toast.makeText(OnlineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                String message = t.getMessage();
+            }
+        });
+
+    }
+
+
     public Boolean dbIsLogin() {
         SharedPreferences sharedPreferences = getSharedPreferences("tokenDb", MODE_PRIVATE);
         boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
@@ -169,8 +236,11 @@ public class RecommendCourseActivity extends BaseActivity{
         }
     }
     private boolean zxFlag=true;
+    private boolean tjFlag=true;
+    private boolean skFlag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        gundongRV = (RecyclerView) findViewById(R.id.gundongRV);
         recommedn_back_iv = (ImageView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
@@ -184,11 +254,59 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RecommendCourseActivity.this,SelectClassifyActivity.class));
+                startActivity(new Intent(OnlineCourseActivity.this,SelectClassifyActivity.class));
             }
         });
 
-        isrecommendTV=(TextView)findViewById(R.id.isrecommendTV);
+        shikanTV=(TextView)findViewById(R.id.shikanTV);
+        shikanTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(skFlag) {
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.play_icon);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    skFlag=false;
+                    totalList.clear();
+                    isTrailers=1;
+                }else{
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.play_icon_nosel);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    skFlag=true;
+                    totalList.clear();
+                    isTrailers=null;
+                }
+                downLoadData(1);
+            }
+        });
+
+        isrecmmendTV=(TextView)findViewById(R.id.recommendTV);
+        isrecmmendTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(tjFlag) {
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.tuijian_sel);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    tjFlag=false;
+                    totalList.clear();
+                    isRecommend=1;
+                }else{
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.tuijian);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    tjFlag=true;
+                    totalList.clear();
+                    isRecommend=null;
+                }
+                downLoadData(1);
+            }
+        });
         zuixinTV=(TextView) findViewById(R.id.zuixinTV);
         zuixinTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +319,7 @@ public class RecommendCourseActivity extends BaseActivity{
                     ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
+                    isNew=1;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
@@ -209,6 +328,7 @@ public class RecommendCourseActivity extends BaseActivity{
                     ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
                     zxFlag=true;
                     totalList.clear();
+                    isNew=null;
                 }
                 downLoadData(1);
             }
@@ -226,7 +346,7 @@ public class RecommendCourseActivity extends BaseActivity{
     }
 
     public void downLoadOnClick(View view) {
-        Intent intent = new Intent(RecommendCourseActivity.this, DownloadListActivity.class);
+        Intent intent = new Intent(OnlineCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
 
@@ -282,13 +402,13 @@ public class RecommendCourseActivity extends BaseActivity{
         if (upLoadAlertDialog != null) {
             upLoadAlertDialog.dismiss();
         }
-        upLoadAlertDialog = new AlertDialog.Builder(RecommendCourseActivity.this)
+        upLoadAlertDialog = new AlertDialog.Builder(OnlineCourseActivity.this)
                 .setTitle("提示")
                 .setMessage(R.string.upload_portrait_prompt)
                 .setNegativeButton(R.string.btn_go_to_upload, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(RecommendCourseActivity.this, EditMessageActivity.class));
+                        startActivity(new Intent(OnlineCourseActivity.this, EditMessageActivity.class));
                         return;
                     }
                 }).create();

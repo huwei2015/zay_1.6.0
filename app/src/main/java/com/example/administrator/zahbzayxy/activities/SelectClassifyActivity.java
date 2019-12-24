@@ -21,7 +21,9 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.ListClassifyAdapter;
 import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
+import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
+import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -39,7 +41,7 @@ import retrofit2.Response;
 public class SelectClassifyActivity  extends BaseActivity implements View.OnClickListener {
 
 	private LinearLayout layout;
-    private List<PMyLessonBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<CourseCatesBean.DataBean.Cates> totalList = new ArrayList<>();
     private static String token;
     ListClassifyAdapter adapter;
 
@@ -85,15 +87,15 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
     }
 
     private void downLoadData(int pager) {
-        PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getPMyLessonData(pager, pageSize, token).enqueue(new Callback<PMyLessonBean>() {
+        IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
+        aClass.getCourseCates(1, token).enqueue(new Callback<CourseCatesBean>() {
             @Override
-            public void onResponse(Call<PMyLessonBean> call, Response<PMyLessonBean> response) {
+            public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
                 int code1 = response.code();
-                PMyLessonBean body = response.body();
+                CourseCatesBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                if (body != null && body.getData().getCates().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
@@ -107,9 +109,7 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
                         } else if (code.equals("99999")) {
                             Toast.makeText(SelectClassifyActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
-                            dividePrice = body.getData().getDividePrice();
-                            adapter.setPrice(dividePrice);
-                            List<PMyLessonBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<CourseCatesBean.DataBean.Cates> courseList = body.getData().getCates();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -123,7 +123,7 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
             }
 
             @Override
-            public void onFailure(Call<PMyLessonBean> call, Throwable t) {
+            public void onFailure(Call<CourseCatesBean> call, Throwable t) {
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
             }

@@ -12,8 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_weight="1"
         android:background="@color/white"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="1dp"
         android:layout_marginLeft="8dp"
         android:layout_alignParentLeft="true"
         android:layout_height="wrap_content"
@@ -31,7 +29,7 @@
                     app:right_top_radius="8dp"
                     android:layout_height="match_parent" />
                 <ImageView
-                    android:id="@+id/sing_zxIV"
+                    android:id="@+id/sign_zxIV1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/sign_new"
@@ -90,8 +88,6 @@
         android:background="@color/white"
         android:layout_width="wrap_content"
         android:layout_weight="1"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="1dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
@@ -111,7 +107,7 @@
                     android:layout_height="match_parent" />
 
                 <ImageView
-                    android:id="@+id/sing_zxIV2"
+                    android:id="@+id/sign_zxIV2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/sign_new"

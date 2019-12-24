@@ -6,6 +6,12 @@
     android:background="@color/bg_light_Gray"
     tools:context="com.example.administrator.zahbzayxy.activities.RecommendCourseActivity">
 
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_course"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/top_layout"
@@ -33,13 +39,14 @@
         android:id="@+id/func_layout"
         android:layout_below="@+id/top_layout"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/isrecommendTV"
                 android:layout_width="wrap_content"
                 android:textColor="@color/shikan_text_color"
                 android:drawableLeft="@mipmap/play_icon"
@@ -49,6 +56,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/zuixinTV"
                 android:layout_width="wrap_content"
                 android:textColor="@color/zx_text_color"
                 android:drawableRight="@mipmap/jt_down"
@@ -56,7 +64,7 @@
                 android:paddingLeft="10dp"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
-
+            <!--
             <TextView
                 android:layout_width="wrap_content"
                 android:textColor="@color/zx_text_color"
@@ -65,6 +73,7 @@
                 android:paddingLeft="10dp"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
+                -->
         </LinearLayout>
 
         <LinearLayout
@@ -90,7 +99,7 @@
         android:layout_below="@+id/func_layout"
         android:divider="@color/bg_light_Gray"
         android:dividerHeight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:background="@color/bg_light_Gray"
         android:layout_height="match_parent"

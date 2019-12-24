@@ -38,6 +38,7 @@ import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MyLessonActivity;
 import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
+import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
@@ -227,10 +228,9 @@ public class NewHomeFragment extends Fragment {
         @JavascriptInterface
         public void recommend(String dataType,String pageType){
 
-
+            Log.i("=====",dataType+"-----------"+pageType);
             if ("course".equals(dataType)) {
                 if("list".equals(pageType)){
-                    Log.i("=============",dataType+"==="+pageType);
                     Intent intent=new Intent(context, RecommendCourseActivity.class);
                     Bundle bundle=new Bundle();
                     intent.putExtras(bundle);
@@ -238,6 +238,14 @@ public class NewHomeFragment extends Fragment {
                 }
                 if("detail".equals(pageType)) {
 
+                }
+            }
+            if("online_course".equals(dataType)){
+                if("list".equals(pageType)){
+                    Intent intent=new Intent(context, OnlineCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             }
         }
