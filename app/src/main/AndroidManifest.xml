@@ -308,6 +308,7 @@
         <activity android:name=".activities.RecommendCourseActivity"/>
         <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleBottom" />
         <activity android:name=".activities.OnlineCourseActivity"/>
+        <activity android:name=".activities.OfflineCourseActivity"/>
     </application>
 
 </manifest>

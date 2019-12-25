@@ -25,6 +25,7 @@
 
 
             <LinearLayout
+                android:id="@+id/all_classify_layout"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"

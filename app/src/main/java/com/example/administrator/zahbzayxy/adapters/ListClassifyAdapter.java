@@ -61,6 +61,7 @@ public class ListClassifyAdapter extends BaseAdapter {
     String price, token;
     Handler mHandler;
     private OnItemClickListener mOnItemClickListener;
+    private Integer cateId;
 
     public interface OnItemClickListener {
         //item点击事件
@@ -87,12 +88,13 @@ public class ListClassifyAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(context);
     }
 
-    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token, Handler handler) {
+    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token, Handler handler,Integer cateId) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
         mHandler = handler;
+        this.cateId=cateId;
     }
 
     @Override

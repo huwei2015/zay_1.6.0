@@ -23,11 +23,11 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
+import com.example.administrator.zahbzayxy.adapters.OfflineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
+import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
-import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
@@ -37,17 +37,14 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Query;
 
-public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
+public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
 
     private ImageView recommedn_back_iv;
     private PullToRefreshListView recLv;
@@ -55,11 +52,11 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private ProgressBarLayout mLoadingBar;
     private RecyclerView gundongRV;
 
-    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<OfflineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
     private List<CourseCatesBean.DataBean.Cates> catesList = new ArrayList<>();
 
     private static String token;
-    OnlineCourseAdapter adapter;
+    OfflineCourseAdapter adapter;
     Lv1CateAdapter cateAdapter;
     private int pageSize = 10;
     private int pager = 1;
@@ -69,22 +66,22 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private Integer isNew;
     private TextView zuixinTV;
     private TextView isrecmmendTV;
-    private TextView shikanTV;
+
 
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_online_course);
+        setContentView(R.layout.activity_offline_course);
         initView();
         getSP();
-        adapter = new OnlineCourseAdapter(totalList, OnlineCourseActivity.this, token, handler);
+        adapter = new OfflineCourseAdapter(totalList, OfflineCourseActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
         LinearLayoutManager ms= new LinearLayoutManager(this);
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList,OnlineCourseActivity.this,gundongRV);//初始化适配器
+        cateAdapter=new Lv1CateAdapter(catesList, OfflineCourseActivity.this,gundongRV);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
         downLoadCatesData();
     }
@@ -119,11 +116,11 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(1,10,token,cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OnlineCourseBean>() {
+        aClass.offlineCourseList(1,10,token,cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
             @Override
-            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
+            public void onResponse(Call<OfflineCourseBean> call, Response<OfflineCourseBean> response) {
                 int code1 = response.code();
-                OnlineCourseBean body = response.body();
+                OfflineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
@@ -131,27 +128,27 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
                             initViewVisible(false);
-                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             initViewVisible(false);
-                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
                             initViewVisible(false);
-                            Toast.makeText(OnlineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<OfflineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(OnlineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(OfflineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -164,7 +161,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
             }
 
             @Override
-            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+            public void onFailure(Call<OfflineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -183,7 +180,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
 
     private void downLoadCatesData() {
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
+        aClass.getOfflineCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
             @Override
             public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
                 int code1 = response.code();
@@ -194,15 +191,15 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
-                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
-                            Toast.makeText(OnlineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
-                            Toast.makeText(OnlineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OfflineCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             List<CourseCatesBean.DataBean.Cates> cates = body.getData().getCates();
                             catesList.addAll(cates);
@@ -210,7 +207,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
                         } else {
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(OnlineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(OfflineCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -254,34 +251,9 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OnlineCourseActivity.this, SelectClassifyActivity.class);
+                Intent intent = new Intent(OfflineCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateId", cateId);
                 startActivity(intent);
-            }
-        });
-
-        shikanTV=(TextView)findViewById(R.id.shikanTV);
-        shikanTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(skFlag) {
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    skFlag=false;
-                    totalList.clear();
-                    isTrailers=1;
-                }else{
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
-                    totalList.clear();
-                    isTrailers=null;
-                }
-                downLoadData(1);
             }
         });
 
@@ -348,7 +320,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     }
 
     public void downLoadOnClick(View view) {
-        Intent intent = new Intent(OnlineCourseActivity.this, DownloadListActivity.class);
+        Intent intent = new Intent(OfflineCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
 
@@ -403,13 +375,13 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
         if (upLoadAlertDialog != null) {
             upLoadAlertDialog.dismiss();
         }
-        upLoadAlertDialog = new AlertDialog.Builder(OnlineCourseActivity.this)
+        upLoadAlertDialog = new AlertDialog.Builder(OfflineCourseActivity.this)
                 .setTitle("提示")
                 .setMessage(R.string.upload_portrait_prompt)
                 .setNegativeButton(R.string.btn_go_to_upload, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(OnlineCourseActivity.this, EditMessageActivity.class));
+                        startActivity(new Intent(OfflineCourseActivity.this, EditMessageActivity.class));
                         return;
                     }
                 }).create();

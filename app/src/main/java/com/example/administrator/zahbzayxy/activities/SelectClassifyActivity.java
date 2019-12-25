@@ -41,6 +41,7 @@ import retrofit2.Response;
 public class SelectClassifyActivity  extends BaseActivity implements View.OnClickListener {
 
 	private LinearLayout layout;
+	private LinearLayout all_classify_layout;
     private List<CourseCatesBean.DataBean.Cates> totalList = new ArrayList<>();
     private static String token;
     ListClassifyAdapter adapter;
@@ -50,13 +51,18 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
     private String dividePrice;
 
     private ListView classifyLv;
+    private Integer cateId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_classify);
+        cateId = getIntent().getIntExtra("cateId",0);
         initView();
         getSP();
+        if(cateId>0){
+            all_classify_layout.setVisibility(View.GONE);
+        }
         adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token);
         classifyLv.setAdapter(adapter);
         initPullToRefreshLv();
@@ -73,6 +79,7 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
 
     private void initView() {
         classifyLv=(ListView) findViewById(R.id.classifyLv);
+        all_classify_layout=(LinearLayout) findViewById(R.id.all_classify_layout);
 
     }
 
@@ -88,7 +95,7 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
 
     private void downLoadData(int pager) {
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.getCourseCates(1, token).enqueue(new Callback<CourseCatesBean>() {
+        aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
             @Override
             public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
                 int code1 = response.code();
@@ -110,7 +117,15 @@ public class SelectClassifyActivity  extends BaseActivity implements View.OnClic
                             Toast.makeText(SelectClassifyActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             List<CourseCatesBean.DataBean.Cates> courseList = body.getData().getCates();
-                            totalList.addAll(courseList);
+                            if(cateId>0){
+                                for(CourseCatesBean.DataBean.Cates ct:courseList){
+                                    if(ct.getId()==cateId){
+                                        totalList.addAll(ct.getChilds());
+                                    }
+                                }
+                            }else {
+                                totalList.addAll(courseList);
+                            }
                             adapter.notifyDataSetChanged();
                         } else {
                             Object errMsg = body.getErrMsg();

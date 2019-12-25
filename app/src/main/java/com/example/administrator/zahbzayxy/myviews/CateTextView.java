@@ -38,7 +38,6 @@ public class CateTextView extends AppCompatTextView {
         typedArray.recycle();
         setDataId(dataId);
         setStr(str);
-        setTextSize(20);
         setGravity(Gravity.CENTER);
     }
 
