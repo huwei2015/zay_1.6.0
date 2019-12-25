@@ -29,6 +29,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -42,7 +43,7 @@ import retrofit2.Response;
 
 public class RecommendCourseActivity extends BaseActivity{
 
-    private ImageView recommedn_back_iv;
+    private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
     private TextView zuixinTV;
@@ -59,6 +60,7 @@ public class RecommendCourseActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommend_course);
+        Utils.setFullScreen(RecommendCourseActivity.this,getWindow());
         initView();
         getSP();
         adapter = new PMyRecommendAdapter(totalList, RecommendCourseActivity.this, token, handler);
@@ -171,7 +173,7 @@ public class RecommendCourseActivity extends BaseActivity{
     private boolean zxFlag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
-        recommedn_back_iv = (ImageView) findViewById(R.id.recommedn_back_iv);
+        recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
         sel_classifyTV = (TextView) findViewById(R.id.sel_classify);

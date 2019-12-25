@@ -42,6 +42,7 @@ import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
+import com.example.administrator.zahbzayxy.activities.SignInActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -267,6 +268,15 @@ public class NewHomeFragment extends Fragment {
                 }
             }
         }
+
+        @JavascriptInterface
+        public void signIn(String id){
+            Intent intent=new Intent(context, SignInActivity.class);
+            Bundle bundle=new Bundle();
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
+
 
     }
 

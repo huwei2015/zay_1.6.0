@@ -33,6 +33,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -46,7 +47,7 @@ import retrofit2.Response;
 
 public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
 
-    private ImageView recommedn_back_iv;
+    private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
     private ProgressBarLayout mLoadingBar;
@@ -72,6 +73,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queslib);
+        Utils.setFullScreen(QueslibActivity.this,getWindow());
         initView();
         getSP();
         adapter = new QueslibAdapter(totalList, QueslibActivity.this, token, handler);
@@ -238,7 +240,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
         gundongRV = (RecyclerView) findViewById(R.id.gundongRV);
-        recommedn_back_iv = (ImageView) findViewById(R.id.recommedn_back_iv);
+        recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
         sel_classifyTV = (TextView) findViewById(R.id.sel_classify);

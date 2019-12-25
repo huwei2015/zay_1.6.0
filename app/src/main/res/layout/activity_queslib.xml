@@ -15,26 +15,33 @@
 
 
     <RelativeLayout
-            android:id="@+id/top_layout"
-            android:layout_width="match_parent"
-            android:background="@mipmap/header_bg"
-            android:layout_height="50dp">
-            <ImageView
-                android:id="@+id/recommedn_back_iv"
-                android:src="@mipmap/return_big"
-                android:paddingLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_height="20dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="题库"
-                android:textSize="18sp"
-                android:layout_centerInParent="true"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:background="@mipmap/header_bg"
+        android:gravity="bottom"
+        android:paddingBottom="9dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/recommedn_back_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:drawableLeft="@mipmap/s_back"
+            android:text=" "
+            android:textSize="18sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="题库"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/gundongRV"

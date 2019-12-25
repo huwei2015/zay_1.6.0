@@ -306,10 +306,13 @@
 
         <!-- HYY 添加 推荐-->
         <activity android:name=".activities.RecommendCourseActivity"/>
-        <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleBottom" />
+        <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleRight" />
         <activity android:name=".activities.OnlineCourseActivity"/>
         <activity android:name=".activities.OfflineCourseActivity"/>
         <activity android:name=".activities.QueslibActivity"/>
+        <activity android:name=".activities.SignInActivity"/>
+        <activity android:name=".activities.SigninSuccessActivity"
+            android:theme="@style/MyDialogStyleBottom"/>
 
     </application>
 
