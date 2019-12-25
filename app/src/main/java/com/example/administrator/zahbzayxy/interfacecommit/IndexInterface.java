@@ -17,6 +17,7 @@ import com.example.administrator.zahbzayxy.beans.PMyTestGradBean;
 import com.example.administrator.zahbzayxy.beans.PMyTestOrderBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.beans.PersonTiKuListBean;
+import com.example.administrator.zahbzayxy.beans.QueslibBean;
 import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.YouHuiJuanBean;
@@ -72,6 +73,25 @@ public interface IndexInterface {
                                               @Query("dataFormat") Integer dataFormat
     );
 
+
+    //获取题库分类
+    static final String queslibClassifyPath="data/queslib/getQueslibClassify";
+    @GET(value = queslibClassifyPath)
+    Call<CourseCatesBean> getQueslibCates(@Query("token") String token);
+
+
+    //题库列表
+    static final String queslibListPath="data/queslib/listQueslib";
+    @GET(value = queslibListPath)
+    Call<QueslibBean> queslibList(@Query("pageNo") Integer pageNo,
+                                  @Query("pageSize") Integer pageSize,
+                                  @Query("token") String token,
+                                  @Query("cateId") Integer cateId,
+                                  @Query("isRecommend") Integer isRecommend,
+                                  @Query("isFree") Integer isFree,
+                                  @Query("isNew") Integer isNew,
+                                  @Query("dataFormat") Integer dataFormat
+    );
 
     //课程推荐列表
     static final String recommendCourseListPath="data/course/listByPage";

@@ -40,6 +40,7 @@ import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
+import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
@@ -252,6 +253,14 @@ public class NewHomeFragment extends Fragment {
             if("offline_course".equals(dataType)){
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, OfflineCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            }
+            if("queslib".equals(dataType)){
+                if("list".equals(pageType)){
+                    Intent intent=new Intent(context, QueslibActivity.class);
                     Bundle bundle=new Bundle();
                     intent.putExtras(bundle);
                     context.startActivity(intent);
