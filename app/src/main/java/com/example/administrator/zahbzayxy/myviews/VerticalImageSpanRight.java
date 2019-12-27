@@ -23,7 +23,7 @@ public class VerticalImageSpanRight extends ImageSpan {
 
         Drawable b = getDrawable();
         Paint.FontMetricsInt fm = paint.getFontMetricsInt();
-        int transY = (y + fm.descent + y + fm.ascent) / 2 - (b.getBounds().bottom );//计算y方向的位移
+        int transY = (y + fm.descent + y + fm.ascent) / 2 - (b.getBounds().bottom )-10;//计算y方向的位移
         canvas.save();
         canvas.translate(x, transY);//绘制图片位移一段距离
         b.draw(canvas);

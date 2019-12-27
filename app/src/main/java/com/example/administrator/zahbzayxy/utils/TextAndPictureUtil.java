@@ -35,7 +35,7 @@ public class TextAndPictureUtil {
     }
 
     public static SpannableString getTextRightImg(Context mcontext, String text, int drawId){
-        SpannableString spannableString = new SpannableString(text+" ");
+        SpannableString spannableString = new SpannableString(text.trim()+" ");
         Drawable drawable = mcontext.getResources().getDrawable(drawId);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         spannableString.setSpan(new VerticalImageSpanRight(drawable), text.length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

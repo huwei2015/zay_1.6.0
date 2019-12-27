@@ -93,12 +93,4 @@ public interface IndexInterface {
                                   @Query("dataFormat") Integer dataFormat
     );
 
-    //课程推荐列表
-    static final String recommendCourseListPath="data/course/listByPage";
-    @GET(value = recommendCourseListPath)
-    Call<RecommendCourseBean> recommendCourseList(@Query("pageNo") Integer pageNo,
-                                                  @Query("pageSize") Integer pageSize,
-                                                  @Query("isTrailers") Integer isTrailers,
-                                                  @Query("isNew") Integer isNew,
-                                                  @Query("token") String token);
 }

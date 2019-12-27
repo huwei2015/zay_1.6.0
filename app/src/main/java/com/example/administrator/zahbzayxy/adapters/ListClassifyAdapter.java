@@ -1,55 +1,27 @@
 package com.example.administrator.zahbzayxy.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
-import com.example.administrator.zahbzayxy.beans.PersonInfo;
-import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.CateTextView;
 import com.example.administrator.zahbzayxy.myviews.CustomLayout;
-import com.example.administrator.zahbzayxy.myviews.ImageRadiusView;
-import com.example.administrator.zahbzayxy.utils.Constant;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
-import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
-import com.example.administrator.zahbzayxy.utils.StringUtil;
+import com.example.administrator.zahbzayxy.utils.DisplayUtil;
 import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
-import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
-import com.example.administrator.zahbzayxy.vo.UserInfo;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
+import java.util.Map;
 
 /**
  * Created by ${ZWJ} on 2017/4/5 0005.
@@ -57,11 +29,21 @@ import static android.content.Context.MODE_PRIVATE;
 public class ListClassifyAdapter extends BaseAdapter {
     private Context context;
     private List<CourseCatesBean.DataBean.Cates> list;
-    private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
     private OnItemClickListener mOnItemClickListener;
-    private Integer cateId;
+    private Integer cateId=0;
+    private Map<Integer,CateTextView> cmap;
+    private OnClickListener mOnClickListener;
+    private Map<Integer,List<CourseCatesBean.DataBean.Cates>> catesLv3Map;
+    private Map<String,CustomLayout> lv3Map;
+    private Map<Integer,CateTextView> lv3cmap;
+    private CateTextView clickLv2;
+
+
+    public interface OnClickListener {
+        public void setSelectedNum(int num);
+    }
 
     public interface OnItemClickListener {
         //item点击事件
@@ -85,16 +67,16 @@ public class ListClassifyAdapter extends BaseAdapter {
         this.list = list;
         this.context = context;
         this.token = token;
-        inflater = LayoutInflater.from(context);
+        mOnClickListener = (OnClickListener) context;
     }
 
     public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token, Handler handler,Integer cateId) {
         this.list = list;
         this.context = context;
         this.token = token;
-        inflater = LayoutInflater.from(context);
         mHandler = handler;
         this.cateId=cateId;
+        mOnClickListener = (OnClickListener) context;
     }
 
     @Override
@@ -115,50 +97,332 @@ public class ListClassifyAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         myViewHold myViewHold;
-        if (convertView == null) {
-            myViewHold = new myViewHold();
-            convertView = inflater.inflate(R.layout.item_classify_layout, parent, false);
-            myViewHold.txtRL = convertView.findViewById(R.id.txtRL);
-            myViewHold.mainClassify = convertView.findViewById(R.id.mainClassify);
-            convertView.setTag(myViewHold);
-        } else {
-            myViewHold = (ListClassifyAdapter.myViewHold) convertView.getTag();
-        }
+        CourseCatesBean.DataBean.Cates cate = (CourseCatesBean.DataBean.Cates) getItem(position);
+//        Log.i("-----", cate.getCateName()+"------"+position+"----"+(convertView == null));
 
-        CourseCatesBean.DataBean.Cates cate = list.get(position);
-        myViewHold.mainClassify.setText(cate.getCateName());
-        if(cate.getChilds().size()>0){
-            for(CourseCatesBean.DataBean.Cates c:cate.getChilds()){
-                CateTextView tv=new CateTextView(context);
-                tv.setText(c.getCateName());
-                tv.setDataId(c.getId());
-                tv.setStr("0");
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                tv.setBackgroundResource(R.drawable.corner_text_view_normal);
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Log.i("dataId",((CateTextView)v).getDataId()+"");
-                        String str=((CateTextView)v).getStr();
-                        if("0".equals(str)){
-                            v.setBackgroundResource(R.drawable.corner_text_view);
-                            ((CateTextView)v).setText(TextAndPictureUtil.getTextRightImg(context,((CateTextView)v).getText().toString(),R.mipmap.circle_right));
-                            ((CateTextView)v).setStr("1");
-                        }else{
-                            v.setBackgroundResource(R.drawable.corner_text_view_normal);
-                            ((CateTextView)v).setText(((CateTextView)v).getText().toString().trim());
-                            ((CateTextView)v).setStr("0");
-                        }
-                    }
-                });
-                myViewHold.txtRL.addView(tv);
+//        if (convertView == null) {
+//            myViewHold = new myViewHold();
+//            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            convertView = inflater.inflate(R.layout.item_classify_layout,null);
+//            myViewHold.txtRL = convertView.findViewById(R.id.txtRL);
+//            myViewHold.mainClassify = convertView.findViewById(R.id.mainClassify);
+//            myViewHold.mainClassify.setText(cate.getCateName());
+//            cmap=new HashMap<Integer,CateTextView>();
+//            if(cate.getChilds().size()>0){
+//                for(CourseCatesBean.DataBean.Cates c:cate.getChilds()){
+//                    CateTextView tv = new CateTextView(context);
+//                    tv.setId(c.getId());
+//                    tv.setText(c.getCateName());
+//                    tv.setDataId(c.getId());
+//                    tv.setStr("0");
+//                    tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+//                    tv.setBackgroundResource(R.drawable.corner_text_view_normal);
+//                    cmap.put(c.getId(),tv);
+//                    myViewHold.txtRL.addView(tv);
+//                    tv.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            String str = ((CateTextView) v).getStr();
+//                            cateId=((CateTextView) v).getDataId();
+//                            if ("0".equals(str)) {
+//                                int dataId = ((CateTextView) v).getDataId();
+//                                for (Integer index : cmap.keySet()) {
+//                                    CateTextView temp=cmap.get(index);
+//                                    temp.setBackgroundResource(R.drawable.corner_text_view_normal);
+//                                    temp.setText(temp.getText().toString().trim());
+//                                    temp.setStr("0");
+//                                }
+//                                ((CateTextView) v).setBackgroundResource(R.drawable.corner_text_view);
+//                                ((CateTextView) v).setText(TextAndPictureUtil.getTextRightImg(context, ((CateTextView) v).getText().toString().trim(), R.mipmap.circle_right));
+//                                ((CateTextView) v).setStr("1");
+//                            } else {
+//                                v.setBackgroundResource(R.drawable.corner_text_view_normal);
+//                                ((CateTextView) v).setText(((CateTextView) v).getText().toString().trim());
+//                                ((CateTextView) v).setStr("0");
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//            convertView.setTag(myViewHold);
+//        } else {
+//            myViewHold = (ListClassifyAdapter.myViewHold) convertView.getTag();
+            if(cmap==null){
+                cmap=new HashMap<Integer,CateTextView>();
             }
-        }
+            if(catesLv3Map==null){
+                catesLv3Map=new HashMap<>();
+            }
+            if(lv3Map==null){
+               lv3Map=new HashMap<>();
+            }
+            if(lv3cmap==null){
+                lv3cmap=new HashMap<>();
+            }
+            if(convertView==null){
+                myViewHold = new myViewHold();
+            }else{
+                myViewHold= (ListClassifyAdapter.myViewHold) convertView.getTag();
+            }
+            if(!cmap.containsKey(cate.getId())) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.item_classify_layout, parent,false);
+                myViewHold.txtRL = convertView.findViewById(R.id.txtRL);
+                myViewHold.mainClassify = convertView.findViewById(R.id.mainClassify);
+                myViewHold.mainClassify.setText(cate.getCateName());
+
+                if(position==0){
+                    myViewHold.mainClassify.setVisibility(View.GONE);
+                }
+                if (cate.getChilds().size() > 0) {
+                    LinearLayout alllayout=new LinearLayout(context);
+                    LinearLayout.LayoutParams pall = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    alllayout.setLayoutParams(pall);
+                    alllayout.setOrientation(LinearLayout.VERTICAL);
+
+                    LinearLayout layout=new LinearLayout(context);
+                    LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    layout.setLayoutParams(p);
+                    layout.setOrientation(LinearLayout.HORIZONTAL);
+
+                    int len=0;
+                    int i=0;
+                    int limit=1100;
+                    String ids=",";
+                    for (CourseCatesBean.DataBean.Cates c : cate.getChilds()) {
+                        boolean flag=true;
+                        CateTextView tv = new CateTextView(context);
+                        tv.setText(c.getCateName());
+                        if(position==0){
+                            tv.setVisibility(View.GONE);
+                        }else{
+                            tv.setId(c.getId());
+                            tv.setText(c.getCateName());
+                            tv.setDataId(c.getId());
+                            tv.setStr("0");
+                            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                            tv.setBackgroundResource(R.drawable.corner_text_view_normal);
+
+                            int specTV = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                            tv.measure(specTV,specTV);
+                            int widthTV = tv.getMeasuredWidth();
+                            len+=widthTV;
+                            cmap.put(c.getId(), tv);
+                            ids+=c.getId()+",";
+                            if(c.getChilds().size()>0){
+                                catesLv3Map.put(c.getId(),c.getChilds());
+                            }
+                            layout.addView(tv);
+                            onclickItem(tv);
+
+                            if(i<cate.getChilds().size()-1){
+                                CateTextView temp_tv = new CateTextView(context);
+                                temp_tv.setId(c.getId());
+                                temp_tv.setText(cate.getChilds().get(i+1).getCateName());
+                                temp_tv.setDataId(c.getId());
+                                temp_tv.setStr("0");
+                                temp_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                temp_tv.setBackgroundResource(R.drawable.corner_text_view_normal);
+                                //获取textView宽度
+                                int specTemp = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                                temp_tv.measure(specTemp,specTemp);
+                                int tempWidth = temp_tv.getMeasuredWidth();
+                                if((tempWidth+len)>=limit){
+                                    alllayout.addView(layout);
+                                    len=0;
+                                    //==================================多加一行
+                                    alllayout = addCustomLayout(alllayout,ids);
+                                    ids=",";
+                                    //===================================
+                                    layout=new LinearLayout(context);
+                                    LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    layout.setLayoutParams(p1);
+                                    layout.setOrientation(LinearLayout.HORIZONTAL);
+                                    flag=false;
+                                }
+                            }
+                        }
+
+                        if(len>limit && flag){
+                            alllayout.addView(layout);
+                            len=0;
+                            //==================================多加一行
+                            alllayout = addCustomLayout(alllayout,ids);
+                            ids=",";
+                            //===================================
+                            layout=new LinearLayout(context);
+                            LinearLayout.LayoutParams p1 = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            layout.setLayoutParams(p1);
+                            layout.setOrientation(LinearLayout.HORIZONTAL);
+                        }else{
+                            if(i==cate.getChilds().size()-1){
+                                alllayout.addView(layout);
+                                //==================================多加一行
+                                alllayout = addCustomLayout(alllayout,ids);
+                                ids=",";
+                                //===================================
+                            }
+                        }
+                        i++;
+                    }
+                    myViewHold.txtRL.addView(alllayout);
+                }
+                convertView.setTag(myViewHold);
+            }else{
+                myViewHold = (ListClassifyAdapter.myViewHold) convertView.getTag();
+            }
+
+            if(cmap.containsKey(cateId)){
+                cmap.get(cateId).setBackgroundResource(R.drawable.corner_text_view);
+                cmap.get(cateId).setText(TextAndPictureUtil.getTextRightImg(context,  cmap.get(cateId).getText().toString().trim(), R.mipmap.circle_right));
+                cmap.get(cateId).setStr("1");
+            }
+//        }
         return convertView;
     }
 
+
+    public LinearLayout addCustomLayout(LinearLayout alllayout,String ids){
+        CustomLayout clayout=new CustomLayout(context);
+        LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        clayout.setLayoutParams(cp);
+        clayout.setGrivate(3);
+        clayout.setVisibility(View.GONE);
+        lv3Map.put(ids,clayout);
+        alllayout.addView(clayout);
+        return alllayout;
+    }
+
+    /**
+     * 二级分类点击事件
+     * @param tv
+     */
+    public void onclickItem(CateTextView tv){
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str = ((CateTextView) v).getStr();
+                cateId=((CateTextView) v).getDataId();
+                if ("0".equals(str)) {
+                    int dataId = ((CateTextView) v).getDataId();
+                    for (Integer index : cmap.keySet()) {
+                        CateTextView temp=cmap.get(index);
+                        temp.setBackgroundResource(R.drawable.corner_text_view_normal);
+                        temp.setText(temp.getText().toString().trim());
+                        temp.setStr("0");
+                    }
+                    ((CateTextView) v).setBackgroundResource(R.drawable.corner_text_view);
+                    ((CateTextView) v).setText(TextAndPictureUtil.getTextRightImg(context, ((CateTextView) v).getText().toString().trim(), R.mipmap.circle_right));
+                    ((CateTextView) v).setStr("1");
+                    clickLv2=((CateTextView) v);
+                    for(String ids:lv3Map.keySet()){
+                       if(ids.indexOf(","+dataId+",")!=-1){
+                            CustomLayout clayout=lv3Map.get(ids);
+                            clayout.removeAllViews();
+                            List<CourseCatesBean.DataBean.Cates> cs=catesLv3Map.get(dataId);
+                            if(cs!=null && cs.size()>0){
+                                lv3cmap.clear();
+                                int i=0;
+                                for(CourseCatesBean.DataBean.Cates cte:cs){
+                                    CateTextView temp_tv = new CateTextView(context);
+                                    temp_tv.setText(cte.getCateName());
+                                    temp_tv.setDataId(cte.getId());
+                                    temp_tv.setStr("0");
+                                    temp_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                    temp_tv.setTextColor(context.getResources().getColor(R.color.shikan_text_color));
+                                    temp_tv.setBackgroundResource(R.drawable.tv_padding);
+
+                                    ImageView img=new ImageView(context);
+                                    img.setImageDrawable(context.getResources().getDrawable(R.mipmap.fg_line));
+                                    img.setPadding(0,DisplayUtil.dipToPix(context,14),0,0);
+                                    lv3cmap.put(cte.getId(),temp_tv);
+                                    onclickItemLv3(temp_tv);
+                                    clayout.addView(temp_tv);
+                                    if(i<(cs.size()-1)){
+                                        clayout.addView(img);
+                                    }
+                                    i++;
+                                }
+                                clayout.setVisibility(View.VISIBLE);
+                            }
+
+                       }else{
+                           CustomLayout clayout=lv3Map.get(ids);
+                           clayout.setVisibility(View.GONE);
+                       }
+                    }
+
+                    //mOnClickListener.setSelectedNum(dataId);
+                } else {
+                    v.setBackgroundResource(R.drawable.corner_text_view_normal);
+                    ((CateTextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    ((CateTextView) v).setText(((CateTextView) v).getText().toString().trim());
+                    ((CateTextView) v).setStr("0");
+                }
+            }
+        });
+    }
+
+    /**
+     * 三级分类点击事件
+     * @param tv
+     */
+    public void onclickItemLv3(CateTextView tv){
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str = ((CateTextView) v).getStr();
+                cateId=((CateTextView) v).getDataId();
+                if ("0".equals(str)) {
+                    int dataId = ((CateTextView) v).getDataId();
+                    for (Integer index : lv3cmap.keySet()) {
+                        CateTextView temp=lv3cmap.get(index);
+                        temp.setText(temp.getText().toString().trim());
+                        temp.setBackgroundResource(R.drawable.tv_padding);
+                        temp.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                        temp.setStr("0");
+                    }
+                    ((CateTextView) v).setText(((CateTextView) v).getText().toString()+"  ");
+                    Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.copy_right);
+                    ((CateTextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    ((CateTextView) v).setBackgroundResource(R.drawable.tv_padding_sel);
+                    ((CateTextView) v).setStr("1");
+
+                    //去掉点击 二级分类上边的对号
+                    clickLv2.setBackgroundResource(R.drawable.corner_text_view_nopic);
+                    clickLv2.setText(clickLv2.getText().toString().trim());
+                    clickLv2.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    clickLv2.setStr("1");
+
+                    mOnClickListener.setSelectedNum(dataId);
+                } else {
+                    ((CateTextView) v).setText(((CateTextView) v).getText().toString().trim());
+                    ((CateTextView) v).setBackgroundResource(R.drawable.tv_padding);
+                    ((CateTextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    ((CateTextView) v).setStr("0");
+                }
+            }
+        });
+    }
+
+
     static class myViewHold {
-        CustomLayout txtRL;
+        LinearLayout txtRL;
         TextView mainClassify;
     }
 

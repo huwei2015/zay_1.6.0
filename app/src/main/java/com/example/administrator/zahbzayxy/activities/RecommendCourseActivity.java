@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
+import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
 import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
@@ -50,13 +52,15 @@ public class RecommendCourseActivity extends BaseActivity{
     private TextView isrecommendTV;
     private ProgressBarLayout mLoadingBar;
 
-    private List<RecommendCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
     private static String token;
     PMyRecommendAdapter adapter;
     private int pageSize = 10;
     private int pager = 1;
     private String dividePrice;
     private RelativeLayout rl_empty;
+    private static final int RECOMMEND_SIGN=1;
+    private int cateId=0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommend_course);
@@ -98,11 +102,11 @@ public class RecommendCourseActivity extends BaseActivity{
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.recommendCourseList(pager, pageSize,null,null,token).enqueue(new Callback<RecommendCourseBean>() {
+        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,null,1,1).enqueue(new Callback<OnlineCourseBean>() {
             @Override
-            public void onResponse(Call<RecommendCourseBean> call, Response<RecommendCourseBean> response) {
+            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 int code1 = response.code();
-                RecommendCourseBean body = response.body();
+                OnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
@@ -124,8 +128,7 @@ public class RecommendCourseActivity extends BaseActivity{
                             Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            hideLoadingBar();
-                            List<RecommendCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -141,10 +144,11 @@ public class RecommendCourseActivity extends BaseActivity{
                         initViewVisible(false);
                     }
                 }
+                hideLoadingBar();
             }
 
             @Override
-            public void onFailure(Call<RecommendCourseBean> call, Throwable t) {
+            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -186,7 +190,8 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RecommendCourseActivity.this,SelectClassifyActivity.class));
+                Intent intent=new Intent(RecommendCourseActivity.this,SelectClassifyActivity.class);
+                startActivityForResult(intent,RECOMMEND_SIGN);
             }
         });
 
@@ -227,6 +232,8 @@ public class RecommendCourseActivity extends BaseActivity{
         mLoadingBar.hide();
     }
 
+
+
     public void downLoadOnClick(View view) {
         Intent intent = new Intent(RecommendCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
@@ -265,6 +272,23 @@ public class RecommendCourseActivity extends BaseActivity{
         final String token = msg.getData().getString("token");
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("===============",requestCode+"====="+resultCode);
+        switch(requestCode){
+            case RECOMMEND_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    int s_cateId = data.getIntExtra("cateId",0);
+                    cateId=s_cateId;
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
     }
 
 

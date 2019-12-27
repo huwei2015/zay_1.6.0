@@ -63,6 +63,7 @@
 
             <ListView
                 android:id="@+id/classifyLv"
+                android:clickable="false"
                 android:layout_below="@+id/func_layout"
                 android:divider="@color/white"
                 android:dividerHeight="10dp"

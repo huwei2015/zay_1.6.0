@@ -16,15 +16,29 @@
             android:textSize="14sp"
             android:text="全部"/>
 
-        <com.example.administrator.zahbzayxy.myviews.CustomLayout
-            android:id="@+id/txtRL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            app:grivate="left"
-            app:horizontal_Space="10dp"
-            app:isFull="false"
-            app:vertical_Space="10dp">
-        </com.example.administrator.zahbzayxy.myviews.CustomLayout>
+
+
+
+        <LinearLayout
+                android:id="@+id/txtRL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+        >
+        </LinearLayout>
+        <!--
+     <com.example.administrator.zahbzayxy.myviews.CustomLayout
+         android:id="@+id/txtRL"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="8dp"
+         android:background="@color/white"
+         app:grivate="left"
+
+         app:isFull="false"
+         >
+     </com.example.administrator.zahbzayxy.myviews.CustomLayout>
+   app:vertical_Space="10dp" app:horizontal_Space="10dp"-->
 </LinearLayout>
