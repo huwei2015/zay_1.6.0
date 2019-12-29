@@ -163,6 +163,7 @@ public class PMyRecommendAdapter extends BaseAdapter {
             } else {
                 myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
             }
+            myViewHold.right_layout.setVisibility(View.VISIBLE);
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }

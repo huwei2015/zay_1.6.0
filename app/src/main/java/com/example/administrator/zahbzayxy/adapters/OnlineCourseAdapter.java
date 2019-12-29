@@ -156,8 +156,8 @@ public class OnlineCourseAdapter extends BaseAdapter {
             myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
         }
 
-        if(!StringUtils.isEmpty(courseListBean.getCreateTime())){
-            String[] arrs=courseListBean.getCreateTime().split("-");
+        if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
+            String[] arrs=courseListBean.getUpdateTime().split("-");
             String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
             SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -194,8 +194,8 @@ public class OnlineCourseAdapter extends BaseAdapter {
                 myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
             }
 
-            if(!StringUtils.isEmpty(courseListBean.getCreateTime1())){
-                String[] arrs=courseListBean.getCreateTime1().split("-");
+            if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){
+                String[] arrs=courseListBean.getUpdateTime1().split("-");
                 String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
                 SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
                 try {
@@ -213,16 +213,10 @@ public class OnlineCourseAdapter extends BaseAdapter {
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
+            myViewHold.right_layout.setVisibility(View.VISIBLE);
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }
-        //用户课程id传到下个界面
-//        final int userCourseId = courseListBean.getUserCourseId();
-//        final int coruseId = courseListBean.getCoruseId();
-//        String endDate = courseListBean.getEndDate();
-//        Log.e("endDate", endDate + "");
-//        String currentTime = DateUtil.getCurrentTimeAll();
-//        int i = endDate.compareTo(currentTime);
         return convertView;
     }
 

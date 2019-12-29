@@ -210,6 +210,7 @@ public class QueslibAdapter extends BaseAdapter {
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
+            myViewHold.right_layout.setVisibility(View.VISIBLE);
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }

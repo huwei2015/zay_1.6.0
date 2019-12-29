@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -64,14 +65,15 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     Lv1CateAdapter cateAdapter;
     private int pageSize = 10;
     private int pager = 1;
-    private Integer cateId=null;
+    private Integer cateId=0;
+    private Integer s_cateId=0;
     private Integer isRecommend;
     private Integer isTrailers;
     private Integer isNew;
     private TextView zuixinTV;
     private TextView isrecmmendTV;
     private TextView shikanTV;
-
+    private static final int ONLINECOURSE_SIGN=3;
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +123,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(1,10,token,cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OnlineCourseBean>() {
+        aClass.onlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OnlineCourseBean>() {
             @Override
             public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 int code1 = response.code();
@@ -258,7 +260,8 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
             public void onClick(View v) {
                 Intent intent = new Intent(OnlineCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateId", cateId);
-                startActivity(intent);
+                intent.putExtra("cateType", "online_cate");
+                startActivityForResult(intent,ONLINECOURSE_SIGN);
             }
         });
 
@@ -340,6 +343,21 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case ONLINECOURSE_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    s_cateId = data.getIntExtra("cateId",0);
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
+    }
+
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
         mLoadingBar.show();
@@ -384,8 +402,6 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
         final int userCourseId = msg.getData().getInt("userCourseId", 0);
         final int courseId = msg.getData().getInt("coruseId", 0);
         final String token = msg.getData().getString("token");
-
-
     }
 
 
@@ -432,6 +448,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     @Override
     public void setSelectedNum(int id) {
          cateId=id;
+         s_cateId=id;
          totalList.clear();
          downLoadData(1);
     }

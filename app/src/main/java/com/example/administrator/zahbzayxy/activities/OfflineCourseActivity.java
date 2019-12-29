@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,14 +62,15 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
     Lv1CateAdapter cateAdapter;
     private int pageSize = 10;
     private int pager = 1;
-    private Integer cateId=null;
+    private Integer cateId=0;
+    private Integer s_cateId=0;
     private Integer isRecommend;
     private Integer isTrailers;
     private Integer isNew;
     private TextView zuixinTV;
     private TextView isrecmmendTV;
 
-
+    private static final int OFFLINECOURSE_SIGN=4;
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +120,7 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.offlineCourseList(1,10,token,cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
+        aClass.offlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
             @Override
             public void onResponse(Call<OfflineCourseBean> call, Response<OfflineCourseBean> response) {
                 int code1 = response.code();
@@ -255,7 +257,8 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
             public void onClick(View v) {
                 Intent intent = new Intent(OfflineCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateId", cateId);
-                startActivity(intent);
+                intent.putExtra("cateType", "offline_cate");
+                startActivityForResult(intent,OFFLINECOURSE_SIGN);
             }
         });
 
@@ -359,7 +362,20 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
 
 
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case OFFLINECOURSE_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    s_cateId = data.getIntExtra("cateId",0);
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -404,6 +420,7 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
     @Override
     public void setSelectedNum(int id) {
          cateId=id;
+         s_cateId=id;
          totalList.clear();
          downLoadData(1);
     }

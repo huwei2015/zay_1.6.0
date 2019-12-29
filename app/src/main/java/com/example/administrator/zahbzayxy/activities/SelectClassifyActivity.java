@@ -31,6 +31,7 @@ import com.example.administrator.zahbzayxy.myviews.CateTextView;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -50,26 +51,29 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
     private List<CourseCatesBean.DataBean.Cates> totalList = new ArrayList<>();
     private static String token;
     ListClassifyAdapter adapter;
-
-    private int pageSize = 10;
-    private int pager = 1;
-    private String dividePrice;
+    private TextView allClassify;
 
     private ListView classifyLv;
     private Integer cateId;
+    private String cateType;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_classify);
+        Utils.setFullScreen(SelectClassifyActivity.this,getWindow());
         cateId = getIntent().getIntExtra("cateId",0);
+        cateType = getIntent().getStringExtra("cateType");
         initView();
         getSP();
+        Integer level=3;
         if(cateId>0){
             all_classify_layout.setVisibility(View.GONE);
+            level=2;
         }
-        adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token);
+
+        adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token,level);
         classifyLv.setAdapter(adapter);
         downLoadData();
 		layout = (LinearLayout) findViewById(R.id.pop_layout);
@@ -85,6 +89,16 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
     private void initView() {
         classifyLv=(ListView) findViewById(R.id.classifyLv);
         all_classify_layout=(LinearLayout) findViewById(R.id.all_classify_layout);
+        allClassify=(TextView) findViewById(R.id.allClassify);
+        allClassify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("cateId",0);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
 
     }
 
@@ -97,66 +111,113 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
 
     private void downLoadData() {
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
-            @Override
-            public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
-                int code1 = response.code();
-                CourseCatesBean body = response.body();
-                String s = new Gson().toJson(body);
-                Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCates().size() > 0) {
-                    String code = body.getCode();
-                    if (!TextUtils.isEmpty(code)) {
-                        if (code.equals("00003")) {
-                            Toast.makeText(SelectClassifyActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                            SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
-                            SharedPreferences.Editor edit = sp.edit();
-                            edit.putBoolean("isLogin", false);
-                            edit.commit();
-                        } else if (dbIsLogin() == false) {
-                            Toast.makeText(SelectClassifyActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                        } else if (code.equals("99999")) {
-                            Toast.makeText(SelectClassifyActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
-                        } else if (code.equals("00000")) {
-                            List<CourseCatesBean.DataBean.Cates> courseList = body.getData().getCates();
-                            CourseCatesBean.DataBean.Cates cates=new CourseCatesBean.DataBean.Cates();
-                            cates.setId(-1);
-                            cates.setCateName("全部");
-                            List<CourseCatesBean.DataBean.Cates> childs=new ArrayList<CourseCatesBean.DataBean.Cates>();
-                            CourseCatesBean.DataBean.Cates child=new  CourseCatesBean.DataBean.Cates();
-                            child.setId(-2);
-                            child.setCateName("全部课程");
-                            child.setChilds(new ArrayList<CourseCatesBean.DataBean.Cates>());
-                            childs.add(child);
-                            cates.setChilds(childs);
-                            totalList.add(cates);
-                            if(cateId>0){
-                                for(CourseCatesBean.DataBean.Cates ct:courseList){
-                                    if(ct.getId()==cateId){
-                                        totalList.addAll(ct.getChilds());
-                                    }
-                                }
-                            }else {
-                                totalList.addAll(courseList);
-                            }
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Object errMsg = body.getErrMsg();
-                            if (errMsg != null) {
-                                Toast.makeText(SelectClassifyActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+        if("book_cate".equals(cateType)){
+            aClass.getBookCates(token).enqueue(new Callback<CourseCatesBean>() {
+                @Override
+                public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                    getCates(response);
+                }
+                @Override
+                public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                    String message = t.getMessage();
+                }
+            });
+        }else if("online_cate".equals(cateType)){
+            aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
+                @Override
+                public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                    getCates(response);
+                }
+                @Override
+                public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                    String message = t.getMessage();
+                }
+            });
+        }else if("offline_cate".equals(cateType)){
+            aClass.getOfflineCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
+                @Override
+                public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                    getCates(response);
+                }
+                @Override
+                public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                    String message = t.getMessage();
+                }
+            });
+        }else if("queslib_cate".equals(cateType)){
+            aClass.getQueslibCates(token).enqueue(new Callback<CourseCatesBean>() {
+                @Override
+                public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                    getCates(response);
+                }
+                @Override
+                public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                    String message = t.getMessage();
+                }
+            });
+        }else if("live_cate".equals(cateType)){
+            aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
+                @Override
+                public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
+                    getCates(response);
+                }
+                @Override
+                public void onFailure(Call<CourseCatesBean> call, Throwable t) {
+                    String message = t.getMessage();
+                }
+            });
+        }
+    }
+
+
+    public void getCates(Response<CourseCatesBean> response){
+        int code1 = response.code();
+        CourseCatesBean body = response.body();
+        String s = new Gson().toJson(body);
+        if (body != null && body.getData().getCates().size() > 0) {
+            String code = body.getCode();
+            if (!TextUtils.isEmpty(code)) {
+                if (code.equals("00003")) {
+                    Toast.makeText(SelectClassifyActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                    SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sp.edit();
+                    edit.putBoolean("isLogin", false);
+                    edit.commit();
+                } else if (dbIsLogin() == false) {
+                    Toast.makeText(SelectClassifyActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                } else if (code.equals("99999")) {
+                    Toast.makeText(SelectClassifyActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                } else if (code.equals("00000")) {
+                    List<CourseCatesBean.DataBean.Cates> courseList = body.getData().getCates();
+                    CourseCatesBean.DataBean.Cates cates=new CourseCatesBean.DataBean.Cates();
+                    cates.setId(-1);
+                    cates.setCateName("全部");
+                    List<CourseCatesBean.DataBean.Cates> childs=new ArrayList<CourseCatesBean.DataBean.Cates>();
+                    CourseCatesBean.DataBean.Cates child=new  CourseCatesBean.DataBean.Cates();
+                    child.setId(-2);
+                    child.setCateName("全部课程");
+                    child.setChilds(new ArrayList<CourseCatesBean.DataBean.Cates>());
+                    childs.add(child);
+                    cates.setChilds(childs);
+                    totalList.add(cates);
+                    if(cateId>0){
+                        for(CourseCatesBean.DataBean.Cates ct:courseList){
+                            if(ct.getId()==cateId){
+                                totalList.addAll(ct.getChilds());
                             }
                         }
+                    }else {
+                        totalList.addAll(courseList);
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Object errMsg = body.getErrMsg();
+                    if (errMsg != null) {
+                        Toast.makeText(SelectClassifyActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<CourseCatesBean> call, Throwable t) {
-                String message = t.getMessage();
-                // Log.e("myLessonerror",message);
-            }
-        });
-
+        }
     }
 
 

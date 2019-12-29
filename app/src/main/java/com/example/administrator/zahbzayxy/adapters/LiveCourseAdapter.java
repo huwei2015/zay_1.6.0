@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
-import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
@@ -55,11 +54,11 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by ${ZWJ} on 2017/4/5 0005.
  */
-public class OfflineCourseAdapter extends BaseAdapter {
+public class LiveCourseAdapter extends BaseAdapter {
     private Context context;
     int userCourse_Id;
     int coruse_Id;
-    private List<OfflineCourseBean.DataBean.CourseListBean> list;
+    private List<OnlineCourseBean.DataBean.CourseListBean> list;
     private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
@@ -75,7 +74,7 @@ public class OfflineCourseAdapter extends BaseAdapter {
     }
 
 
-    public OfflineCourseAdapter(Context context) {
+    public LiveCourseAdapter(Context context) {
         this.context = context;
     }
 
@@ -83,14 +82,14 @@ public class OfflineCourseAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public OfflineCourseAdapter(List<OfflineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
+    public LiveCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
     }
 
-    public OfflineCourseAdapter(List<OfflineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
+    public LiveCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
         this.list = list;
         this.context = context;
         this.token = token;
@@ -118,7 +117,7 @@ public class OfflineCourseAdapter extends BaseAdapter {
         myViewHold myViewHold;
         if (convertView == null) {
             myViewHold = new myViewHold();
-            convertView = inflater.inflate(R.layout.item_offline_layout, parent, false);
+            convertView = inflater.inflate(R.layout.item_live_layout, parent, false);
             myViewHold.recPic1 = convertView.findViewById(R.id.recPic1);
             myViewHold.recPic2 = convertView.findViewById(R.id.recPic2);
             myViewHold.rec_courseName1 = convertView.findViewById(R.id.rec_courseName1);
@@ -133,10 +132,10 @@ public class OfflineCourseAdapter extends BaseAdapter {
             myViewHold.sign_zxIV2=convertView.findViewById(R.id.sign_zxIV2);
             convertView.setTag(myViewHold);
         } else {
-            myViewHold = (OfflineCourseAdapter.myViewHold) convertView.getTag();
+            myViewHold = (LiveCourseAdapter.myViewHold) convertView.getTag();
         }
 
-        OfflineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
+        OnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
         if(courseListBean.getIsRecommend()==1){
             myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
         }else{
@@ -146,6 +145,11 @@ public class OfflineCourseAdapter extends BaseAdapter {
         myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getSalePrice()));
         if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
             Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
+        }
+        if(courseListBean.getIsTrailers()==1){
+            myViewHold.rec_sign_shikan1.setVisibility(View.VISIBLE);
+        }else{
+            myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
         }
 
         if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
@@ -179,6 +183,11 @@ public class OfflineCourseAdapter extends BaseAdapter {
             myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getSalePrice1()));
             if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
                 Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
+            }
+            if (courseListBean.getIsTrailers1() == 1) {
+                myViewHold.rec_sign_shikan2.setVisibility(View.VISIBLE);
+            } else {
+                myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
             }
 
             if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){

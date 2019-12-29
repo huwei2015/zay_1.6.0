@@ -70,7 +70,7 @@ public class RecommendCourseBean {
             private String putawayStatusName;
             private int platformId;
             private int totalHours;
-            private String createTime;
+            private String updateTime;
             private String imagePath;
             private int is_trailers;
             private String salePrice;
@@ -82,7 +82,7 @@ public class RecommendCourseBean {
             private String putawayStatusName1;
             private int platformId1;
             private int totalHours1;
-            private String createTime1;
+            private String updateTime1;
             private String imagePath1;
             private int is_trailers1;
             private String salePrice1;
@@ -128,9 +128,7 @@ public class RecommendCourseBean {
                 return courseName;
             }
 
-            public String getCreateTime() {
-                return createTime;
-            }
+
 
             public String getImagePath() {
                 return imagePath;
@@ -144,9 +142,7 @@ public class RecommendCourseBean {
                 this.courseName = courseName;
             }
 
-            public void setCreateTime(String createTime) {
-                this.createTime = createTime;
-            }
+
 
             public void setImagePath(String imagePath) {
                 this.imagePath = imagePath;
@@ -224,12 +220,20 @@ public class RecommendCourseBean {
                 this.totalHours1 = totalHours1;
             }
 
-            public String getCreateTime1() {
-                return createTime1;
+            public String getUpdateTime() {
+                return updateTime;
             }
 
-            public void setCreateTime1(String createTime1) {
-                this.createTime1 = createTime1;
+            public void setUpdateTime(String updateTime) {
+                this.updateTime = updateTime;
+            }
+
+            public String getUpdateTime1() {
+                return updateTime1;
+            }
+
+            public void setUpdateTime1(String updateTime1) {
+                this.updateTime1 = updateTime1;
             }
 
             public String getImagePath1() {

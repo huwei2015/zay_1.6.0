@@ -190,7 +190,8 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(RecommendCourseActivity.this,SelectClassifyActivity.class);
+                Intent intent = new Intent(RecommendCourseActivity.this, SelectClassifyActivity.class);
+                intent.putExtra("cateType", "online_cate");
                 startActivityForResult(intent,RECOMMEND_SIGN);
             }
         });

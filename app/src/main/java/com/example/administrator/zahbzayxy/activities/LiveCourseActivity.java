@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,10 +24,8 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.QueslibAdapter;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
-import com.example.administrator.zahbzayxy.beans.QueslibBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
@@ -46,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
+public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
 
     private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
@@ -54,11 +51,11 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     private ProgressBarLayout mLoadingBar;
     private RecyclerView gundongRV;
 
-    private List<QueslibBean.DataBean.QueslibListBean> totalList = new ArrayList<>();
+    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
     private List<CourseCatesBean.DataBean.Cates> catesList = new ArrayList<>();
 
     private static String token;
-    QueslibAdapter adapter;
+    OnlineCourseAdapter adapter;
     Lv1CateAdapter cateAdapter;
     private int pageSize = 10;
     private int pager = 1;
@@ -70,23 +67,23 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     private TextView zuixinTV;
     private TextView isrecmmendTV;
     private TextView shikanTV;
-    private static final int QUESLIB_SIGN=6;
+    private static final int LIVECOURSE_SIGN=5;
 
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_queslib);
-        Utils.setFullScreen(QueslibActivity.this,getWindow());
+        setContentView(R.layout.activity_live_course);
+        Utils.setFullScreen(LiveCourseActivity.this,getWindow());
         initView();
         getSP();
-        adapter = new QueslibAdapter(totalList, QueslibActivity.this, token, handler);
+        adapter = new OnlineCourseAdapter(totalList, LiveCourseActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
         LinearLayoutManager ms= new LinearLayoutManager(this);
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList, QueslibActivity.this,gundongRV);//初始化适配器
+        cateAdapter=new Lv1CateAdapter(catesList, LiveCourseActivity.this,gundongRV);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
         downLoadCatesData();
     }
@@ -106,7 +103,6 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 pager++;
                 downLoadData(pager);
-
             }
         });
         downLoadData(pager);
@@ -121,39 +117,39 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.queslibList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<QueslibBean>() {
+        aClass.onlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OnlineCourseBean>() {
             @Override
-            public void onResponse(Call<QueslibBean> call, Response<QueslibBean> response) {
+            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 int code1 = response.code();
-                QueslibBean body = response.body();
+                OnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getQueslibList().size() > 0) {
+                if (body != null && body.getData().getCourseList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
                             initViewVisible(false);
-                            Toast.makeText(QueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             initViewVisible(false);
-                            Toast.makeText(QueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
                             initViewVisible(false);
-                            Toast.makeText(QueslibActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            List<QueslibBean.DataBean.QueslibListBean> courseList = body.getData().getQueslibList();
+                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(QueslibActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LiveCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -166,7 +162,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
             }
 
             @Override
-            public void onFailure(Call<QueslibBean> call, Throwable t) {
+            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -185,7 +181,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
 
     private void downLoadCatesData() {
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.getQueslibCates(token).enqueue(new Callback<CourseCatesBean>() {
+        aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
             @Override
             public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
                 int code1 = response.code();
@@ -196,15 +192,15 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
-                            Toast.makeText(QueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
-                            Toast.makeText(QueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
-                            Toast.makeText(QueslibActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LiveCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             List<CourseCatesBean.DataBean.Cates> cates = body.getData().getCates();
                             catesList.addAll(cates);
@@ -212,7 +208,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
                         } else {
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(QueslibActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LiveCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -256,10 +252,10 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(QueslibActivity.this, SelectClassifyActivity.class);
+                Intent intent = new Intent(LiveCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateId", cateId);
-                intent.putExtra("cateType", "queslib_cate");
-                startActivityForResult(intent,QUESLIB_SIGN);
+                intent.putExtra("cateType", "live_cate");
+                startActivityForResult(intent,LIVECOURSE_SIGN);
             }
         });
 
@@ -341,21 +337,6 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
 
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode){
-            case QUESLIB_SIGN :
-                if (resultCode == Activity.RESULT_OK) {
-                    s_cateId = data.getIntExtra("cateId",0);
-                    totalList.clear();
-                    downLoadData(1);
-                }
-                break;
-            default:break;
-        }
-    }
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
         mLoadingBar.show();
@@ -366,7 +347,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     }
 
     public void downLoadOnClick(View view) {
-        Intent intent = new Intent(QueslibActivity.this, DownloadListActivity.class);
+        Intent intent = new Intent(LiveCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
 
@@ -404,6 +385,20 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case LIVECOURSE_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    s_cateId = data.getIntExtra("cateId",0);
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -421,13 +416,13 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
         if (upLoadAlertDialog != null) {
             upLoadAlertDialog.dismiss();
         }
-        upLoadAlertDialog = new AlertDialog.Builder(QueslibActivity.this)
+        upLoadAlertDialog = new AlertDialog.Builder(LiveCourseActivity.this)
                 .setTitle("提示")
                 .setMessage(R.string.upload_portrait_prompt)
                 .setNegativeButton(R.string.btn_go_to_upload, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(QueslibActivity.this, EditMessageActivity.class));
+                        startActivity(new Intent(LiveCourseActivity.this, EditMessageActivity.class));
                         return;
                     }
                 }).create();

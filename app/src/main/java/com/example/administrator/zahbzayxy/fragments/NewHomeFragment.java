@@ -31,9 +31,11 @@ import android.webkit.WebViewClient;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.Runnables.UserInfoRunnable;
+import com.example.administrator.zahbzayxy.activities.BooksActivity;
 import com.example.administrator.zahbzayxy.activities.BuyActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
+import com.example.administrator.zahbzayxy.activities.LiveCourseActivity;
 import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MyLessonActivity;
 import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
@@ -229,10 +231,10 @@ public class NewHomeFragment extends Fragment {
         }
 
         @JavascriptInterface
-        public void recommend(String dataType,String pageType){
+        public void goToMyPage(String dataType,String pageType){
 
             Log.i("=====",dataType+"-----------"+pageType);
-            if ("course".equals(dataType)) {
+            if ("recommend_course".equals(dataType)) {
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, RecommendCourseActivity.class);
                     Bundle bundle=new Bundle();
@@ -259,9 +261,25 @@ public class NewHomeFragment extends Fragment {
                     context.startActivity(intent);
                 }
             }
+            if("live_course".equals(dataType)){
+                if("list".equals(pageType)){
+                    Intent intent=new Intent(context, LiveCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            }
             if("queslib".equals(dataType)){
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, QueslibActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            }
+            if("book".equals(dataType)){
+                if("list".equals(pageType)){
+                    Intent intent=new Intent(context, BooksActivity.class);
                     Bundle bundle=new Bundle();
                     intent.putExtras(bundle);
                     context.startActivity(intent);

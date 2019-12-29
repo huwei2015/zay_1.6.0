@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.interfacecommit;
 
+import com.example.administrator.zahbzayxy.beans.BookBean;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.ExamBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiBean;
@@ -93,4 +94,22 @@ public interface IndexInterface {
                                   @Query("dataFormat") Integer dataFormat
     );
 
+
+
+    //获取书籍分类
+    static final String bookClassifyPath="data/book/getBookClassify";
+    @GET(value = bookClassifyPath)
+    Call<CourseCatesBean> getBookCates(@Query("token") String token);
+
+
+    //书籍列表
+    static final String booListPath="data/book/listBook";
+    @GET(value = booListPath)
+    Call<BookBean> bookList(@Query("pageNo") Integer pageNo,
+                            @Query("pageSize") Integer pageSize,
+                            @Query("token") String token,
+                            @Query("cateId") Integer cateId,
+                            @Query("isNew") Integer isNew,
+                            @Query("dataFormat") Integer dataFormat
+    );
 }
