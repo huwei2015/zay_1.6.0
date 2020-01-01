@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -29,6 +30,10 @@
     <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar" -->
     <!-- 允许相机对焦 -->
     <uses-permission android:name="android.hardware.camera.autofocus" />
+
+    <!-- HYY 添加 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".DemoApplication"
@@ -309,13 +314,23 @@
         <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleRight" />
         <activity android:name=".activities.OnlineCourseActivity"/>
         <activity android:name=".activities.OfflineCourseActivity"/>
+        <activity android:name=".activities.OfflineDetailActivity"/>
+
         <activity android:name=".activities.LiveCourseActivity"/>
+        <activity android:name=".activities.LivePlayActivity"/>
+
         <activity android:name=".activities.QueslibActivity"/>
         <activity android:name=".activities.BooksActivity"/>
         <activity android:name=".activities.SignInActivity"/>
         <activity android:name=".activities.SigninSuccessActivity"
             android:theme="@style/MyDialogStyleBottom"/>
 
+        <activity
+            android:name=".activities.ScanQRCodeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
     </application>
 
 </manifest>

@@ -10,8 +10,8 @@ android {
         applicationId "com.example.administrator.zahbzayxy"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 158
-        versionName "1.5.8"
+        versionCode 160
+        versionName "1.6.0"
         multiDexEnabled true
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
         flavorDimensions "versionCode"
@@ -160,6 +160,7 @@ dependencies {
     //上拉加载下拉刷新
     implementation 'com.androidkun:pulltorefreshrecyclerview:1.1.0'
     implementation 'com.alibaba:fastjson:1.2.47'
+    implementation files('libs\\zxing.jar')
     /*兼容webview*/
 }
 //apt {

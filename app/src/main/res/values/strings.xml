@@ -43,4 +43,7 @@
     <string name="content_confirm_upload">确认上传该照片吗?如图片五官不清晰请点击取消重新获取图片，否则将导致人脸识别验证失败</string>
     <string name="prompt_Portrait_not_exist">人像不存在，请进入个人中心重新上传人脸照片</string>
     <!--*******************FHS End***************-->
+
+    <!-- hyy 添加-->
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
 </resources>

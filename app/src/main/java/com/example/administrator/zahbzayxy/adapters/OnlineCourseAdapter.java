@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
@@ -177,6 +178,19 @@ public class OnlineCourseAdapter extends BaseAdapter {
             myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
         }
 
+        final int courseId=courseListBean.getCourseId();
+        myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, LessonThiredActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("courseId",courseId);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
+
+
         //=============================================================================第二个值
         if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
             if(courseListBean.getIsRecommend1()==1) {
@@ -213,6 +227,17 @@ public class OnlineCourseAdapter extends BaseAdapter {
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
+            final int courseId1=courseListBean.getCourseId1();
+            myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, LessonThiredActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",courseId1);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
             myViewHold.right_layout.setVisibility(View.VISIBLE);
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);

@@ -22,7 +22,7 @@
         android:paddingBottom="9dp"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/recommedn_back_iv"
+            android:id="@+id/back_index_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -42,18 +42,9 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/gundongRV"
-            android:layout_below="@+id/top_layout"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        </android.support.v7.widget.RecyclerView>
-
     <RelativeLayout
             android:id="@+id/func_layout"
-            android:layout_below="@+id/gundongRV"
+            android:layout_below="@+id/top_layout"
             android:layout_width="match_parent"
             android:background="@color/bg_light_Gray"
             android:paddingTop="12dp"
@@ -64,49 +55,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/recommendTV"
+                    android:id="@+id/lveingTV"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/shikan_text_color"
-                    android:drawableLeft="@mipmap/tuijian_sel"
-                    android:text=" 推荐"
+                    android:textColor="@color/zx_text_color"
+                    android:drawableRight="@mipmap/live"
+                    android:text="直播中 "
                     android:paddingLeft="20dp"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/shikanTV"
+                    android:id="@+id/lveingyyTV"
                     android:layout_width="wrap_content"
                     android:textColor="@color/zx_text_color"
-                    android:drawableLeft="@mipmap/play_icon_nosel"
-                    android:text=" 试看"
-                    android:paddingLeft="10dp"
+                    android:drawableRight="@mipmap/live_yy"
+                    android:text="预约中 "
+                    android:paddingLeft="15dp"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/zuixinTV"
+                    android:id="@+id/liveingendTV"
                     android:layout_width="wrap_content"
                     android:textColor="@color/zx_text_color"
-                    android:drawableRight="@mipmap/jt_down"
-                    android:text="最新 "
-                    android:paddingLeft="10dp"
-                    android:textSize="14sp"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:id="@+id/sel_classify"
-                    android:textColor="@color/zx_text_color"
-                    android:drawableRight="@mipmap/sx_data"
-                    android:text="选择分类 "
-                    android:paddingRight="20dp"
+                    android:drawableRight="@mipmap/live_end"
+                    android:text="已结束 "
+                    android:paddingLeft="15dp"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
             </LinearLayout>

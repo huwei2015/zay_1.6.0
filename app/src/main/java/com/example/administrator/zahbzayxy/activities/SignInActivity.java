@@ -52,9 +52,13 @@ public class SignInActivity extends BaseActivity{
     private RelativeLayout signin_ctrlRL;
     private TextView back_indexTV;
 
+    private String resultString;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        resultString = getIntent().getStringExtra("result");
+        Log.i("resultString",""+resultString);
         Utils.setFullScreen(SignInActivity.this,getWindow());
         initView();
         getSP();

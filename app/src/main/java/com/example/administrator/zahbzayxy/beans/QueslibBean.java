@@ -72,6 +72,7 @@ public class QueslibBean {
             private int sPrice;
             private String updateTime;
             private int isRecommend;
+            private int isNew;
 
             private int id1;
             private String quesLibName1;
@@ -81,6 +82,23 @@ public class QueslibBean {
             private int sPrice1;
             private String updateTime1;
             private int isRecommend1;
+            private int isNew1;
+
+            public int getIsNew() {
+                return isNew;
+            }
+
+            public void setIsNew(int isNew) {
+                this.isNew = isNew;
+            }
+
+            public int getIsNew1() {
+                return isNew1;
+            }
+
+            public void setIsNew1(int isNew1) {
+                this.isNew1 = isNew1;
+            }
 
             public int getId() {
                 return id;

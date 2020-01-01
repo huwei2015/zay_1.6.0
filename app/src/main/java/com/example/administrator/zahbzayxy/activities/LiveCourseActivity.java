@@ -21,14 +21,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.adapters.LiveCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
+import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
@@ -43,30 +48,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
+public class LiveCourseActivity extends BaseActivity{
 
-    private TextView recommedn_back_iv;
+    private TextView back_index_iv;
     private PullToRefreshListView recLv;
-    private TextView sel_classifyTV;
     private ProgressBarLayout mLoadingBar;
-    private RecyclerView gundongRV;
 
-    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
-    private List<CourseCatesBean.DataBean.Cates> catesList = new ArrayList<>();
+    private List<LiveCourseBean.DataBean> totalList = new ArrayList<>();
 
     private static String token;
-    OnlineCourseAdapter adapter;
-    Lv1CateAdapter cateAdapter;
+    LiveCourseAdapter adapter;
     private int pageSize = 10;
     private int pager = 1;
-    private Integer cateId=0;
-    private Integer s_cateId=0;
-    private Integer isRecommend;
-    private Integer isTrailers;
-    private Integer isNew;
-    private TextView zuixinTV;
-    private TextView isrecmmendTV;
-    private TextView shikanTV;
+    private String status;
+
+    private TextView lveingTV;
+    private TextView lveingyyTV;
+    private TextView lveingendTV;
     private static final int LIVECOURSE_SIGN=5;
 
     private RelativeLayout rl_empty;
@@ -76,16 +74,11 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
         Utils.setFullScreen(LiveCourseActivity.this,getWindow());
         initView();
         getSP();
-        adapter = new OnlineCourseAdapter(totalList, LiveCourseActivity.this, token, handler);
+        adapter = new LiveCourseAdapter(totalList, LiveCourseActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
-        LinearLayoutManager ms= new LinearLayoutManager(this);
-        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
-        gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList, LiveCourseActivity.this,gundongRV);//初始化适配器
-        gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
-        downLoadCatesData();
+
     }
 
     private void initPullToRefreshLv() {
@@ -117,14 +110,14 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OnlineCourseBean>() {
+        aClass.liveCourseList(pager,pageSize,token,status,1).enqueue(new Callback<LiveCourseBean>() {
             @Override
-            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
+            public void onResponse(Call<LiveCourseBean> call, Response<LiveCourseBean> response) {
                 int code1 = response.code();
-                OnlineCourseBean body = response.body();
+                LiveCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                if (body != null && body.getData() !=null && body.getData().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
@@ -142,7 +135,7 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
                             Toast.makeText(LiveCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<LiveCourseBean.DataBean> courseList = body.getData();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -154,6 +147,10 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
                         }
                     }
                 }else{
+                    Object errMsg = body.getErrMsg();
+                    if (errMsg != null) {
+                        Toast.makeText(LiveCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                    }
                     if(totalList==null || totalList.size()==0) {
                         initViewVisible(false);
                     }
@@ -162,7 +159,7 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
             }
 
             @Override
-            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+            public void onFailure(Call<LiveCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -179,50 +176,6 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
         }
     }
 
-    private void downLoadCatesData() {
-        IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.getCourseCates(token).enqueue(new Callback<CourseCatesBean>() {
-            @Override
-            public void onResponse(Call<CourseCatesBean> call, Response<CourseCatesBean> response) {
-                int code1 = response.code();
-                CourseCatesBean body = response.body();
-                String s = new Gson().toJson(body);
-                Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCates().size() > 0) {
-                    String code = body.getCode();
-                    if (!TextUtils.isEmpty(code)) {
-                        if (code.equals("00003")) {
-                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                            SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
-                            SharedPreferences.Editor edit = sp.edit();
-                            edit.putBoolean("isLogin", false);
-                            edit.commit();
-                        } else if (dbIsLogin() == false) {
-                            Toast.makeText(LiveCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                        } else if (code.equals("99999")) {
-                            Toast.makeText(LiveCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
-                        } else if (code.equals("00000")) {
-                            List<CourseCatesBean.DataBean.Cates> cates = body.getData().getCates();
-                            catesList.addAll(cates);
-                            cateAdapter.notifyDataSetChanged();
-                        } else {
-                            Object errMsg = body.getErrMsg();
-                            if (errMsg != null) {
-                                Toast.makeText(LiveCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CourseCatesBean> call, Throwable t) {
-                String message = t.getMessage();
-            }
-        });
-
-    }
-
 
     public Boolean dbIsLogin() {
         SharedPreferences sharedPreferences = getSharedPreferences("tokenDb", MODE_PRIVATE);
@@ -233,109 +186,120 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
             return false;
         }
     }
-    private boolean zxFlag=true;
-    private boolean tjFlag=true;
-    private boolean skFlag=true;
+    private boolean v1Flag=true;
+    private boolean v2Flag=true;
+    private boolean v3Flag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
-        gundongRV = (RecyclerView) findViewById(R.id.gundongRV);
-        recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
-        recLv = (PullToRefreshListView) findViewById(R.id.recLv);
-        rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
-        sel_classifyTV = (TextView) findViewById(R.id.sel_classify);
-        recommedn_back_iv.setOnClickListener(new View.OnClickListener() {
+        back_index_iv = (TextView) findViewById(R.id.back_index_iv);
+        back_index_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        sel_classifyTV.setOnClickListener(new View.OnClickListener(){
+        recLv = (PullToRefreshListView) findViewById(R.id.recLv);
+        rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        lveingTV= (TextView)findViewById(R.id.lveingTV);
+        lveingTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LiveCourseActivity.this, SelectClassifyActivity.class);
-                intent.putExtra("cateId", cateId);
-                intent.putExtra("cateType", "live_cate");
-                startActivityForResult(intent,LIVECOURSE_SIGN);
+                 if(v1Flag){
+                      Drawable drawableLeft = getResources().getDrawable(R.mipmap.liveing);
+                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                     lveingTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+                     v1Flag=false;
+                     totalList.clear();
+                     status="1";
+
+
+                     Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live_yy);
+                     lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                     lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                     v2Flag=true;
+                     Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_end);
+                     lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                     lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                     v3Flag=true;
+
+                 }else{
+                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live);
+                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                     lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+
+                     v1Flag=true;
+                     totalList.clear();
+                     status=null;
+                 }
+                 downLoadData(1);
             }
         });
-
-        shikanTV=(TextView)findViewById(R.id.shikanTV);
-        shikanTV.setOnClickListener(new View.OnClickListener() {
+        lveingyyTV= (TextView)findViewById(R.id.lveingyyTV);
+        lveingyyTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(skFlag) {
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    skFlag=false;
+                if(v2Flag){
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy_sel);
+                    lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingyyTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    v2Flag=false;
                     totalList.clear();
-                    isTrailers=1;
+                    status="2";
+
+                    Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
+                    lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                    lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v1Flag=true;
+                    Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_end);
+                    lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v3Flag=true;
                 }else{
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy);
+                    lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v2Flag=true;
                     totalList.clear();
-                    isTrailers=null;
+                    status=null;
                 }
                 downLoadData(1);
             }
         });
-
-        isrecmmendTV=(TextView)findViewById(R.id.recommendTV);
-        isrecmmendTV.setOnClickListener(new View.OnClickListener() {
+        lveingendTV= (TextView)findViewById(R.id.liveingendTV);
+        lveingendTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tjFlag) {
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.tuijian_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    tjFlag=false;
+                if(v3Flag){
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end_sel);
+                    lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    v3Flag=false;
                     totalList.clear();
-                    isRecommend=1;
+                    status="[3,4,5]";
+
+                    Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
+                    lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                    lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v1Flag=true;
+                    Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_yy);
+                    lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v2Flag=true;
                 }else{
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.tuijian);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    tjFlag=true;
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end);
+                    lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v3Flag=true;
                     totalList.clear();
-                    isRecommend=null;
+                    status=null;
                 }
                 downLoadData(1);
             }
         });
-        zuixinTV=(TextView) findViewById(R.id.zuixinTV);
-        zuixinTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(zxFlag) {
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.jt_down_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    zxFlag=false;
-                    totalList.clear();
-                    isNew=1;
-                }else{
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.jt_down);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    zxFlag=true;
-                    totalList.clear();
-                    isNew=null;
-                }
-                downLoadData(1);
-            }
-        });
-
     }
+
+
+
 
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
@@ -346,10 +310,14 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
         mLoadingBar.hide();
     }
 
+
+
     public void downLoadOnClick(View view) {
         Intent intent = new Intent(LiveCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
+
+
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -385,20 +353,7 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode){
-            case LIVECOURSE_SIGN :
-                if (resultCode == Activity.RESULT_OK) {
-                    s_cateId = data.getIntExtra("cateId",0);
-                    totalList.clear();
-                    downLoadData(1);
-                }
-                break;
-            default:break;
-        }
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -440,11 +395,4 @@ public class LiveCourseActivity extends BaseActivity implements Lv1CateAdapter.O
         }
     }
 
-    @Override
-    public void setSelectedNum(int id) {
-         cateId=id;
-         s_cateId=id;
-         totalList.clear();
-         downLoadData(1);
-    }
 }

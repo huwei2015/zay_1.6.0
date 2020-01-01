@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,7 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.activities.BooksActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.LivePlayActivity;
+import com.example.administrator.zahbzayxy.activities.SelectClassifyActivity;
+import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
@@ -58,7 +63,7 @@ public class LiveCourseAdapter extends BaseAdapter {
     private Context context;
     int userCourse_Id;
     int coruse_Id;
-    private List<OnlineCourseBean.DataBean.CourseListBean> list;
+    private List<LiveCourseBean.DataBean> list;
     private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
@@ -82,14 +87,14 @@ public class LiveCourseAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public LiveCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
+    public LiveCourseAdapter(List<LiveCourseBean.DataBean> list, Context context, String token) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
     }
 
-    public LiveCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
+    public LiveCourseAdapter(List<LiveCourseBean.DataBean> list, Context context, String token, Handler handler) {
         this.list = list;
         this.context = context;
         this.token = token;
@@ -120,12 +125,12 @@ public class LiveCourseAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_live_layout, parent, false);
             myViewHold.recPic1 = convertView.findViewById(R.id.recPic1);
             myViewHold.recPic2 = convertView.findViewById(R.id.recPic2);
-            myViewHold.rec_courseName1 = convertView.findViewById(R.id.rec_courseName1);
-            myViewHold.rec_courseName2 = convertView.findViewById(R.id.rec_courseName2);
-            myViewHold.rec_price1 = convertView.findViewById(R.id.rec_price1);
-            myViewHold.rec_price2 = convertView.findViewById(R.id.rec_price2);
-            myViewHold.rec_sign_shikan1 = convertView.findViewById(R.id.rec_sign_shikan1);
-            myViewHold.rec_sign_shikan2 = convertView.findViewById(R.id.rec_sign_shikan2);
+            myViewHold.subject1 = convertView.findViewById(R.id.subject1);
+            myViewHold.subject2 = convertView.findViewById(R.id.subject2);
+            myViewHold.start_time1 = convertView.findViewById(R.id.start_time1);
+            myViewHold.start_time2 = convertView.findViewById(R.id.start_time2);
+            myViewHold.livesStatus1 = convertView.findViewById(R.id.livesStatus1);
+            myViewHold.livesStatus2 = convertView.findViewById(R.id.livesStatus2);
             myViewHold.left_layout=convertView.findViewById(R.id.left_layout);
             myViewHold.right_layout=convertView.findViewById(R.id.right_layout);
             myViewHold.sign_zxIV1= convertView.findViewById(R.id.sign_zxIV1);
@@ -135,91 +140,100 @@ public class LiveCourseAdapter extends BaseAdapter {
             myViewHold = (LiveCourseAdapter.myViewHold) convertView.getTag();
         }
 
-        OnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
-        if(courseListBean.getIsRecommend()==1){
-            myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
+        LiveCourseBean.DataBean courseListBean = list.get(position);
+        myViewHold.subject1.setText(courseListBean.getSubject());
+
+        myViewHold.start_time1.setText(String.valueOf(courseListBean.getStart_time_ymd()));
+        if (!TextUtils.isEmpty(courseListBean.getThumb())) {
+            Picasso.with(context).load(courseListBean.getThumb()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }else{
-            myViewHold.rec_courseName1.setText(courseListBean.getCourseName());
+            Picasso.with(context).load(R.mipmap.loading_png).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
+        }
+        if(courseListBean.getStatus()==1){//直播中
+            Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.live_sign_playing);
+            myViewHold.livesStatus1.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            myViewHold.livesStatus1.setTextColor(context.getResources().getColor(R.color.live_playing));
+            myViewHold.livesStatus1.setText("直播中 ");
+        }else if(courseListBean.getStatus()==2){//预约中
+            Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.live_sign_yy);
+            myViewHold.livesStatus1.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            myViewHold.livesStatus1.setTextColor(context.getResources().getColor(R.color.live_yy));
+            myViewHold.livesStatus1.setText("预约 ");
+        }else if(courseListBean.getStatus()==5){//回放
+            Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.back_paly);
+            myViewHold.livesStatus1.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            myViewHold.livesStatus1.setTextColor(context.getResources().getColor(R.color.live_back_play));
+            myViewHold.livesStatus1.setText("回放 ");
+        }else{//结束
+            myViewHold.livesStatus1.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            myViewHold.livesStatus1.setTextColor(context.getResources().getColor(R.color.signin_tit_color));
+            myViewHold.livesStatus1.setText("已结束");
         }
 
-        myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getSalePrice()));
-        if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
-            Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
-        }
-        if(courseListBean.getIsTrailers()==1){
-            myViewHold.rec_sign_shikan1.setVisibility(View.VISIBLE);
-        }else{
-            myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
-        }
-
-        if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
-            String[] arrs=courseListBean.getUpdateTime().split("-");
-            String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-            SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-
-            try {
-                Date date = srtFormat.parse(newDate);
-                long d1=date.getTime();
-                long d2=System.currentTimeMillis();
-                if(d1>d2){
-                    myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
-                }else{
-                    myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if(courseListBean.getIsNew()==1){
+            myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
         }else{
             myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
         }
+        final int webinar_id=courseListBean.getWebinar_id();
+        myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, LivePlayActivity.class);
+                intent.putExtra("webinar_id", webinar_id);
+                context.startActivity(intent);
+            }
+        });
 
         //=============================================================================第二个值
-        if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
-            if(courseListBean.getIsRecommend1()==1) {
-                myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context, courseListBean.getCourseName1(), R.mipmap.recommend_course));
+        if (!TextUtils.isEmpty(courseListBean.getSubject1())) {
+            myViewHold.subject2.setText(courseListBean.getSubject1());
+            myViewHold.start_time2.setText(String.valueOf(courseListBean.getStart_time_ymd1()));
+            if (!TextUtils.isEmpty(courseListBean.getThumb1())) {
+                Picasso.with(context).load(courseListBean.getThumb1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }else{
-                myViewHold.rec_courseName2.setText(courseListBean.getCourseName1());
+                Picasso.with(context).load(R.mipmap.loading_png).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
-            myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getSalePrice1()));
-            if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
-                Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
-            }
-            if (courseListBean.getIsTrailers1() == 1) {
-                myViewHold.rec_sign_shikan2.setVisibility(View.VISIBLE);
-            } else {
-                myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
+            if(courseListBean.getStatus1()==1){//直播中
+                Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.live_sign_playing);
+                myViewHold.livesStatus2.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                myViewHold.livesStatus2.setTextColor(context.getResources().getColor(R.color.live_playing));
+                myViewHold.livesStatus2.setText("直播中 ");
+            }else if(courseListBean.getStatus1()==2){//预约中
+                Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.live_sign_yy);
+                myViewHold.livesStatus2.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                myViewHold.livesStatus2.setTextColor(context.getResources().getColor(R.color.live_yy));
+                myViewHold.livesStatus2.setText("预约 ");
+            }else if(courseListBean.getStatus1()==5){//回放
+                Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.back_paly);
+                myViewHold.livesStatus2.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                myViewHold.livesStatus2.setTextColor(context.getResources().getColor(R.color.live_back_play));
+                myViewHold.livesStatus2.setText("回放 ");
+            }else{//结束
+                myViewHold.livesStatus2.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                myViewHold.livesStatus2.setTextColor(context.getResources().getColor(R.color.signin_tit_color));
+                myViewHold.livesStatus2.setText("已结束");
             }
 
-            if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){
-                String[] arrs=courseListBean.getUpdateTime1().split("-");
-                String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-                SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-                try {
-                    Date date = srtFormat.parse(newDate);
-                    long d1=date.getTime();
-                    long d2=System.currentTimeMillis();
-                    if(d1>d2){
-                        myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
-                    }else{
-                        myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            if(courseListBean.getIsNew()==1){
+                myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
+            final int webinar_id1=courseListBean.getWebinar_id1();
+            myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, LivePlayActivity.class);
+                    intent.putExtra("webinar_id", webinar_id1);
+                    context.startActivity(intent);
+                }
+            });
+
             myViewHold.right_layout.setVisibility(View.VISIBLE);
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }
-        //用户课程id传到下个界面
-//        final int userCourseId = courseListBean.getUserCourseId();
-//        final int coruseId = courseListBean.getCoruseId();
-//        String endDate = courseListBean.getEndDate();
-//        Log.e("endDate", endDate + "");
-//        String currentTime = DateUtil.getCurrentTimeAll();
-//        int i = endDate.compareTo(currentTime);
         return convertView;
     }
 
@@ -231,8 +245,8 @@ public class LiveCourseAdapter extends BaseAdapter {
 
     static class myViewHold {
         ImageRadiusView recPic1,recPic2;
-        TextView rec_courseName1, rec_courseName2, rec_price1, rec_price2;
-        ImageView rec_sign_shikan1,rec_sign_shikan2,sign_zxIV1,sign_zxIV2;
+        TextView subject1, subject2, start_time1, start_time2,livesStatus1,livesStatus2;
+        ImageView sign_zxIV1,sign_zxIV2;
         LinearLayout left_layout,right_layout;
     }
 

@@ -21,7 +21,6 @@
                 android:layout_height="120dp">
                 <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
                     android:id="@+id/recPic1"
-                    android:src="@mipmap/lesson_name1"
                     android:layout_width="match_parent"
                     android:background="@color/bg_light_Gray"
                     android:scaleType="fitXY"
@@ -46,7 +45,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName1"
+                android:id="@+id/subject1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -61,21 +60,23 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:id="@+id/rec_price1"
+                    android:id="@+id/start_time1"
                     android:textColor="@color/price_color"
-                    android:text="￥15.00"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:textSize="14sp"
                     android:layout_alignParentLeft="true"
                     android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/rec_sign_shikan1"
+                <TextView
+                    android:id="@+id/livesStatus1"
                     android:layout_width="wrap_content"
+                    android:text="直播中 "
+                    android:drawableRight="@mipmap/live_sign_playing"
+                    android:layout_marginRight="5dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@mipmap/shikan"/>
+                    android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
         </LinearLayout>
@@ -98,7 +99,6 @@
                 android:layout_height="120dp">
                 <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
                     android:id="@+id/recPic2"
-                    android:src="@mipmap/lesson_name1"
                     android:layout_width="match_parent"
                     android:background="@color/bg_light_Gray"
                     android:scaleType="fitXY"
@@ -124,7 +124,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName2"
+                android:id="@+id/subject2"
                 android:text="防爆电气执业资格培训"
                 android:textColor="@color/cname_color"
                 android:textSize="14sp"
@@ -138,21 +138,23 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:id="@+id/rec_price2"
+                    android:id="@+id/start_time2"
                     android:textColor="@color/price_color"
-                    android:text="￥15.00"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:textSize="14sp"
                     android:layout_alignParentLeft="true"
                     android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/rec_sign_shikan2"
+                <TextView
+                    android:id="@+id/livesStatus2"
                     android:layout_width="wrap_content"
+                    android:text="直播中 "
+                    android:drawableRight="@mipmap/live_sign_playing"
+                    android:layout_marginRight="5dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@mipmap/shikan"/>
+                    android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
         </LinearLayout>

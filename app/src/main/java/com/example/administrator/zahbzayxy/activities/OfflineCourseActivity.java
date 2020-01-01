@@ -118,7 +118,9 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
     }
 
     private void downLoadData(int pager) {
+        Log.e("--------------------", "1111");
         showLoadingBar(false);
+        Log.e("--------------------", "222");
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.offlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
             @Override
@@ -126,7 +128,7 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
                 int code1 = response.code();
                 OfflineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
-                Log.e("lessonSSss", s);
+                Log.e("--------------------", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
@@ -168,7 +170,7 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
             public void onFailure(Call<OfflineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
-                // Log.e("myLessonerror",message);
+                Log.e("myLessonerror",message);
             }
         });
         if (recLv.isRefreshing()) {

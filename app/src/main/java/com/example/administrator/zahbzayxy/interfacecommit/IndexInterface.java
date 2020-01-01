@@ -3,9 +3,12 @@ package com.example.administrator.zahbzayxy.interfacecommit;
 import com.example.administrator.zahbzayxy.beans.BookBean;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.ExamBean;
+import com.example.administrator.zahbzayxy.beans.LessonThiredBean;
+import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiListBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
+import com.example.administrator.zahbzayxy.beans.OfflineCoursePOBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OrderIsOutOfDateBean;
 import com.example.administrator.zahbzayxy.beans.PLessonPlayTimeBean;
@@ -74,6 +77,10 @@ public interface IndexInterface {
                                               @Query("dataFormat") Integer dataFormat
     );
 
+    static final String getOfflineCourseDetail="data/course/getOfflineCourseDetail?";
+    @GET(value=getOfflineCourseDetail)
+    Call<OfflineCoursePOBean> getOfflineCourseDetail(@Query("courseId")Integer courseId);
+
 
     //获取题库分类
     static final String queslibClassifyPath="data/queslib/getQueslibClassify";
@@ -112,4 +119,17 @@ public interface IndexInterface {
                             @Query("isNew") Integer isNew,
                             @Query("dataFormat") Integer dataFormat
     );
+
+
+    //直播课列表
+    static final String liveCourseListPath="CourseController/getLiveList";
+    @GET(value = liveCourseListPath)
+    Call<LiveCourseBean> liveCourseList(@Query("pageNo") Integer pageNo,
+                                        @Query("pageSize") Integer pageSize,
+                                        @Query("token") String token,
+                                        @Query("status") String status,
+                                        @Query("dataFormat") Integer dataFormat
+    );
+
+
 }

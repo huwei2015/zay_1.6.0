@@ -43,17 +43,8 @@ public class OfflineCourseBean {
     }
 
     public static class DataBean {
-        private String dividePrice;
 
         private List<CourseListBean> courseList;
-
-        public String getDividePrice() {
-            return dividePrice;
-        }
-
-        public void setDividePrice(String dividePrice) {
-            this.dividePrice = dividePrice;
-        }
 
         public List<CourseListBean> getCourseList() {
             return courseList;
@@ -76,6 +67,8 @@ public class OfflineCourseBean {
             private String salePrice;
             private String originalPrice;
             private int isRecommend;
+            private String courseDesc;
+            private int isNew;
 
             private int courseId1;
             private String courseName1;
@@ -89,6 +82,40 @@ public class OfflineCourseBean {
             private String salePrice1;
             private String originalPrice1;
             private int isRecommend1;
+            private String courseDesc1;
+            private int isNew1;
+
+            public int getIsNew() {
+                return isNew;
+            }
+
+            public void setIsNew(int isNew) {
+                this.isNew = isNew;
+            }
+
+            public int getIsNew1() {
+                return isNew1;
+            }
+
+            public void setIsNew1(int isNew1) {
+                this.isNew1 = isNew1;
+            }
+
+            public String getCourseDesc() {
+                return courseDesc;
+            }
+
+            public void setCourseDesc(String courseDesc) {
+                this.courseDesc = courseDesc;
+            }
+
+            public String getCourseDesc1() {
+                return courseDesc1;
+            }
+
+            public void setCourseDesc1(String courseDesc1) {
+                this.courseDesc1 = courseDesc1;
+            }
 
             public int getIsRecommend() {
                 return isRecommend;

@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
+import com.example.administrator.zahbzayxy.activities.OfflineDetailActivity;
 import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
@@ -148,26 +151,22 @@ public class OfflineCourseAdapter extends BaseAdapter {
             Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
 
-        if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
-            String[] arrs=courseListBean.getUpdateTime().split("-");
-            String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-            SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-
-            try {
-                Date date = srtFormat.parse(newDate);
-                long d1=date.getTime();
-                long d2=System.currentTimeMillis();
-                if(d1>d2){
-                    myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
-                }else{
-                    myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if(courseListBean.getIsNew()==1){
+            myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
         }else{
             myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
         }
+        final int courseId=courseListBean.getCourseId();
+        myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context,  OfflineDetailActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("courseId",courseId);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 
         //=============================================================================第二个值
         if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
@@ -181,36 +180,26 @@ public class OfflineCourseAdapter extends BaseAdapter {
                 Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
 
-            if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){
-                String[] arrs=courseListBean.getUpdateTime1().split("-");
-                String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-                SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-                try {
-                    Date date = srtFormat.parse(newDate);
-                    long d1=date.getTime();
-                    long d2=System.currentTimeMillis();
-                    if(d1>d2){
-                        myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
-                    }else{
-                        myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            if(courseListBean.getIsNew1()==1){
+                myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
             myViewHold.right_layout.setVisibility(View.VISIBLE);
+            final int courseId1=courseListBean.getCourseId1();
+            myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context,  OfflineDetailActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",courseId1);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }
-        //用户课程id传到下个界面
-//        final int userCourseId = courseListBean.getUserCourseId();
-//        final int coruseId = courseListBean.getCoruseId();
-//        String endDate = courseListBean.getEndDate();
-//        Log.e("endDate", endDate + "");
-//        String currentTime = DateUtil.getCurrentTimeAll();
-//        int i = endDate.compareTo(currentTime);
         return convertView;
     }
 
