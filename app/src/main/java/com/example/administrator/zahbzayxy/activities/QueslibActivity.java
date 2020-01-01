@@ -121,7 +121,7 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.queslibList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<QueslibBean>() {
+        aClass.queslibList(pager,pageSize,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<QueslibBean>() {
             @Override
             public void onResponse(Call<QueslibBean> call, Response<QueslibBean> response) {
                 int code1 = response.code();
@@ -256,35 +256,15 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(QueslibActivity.this, SelectClassifyActivity.class);
-                intent.putExtra("cateId", cateId);
-                intent.putExtra("cateType", "queslib_cate");
-                startActivityForResult(intent,QUESLIB_SIGN);
-            }
-        });
-
-        shikanTV=(TextView)findViewById(R.id.shikanTV);
-        shikanTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(skFlag) {
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    skFlag=false;
-                    totalList.clear();
-                    isTrailers=1;
+                if(cateId!=null && cateId!=0){
+                    Intent intent = new Intent(QueslibActivity.this, SelectClassifyActivity.class);
+                    intent.putExtra("cateId", cateId);
+                    intent.putExtra("cateType", "online_cate");
+                    intent.putExtra("s_cateId", s_cateId);
+                    startActivityForResult(intent,QUESLIB_SIGN);
                 }else{
-                    Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
-                    totalList.clear();
-                    isTrailers=null;
+                    Toast.makeText(getApplicationContext(), R.string.ctrl_tips, Toast.LENGTH_SHORT).show();
                 }
-                downLoadData(1);
             }
         });
 
@@ -300,6 +280,20 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
                     tjFlag=false;
                     totalList.clear();
                     isRecommend=1;
+
+                    Drawable drawableLeft1 = getResources().getDrawable(
+                            R.mipmap.play_icon_nosel);
+                    shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    shikanTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    skFlag=true;
+                    isTrailers=null;
+
+                    Drawable drawableLeft2 = getResources().getDrawable(
+                            R.mipmap.jt_down);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zxFlag=true;
+                    isNew=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian);
@@ -312,6 +306,46 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
                 downLoadData(1);
             }
         });
+
+        shikanTV=(TextView)findViewById(R.id.shikanTV);
+        shikanTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(skFlag) {
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.play_icon);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    skFlag=false;
+                    totalList.clear();
+                    isTrailers=1;
+
+                    Drawable drawableLeft1 = getResources().getDrawable(
+                            R.mipmap.tuijian);
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    tjFlag=true;
+                    isRecommend=null;
+
+                    Drawable drawableLeft2 = getResources().getDrawable(
+                            R.mipmap.jt_down);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zxFlag=true;
+                    isNew=null;
+                }else{
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.play_icon_nosel);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    skFlag=true;
+                    totalList.clear();
+                    isTrailers=null;
+                }
+                downLoadData(1);
+            }
+        });
+
         zuixinTV=(TextView) findViewById(R.id.zuixinTV);
         zuixinTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,6 +359,20 @@ public class QueslibActivity extends BaseActivity implements Lv1CateAdapter.OnCl
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
+
+                    Drawable drawableLeft1 = getResources().getDrawable(
+                            R.mipmap.play_icon_nosel);
+                    shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    shikanTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    skFlag=true;
+                    isTrailers=null;
+
+                    Drawable drawableLeft2 = getResources().getDrawable(
+                            R.mipmap.tuijian);
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft2, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    tjFlag=true;
+                    isRecommend=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);

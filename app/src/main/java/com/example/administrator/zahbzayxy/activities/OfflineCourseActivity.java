@@ -118,11 +118,9 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
     }
 
     private void downLoadData(int pager) {
-        Log.e("--------------------", "1111");
         showLoadingBar(false);
-        Log.e("--------------------", "222");
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.offlineCourseList(1,10,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
+        aClass.offlineCourseList(pager,pageSize,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<OfflineCourseBean>() {
             @Override
             public void onResponse(Call<OfflineCourseBean> call, Response<OfflineCourseBean> response) {
                 int code1 = response.code();
@@ -257,10 +255,15 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OfflineCourseActivity.this, SelectClassifyActivity.class);
-                intent.putExtra("cateId", cateId);
-                intent.putExtra("cateType", "offline_cate");
-                startActivityForResult(intent,OFFLINECOURSE_SIGN);
+                if(cateId!=null && cateId!=0) {
+                    Intent intent = new Intent(OfflineCourseActivity.this, SelectClassifyActivity.class);
+                    intent.putExtra("cateId", cateId);
+                    intent.putExtra("cateType", "offline_cate");
+                    intent.putExtra("s_cateId", s_cateId);
+                    startActivityForResult(intent, OFFLINECOURSE_SIGN);
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.ctrl_tips, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -276,6 +279,13 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
                     tjFlag=false;
                     totalList.clear();
                     isRecommend=1;
+
+                    Drawable drawableLeft1 = getResources().getDrawable(
+                            R.mipmap.jt_down);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zxFlag=true;
+                    isNew=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian);
@@ -296,16 +306,21 @@ public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapte
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down_sel);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    //((TextView) v).setCompoundDrawablePadding(4);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
+
+                    Drawable drawableLeft1 = getResources().getDrawable(
+                            R.mipmap.tuijian);
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    tjFlag=true;
+                    isRecommend=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    //((TextView) v).setCompoundDrawablePadding(4);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
                     zxFlag=true;
                     totalList.clear();

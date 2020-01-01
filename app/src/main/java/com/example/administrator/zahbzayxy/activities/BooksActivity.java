@@ -116,7 +116,7 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.bookList(1,10,token,s_cateId==0?null:s_cateId,isNew,1).enqueue(new Callback<BookBean>() {
+        aClass.bookList(pager,pageSize,token,s_cateId==0?null:s_cateId,isNew,1).enqueue(new Callback<BookBean>() {
             @Override
             public void onResponse(Call<BookBean> call, Response<BookBean> response) {
                 int code1 = response.code();
@@ -277,10 +277,15 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BooksActivity.this, SelectClassifyActivity.class);
-                intent.putExtra("cateId", cateId);
-                intent.putExtra("cateType", "book_cate");
-                startActivityForResult(intent,BOOK_SIGN);
+                if(cateId!=null && cateId!=0){
+                    Intent intent = new Intent(BooksActivity.this, SelectClassifyActivity.class);
+                    intent.putExtra("cateId", cateId);
+                    intent.putExtra("cateType", "online_cate");
+                    intent.putExtra("s_cateId", s_cateId);
+                    startActivityForResult(intent,BOOK_SIGN);
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.ctrl_tips, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

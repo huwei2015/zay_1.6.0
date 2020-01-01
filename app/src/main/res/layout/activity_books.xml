@@ -68,8 +68,8 @@
                 <TextView
                     android:id="@+id/zuixinTV"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/shikan_text_color"
-                    android:drawableRight="@mipmap/jt_down_sel"
+                    android:textColor="@color/zx_text_color"
+                    android:drawableRight="@mipmap/jt_down"
                     android:text="最新 "
                     android:paddingLeft="10dp"
                     android:textSize="14sp"

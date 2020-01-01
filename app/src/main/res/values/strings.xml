@@ -46,4 +46,6 @@
 
     <!-- hyy 添加-->
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="ctrl_tips"> 请选择一级分类再操作选择分类</string>
+    <string name="no_cates_data"> 未查询到二级、三级分类</string>
 </resources>

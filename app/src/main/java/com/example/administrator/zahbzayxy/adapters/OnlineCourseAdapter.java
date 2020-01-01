@@ -157,23 +157,8 @@ public class OnlineCourseAdapter extends BaseAdapter {
             myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
         }
 
-        if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
-            String[] arrs=courseListBean.getUpdateTime().split("-");
-            String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-            SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-
-            try {
-                Date date = srtFormat.parse(newDate);
-                long d1=date.getTime();
-                long d2=System.currentTimeMillis();
-                if(d1>d2){
-                    myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
-                }else{
-                    myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if(courseListBean.getIsNew()==1){
+            myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
         }else{
             myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
         }
@@ -208,22 +193,8 @@ public class OnlineCourseAdapter extends BaseAdapter {
                 myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
             }
 
-            if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){
-                String[] arrs=courseListBean.getUpdateTime1().split("-");
-                String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
-                SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
-                try {
-                    Date date = srtFormat.parse(newDate);
-                    long d1=date.getTime();
-                    long d2=System.currentTimeMillis();
-                    if(d1>d2){
-                        myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
-                    }else{
-                        myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            if(courseListBean.getIsNew1()==1){
+                myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
             }else{
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }

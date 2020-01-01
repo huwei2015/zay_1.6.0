@@ -76,6 +76,7 @@ public class OnlineCourseBean {
             private String salePrice;
             private String originalPrice;
             private int isRecommend;
+            private int isNew;
 
             private int courseId1;
             private String courseName1;
@@ -89,6 +90,23 @@ public class OnlineCourseBean {
             private String salePrice1;
             private String originalPrice1;
             private int isRecommend1;
+            private int isNew1;
+
+            public int getIsNew() {
+                return isNew;
+            }
+
+            public void setIsNew(int isNew) {
+                this.isNew = isNew;
+            }
+
+            public int getIsNew1() {
+                return isNew1;
+            }
+
+            public void setIsNew1(int isNew1) {
+                this.isNew1 = isNew1;
+            }
 
             public int getIsRecommend() {
                 return isRecommend;

@@ -192,6 +192,7 @@ public class RecommendCourseActivity extends BaseActivity{
             public void onClick(View v) {
                 Intent intent = new Intent(RecommendCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateType", "online_cate");
+                intent.putExtra("s_cateId", cateId);
                 startActivityForResult(intent,RECOMMEND_SIGN);
             }
         });

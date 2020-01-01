@@ -35,6 +35,7 @@ public class ListClassifyAdapter extends BaseAdapter {
     String price, token;
     private OnItemClickListener mOnItemClickListener;
     private Integer cateId=0;
+    private Integer s_cateId=0;
     private Map<Integer,CateTextView> cmap;
     private OnClickListener mOnClickListener;
     private Map<Integer,List<CourseCatesBean.DataBean.Cates>> catesLv3Map;
@@ -66,21 +67,23 @@ public class ListClassifyAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token,Integer cateId,Integer level) {
+    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token,Integer cateId,Integer level,Integer s_cateId) {
         this.list = list;
         this.context = context;
         this.token = token;
         mOnClickListener = (OnClickListener) context;
         this.level=level;
+        this.s_cateId=s_cateId;
     }
 
-    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token,Integer level) {
+    public ListClassifyAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, String token,Integer level,Integer s_cateId) {
         this.list = list;
         this.context = context;
         this.token = token;
         this.cateId=cateId;
         mOnClickListener = (OnClickListener) context;
         this.level=level;
+        this.s_cateId=s_cateId;
     }
 
     @Override
@@ -167,9 +170,15 @@ public class ListClassifyAdapter extends BaseAdapter {
                         tv.setId(c.getId());
                         tv.setText(c.getCateName());
                         tv.setDataId(c.getId());
-                        tv.setStr("0");
                         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                        tv.setBackgroundResource(R.drawable.corner_text_view_normal);
+                        if(c.getId()==s_cateId){
+                            tv.setBackgroundResource(R.drawable.corner_text_view);
+                            tv.setText(TextAndPictureUtil.getTextRightImg(context,  tv.getText().toString().trim(), R.mipmap.circle_right));
+                            tv.setStr("1");
+                        }else {
+                            tv.setStr("0");
+                            tv.setBackgroundResource(R.drawable.corner_text_view_normal);
+                        }
 
                         int specTV = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
                         tv.measure(specTV,specTV);
@@ -282,6 +291,7 @@ public class ListClassifyAdapter extends BaseAdapter {
             public void onClick(View v) {
                 String str = ((CateTextView) v).getStr();
                 cateId=((CateTextView) v).getDataId();
+                Log.i("================",str);
                 if ("0".equals(str)) {
                     int dataId = ((CateTextView) v).getDataId();
                     for (Integer index : cmap.keySet()) {
@@ -339,6 +349,9 @@ public class ListClassifyAdapter extends BaseAdapter {
                     ((CateTextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                     ((CateTextView) v).setText(((CateTextView) v).getText().toString().trim());
                     ((CateTextView) v).setStr("0");
+                    if(level==2){
+                        mOnClickListener.setSelectedNum(0);
+                    }
                 }
             }
         });

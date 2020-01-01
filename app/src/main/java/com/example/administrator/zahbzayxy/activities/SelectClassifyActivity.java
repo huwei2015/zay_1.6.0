@@ -55,6 +55,7 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
 
     private ListView classifyLv;
     private Integer cateId;
+    private Integer s_cateId;
     private String cateType;
 
 
@@ -65,6 +66,8 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
         Utils.setFullScreen(SelectClassifyActivity.this,getWindow());
         cateId = getIntent().getIntExtra("cateId",0);
         cateType = getIntent().getStringExtra("cateType");
+        s_cateId = getIntent().getIntExtra("s_cateId",0);
+
         initView();
         getSP();
         Integer level=3;
@@ -73,7 +76,7 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
             level=2;
         }
 
-        adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token,level);
+        adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token,level,s_cateId);
         classifyLv.setAdapter(adapter);
         downLoadData();
 		layout = (LinearLayout) findViewById(R.id.pop_layout);
@@ -188,7 +191,10 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
                 } else if (code.equals("99999")) {
                     Toast.makeText(SelectClassifyActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                 } else if (code.equals("00000")) {
-                    List<CourseCatesBean.DataBean.Cates> courseList = body.getData().getCates();
+                    List<CourseCatesBean.DataBean.Cates> cateList = body.getData().getCates();
+                    if(cateList.size()==0){
+                        Toast.makeText(getApplicationContext(), R.string.no_cates_data, Toast.LENGTH_SHORT).show();
+                    }
                     CourseCatesBean.DataBean.Cates cates=new CourseCatesBean.DataBean.Cates();
                     cates.setId(-1);
                     cates.setCateName("全部");
@@ -201,13 +207,13 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
                     cates.setChilds(childs);
                     totalList.add(cates);
                     if(cateId>0){
-                        for(CourseCatesBean.DataBean.Cates ct:courseList){
+                        for(CourseCatesBean.DataBean.Cates ct:cateList){
                             if(ct.getId()==cateId){
                                 totalList.addAll(ct.getChilds());
                             }
                         }
                     }else {
-                        totalList.addAll(courseList);
+                        totalList.addAll(cateList);
                     }
                     adapter.notifyDataSetChanged();
                 } else {

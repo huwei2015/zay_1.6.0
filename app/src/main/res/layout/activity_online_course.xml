@@ -66,8 +66,8 @@
                 <TextView
                     android:id="@+id/recommendTV"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/shikan_text_color"
-                    android:drawableLeft="@mipmap/tuijian_sel"
+                    android:textColor="@color/zx_text_color"
+                    android:drawableLeft="@mipmap/tuijian"
                     android:text=" 推荐"
                     android:paddingLeft="20dp"
                     android:textSize="14sp"
