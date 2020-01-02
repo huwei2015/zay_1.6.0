@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
@@ -151,6 +152,17 @@ public class PMyRecommendAdapter extends BaseAdapter {
         }else{
             myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
         }
+        final int courseId=courseListBean.getCourseId();
+        myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, LessonThiredActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("courseId",courseId);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 
         if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
             myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName1(),R.mipmap.recommend_course));
@@ -164,16 +176,20 @@ public class PMyRecommendAdapter extends BaseAdapter {
                 myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
             }
             myViewHold.right_layout.setVisibility(View.VISIBLE);
+            final int courseId1=courseListBean.getCourseId1();
+            myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, LessonThiredActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",courseId1);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
         }else{
             myViewHold.right_layout.setVisibility(View.INVISIBLE);
         }
-        //用户课程id传到下个界面
-//        final int userCourseId = courseListBean.getUserCourseId();
-//        final int coruseId = courseListBean.getCoruseId();
-//        String endDate = courseListBean.getEndDate();
-//        Log.e("endDate", endDate + "");
-//        String currentTime = DateUtil.getCurrentTimeAll();
-//        int i = endDate.compareTo(currentTime);
         return convertView;
     }
 

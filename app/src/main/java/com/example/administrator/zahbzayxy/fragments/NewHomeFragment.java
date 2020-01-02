@@ -36,16 +36,19 @@ import com.example.administrator.zahbzayxy.activities.BuyActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
 import com.example.administrator.zahbzayxy.activities.LiveCourseActivity;
+import com.example.administrator.zahbzayxy.activities.LivePlayActivity;
 import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MyLessonActivity;
 import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
+import com.example.administrator.zahbzayxy.activities.OfflineDetailActivity;
 import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.activities.SignInActivity;
+import com.example.administrator.zahbzayxy.activities.TestDetailActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -232,7 +235,7 @@ public class NewHomeFragment extends Fragment {
         }
 
         @JavascriptInterface
-        public void goToMyPage(String dataType,String pageType){
+        public void goToMyPage(String dataType,String pageType,Integer key){
 
             Log.i("=====",dataType+"-----------"+pageType);
             if ("recommend_course".equals(dataType)) {
@@ -243,13 +246,24 @@ public class NewHomeFragment extends Fragment {
                     context.startActivity(intent);
                 }
                 if("detail".equals(pageType)) {
-
+                    Intent intent=new Intent(context, LessonThiredActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",key);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
                 }
             }
             if("online_course".equals(dataType)){
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, OnlineCourseActivity.class);
                     Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+                if("detail".equals(pageType)) {
+                    Intent intent=new Intent(context, LessonThiredActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",key);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
@@ -261,6 +275,13 @@ public class NewHomeFragment extends Fragment {
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
+                if("detail".equals(pageType)) {
+                    Intent intent=new Intent(context,  OfflineDetailActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",key);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
             }
             if("live_course".equals(dataType)){
                 if("list".equals(pageType)){
@@ -269,11 +290,23 @@ public class NewHomeFragment extends Fragment {
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
+                if("detail".equals(pageType)) {
+                    Intent intent = new Intent(context, LivePlayActivity.class);
+                    intent.putExtra("webinar_id", key);
+                    context.startActivity(intent);
+                }
             }
             if("queslib".equals(dataType)){
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, QueslibActivity.class);
                     Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+                if("detail".equals(pageType)) {
+                    Intent intent = new Intent(context, TestDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("quesLibId", key);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
