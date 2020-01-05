@@ -123,6 +123,7 @@ public class ListClassifyAdapter extends BaseAdapter {
         }else{
             myViewHold= (ListClassifyAdapter.myViewHold) convertView.getTag();
         }
+        Map<Integer,List<CourseCatesBean.DataBean.Cates>> rowChilds=new HashMap<>();
         if(!cmap.containsKey(cate.getId())) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.item_classify_layout, parent,false);
@@ -162,6 +163,7 @@ public class ListClassifyAdapter extends BaseAdapter {
                 String ids=",";
                 for (CourseCatesBean.DataBean.Cates c : cate.getChilds()) {
                     boolean flag=true;
+                    rowChilds.put(c.getId(),c.getChilds());
                     CateTextView tv = new CateTextView(context);
                     tv.setText(c.getCateName());
                     if(position==0){
@@ -184,9 +186,11 @@ public class ListClassifyAdapter extends BaseAdapter {
                         tv.measure(specTV,specTV);
                         int widthTV = tv.getMeasuredWidth();
                         len+=widthTV;
+                        //存放二级分类
                         cmap.put(c.getId(), tv);
                         ids+=c.getId()+",";
                         if(c.getChilds().size()>0){
+                            //存放二级分类下节点
                             catesLv3Map.put(c.getId(),c.getChilds());
                         }
                         layout.addView(tv);
@@ -208,7 +212,7 @@ public class ListClassifyAdapter extends BaseAdapter {
                                 alllayout.addView(layout);
                                 len=0;
                                 //==================================多加一行
-                                alllayout = addCustomLayout(alllayout,ids);
+                                alllayout = addCustomLayout(alllayout,ids,rowChilds);
                                 ids=",";
                                 //===================================
                                 layout=new LinearLayout(context);
@@ -227,7 +231,7 @@ public class ListClassifyAdapter extends BaseAdapter {
                         alllayout.addView(layout);
                         len=0;
                         //==================================多加一行
-                        alllayout = addCustomLayout(alllayout,ids);
+                        alllayout = addCustomLayout(alllayout,ids,rowChilds);
                         ids=",";
                         //===================================
                         layout=new LinearLayout(context);
@@ -241,7 +245,7 @@ public class ListClassifyAdapter extends BaseAdapter {
                         if(i==cate.getChilds().size()-1){
                             alllayout.addView(layout);
                             //==================================多加一行
-                            alllayout = addCustomLayout(alllayout,ids);
+                            alllayout = addCustomLayout(alllayout,ids,rowChilds);
                             ids=",";
                             //===================================
                         }
@@ -263,11 +267,77 @@ public class ListClassifyAdapter extends BaseAdapter {
             cmap.get(cateId).setText(TextAndPictureUtil.getTextRightImg(context,  cmap.get(cateId).getText().toString().trim(), R.mipmap.circle_right));
             cmap.get(cateId).setStr("1");
         }
+        int temp_selLv2Id=0;
+        if(level==3 && s_cateId!=0){
+            boolean flag=false;
+            for(Integer key:rowChilds.keySet()){
+                List<CourseCatesBean.DataBean.Cates> list=rowChilds.get(key);
+                if(temp_selLv2Id!=0){
+                    break;
+                }
+                if(list!=null){
+                    for(CourseCatesBean.DataBean.Cates c:list){
+                        if(c.getId()==s_cateId){
+                            temp_selLv2Id=key;
+                            int i=0;
+                            CustomLayout clayout=new CustomLayout(context);
+                            for(String ids:lv3Map.keySet()) {
+                                if (ids.indexOf("," + key + ",") != -1) {
+                                    clayout=lv3Map.get(ids);
+                                    clayout.removeAllViews();
+                                }
+                            }
+                            for(CourseCatesBean.DataBean.Cates cte:list){
+                                CateTextView temp_tv = new CateTextView(context);
+                                if(cte.getId()==s_cateId){
+                                    temp_tv.setText(cte.getCateName()+"  ");
+                                    Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.copy_right);
+                                    temp_tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                                    temp_tv.setBackgroundResource(R.drawable.tv_padding_sel);
+                                    temp_tv.setStr("1");
+                                }else{
+                                    temp_tv.setText(cte.getCateName());
+                                    temp_tv.setDataId(cte.getId());
+                                    temp_tv.setStr("0");
+                                    temp_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                    temp_tv.setBackgroundResource(R.drawable.tv_padding);
+                                }
+                                temp_tv.setTextColor(context.getResources().getColor(R.color.shikan_text_color));
+
+                                ImageView img=new ImageView(context);
+                                img.setImageDrawable(context.getResources().getDrawable(R.mipmap.fg_line));
+                                img.setPadding(0,DisplayUtil.dipToPix(context,14),0,0);
+                                lv3cmap.put(cte.getId(),temp_tv);
+                                onclickItemLv3(temp_tv);
+                                clayout.addView(temp_tv);
+                                if(i<(list.size()-1)){
+                                    clayout.addView(img);
+                                }
+                                i++;
+                            }
+                            clayout.setVisibility(View.VISIBLE);
+                            flag=true;
+                            clickLv2=cmap.get(key);
+                            //去掉点击 二级分类上边的对号
+                            clickLv2.setBackgroundResource(R.drawable.corner_text_view_nopic);
+                            clickLv2.setText(clickLv2.getText().toString().trim());
+                            clickLv2.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                            clickLv2.setStr("1");
+                            break;
+                        }
+                    }
+                    if(flag){
+                        break;
+                    }
+                }
+            }
+
+        }
         return convertView;
     }
 
-
-    public LinearLayout addCustomLayout(LinearLayout alllayout,String ids){
+    private Integer selLv2Id=0;
+    public LinearLayout addCustomLayout(LinearLayout alllayout,String ids,Map<Integer,List<CourseCatesBean.DataBean.Cates>> rowChilds){
         CustomLayout clayout=new CustomLayout(context);
         LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -275,7 +345,70 @@ public class ListClassifyAdapter extends BaseAdapter {
         );
         clayout.setLayoutParams(cp);
         clayout.setGrivate(3);
-        clayout.setVisibility(View.GONE);
+
+        if(level==3 && s_cateId!=0){
+            boolean flag=false;
+            for(Integer key:rowChilds.keySet()){
+                List<CourseCatesBean.DataBean.Cates> list=rowChilds.get(key);
+                if(selLv2Id!=0){
+                    break;
+                }
+                if(list!=null){
+                    for(CourseCatesBean.DataBean.Cates c:list){
+                        if(c.getId()==s_cateId){
+                            selLv2Id=key;
+                            int i=0;
+                            for(CourseCatesBean.DataBean.Cates cte:list){
+                                CateTextView temp_tv = new CateTextView(context);
+                                if(cte.getId()==s_cateId){
+                                    temp_tv.setText(cte.getCateName()+"  ");
+                                    Drawable drawableLeft = context.getResources().getDrawable(R.mipmap.copy_right);
+                                    temp_tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                                    temp_tv.setBackgroundResource(R.drawable.tv_padding_sel);
+                                    temp_tv.setStr("1");
+                                }else{
+                                    temp_tv.setText(cte.getCateName());
+                                    temp_tv.setDataId(cte.getId());
+                                    temp_tv.setStr("0");
+                                    temp_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                    temp_tv.setBackgroundResource(R.drawable.tv_padding);
+                                }
+                                temp_tv.setTextColor(context.getResources().getColor(R.color.shikan_text_color));
+
+                                ImageView img=new ImageView(context);
+                                img.setImageDrawable(context.getResources().getDrawable(R.mipmap.fg_line));
+                                img.setPadding(0,DisplayUtil.dipToPix(context,14),0,0);
+                                lv3cmap.put(cte.getId(),temp_tv);
+                                onclickItemLv3(temp_tv);
+                                clayout.addView(temp_tv);
+                                if(i<(list.size()-1)){
+                                    clayout.addView(img);
+                                }
+                                i++;
+                            }
+                            flag=true;
+                            clickLv2=cmap.get(key);
+                            //去掉点击 二级分类上边的对号
+                            clickLv2.setBackgroundResource(R.drawable.corner_text_view_nopic);
+                            clickLv2.setText(clickLv2.getText().toString().trim());
+                            clickLv2.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                            clickLv2.setStr("1");
+                            break;
+                        }
+                    }
+                    if(flag){
+                        break;
+                    }
+                }
+            }
+            if(flag){
+                clayout.setVisibility(View.VISIBLE);
+            }else{
+                clayout.setVisibility(View.GONE);
+            }
+        }else {
+            clayout.setVisibility(View.GONE);
+        }
         lv3Map.put(ids,clayout);
         alllayout.addView(clayout);
         return alllayout;
