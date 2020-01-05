@@ -141,8 +141,8 @@ public class NewHomeFragment extends Fragment {
         WebSettings webSettings = mwebView.getSettings();
         webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(true);
-        //LOAD_CACHE_ELSE_NETWORK
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        //LOAD_CACHE_ELSE_NETWORK LOAD_NO_CACHE
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setBlockNetworkImage(false);
         webSettings.setJavaScriptEnabled(true);
