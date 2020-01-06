@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.AllMyYouHuiJuanAdapter;
@@ -41,6 +42,7 @@ public class OutOfDateFragment extends Fragment {
     private Unbinder mUnbinder;
     RelativeLayout rl_empty;
     LinearLayout ll_list;
+    TextView tv_msg;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -53,6 +55,7 @@ public class OutOfDateFragment extends Fragment {
        view=inflater.inflate(R.layout.fragment_out_of_date, container, false);
         rl_empty=view.findViewById(R.id.rl_empty_layout);
         ll_list=view.findViewById(R.id.ll_list);
+        tv_msg=view.findViewById(R.id.tv_msg);
        mUnbinder= ButterKnife.bind(this,view);
        getSP();
        initDownLoadData();
@@ -116,6 +119,7 @@ public class OutOfDateFragment extends Fragment {
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             ll_list.setVisibility(View.GONE);
+            tv_msg.setText("暂无已过期优惠券");
         }
     }
 

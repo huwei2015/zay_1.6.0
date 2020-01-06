@@ -29,10 +29,8 @@ import retrofit2.Response;
 
 public class MyAccountActivity extends BaseActivity {
     PullToRefreshListView money_plv;
-    private LinearLayout ll_list;
     private String token;
     TextView myAccount_tv;
-    private RelativeLayout rl_empty;
     int pager;
     private List<MyAccountFlowBean.DataBean.AccountFlowsBean>totalList=new ArrayList<>();
     private MyAccountFlowAdater adater;
@@ -53,7 +51,6 @@ public class MyAccountActivity extends BaseActivity {
             @Override
             public void onResponse(Call<MyAmountBean> call, Response<MyAmountBean> response) {
                 MyAmountBean body = response.body();
-                int code1 = response.code();
                 if (body!=null){
                     String code = body.getCode();
                     if(code.equals("00003")){
@@ -128,20 +125,16 @@ public class MyAccountActivity extends BaseActivity {
                 if (body!=null){
                     String code = body.getCode();
                     if(code.equals("00003")){
-//                        isVisible(false);
                         Toast.makeText(MyAccountActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                         SharedPreferences.Editor edit = sp.edit();
                         edit.putBoolean("isLogin",false);
                         edit.commit();
                     }else if (dbIsLogin()==false){
-//                        isVisible(false);
                         Toast.makeText(MyAccountActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                     }else if (code.equals("00000")){
-//                        isVisible(true);
                         MyAccountFlowBean.DataBean data = body.getData();
                         List<MyAccountFlowBean.DataBean.AccountFlowsBean> accountFlows = data.getAccountFlows();
-                        //totalList.clear();
                         totalList.addAll(accountFlows);
                         adater.notifyDataSetChanged();
                     }

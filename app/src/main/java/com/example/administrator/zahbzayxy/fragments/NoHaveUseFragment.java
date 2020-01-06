@@ -135,7 +135,7 @@ public class NoHaveUseFragment extends Fragment {
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             ll_list.setVisibility(View.GONE);
-            tv_msg.setText("暂无订单信息");
+            tv_msg.setText("暂无未使用的优惠券");
         }
     }
 

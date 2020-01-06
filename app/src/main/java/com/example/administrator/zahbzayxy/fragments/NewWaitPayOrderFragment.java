@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
@@ -48,7 +49,7 @@ public class NewWaitPayOrderFragment extends Fragment {
     private int pager=1;
     RelativeLayout rl_empty;
     LinearLayout ll_list;
-
+    TextView tv_msg;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -166,6 +167,7 @@ public class NewWaitPayOrderFragment extends Fragment {
         SharedPreferences tokenDb =context.getSharedPreferences("tokenDb", context.MODE_APPEND);
         rl_empty=view.findViewById(R.id.rl_empty_layout);
         ll_list=view.findViewById(R.id.ll_list);
+        tv_msg=view.findViewById(R.id.tv_msg);
         token = tokenDb.getString("token","");
         Log.e("setUserNameToken",token);
     }
@@ -184,6 +186,7 @@ public class NewWaitPayOrderFragment extends Fragment {
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             ll_list.setVisibility(View.GONE);
+            tv_msg.setText("暂无待支付订单");
         }
     }
 }

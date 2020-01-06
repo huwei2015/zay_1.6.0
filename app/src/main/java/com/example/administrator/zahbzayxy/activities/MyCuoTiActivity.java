@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
@@ -41,6 +42,7 @@ public class MyCuoTiActivity extends BaseActivity {
     private MyCuoTiJiLuAdapter adapter;
     private RelativeLayout rl_empty;
     private LinearLayout ll_list;
+    private TextView tv_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,8 @@ public class MyCuoTiActivity extends BaseActivity {
             public void onResponse(Call<PCuoTiJiLuBean> call, Response<PCuoTiJiLuBean> response) {
                 if (response!=null) {
                     PCuoTiJiLuBean body = response.body();
-                    if (body != null && body.getData().getErrorRecordQuesLibs().size() > 0) {
+                    String errMsg = (String) response.body().getErrMsg();
+                    if (body != null) {
                         if (body.getCode().equals("00003")) {
                             isVisible(false);
                             Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
@@ -92,7 +95,7 @@ public class MyCuoTiActivity extends BaseActivity {
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                        } else if (body.getErrMsg() == null) {
+                        } else if (body.getErrMsg() == null && body.getData().getErrorRecordQuesLibs().size() > 0) {
                             List<PCuoTiJiLuBean.DataBean.ErrorRecordQuesLibsBean> errorRecordQuesLibs = body.getData().getErrorRecordQuesLibs();
                             isVisible(true);
                             // totalList.clear();
@@ -100,7 +103,8 @@ public class MyCuoTiActivity extends BaseActivity {
                             adapter.notifyDataSetChanged();
                         } else if (body.getCode().equals("99999")) {
                             isVisible(false);
-                            Toast.makeText(MyCuoTiActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MyCuoTiActivity.this, errMsg, Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
 
@@ -114,7 +118,7 @@ public class MyCuoTiActivity extends BaseActivity {
             @Override
             public void onFailure(Call<PCuoTiJiLuBean> call, Throwable t) {
                 isVisible(false);
-//                Toast.makeText(MyCuoTiActivity.this,"网络问题",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyCuoTiActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -148,6 +152,7 @@ public class MyCuoTiActivity extends BaseActivity {
         back_iv= (ImageView) findViewById(R.id.myCuoTiBack_iv);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);
         ll_list= (LinearLayout) findViewById(R.id.ll_list);
+        tv_msg= (TextView) findViewById(R.id.tv_msg);
         back_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,6 +193,7 @@ public class MyCuoTiActivity extends BaseActivity {
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             ll_list.setVisibility(View.GONE);
+            tv_msg.setText("暂无错题数据");
         }
     }
 }

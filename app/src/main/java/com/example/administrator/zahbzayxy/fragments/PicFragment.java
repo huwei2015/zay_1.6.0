@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +36,11 @@ import retrofit2.Response;
 
 /**
  * Created by huwei.
- * Data 2019-12-18.
- * Time 16:46.
- * //全部附件
+ * Data 2019-12-24.
+ * Time 13:57.
+ * 附件图片
  */
-public class FileAllFragment extends Fragment implements PullToRefreshListener, AllFileAdapter.onItemClickListener,AllFileAdapter.onDelClickListener{
+public class PicFragment extends Fragment implements PullToRefreshListener, AllFileAdapter.onItemClickListener, AllFileAdapter.onDelClickListener{
     private View view;
     private String token;
     Context mContext;
@@ -53,32 +52,33 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
     LinearLayout ll_list;
     private int currentPage = 1;
     private int pageSize = 10;
+    List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
     String del_id;
     String file_path;
-    List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mContext = context;
+        this.mContext=context;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_all_file, container, false);
+        view=inflater.inflate(R.layout.fragment_pic,container,false);
         initView();
         initPullToRefreshListView();
         return view;
     }
 
     private void initView() {
-        pullToRefreshRecyclerView = view.findViewById(R.id.allFile_recyclerView);
+        mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
+        pullToRefreshRecyclerView = view.findViewById(R.id.pic_recyclerView);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
         tv_msg = view.findViewById(R.id.tv_msg);
         ll_list = view.findViewById(R.id.ll_list);
         token = tokenDb.getString("token", "");
-        mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
@@ -104,73 +104,47 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                 ViewGroup.LayoutParams.MATCH_PARENT));
         pullToRefreshRecyclerView.setEmptyView(emptyView);
     }
-
-    /**
-     * 列表接口
-     */
     private void initPullToRefreshListView() {
         showLoadingBar(false);
-        final AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
-       allFileInterface.getAllFileData(currentPage,pageSize,null,token).enqueue(new Callback<AllFileBean>() {
-           @Override
-           public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
-               if(response !=null && response.body() !=null && response.body().getData().getData().size() > 0){
-                   String code = response.body().getCode();
-                   if(code.equals("00000")){
-                       isVisible(true);
-                       hideLoadingBar();
-                       allFileListBeanList = response.body().getData().getData();
-                       if(currentPage == 1) {
-                           allFileAdapter.setList(allFileListBeanList);
-                       }else{
-                           allFileAdapter.addList(allFileListBeanList);
-                       }
-                   }
-               }else {
-                   isVisible(false);
-               }
-           }
-
-           @Override
-           public void onFailure(Call<AllFileBean> call, Throwable t) {
-               hideLoadingBar();
-               isVisible(false);
-           }
-       });
-    }
-    public void getDelData(){
-        final AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
-        allFileInterface.getDelData(del_id,token).enqueue(new Callback<FileDelBean>() {
+        AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
+        allFileInterface.getAllFileData(currentPage,pageSize,1,token).enqueue(new Callback<AllFileBean>() {
             @Override
-            public void onResponse(Call<FileDelBean> call, Response<FileDelBean> response) {
-                if(response !=null && response.body() !=null){
+            public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
+                if(response !=null && response.body() !=null && response.body().getData().getData().size() > 0){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
-                        builder.setTitle("确定删除吗？");
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                    allFileAdapter.notifyDataSetChanged();
-                                    initPullToRefreshListView();
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        isVisible(true);
+                        hideLoadingBar();
+                        allFileListBeanList = response.body().getData().getData();
+                        if(currentPage == 1){
+                            allFileAdapter.setList(allFileListBeanList);
+                            allFileAdapter.notifyDataSetChanged();
+                        }else{
+                            allFileAdapter.addList(allFileListBeanList);
+                            allFileAdapter.notifyDataSetChanged();
+                        }
                     }
+                }else{
+                    isVisible(false);
                 }
-
             }
 
             @Override
-            public void onFailure(Call<FileDelBean> call, Throwable t) {
+            public void onFailure(Call<AllFileBean> call, Throwable t) {
 
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(allFileListBeanList.size() > 0){
+            allFileListBeanList.clear();
+            initPullToRefreshListView();
+        }
+    }
+
     @Override
     public void onRefresh() {
         pullToRefreshRecyclerView.postDelayed(new Runnable() {
@@ -218,23 +192,50 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
         } else {
             rl_empty.setVisibility(View.VISIBLE);
             ll_list.setVisibility(View.GONE);
-            tv_msg.setText("暂无附件");
+            tv_msg.setText("暂无图片");
         }
     }
+    public void getDelData(){
+        AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
+        allFileInterface.getDelData(del_id,token).enqueue(new Callback<FileDelBean>() {
+            @Override
+            public void onResponse(Call<FileDelBean> call, Response<FileDelBean> response) {
+                if(response !=null && response.body() !=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000")){
+                        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
+                        builder.setTitle("确定删除吗？");
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                allFileAdapter.notifyDataSetChanged();
+                               initPullToRefreshListView();
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+                }
 
-    //Item点击事件
+            }
+
+            @Override
+            public void onFailure(Call<FileDelBean> call, Throwable t) {
+
+            }
+        });
+    }
     @Override
     public void OnItemCilck(View view, int position) {
-        Toast.makeText(mContext,"点击了"+position,Toast.LENGTH_LONG).show();
-           file_path= allFileListBeanList.get(position).getAttaPath();
-           Log.i("hw","hw=============="+file_path);
+        file_path=allFileListBeanList.get(position).getAttaPath();
     }
 
     @Override
     public void onDelClick(View view, int position) {
-        Log.i("zahb","zahb================"+del_id);
-       del_id= allFileListBeanList.get(position).getId();
-        //删除文件接口
+        del_id=allFileListBeanList.get(position).getId();
         getDelData();
     }
 }
