@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
@@ -56,7 +57,7 @@ public class ForgetPWFragment extends Fragment {
     EditText mResetPW_et;
     // 获取验证码按钮
     @BindView(R.id.getCode_bt_forgetPw)
-    Button mGetCode_bt;
+    TextView mGetCode_bt;
 
     private Unbinder mUnbinder;
     private Context mContext;

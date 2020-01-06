@@ -64,13 +64,14 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".activities.WelcomeActivity">
+        <activity android:name=".activities.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.SplashActivity"/>
         <activity
             android:name=".activities.ChangeAppActivity"
             android:screenOrientation="portrait" />
@@ -195,6 +196,7 @@
         <activity android:name=".activities.ProfessionalActivity"/>
         <activity android:name=".activities.TypeActivity"/>
         <activity android:name=".activities.SkillsActivity"/>
+        <activity android:name=".activities.WelcomeActivity"/>
         <activity android:name=".activities.AuthorizationActivity"/>
         <activity
             android:name=".activities.NewMyChengJiActivity"
