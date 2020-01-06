@@ -657,6 +657,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/common_problemRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -683,6 +684,7 @@
                 android:background="#f2f3f5" />
 
             <RelativeLayout
+                android:id="@+id/user_manualRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

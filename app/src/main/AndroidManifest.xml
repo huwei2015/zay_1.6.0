@@ -331,6 +331,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
+        <activity android:name=".activities.H5PageActivity"/>
     </application>
 
 </manifest>

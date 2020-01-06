@@ -142,7 +142,7 @@ public class NewHomeFragment extends Fragment {
         webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(true);
         //LOAD_CACHE_ELSE_NETWORK LOAD_NO_CACHE
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setBlockNetworkImage(false);
         webSettings.setJavaScriptEnabled(true);

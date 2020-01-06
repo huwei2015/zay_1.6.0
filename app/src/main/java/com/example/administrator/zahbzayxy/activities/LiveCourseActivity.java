@@ -48,6 +48,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+/**
+ * 直播课列表页面
+ */
 public class LiveCourseActivity extends BaseActivity{
 
     private TextView back_index_iv;
@@ -200,6 +204,7 @@ public class LiveCourseActivity extends BaseActivity{
         });
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        //直播中
         lveingTV= (TextView)findViewById(R.id.lveingTV);
         lveingTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +239,7 @@ public class LiveCourseActivity extends BaseActivity{
                  downLoadData(1);
             }
         });
+        //预约直播
         lveingyyTV= (TextView)findViewById(R.id.lveingyyTV);
         lveingyyTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,6 +271,7 @@ public class LiveCourseActivity extends BaseActivity{
                 downLoadData(1);
             }
         });
+        //直播结束
         lveingendTV= (TextView)findViewById(R.id.liveingendTV);
         lveingendTV.setOnClickListener(new View.OnClickListener() {
             @Override

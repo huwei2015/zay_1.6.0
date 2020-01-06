@@ -31,6 +31,7 @@ import com.example.administrator.zahbzayxy.activities.AuthorizationActivity;
 import com.example.administrator.zahbzayxy.activities.BuyCarActivity;
 import com.example.administrator.zahbzayxy.activities.ContacActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.H5PageActivity;
 import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MsgListActivity;
 import com.example.administrator.zahbzayxy.activities.MyAccountActivity;
@@ -128,6 +129,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     /**********FHS Start**********/
 
+    //HYY添加
+    private RelativeLayout common_problemRL;
+    private RelativeLayout user_manualRL;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -197,6 +202,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         ll_file=view.findViewById(R.id.ll_file);
         ll_file.setOnClickListener(this);
 
+        //HYY添加 常见问题  使用手册
+        common_problemRL=view.findViewById(R.id.common_problemRL);
+        common_problemRL.setOnClickListener(this);
+        user_manualRL=view.findViewById(R.id.user_manualRL);
+        user_manualRL.setOnClickListener(this);
     }
 
     @Override
@@ -328,6 +338,23 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_file://我的附件
                 if(isLogin){
                     startActivity(new Intent(context, MyFileActivitiy.class));
+                }else{
+                    startActivity(new Intent(context, LoginActivity.class));
+                }
+            case R.id.common_problemRL://常见问题
+                if(isLogin){
+                    Intent intent=new Intent(context, H5PageActivity.class);
+                    intent.putExtra("h5Type","common_problem");
+                    startActivity(intent);
+                }else{
+                    startActivity(new Intent(context, LoginActivity.class));
+                }
+                break;
+            case R.id.user_manualRL://使用手册
+                if(isLogin){
+                    Intent intent=new Intent(context, H5PageActivity.class);
+                    intent.putExtra("h5Type","user_manual");
+                    startActivity(intent);
                 }else{
                     startActivity(new Intent(context, LoginActivity.class));
                 }

@@ -1,22 +1,10 @@
 package com.example.administrator.zahbzayxy.activities;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -24,60 +12,37 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.adapters.LiveCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
-import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
-import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
-import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
-import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
-import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
-import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
-import com.google.gson.Gson;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
- * 直播课跳转h5播放页面
+ * 跳转h5页面，如常见问题，用户手册
  */
-public class LivePlayActivity extends BaseActivity{
+public class H5PageActivity extends BaseActivity{
 
     WebView mwebView;
-    private int webinar_id;
-    private TextView backLive;
+    private String h5Type;
+    private TextView backPage;
+    private TextView titleText;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setFullScreen(LivePlayActivity.this,getWindow());
-        webinar_id = getIntent().getIntExtra("webinar_id",0);
-        setContentView(R.layout.activity_live_play);
-        mwebView=(WebView)findViewById(R.id.play_wv);
-        backLive=(TextView)findViewById(R.id.backLive);
-        backLive.setOnClickListener(new View.OnClickListener() {
+        Utils.setFullScreen(H5PageActivity.this,getWindow());
+        h5Type = getIntent().getStringExtra("h5Type");
+        setContentView(R.layout.activity_h5_page);
+        mwebView=(WebView)findViewById(R.id.htmlpage_wv);
+        backPage=(TextView)findViewById(R.id.backPage);
+        backPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        titleText=(TextView)findViewById(R.id.titleText);
         initWebView();
     }
 
@@ -100,13 +65,18 @@ public class LivePlayActivity extends BaseActivity{
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setBlockNetworkImage(false);
         webSettings.setJavaScriptEnabled(true);
-        Log.i("=======================","进来了.....");
-        mwebView.loadUrl(AppUrls.LIVE_URL+webinar_id);
+        String url=RetrofitUtils.getBaseUrl() +AppUrls.common_problem_URL+"?token="+token;
+        if("common_problem".equals(h5Type)){//常见问题
+            url= RetrofitUtils.getBaseUrl() +AppUrls.common_problem_URL+"?token="+token;
+            titleText.setText("常见问题");
+        }else if("user_manual".equals(h5Type)){//用户手册
+            url=RetrofitUtils.getBaseUrl() +AppUrls.user_manual_URL+"?token="+token;
+            titleText.setText("使用手册");
+        }
+        mwebView.loadUrl(url);
         mwebView.getSettings().setJavaScriptEnabled(true);
 
-
         mwebView.setWebViewClient(new WebViewClient() {
-            //覆盖shouldOverrideUrlLoading 方法
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
