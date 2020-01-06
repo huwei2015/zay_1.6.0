@@ -8,6 +8,7 @@ import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoResetBean;
 import com.example.administrator.zahbzayxy.utils.Constant;
@@ -61,6 +62,14 @@ public interface UserInfoInterface {
     @POST(value = updateOneCun)
     Call<OneCunBean> updatePhoto(@Query("token") String token,
                                  @Part MultipartBody.Part oneInchPhoto);
+
+    //附件上传图片
+    static final String updateFile = "user/attachment/upload";
+    @Multipart
+    @POST(value = updateFile)
+    Call<OneCunBean> updateFile(@Query("token") String token,
+                                @Part MultipartBody.Part oneInchPhoto);
+
     //账户余额
     static final String getMyAmmountPath="user/account/balance";
     @GET(value =getMyAmmountPath)
@@ -94,4 +103,8 @@ public interface UserInfoInterface {
     Call<PayCardBean> studyCard(@FieldMap Map<String,String>cardNum);
     //Call<SuccessBean> studyCard(@Query("cardCode") String cardCode,@Query("orderNumber") String orderNumber, @Query("token") String token);
 
+    //个人中心
+    static final String userCenter = "userCenter";
+    @POST(value = userCenter)
+    Call<UserCenter> getUserCenter(@Query("token") String token);
 }

@@ -3,16 +3,16 @@
     android:id="@+id/userCenter_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@mipmap/mine_bg"
+    android:orientation="vertical"
     tools:context="com.example.administrator.zahbzayxy.fragments.UserFragment">
     <!--个人中心界面-->
     <!--未登录的个人中心界面,已登录时把该界面隐藏-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:scaleType="fitXY">
+        android:scaleType="fitXY"
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/noLoginToolBar_layout"
@@ -30,17 +30,18 @@
 
             <TextView
                 android:id="@+id/tab_unread_message"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/shape_unread_message_bg"
-                android:gravity="center"
+                android:layout_width="20dp"
+                android:layout_height="18dp"
+                android:layout_gravity="top|right"
+                android:layout_marginEnd="6dp"
                 android:layout_marginTop="6dp"
                 android:layout_toStartOf="@+id/resetMessage_ic"
+                android:background="@drawable/shape_unread_message_bg"
+                android:gravity="center"
+                android:text="23"
                 android:textColor="@android:color/white"
-                android:textSize="8sp"
-                android:text="2"
-                android:layout_gravity="top|right"
-                android:visibility="visible"/>
+                android:textSize="12sp"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/resetMessage_ic"
@@ -53,13 +54,13 @@
         </RelativeLayout>
 
 
-    <!--个人头像 未登陆-->
+        <!--个人头像 未登陆-->
         <RelativeLayout
             android:id="@+id/noLogin_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_below="@+id/noLoginToolBar_layout">
+            android:layout_below="@+id/noLoginToolBar_layout"
+            android:visibility="visible">
 
             <com.example.administrator.zahbzayxy.myviews.CircleImageView
                 android:id="@+id/noLoginUserHead_img"
@@ -100,19 +101,17 @@
                         android:src="@mipmap/administrator" />
 
                     <TextView
-                        android:id="@+id/tv_student"
+                        android:id="@+id/tv_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:paddingEnd="6dp"
-                        android:text="学员"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>
-
-<!--            android:id="@+id/editMessage_logined"-->
 
             <Button
                 android:id="@+id/no_editMessage_logined"
@@ -134,31 +133,31 @@
         android:scaleType="fitXY"
         android:visibility="gone">
 
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/toolBar_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:visibility="gone"-->
-<!--            android:layout_height="50dp">-->
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/toolBar_layout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:visibility="gone"-->
+        <!--            android:layout_height="50dp">-->
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_centerVertical="true"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="用户中心"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="20sp" />-->
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:layout_centerVertical="true"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:text="用户中心"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="20sp" />-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/resetMessage_logined"-->
-<!--                android:layout_width="26dp"-->
-<!--                android:layout_height="26dp"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:layout_margin="12dp"-->
-<!--                android:scaleType="fitXY"-->
-<!--                android:src="@mipmap/reset" />-->
-<!--        </RelativeLayout>-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/resetMessage_logined"-->
+        <!--                android:layout_width="26dp"-->
+        <!--                android:layout_height="26dp"-->
+        <!--                android:layout_alignParentEnd="true"-->
+        <!--                android:layout_margin="12dp"-->
+        <!--                android:scaleType="fitXY"-->
+        <!--                android:src="@mipmap/reset" />-->
+        <!--        </RelativeLayout>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -191,9 +190,9 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:background="@mipmap/identity"
                     android:gravity="center"
-                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -208,34 +207,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:paddingEnd="6dp"
-                        android:text="管理员"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>
 
-
-
-<!--            <TextView-->
-<!--                android:id="@+id/name_tv"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginTop="30dp"-->
-<!--                android:layout_toEndOf="@+id/userHead_img"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="18sp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/phonenum_tv"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/name_tv"-->
-<!--                android:layout_alignStart="@+id/name_tv"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:gravity="center" />-->
-            <!--android:drawableLeft="@mipmap/phone_icon"-->
             <Button
                 android:id="@+id/editMessage_logined"
                 android:layout_width="match_parent"
@@ -249,14 +227,12 @@
     </RelativeLayout>
 
 
-
-
     <!--悬浮布局-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@mipmap/ll_bg"
         android:gravity="center"
         android:orientation="horizontal">
@@ -270,11 +246,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.0"
+                android:maxLines="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:ellipsize="end"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -298,11 +279,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_couponNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -326,11 +308,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -354,11 +337,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_shop_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -367,9 +351,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
-
 
 
     <!--九宫格-->
@@ -387,6 +368,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -394,7 +376,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/tv_authorization"
+                        android:id="@+id/myRenZheng_ll"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -404,13 +386,13 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@mipmap/authorization" />
+                            android:src="@mipmap/certificate" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="授权管理" />
+                            android:text="我的证书" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -569,26 +551,6 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/myRenZheng_ll"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@mipmap/certificate" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="我的证书" />
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/ll_file"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -607,6 +569,28 @@
                             android:layout_marginTop="8dp"
                             android:text="我的附件" />
                     </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_authorization"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@mipmap/authorization" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="授权管理" />
+                    </LinearLayout>
+
                     <!--默认下面两个布局不显示，占位用的-->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -709,6 +693,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:background="#f2f3f5" />
+
             <RelativeLayout
                 android:id="@+id/rl_contac"
                 android:layout_width="match_parent"

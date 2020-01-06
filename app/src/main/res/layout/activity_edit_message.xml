@@ -202,6 +202,39 @@
 
         <include layout="@layout/divid_line_layout" />
 
+        <!--身份证号复印件-->
+        <RelativeLayout
+            android:id="@+id/personId_layout_copy"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="身份证复印件"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
         <!--性别默认不显示-->
         <RelativeLayout
             android:id="@+id/sexSet_layout"
@@ -568,6 +601,42 @@
         </RelativeLayout>
 
         <include layout="@layout/divid_line_layout" />
+
+        <!--学历证书复印件-->
+        <RelativeLayout
+            android:id="@+id/culture_layout_copy"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="学历证书复印件"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/right_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/divid_line_layout" />
+
+
         <!--修改密码默认不显示-->
         <RelativeLayout
             android:id="@+id/pWChange_layout"
