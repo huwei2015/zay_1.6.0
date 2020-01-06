@@ -6,13 +6,7 @@ import java.util.List;
  * Created by ${ZWJ} on 2017/4/5 0005.
  */
 public class AllOnlineCourseBean {
-
-    /**
-     * code : 00000
-     * errMsg : null
-     * data : {"dividePrice":"课时收费标准：1-16学时 12元/学时;16学时以上 10元/学时","courseList":[{"beginDate":1491557859000,"courseName":"金属非金属矿山安全生产管理人员培训课程（地下矿-初训）","userCourseId":19,"totalHours":54,"endDate":1492249059000,"logo":"/file_upload/course/logo/2016/9/ee9a5251-39de-43c7-9773-19cec6f8b148.jpg","coruseId":186}]}
-     */
-
+    
     private String code;
     private Object errMsg;
 
