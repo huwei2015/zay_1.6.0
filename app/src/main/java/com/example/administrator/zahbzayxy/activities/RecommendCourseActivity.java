@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,12 +21,9 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
-import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
+import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
-import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -52,7 +48,7 @@ public class RecommendCourseActivity extends BaseActivity{
     private TextView isrecommendTV;
     private ProgressBarLayout mLoadingBar;
 
-    private List<OnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<AllOnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
     private static String token;
     PMyRecommendAdapter adapter;
     private int pageSize = 10;
@@ -102,11 +98,11 @@ public class RecommendCourseActivity extends BaseActivity{
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,null,1,1).enqueue(new Callback<OnlineCourseBean>() {
+        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,null,1,1).enqueue(new Callback<AllOnlineCourseBean>() {
             @Override
-            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
+            public void onResponse(Call<AllOnlineCourseBean> call, Response<AllOnlineCourseBean> response) {
                 int code1 = response.code();
-                OnlineCourseBean body = response.body();
+                AllOnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
@@ -128,7 +124,7 @@ public class RecommendCourseActivity extends BaseActivity{
                             Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            List<OnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<AllOnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -148,7 +144,7 @@ public class RecommendCourseActivity extends BaseActivity{
             }
 
             @Override
-            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+            public void onFailure(Call<AllOnlineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);

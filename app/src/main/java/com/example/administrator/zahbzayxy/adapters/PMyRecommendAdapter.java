@@ -5,19 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,16 +22,11 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
+import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
-import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.ImageRadiusView;
-import com.example.administrator.zahbzayxy.myviews.VerticalImageSpan;
 import com.example.administrator.zahbzayxy.utils.Constant;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
-import com.example.administrator.zahbzayxy.utils.DisplayUtil;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
@@ -64,7 +55,7 @@ public class PMyRecommendAdapter extends BaseAdapter {
     private Context context;
     int userCourse_Id;
     int coruse_Id;
-    private List<OnlineCourseBean.DataBean.CourseListBean> list;
+    private List<AllOnlineCourseBean.DataBean.CourseListBean> list;
     private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
@@ -88,14 +79,14 @@ public class PMyRecommendAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public PMyRecommendAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
+    public PMyRecommendAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
     }
 
-    public PMyRecommendAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
+    public PMyRecommendAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
         this.list = list;
         this.context = context;
         this.token = token;
@@ -139,7 +130,7 @@ public class PMyRecommendAdapter extends BaseAdapter {
             myViewHold = (PMyRecommendAdapter.myViewHold) convertView.getTag();
         }
 
-        OnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
+        AllOnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
         myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
 
 

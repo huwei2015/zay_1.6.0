@@ -22,13 +22,11 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
+import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
-import com.example.administrator.zahbzayxy.beans.RecommendCourseBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.ImageRadiusView;
 import com.example.administrator.zahbzayxy.utils.Constant;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
@@ -36,13 +34,7 @@ import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.ta.utdid2.android.utils.StringUtils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -63,7 +55,7 @@ public class OnlineCourseAdapter extends BaseAdapter {
     private Context context;
     int userCourse_Id;
     int coruse_Id;
-    private List<OnlineCourseBean.DataBean.CourseListBean> list;
+    private List<AllOnlineCourseBean.DataBean.CourseListBean> list;
     private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
@@ -87,14 +79,14 @@ public class OnlineCourseAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public OnlineCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
+    public OnlineCourseAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
     }
 
-    public OnlineCourseAdapter(List<OnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
+    public OnlineCourseAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
         this.list = list;
         this.context = context;
         this.token = token;
@@ -140,7 +132,7 @@ public class OnlineCourseAdapter extends BaseAdapter {
             myViewHold = (OnlineCourseAdapter.myViewHold) convertView.getTag();
         }
 
-        OnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
+        AllOnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
         if(courseListBean.getIsRecommend()==1){
             myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
         }else{

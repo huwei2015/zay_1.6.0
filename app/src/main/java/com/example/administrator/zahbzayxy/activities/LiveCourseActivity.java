@@ -1,7 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,19 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LiveCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
-import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
-import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;

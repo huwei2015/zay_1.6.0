@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,10 +23,8 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
-import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.QueslibAdapter;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
-import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.QueslibBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;

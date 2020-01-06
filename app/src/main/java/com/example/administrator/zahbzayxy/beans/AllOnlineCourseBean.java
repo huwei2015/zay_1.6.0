@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by ${ZWJ} on 2017/4/5 0005.
  */
-public class OnlineCourseBean {
+public class AllOnlineCourseBean {
 
     /**
      * code : 00000
