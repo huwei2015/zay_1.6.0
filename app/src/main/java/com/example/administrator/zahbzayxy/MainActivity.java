@@ -34,6 +34,7 @@ import com.bokecc.sdk.mobile.util.HttpUtil;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadController;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadService;
+import com.example.administrator.zahbzayxy.fragments.ExamFragment;
 import com.example.administrator.zahbzayxy.fragments.LearningFragment;
 import com.example.administrator.zahbzayxy.fragments.LessonFragment;
 import com.example.administrator.zahbzayxy.fragments.NewHomeFragment;
@@ -79,8 +80,8 @@ public class MainActivity extends BaseActivity {
 //    LessonFragment lessonFragment;
     LearningFragment learningFragment;
     //题库分类
-    NewTestFragment newTestFragment;
-//    ExamFragment examFragment;
+//    NewTestFragment newTestFragment;
+    ExamFragment examFragment;
     UserFragment userFragment;
     private String moreTiKu;
     private String downloadAdd;
@@ -320,15 +321,13 @@ public class MainActivity extends BaseActivity {
     private void init() {
         //homeFragment  = new HomeFragment();
         newHomeFragment = new NewHomeFragment();
-//        learningFragment = new LearningFragment();
         learningFragment = new LearningFragment();
-        newTestFragment = new NewTestFragment();
+        examFragment = new ExamFragment();
         userFragment = new UserFragment();
         //添加fragment集合
         fragmentList.add(newHomeFragment);
-//        fragmentList.add(learningFragment);
         fragmentList.add(learningFragment);
-        fragmentList.add(newTestFragment);
+        fragmentList.add(examFragment);
         fragmentList.add(userFragment);
         //添加radioButton集合
         radioButtonList.add(homePager);
