@@ -38,6 +38,8 @@ import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MyLessonActivity;
 import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
+import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
+import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
@@ -116,11 +118,13 @@ public class NewHomeFragment extends Fragment {
         WebSettings webSettings = mwebView.getSettings();
         webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(true);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        //LOAD_CACHE_ELSE_NETWORK
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setBlockNetworkImage(false);
         webSettings.setJavaScriptEnabled(true);
-        mwebView.loadUrl(RetrofitUtils.getBaseUrl()+"/static/html/zayh5index.html"+"?token="+token);
+        Log.i("=======================","进来了.....");
+        mwebView.loadUrl(RetrofitUtils.getBaseUrl()+ AppUrls.INDEX_URL+"?token="+token);
 //        mwebView.loadUrl(RetrofitUtils.getBaseUrl()+"/static/html/zayh5index.html"+"?token="+token);
         mwebView.getSettings().setJavaScriptEnabled(true);
 
@@ -220,6 +224,24 @@ public class NewHomeFragment extends Fragment {
             }
         }
 
+        @JavascriptInterface
+        public void recommend(String dataType,String pageType){
+
+
+            if ("course".equals(dataType)) {
+                if("list".equals(pageType)){
+                    Log.i("=============",dataType+"==="+pageType);
+                    Intent intent=new Intent(context, RecommendCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+                if("detail".equals(pageType)) {
+
+                }
+            }
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -258,6 +280,7 @@ public class NewHomeFragment extends Fragment {
                 //当前fragment对用户可见,在新线程中访问获取用户信息的接口
 //                UserInfoRunnable.startUsrInfoRunnable(this, mContext, dialog);
                 UserInfoRunnable.startUsrInfoRunnable(mContext, handler);
+                initWebView();
             }
             Log.d("HomeFragment", "onHiddenChanged");
         }catch (Exception e){

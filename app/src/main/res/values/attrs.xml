@@ -86,6 +86,24 @@
         <attr name="isScroll" />
     </declare-styleable>
 
+    <!-- HYY 添加图片圆角设置-->
+    <declare-styleable name="Custom_Round_Image_View">
+        <attr name="radiusAll" format="dimension"/>
+        <attr name="left_top_radius" format="dimension"/>
+        <attr name="right_top_radius" format="dimension"/>
+        <attr name="right_bottom_radius" format="dimension"/>
+        <attr name="left_bottom_radius" format="dimension"/>
+    </declare-styleable>
 
 
+    <declare-styleable name="WarpLinearLayout">
+        <attr name="grivate" format="enum"><!--对齐方式 !-->
+            <enum name="right" value="0"></enum>
+            <enum name="left" value="1"></enum>
+            <enum name="center" value="2"></enum>
+        </attr>
+        <attr name="horizontal_Space" format="dimension"></attr>
+        <attr name="vertical_Space" format="dimension"></attr>
+        <attr name="isFull" format="boolean"></attr>
+    </declare-styleable>
 </resources>
