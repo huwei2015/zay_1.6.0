@@ -47,23 +47,19 @@ public class LearningFragment extends Fragment {
         learnVPList=new ArrayList<>();
         learnTabList.add("在线课");
         learnTabList.add("线下课");
-        learnTabList.add("直播课");
         learnTabList.add("离线课");
-        NewAllOrderFragment allOrderFragment=new NewAllOrderFragment();
-        NewHavePayOrderFragment havePayOrderFragment=new NewHavePayOrderFragment();
-        NewWaitPayOrderFragment waitPayOrderFragment=new NewWaitPayOrderFragment();
-        NewHaveCancleOrderFragment haveCancleFragment=new NewHaveCancleOrderFragment();
+        OnLineCourseFragment allOrderFragment=new OnLineCourseFragment();
+        OnLineCourseFragment allOrderFragment1=new OnLineCourseFragment();
+        OnLineCourseFragment allOrderFragment2=new OnLineCourseFragment();
         learnVPList.add(allOrderFragment);
-        learnVPList.add(havePayOrderFragment);
-        learnVPList.add(waitPayOrderFragment);
-        learnVPList.add(haveCancleFragment);
+        learnVPList.add(allOrderFragment1);
+        learnVPList.add(allOrderFragment2);
         fragmentManager=getChildFragmentManager();
         pagerAdapter=new LessonFragmentPageAdapter(fragmentManager,learnVPList,learnTabList);
         learnViewPager.setAdapter(pagerAdapter);
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(0)));
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(1)));
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(2)));
-        learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(3)));
         learnTabLayout.setupWithViewPager(learnViewPager);
     }
 }

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/bg_light_Gray"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/left_layout"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:layout_marginLeft="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="120dp">
+                <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
+                    android:id="@+id/recPic1"
+                    android:src="@mipmap/lesson_name1"
+                    android:layout_width="match_parent"
+                    android:background="@color/bg_light_Gray"
+                    android:scaleType="fitXY"
+                    app:left_top_radius="8dp"
+                    app:right_top_radius="8dp"
+                    android:layout_height="match_parent" />
+                <ImageView
+                    android:id="@+id/sign_zxIV1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sign_new"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingRight="2dp"
+            android:paddingLeft="2dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/rec_courseName1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:lines="2"
+                android:text="防爆电气执业资格培训"
+                android:textColor="@color/cname_color"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/rec_price1"
+                    android:textColor="@color/price_color"
+                    android:text="￥15.00"
+                    android:layout_width="match_parent"
+                    android:textSize="14sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/right_layout"
+        android:visibility="visible"
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="120dp">
+                <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
+                    android:id="@+id/recPic2"
+                    android:src="@mipmap/lesson_name1"
+                    android:layout_width="match_parent"
+                    android:background="@color/bg_light_Gray"
+                    android:scaleType="fitXY"
+                    app:left_top_radius="8dp"
+                    app:right_top_radius="8dp"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/sign_zxIV2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sign_new"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingRight="2dp"
+            android:paddingLeft="2dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/rec_courseName2"
+                android:text="防爆电气执业资格培训"
+                android:textColor="@color/cname_color"
+                android:textSize="14sp"
+                android:lines="2"
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/rec_price2"
+                    android:textColor="@color/price_color"
+                    android:text="￥15.00"
+                    android:layout_width="match_parent"
+                    android:textSize="14sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

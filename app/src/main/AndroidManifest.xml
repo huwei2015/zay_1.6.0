@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -29,6 +30,10 @@
     <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar" -->
     <!-- 允许相机对焦 -->
     <uses-permission android:name="android.hardware.camera.autofocus" />
+
+    <!-- HYY 添加 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".DemoApplication"
@@ -59,13 +64,14 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-        <activity android:name=".activities.WelcomeActivity">
+        <activity android:name=".activities.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.SplashActivity"/>
         <activity
             android:name=".activities.ChangeAppActivity"
             android:screenOrientation="portrait" />
@@ -190,7 +196,9 @@
         <activity android:name=".activities.ProfessionalActivity"/>
         <activity android:name=".activities.TypeActivity"/>
         <activity android:name=".activities.SkillsActivity"/>
+        <activity android:name=".activities.WelcomeActivity"/>
         <activity android:name=".activities.AuthorizationActivity"/>
+        <activity android:name=".activities.ChooseTopicActivity"/>
         <activity
             android:name=".activities.NewMyChengJiActivity"
             android:exported="true" />
@@ -304,9 +312,40 @@
     </activity>
         <activity android:name=".activities.TestActivity"/>
 
-        <!-- HYY 添加 推荐-->
+        <!-- HYY 添加 start-->
+        <!-- 课程推荐（只有在线课）列表页 -->
         <activity android:name=".activities.RecommendCourseActivity"/>
-        <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleBottom" />
+        <!-- 在线课、线下课、题库、书籍分类选择 -->
+        <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleRight" />
+        <!-- 在线课列表页 -->
+        <activity android:name=".activities.OnlineCourseActivity"/>
+        <!-- 线下课列表页 -->
+        <activity android:name=".activities.OfflineCourseActivity"/>
+        <!-- 线下课详情页 -->
+        <activity android:name=".activities.OfflineDetailActivity"/>
+        <!-- 直播课列表页 -->
+        <activity android:name=".activities.LiveCourseActivity"/>
+        <!-- 直播课播放页 -->
+        <activity android:name=".activities.LivePlayActivity"/>
+        <!-- 题库列表页 -->
+        <activity android:name=".activities.QueslibActivity"/>
+        <!-- 书籍列表页 -->
+        <activity android:name=".activities.BooksActivity"/>
+        <!-- h5首页扫码签到页 -->
+        <activity android:name=".activities.SignInActivity"/>
+        <!-- 签到成功页 -->
+        <activity android:name=".activities.SigninSuccessActivity"
+            android:theme="@style/MyDialogStyleBottom"/>
+        <!-- 扫码二维码 -->
+        <activity
+            android:name=".activities.ScanQRCodeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <!-- 原生跳H5  常见问题、使用手册 -->
+        <activity android:name=".activities.H5PageActivity"/>
+        <!-- HYY 添加 end-->
 
     </application>
 

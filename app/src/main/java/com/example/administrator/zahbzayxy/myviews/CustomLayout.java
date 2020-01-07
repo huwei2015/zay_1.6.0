@@ -4,13 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.adapters.ListClassifyAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomLayout  extends ViewGroup{
 
@@ -82,6 +89,7 @@ public class CustomLayout  extends ViewGroup{
          * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
          */
         mWarpLineGroup = new ArrayList<WarpLine>();
+
         for (int i = 0; i < childCount; i++) {
             if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontal_Space > with) {
                 if (warpLine.lineView.size() == 0) {
@@ -97,6 +105,8 @@ public class CustomLayout  extends ViewGroup{
                 warpLine.addView(getChildAt(i));
             }
         }
+
+
         /**
          * 添加最后一行
          */

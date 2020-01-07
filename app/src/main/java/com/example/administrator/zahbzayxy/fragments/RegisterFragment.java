@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.PhoneCodeBean;
@@ -57,7 +58,7 @@ public class RegisterFragment extends Fragment {
     EditText mResetPW_et;
     // 获取验证码按钮
     @BindView(R.id.getCode_bt)
-    Button mGetCode_bt;
+    TextView mGetCode_bt;
 
     private Unbinder mUnbinder;
     private Context mContext;

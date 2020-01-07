@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5418544671237855202",
-      "lastPropertyId": "9:8988005182001417870",
+      "lastPropertyId": "12:9197928880135810692",
       "name": "DownloadInfo",
       "properties": [
         {
@@ -43,6 +43,18 @@
         {
           "id": "9:8988005182001417870",
           "name": "definition"
+        },
+        {
+          "id": "10:7908378682742217567",
+          "name": "userCourseId"
+        },
+        {
+          "id": "11:6553319448472431879",
+          "name": "sectionId"
+        },
+        {
+          "id": "12:9197928880135810692",
+          "name": "coruseId"
         }
       ],
       "relations": []

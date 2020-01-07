@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,14 +21,15 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
+import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
+import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.ImageRadiusView;
 import com.example.administrator.zahbzayxy.utils.Constant;
-import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
+import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
 import com.google.gson.Gson;
@@ -55,7 +55,7 @@ public class PMyRecommendAdapter extends BaseAdapter {
     private Context context;
     int userCourse_Id;
     int coruse_Id;
-    private List<PMyLessonBean.DataBean.CourseListBean> list;
+    private List<AllOnlineCourseBean.DataBean.CourseListBean> list;
     private LayoutInflater inflater;
     String price, token;
     Handler mHandler;
@@ -79,14 +79,14 @@ public class PMyRecommendAdapter extends BaseAdapter {
         this.price = price;
     }
 
-    public PMyRecommendAdapter(List<PMyLessonBean.DataBean.CourseListBean> list, Context context, String token) {
+    public PMyRecommendAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token) {
         this.list = list;
         this.context = context;
         this.token = token;
         inflater = LayoutInflater.from(context);
     }
 
-    public PMyRecommendAdapter(List<PMyLessonBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
+    public PMyRecommendAdapter(List<AllOnlineCourseBean.DataBean.CourseListBean> list, Context context, String token, Handler handler) {
         this.list = list;
         this.context = context;
         this.token = token;
@@ -123,29 +123,64 @@ public class PMyRecommendAdapter extends BaseAdapter {
             myViewHold.rec_price2 = convertView.findViewById(R.id.rec_price2);
             myViewHold.rec_sign_shikan1 = convertView.findViewById(R.id.rec_sign_shikan1);
             myViewHold.rec_sign_shikan2 = convertView.findViewById(R.id.rec_sign_shikan2);
+            myViewHold.left_layout=convertView.findViewById(R.id.left_layout);
+            myViewHold.right_layout=convertView.findViewById(R.id.right_layout);
             convertView.setTag(myViewHold);
         } else {
             myViewHold = (PMyRecommendAdapter.myViewHold) convertView.getTag();
         }
 
-        PMyLessonBean.DataBean.CourseListBean courseListBean = list.get(position);
-        userCourse_Id = courseListBean.getUserCourseId();
-        myViewHold.rec_courseName1.setText(courseListBean.getCourseName());
-        myViewHold.rec_courseName2.setText(courseListBean.getCourseName());
-        myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getTotalHours()));
-        myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getTotalHours()));
-        String logo = courseListBean.getLogo();
-        if (!TextUtils.isEmpty(logo)) {
-            Picasso.with(context).load(logo).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
-            Picasso.with(context).load(logo).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
+        AllOnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
+        myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
+
+
+        myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getSalePrice()));
+        if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
+            Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
-        //用户课程id传到下个界面
-        final int userCourseId = courseListBean.getUserCourseId();
-        final int coruseId = courseListBean.getCoruseId();
-        String endDate = courseListBean.getEndDate();
-        Log.e("endDate", endDate + "");
-        String currentTime = DateUtil.getCurrentTimeAll();
-        int i = endDate.compareTo(currentTime);
+        if(courseListBean.getIsTrailers()==1){
+            myViewHold.rec_sign_shikan1.setVisibility(View.VISIBLE);
+        }else{
+            myViewHold.rec_sign_shikan1.setVisibility(View.INVISIBLE);
+        }
+        final int courseId=courseListBean.getCourseId();
+        myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, LessonThiredActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("courseId",courseId);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
+
+        if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
+            myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName1(),R.mipmap.recommend_course));
+            myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getSalePrice1()));
+            if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
+                Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
+            }
+            if (courseListBean.getIsTrailers() == 1) {
+                myViewHold.rec_sign_shikan2.setVisibility(View.VISIBLE);
+            } else {
+                myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
+            }
+            myViewHold.right_layout.setVisibility(View.VISIBLE);
+            final int courseId1=courseListBean.getCourseId1();
+            myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, LessonThiredActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("courseId",courseId1);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
+        }else{
+            myViewHold.right_layout.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
 
@@ -153,6 +188,7 @@ public class PMyRecommendAdapter extends BaseAdapter {
         ImageRadiusView recPic1,recPic2;
         TextView rec_courseName1, rec_courseName2, rec_price1, rec_price2;
         ImageView rec_sign_shikan1,rec_sign_shikan2;
+        LinearLayout left_layout,right_layout;
     }
 
     static class GetUserInfoRunnable implements Runnable {

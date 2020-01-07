@@ -7,7 +7,8 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/medium_layout"
+        android:id="@+id/left_layout"
+        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_weight="1"
         android:background="@color/white"
@@ -17,14 +18,28 @@
         android:layout_alignParentLeft="true"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
-            android:id="@+id/recPic1"
-            android:src="@mipmap/lesson_name1"
-            android:layout_width="match_parent"
-            android:scaleType="fitXY"
-            app:left_top_radius="8dp"
-            app:right_top_radius="8dp"
-            android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="120dp">
+                <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
+                    android:id="@+id/recPic1"
+                    android:src="@mipmap/lesson_name1"
+                    android:layout_width="match_parent"
+                    android:background="@color/bg_light_Gray"
+                    android:scaleType="fitXY"
+                    app:left_top_radius="8dp"
+                    app:right_top_radius="8dp"
+                    android:layout_height="match_parent" />
+                <ImageView
+                    android:id="@+id/sing_zxIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sign_new"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -34,13 +49,14 @@
 
             <TextView
                 android:id="@+id/rec_courseName1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:lines="2"
                 android:text="防爆电气执业资格培训"
                 android:textColor="@color/cname_color"
-                android:textSize="14sp"
-                android:lines="2"
-                android:layout_marginTop="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="14sp" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +85,8 @@
 
 
     <LinearLayout
-        android:id="@+id/medium_layout1"
+        android:id="@+id/right_layout"
+        android:visibility="visible"
         android:background="@color/white"
         android:layout_width="wrap_content"
         android:layout_weight="1"
@@ -80,14 +97,29 @@
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
-            android:id="@+id/recPic2"
-            android:src="@mipmap/lesson_name1"
-            android:layout_width="match_parent"
-            android:scaleType="fitXY"
-            app:left_top_radius="8dp"
-            app:right_top_radius="8dp"
-            android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="120dp">
+                <com.example.administrator.zahbzayxy.myviews.ImageRadiusView
+                    android:id="@+id/recPic2"
+                    android:src="@mipmap/lesson_name1"
+                    android:layout_width="match_parent"
+                    android:background="@color/bg_light_Gray"
+                    android:scaleType="fitXY"
+                    app:left_top_radius="8dp"
+                    app:right_top_radius="8dp"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/sing_zxIV2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/sign_new"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -97,7 +129,7 @@
 
             <TextView
                 android:id="@+id/rec_courseName2"
-                android:text="防爆电气执业资格培训业资格培训业资格培训"
+                android:text="防爆电气执业资格培训"
                 android:textColor="@color/cname_color"
                 android:textSize="14sp"
                 android:lines="2"

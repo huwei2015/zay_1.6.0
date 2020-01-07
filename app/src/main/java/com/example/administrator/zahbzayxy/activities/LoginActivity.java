@@ -64,7 +64,6 @@ public class LoginActivity extends BaseActivity{
     private String downloadAdd;
     private String versionName;
     private int isForce;
-
     private PopupWindow popupWindow;
     private String  uuid;
     private int type;
@@ -80,7 +79,7 @@ public class LoginActivity extends BaseActivity{
         initAppVersion();
     }
 
-    @OnClick({R.id.free_register_bt, R.id.login_bt, R.id.back_login,R.id.forgetPw_login,R.id.youke_tv})
+    @OnClick({R.id.free_register_bt, R.id.login_bt, R.id.back_login,R.id.forgetPw_login,R.id.youke_tv,R.id.tv_yinsi,R.id.tv_xieyi})
     public void onClick(View view) {
 //        KeyboardUtil.hideKeyBoardForAct(LoginActivity.this);
         switch (view.getId()) {
@@ -112,6 +111,12 @@ public class LoginActivity extends BaseActivity{
                 intent.putExtra("isLoginActivity","true");
                 startActivity(intent);
                 finish();
+                break;
+            case R.id.tv_xieyi:
+                startActivity(new Intent(LoginActivity.this,ServiceActivity.class));
+                break;
+            case R.id.tv_yinsi:
+                startActivity(new Intent(LoginActivity.this,PrivacyActivity.class));
                 break;
             default:
                 break;

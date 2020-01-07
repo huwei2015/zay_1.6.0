@@ -31,6 +31,7 @@ import com.example.administrator.zahbzayxy.activities.AuthorizationActivity;
 import com.example.administrator.zahbzayxy.activities.BuyCarActivity;
 import com.example.administrator.zahbzayxy.activities.ContacActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.H5PageActivity;
 import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MsgListActivity;
 import com.example.administrator.zahbzayxy.activities.MyAccountActivity;
@@ -45,6 +46,7 @@ import com.example.administrator.zahbzayxy.activities.NewMyChengJiActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyOrderActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
 import com.example.administrator.zahbzayxy.activities.ResetActivity;
+import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
@@ -74,26 +76,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     View view;
     //用户头像
     CircleImageView userHead_iv;
-    //未登录时点击头像右侧时的箭头
-    Button noLoginEditMessage_bt;
     LinearLayout userCenter_layout;
-    //未登录时的设置按钮
-//    @BindView(R.id.resetMessage_ic)
-//    ImageView getResetMessage_ic;
-    //已登录时的信息编辑
-//    @BindView(R.id.editMessage_logined)
-    //已登录时的信息设置
-//    @BindView(R.id.resetMessage_logined)
-//    ImageView rsetMessage_logined;
     //未登录时的界面
     @BindView(R.id.noLogin_layout)
     RelativeLayout noLoginLayout;
     //已登录时的界面
     @BindView(R.id.haveLogin_layout)
     RelativeLayout haveLoginLayout;
-    //已登录界面中的用户手机号
-    // @BindView(R.id.phonenum_tv)
-    //TextView phoneNum_tv;
     @BindView(R.id.name_tv)
     TextView nickName_tv;
     private LinearLayout myMonney_ll;
@@ -107,7 +96,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private LinearLayout myYouhuiJuan_ll;
     private LinearLayout tv_offline;
     private LinearLayout myExam_ll;
-    private LinearLayout tv_authorization;
+    private LinearLayout ll_authorization;
     private RelativeLayout rl_contac;
     private ImageView getResetMessage_ic;
     private String weChatHeadImg;
@@ -115,7 +104,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private String token;
     private ImageView img_msg;
     private SharedPreferences sharedPreferences;
-    private TextView tv_username;
+    private TextView tv_username,tv_account,tv_couponNum,tv_role,tv_order,tv_shop_num,tab_unread_message;
     private Button editMessage_logined;
     private Button no_editMessage_logined;//没有登录
     private LinearLayout ll_no_role;//未登陆
@@ -127,6 +116,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     boolean isLogin;
 
     /**********FHS Start**********/
+
+    //HYY添加
+    private RelativeLayout common_problemRL;
+    private RelativeLayout user_manualRL;
 
     @Override
     public void onAttach(Context context) {
@@ -146,9 +139,55 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         initView();
         initIsLogin();
         initUserInfo();
+        initUserCenter();
         return view;
     }
 
+    private void initUserCenter() {
+        token = sharedPreferences.getString("token", "");
+        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
+        Call<UserCenter> userCenter = userInfoInterface.getUserCenter(token);
+        userCenter.enqueue(new Callback<UserCenter>() {
+            @Override
+            public void onResponse(Call<UserCenter> call, Response<UserCenter> response) {
+                if(response !=null && response.body() != null){
+                    String code=response.body().getCode();
+                    if(code.equals("00000")){
+                        UserCenter.userCenterData data = response.body().getData();
+                         Double amount=data.getAmount();//金额
+                        tv_account.setText(String.valueOf(amount));
+                        String userLevelStr = data.getUserLevelStr();//角色
+                        tv_role.setText(userLevelStr);
+                        boolean agreementAdmin = data.isAgreementAdmin();
+                        if(agreementAdmin){
+                            ll_authorization.setVisibility(View.VISIBLE);
+                        }else{
+                            ll_authorization.setVisibility(View.INVISIBLE);
+
+                        }
+
+                        int messageNum = data.getMessageNum();//消息
+                        if(messageNum == 0){
+                            tab_unread_message.setVisibility(View.INVISIBLE);
+                        }else{
+                            tab_unread_message.setText(String.valueOf(messageNum));
+                        }
+                        int shopCarNum = data.getShopCarNum();//购物车数量
+                        tv_shop_num.setText(String.valueOf(shopCarNum));
+                        int orderNum = data.getOrderNum();//订单
+                        tv_order.setText(String.valueOf(orderNum));
+                        int couponNum = data.getCouponNum();//优惠券
+                        tv_couponNum.setText(String.valueOf(couponNum));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserCenter> call, Throwable t) {
+
+            }
+        });
+    }
     //初始化view
     private void initView() {
         userHead_iv = view.findViewById(R.id.userHead_img);//用户图像
@@ -159,8 +198,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         no_editMessage_logined = view.findViewById(R.id.no_editMessage_logined);//没有登录
         no_editMessage_logined.setOnClickListener(this);
         userCenter_layout = view.findViewById(R.id.userCenter_layout);
-        tv_authorization = view.findViewById(R.id.tv_authorization);
-        tv_authorization.setOnClickListener(this);
+        ll_authorization = view.findViewById(R.id.ll_authorization);
+        ll_authorization.setOnClickListener(this);
         myYouhuiJuan_ll = view.findViewById(R.id.ll_yhj);
         myYouhuiJuan_ll.setOnClickListener(this);
         tv_offline = view.findViewById(R.id.tv_offline);
@@ -190,6 +229,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         myShopping = view.findViewById(R.id.ll_shopping);
         myShopping.setOnClickListener(this);
         tv_username = view.findViewById(R.id.tv_username);//登录成功显示项目
+        tv_account=view.findViewById(R.id.tv_account);//显示金额
+        tv_couponNum=view.findViewById(R.id.tv_couponNum);//优惠券
+        tv_role=view.findViewById(R.id.tv_role);//角色
+        tv_order=view.findViewById(R.id.tv_order);//订单
+        tab_unread_message=view.findViewById(R.id.tab_unread_message);//消息数
+        tv_shop_num=view.findViewById(R.id.tv_shop_num);//购物车数量
         noLoginLayout = view.findViewById(R.id.noLogin_layout);//没有登录
         haveLoginLayout = view.findViewById(R.id.haveLogin_layout);//已经登录
         ll_sign=view.findViewById(R.id.ll_sign);//我的报名
@@ -197,13 +242,18 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         ll_file=view.findViewById(R.id.ll_file);
         ll_file.setOnClickListener(this);
 
+        //HYY添加 常见问题  使用手册
+        common_problemRL=view.findViewById(R.id.common_problemRL);
+        common_problemRL.setOnClickListener(this);
+        user_manualRL=view.findViewById(R.id.user_manualRL);
+        user_manualRL.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         switch (v.getId()) {
-            case R.id.tv_authorization://授权管理
+            case R.id.ll_authorization://授权管理
                 if (isLogin) {
                     startActivity(new Intent(context, AuthorizationActivity.class));
                 } else {
@@ -332,6 +382,24 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
                 break;
+            case R.id.common_problemRL://常见问题
+                if(isLogin){
+                    Intent intent=new Intent(context, H5PageActivity.class);
+                    intent.putExtra("h5Type","common_problem");
+                    startActivity(intent);
+                }else{
+                    startActivity(new Intent(context, LoginActivity.class));
+                }
+                break;
+            case R.id.user_manualRL://使用手册
+                if(isLogin){
+                    Intent intent=new Intent(context, H5PageActivity.class);
+                    intent.putExtra("h5Type","user_manual");
+                    startActivity(intent);
+                }else{
+                    startActivity(new Intent(context, LoginActivity.class));
+                }
+                break;
         }
     }
 
@@ -430,44 +498,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             });
         }
     }
-
-    private void initUserHeadView() {
-        //点击用户头像时跳到用户登陆的界面
-//        noLoginEditMessage_bt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                startActivityForResult(intent, 200);
-//            }
-//        });
-        //未登陆时，点击设置的按钮
-//        getResetMessage_ic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ResetActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-        // 已登录时点击的编辑信息
-//        editMessage_logined.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), EditMessageActivity.class);
-//                //要把用户头像传回来
-//                startActivity(intent);
-//            }
-//        });
-//        //点击设置按钮
-//        rsetMessage_logined.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ResetActivity.class);
-//                startActivityForResult(intent, 100);
-//            }
-//        });
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

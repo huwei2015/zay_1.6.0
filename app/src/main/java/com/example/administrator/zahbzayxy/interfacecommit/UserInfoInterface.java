@@ -2,12 +2,16 @@ package com.example.administrator.zahbzayxy.interfacecommit;
 
 import android.app.Person;
 
+import com.example.administrator.zahbzayxy.beans.AuthStateBean;
+import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
+import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoResetBean;
 import com.example.administrator.zahbzayxy.utils.Constant;
@@ -61,6 +65,14 @@ public interface UserInfoInterface {
     @POST(value = updateOneCun)
     Call<OneCunBean> updatePhoto(@Query("token") String token,
                                  @Part MultipartBody.Part oneInchPhoto);
+
+    //附件上传图片
+    static final String updateFile = "user/attachment/upload";
+    @Multipart
+    @POST(value = updateFile)
+    Call<OneCunBean> updateFile(@Query("token") String token,
+                                @Part MultipartBody.Part oneInchPhoto);
+
     //账户余额
     static final String getMyAmmountPath="user/account/balance";
     @GET(value =getMyAmmountPath)
@@ -94,4 +106,31 @@ public interface UserInfoInterface {
     Call<PayCardBean> studyCard(@FieldMap Map<String,String>cardNum);
     //Call<SuccessBean> studyCard(@Query("cardCode") String cardCode,@Query("orderNumber") String orderNumber, @Query("token") String token);
 
+    //个人中心
+    static final String userCenter = "userCenter";
+    @POST(value = userCenter)
+    Call<UserCenter> getUserCenter(@Query("token") String token);
+
+    //授权列表
+    static final String auth = "order/auth/list";
+    @POST(value = auth)
+    Call<HasAuthorBean> getAuthData(@Query("token") String token,
+                                    @Query("orderStatus") int orderStatus,
+                                    @Query("pageNo") int pageNo,
+                                    @Query("pageSize") int pageSize,
+                                    @Query("orderNumber") String orderNumber);
+
+    //授权列表
+    static final String un_auth = "order/auth/list";
+    @POST(value = un_auth)
+    Call<StayAuthorBean> getUnAuthData(@Query("token") String token,
+                                       @Query("orderStatus") int orderStatus,
+                                       @Query("pageNo") int pageNo,
+                                       @Query("pageSize") int pageSize,
+                                       @Query("orderNumber") String orderNumber);
+
+    //授权状态接口
+    static final String auth_state = "order/auth";
+    @POST(value = auth_state)
+    Call<AuthStateBean> getStateData(@Query("token") String token, @Query("orderNumber") String orderNumber);
 }

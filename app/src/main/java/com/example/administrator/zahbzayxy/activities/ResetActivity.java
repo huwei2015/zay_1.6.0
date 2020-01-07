@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.DemoApplication;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
+import com.example.administrator.zahbzayxy.beans.LogoutBean;
 import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.DataCleanManager;
@@ -36,12 +37,14 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,6 +76,8 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
     RelativeLayout rl_service;
     //隐私协议
     RelativeLayout rl_privacy;
+    //注销账户
+    RelativeLayout rl_households;
     private String versionName;
     private String downloadAdd;
 
@@ -109,6 +114,8 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
         img_back.setOnClickListener(this);
         showCache_tv= (TextView) findViewById(R.id.showCache_tv);
         textVersion= (TextView) findViewById(R.id.curenntClass);
+        rl_households= (RelativeLayout) findViewById(R.id.rl_households);
+        rl_households.setOnClickListener(this);
         textVersion.setText("v"+getAppVersionName(ResetActivity.this));
         String totalCacheSize = null;
         try {
@@ -204,6 +211,9 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
                 //账户安全
             case R.id.rl_account:
                 startActivity(new Intent(ResetActivity.this,AccountSecurityActivity.class));
+                break;
+            case R.id.rl_households://注销账户
+                getLogout();
                 break;
         }
     }
@@ -356,5 +366,30 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
         }
         return versionName;
     }
+    private void getLogout(){
+       SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        MyLessonInterface aClass = RetrofitUtils.getInstance().createClass(MyLessonInterface.class);
+        aClass.getLogout(token).enqueue(new Callback<LogoutBean>() {
+            @Override
+            public void onResponse(Call<LogoutBean> call, Response<LogoutBean> response) {
+                if(response !=null && response.body()!=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000")){
+                        boolean data = response.body().isData();
+                        if(data){
+                            Toast.makeText(ResetActivity.this,"注销成功",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ResetActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<LogoutBean> call, Throwable t) {
+                Toast.makeText(ResetActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

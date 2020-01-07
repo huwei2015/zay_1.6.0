@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemClassify"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingLeft="15dp"
@@ -16,99 +17,29 @@
             android:textSize="14sp"
             android:text="全部"/>
 
-        <com.example.administrator.zahbzayxy.myviews.CustomLayout
-            android:id="@+id/txtRL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/white"
-            app:grivate="left"
-            app:horizontal_Space="10dp"
-            app:isFull="false"
-            app:vertical_Space="10dp">
-            <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+        <LinearLayout
+                android:id="@+id/txtRL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+        >
+        </LinearLayout>
+        <!--
+     <com.example.administrator.zahbzayxy.myviews.CustomLayout
+         android:id="@+id/txtRL"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="8dp"
+         android:background="@color/white"
+         app:grivate="left"
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textSize="14sp"
-                android:text="全部课程"/>
-                -->
-        </com.example.administrator.zahbzayxy.myviews.CustomLayout>
+         app:isFull="false"
+         >
+     </com.example.administrator.zahbzayxy.myviews.CustomLayout>
+   app:vertical_Space="10dp" app:horizontal_Space="10dp"-->
 </LinearLayout>

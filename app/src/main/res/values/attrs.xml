@@ -106,4 +106,12 @@
         <attr name="vertical_Space" format="dimension"></attr>
         <attr name="isFull" format="boolean"></attr>
     </declare-styleable>
+
+
+    <declare-styleable name="CateTextView">
+        <attr name="textvalue" format="string">
+        </attr>
+        <attr name="dataId" format="dimension"/>
+    </declare-styleable>
+
 </resources>

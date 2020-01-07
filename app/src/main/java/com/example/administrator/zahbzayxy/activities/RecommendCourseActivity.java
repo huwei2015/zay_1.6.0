@@ -1,9 +1,12 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,11 +21,13 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
-import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
+import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
-import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
+import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -37,20 +41,26 @@ import retrofit2.Response;
 
 public class RecommendCourseActivity extends BaseActivity{
 
-    private ImageView recommedn_back_iv;
+    private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
+    private TextView zuixinTV;
+    private TextView isrecommendTV;
+    private ProgressBarLayout mLoadingBar;
 
-    private List<PMyLessonBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<AllOnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
     private static String token;
     PMyRecommendAdapter adapter;
     private int pageSize = 10;
     private int pager = 1;
     private String dividePrice;
     private RelativeLayout rl_empty;
+    private static final int RECOMMEND_SIGN=1;
+    private int cateId=0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommend_course);
+        Utils.setFullScreen(RecommendCourseActivity.this,getWindow());
         initView();
         getSP();
         adapter = new PMyRecommendAdapter(totalList, RecommendCourseActivity.this, token, handler);
@@ -86,12 +96,13 @@ public class RecommendCourseActivity extends BaseActivity{
     }
 
     private void downLoadData(int pager) {
-        PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getPMyLessonData(pager, pageSize, token).enqueue(new Callback<PMyLessonBean>() {
+        showLoadingBar(false);
+        IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
+        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,null,1,1).enqueue(new Callback<AllOnlineCourseBean>() {
             @Override
-            public void onResponse(Call<PMyLessonBean> call, Response<PMyLessonBean> response) {
+            public void onResponse(Call<AllOnlineCourseBean> call, Response<AllOnlineCourseBean> response) {
                 int code1 = response.code();
-                PMyLessonBean body = response.body();
+                AllOnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
                 if (body != null && body.getData().getCourseList().size() > 0) {
@@ -113,9 +124,7 @@ public class RecommendCourseActivity extends BaseActivity{
                             Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            dividePrice = body.getData().getDividePrice();
-                            adapter.setPrice(dividePrice);
-                            List<PMyLessonBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<AllOnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
@@ -127,12 +136,15 @@ public class RecommendCourseActivity extends BaseActivity{
                         }
                     }
                 }else{
-                    initViewVisible(false);
+                    if(totalList==null || totalList.size()==0) {
+                        initViewVisible(false);
+                    }
                 }
+                hideLoadingBar();
             }
 
             @Override
-            public void onFailure(Call<PMyLessonBean> call, Throwable t) {
+            public void onFailure(Call<AllOnlineCourseBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -158,9 +170,10 @@ public class RecommendCourseActivity extends BaseActivity{
             return false;
         }
     }
-
+    private boolean zxFlag=true;
     private void initView() {
-        recommedn_back_iv = (ImageView) findViewById(R.id.recommedn_back_iv);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
         sel_classifyTV = (TextView) findViewById(R.id.sel_classify);
@@ -173,11 +186,51 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RecommendCourseActivity.this,SelectClassifyActivity.class));
+                Intent intent = new Intent(RecommendCourseActivity.this, SelectClassifyActivity.class);
+                intent.putExtra("cateType", "online_cate");
+                intent.putExtra("s_cateId", cateId);
+                startActivityForResult(intent,RECOMMEND_SIGN);
+            }
+        });
+
+        isrecommendTV=(TextView)findViewById(R.id.isrecommendTV);
+        zuixinTV=(TextView) findViewById(R.id.zuixinTV);
+        zuixinTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(zxFlag) {
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.jt_down_sel);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    //((TextView) v).setCompoundDrawablePadding(4);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    zxFlag=false;
+                    totalList.clear();
+                }else{
+                    Drawable drawableLeft = getResources().getDrawable(
+                            R.mipmap.jt_down);
+                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    //((TextView) v).setCompoundDrawablePadding(4);
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zxFlag=true;
+                    totalList.clear();
+                }
+                downLoadData(1);
             }
         });
 
     }
+
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+
 
     public void downLoadOnClick(View view) {
         Intent intent = new Intent(RecommendCourseActivity.this, DownloadListActivity.class);
@@ -219,6 +272,23 @@ public class RecommendCourseActivity extends BaseActivity{
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("===============",requestCode+"====="+resultCode);
+        switch(requestCode){
+            case RECOMMEND_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    int s_cateId = data.getIntExtra("cateId",0);
+                    cateId=s_cateId;
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -250,6 +320,7 @@ public class RecommendCourseActivity extends BaseActivity{
         upLoadAlertDialog.show();
     }
     private void initViewVisible(boolean isviable){
+        Log.i("===",""+isviable);
         if(isviable){
             recLv.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
