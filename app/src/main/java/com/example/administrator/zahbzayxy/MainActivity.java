@@ -75,9 +75,12 @@ public class MainActivity extends BaseActivity {
     private int prePosition = 0;
     //HomeFragment homeFragment;
     NewHomeFragment newHomeFragment;
-//    LearningFragment learningFragment;
-    LessonFragment lessonFragment;
+    //课程分类
+//    LessonFragment lessonFragment;
+    LearningFragment learningFragment;
+    //题库分类
     NewTestFragment newTestFragment;
+//    ExamFragment examFragment;
     UserFragment userFragment;
     private String moreTiKu;
     private String downloadAdd;
@@ -318,13 +321,13 @@ public class MainActivity extends BaseActivity {
         //homeFragment  = new HomeFragment();
         newHomeFragment = new NewHomeFragment();
 //        learningFragment = new LearningFragment();
-        lessonFragment = new LessonFragment();
+        learningFragment = new LearningFragment();
         newTestFragment = new NewTestFragment();
         userFragment = new UserFragment();
         //添加fragment集合
         fragmentList.add(newHomeFragment);
 //        fragmentList.add(learningFragment);
-        fragmentList.add(lessonFragment);
+        fragmentList.add(learningFragment);
         fragmentList.add(newTestFragment);
         fragmentList.add(userFragment);
         //添加radioButton集合
