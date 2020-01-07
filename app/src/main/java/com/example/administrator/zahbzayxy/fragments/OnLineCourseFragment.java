@@ -19,6 +19,7 @@ import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
+import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestNavigationAdapter;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
@@ -75,12 +76,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
-        img_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"点击了添加题库",Toast.LENGTH_LONG).show();
-            }
-        });
         initNavigationData();
         initDate();
         return view;
@@ -185,6 +180,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
                 startActivity(new Intent(getActivity(), ChooseTopicActivity.class));
                 break;
             case R.id.img_add://添加题库
+                startActivity(new Intent(getActivity(), QueslibActivity.class));
                 break;
         }
     }
