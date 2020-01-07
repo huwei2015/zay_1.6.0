@@ -30,6 +30,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -57,6 +59,7 @@ import com.example.administrator.zahbzayxy.activities.SignInActivity;
 import com.example.administrator.zahbzayxy.activities.TestDetailActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
+import com.example.administrator.zahbzayxy.utils.DataHelper;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.Utils;
@@ -84,6 +87,8 @@ public class NewHomeFragment extends Fragment {
     private ValueCallback<Uri> uploadMessage;
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
+
+    private DataHelper mDataHelper=new DataHelper();
 
     public NewHomeFragment() {
         // Required empty public constructor
@@ -192,6 +197,31 @@ public class NewHomeFragment extends Fragment {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public  WebResourceResponse  shouldInterceptRequest(WebView  view, String url) {
+                 if(mDataHelper.hasLocalResource(url)){
+                     WebResourceResponse response=mDataHelper.getReplacedWebResourceResponse(getActivity(),url);if (response != null) {
+                         return response;
+                     }
+                 }
+                 return super.shouldInterceptRequest(view,url);
+            }
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public  WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (mDataHelper.hasLocalResource(url)) {
+                    WebResourceResponse  response = mDataHelper.getReplacedWebResourceResponse(getActivity(),
+                            url); if (response != null) {
+                                return response;
+                            }
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+
+
+
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {

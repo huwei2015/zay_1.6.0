@@ -3,10 +3,10 @@ package com.example.administrator.zahbzayxy.beans;
 import java.util.List;
 
 /**
- * Created by ${ZWJ} on 2017/4/5 0005.
+ * 在线课数据接收类
  */
 public class AllOnlineCourseBean {
-    
+
     private String code;
     private Object errMsg;
 
