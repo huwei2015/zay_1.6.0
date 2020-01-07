@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.beans;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by huwei.
@@ -36,24 +37,116 @@ public class StayAuthorBean {
         this.data = data;
     }
 
-    public static class StayAuthorList implements Serializable{
-        private String order_num;
-        private String title;
+    public static class StayAuthorList implements Serializable {
+        private List<StayAuthBeanList> orderList;
+        private int totalPage;
+        private int currentPage;
+        private int totalCount;
 
-        public String getOrder_num() {
-            return order_num;
+        public List<StayAuthBeanList> getOrderList() {
+            return orderList;
         }
 
-        public void setOrder_num(String order_num) {
-            this.order_num = order_num;
+        public void setOrderList(List<StayAuthBeanList> orderList) {
+            this.orderList = orderList;
         }
 
-        public String getTitle() {
-            return title;
+        public int getTotalPage() {
+            return totalPage;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setTotalPage(int totalPage) {
+            this.totalPage = totalPage;
+        }
+
+        public int getCurrentPage() {
+            return currentPage;
+        }
+
+        public void setCurrentPage(int currentPage) {
+            this.currentPage = currentPage;
+        }
+
+        public int getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(int totalCount) {
+            this.totalCount = totalCount;
+        }
+    }
+    public static class StayAuthBeanList implements Serializable{
+        private int id;
+        private String orderNumber;
+        private int orderStatus;
+        private String orderStatusStr;
+        private int orderType;
+        private String orderTypeStr;
+        private String createTime;
+        private String content;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getOrderNumber() {
+            return orderNumber;
+        }
+
+        public void setOrderNumber(String orderNumber) {
+            this.orderNumber = orderNumber;
+        }
+
+        public int getOrderStatus() {
+            return orderStatus;
+        }
+
+        public void setOrderStatus(int orderStatus) {
+            this.orderStatus = orderStatus;
+        }
+
+        public String getOrderStatusStr() {
+            return orderStatusStr;
+        }
+
+        public void setOrderStatusStr(String orderStatusStr) {
+            this.orderStatusStr = orderStatusStr;
+        }
+
+        public int getOrderType() {
+            return orderType;
+        }
+
+        public void setOrderType(int orderType) {
+            this.orderType = orderType;
+        }
+
+        public String getOrderTypeStr() {
+            return orderTypeStr;
+        }
+
+        public void setOrderTypeStr(String orderTypeStr) {
+            this.orderTypeStr = orderTypeStr;
+        }
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
         }
     }
 }

@@ -21,11 +21,30 @@ import java.util.List;
  */
 public class HasAuthorAdapter extends RecyclerView.Adapter<HasAuthorAdapter.HasAuthorViewHodler>{
     private Context mContext;
-    private List<HasAuthorBean.HasAuthorList> hasAuthorLists;
+    private List<HasAuthorBean.HasAuthBeanList> hasAuthorLists;
 
-    public HasAuthorAdapter(Context mContext, List<HasAuthorBean.HasAuthorList> hasAuthorLists) {
+    public interface OnItemClickListener{
+        //每条点击事件
+        void onItemClick(View view, int position);
+    }
+    private OnItemClickListener onItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public HasAuthorAdapter(Context mContext, List<HasAuthorBean.HasAuthBeanList> hasAuthorLists) {
         this.mContext = mContext;
         this.hasAuthorLists = hasAuthorLists;
+    }
+
+    public void setList(List<HasAuthorBean.HasAuthBeanList> hasAuthorLists) {
+        this.hasAuthorLists = hasAuthorLists;
+        notifyDataSetChanged();
+    }
+
+    public void addList(List<HasAuthorBean.HasAuthBeanList> hasAuthorLists) {
+        this.hasAuthorLists.addAll(hasAuthorLists);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -35,12 +54,12 @@ public class HasAuthorAdapter extends RecyclerView.Adapter<HasAuthorAdapter.HasA
 
     @Override
     public void onBindViewHolder(HasAuthorViewHodler holder, final int position) {
-        holder.order_num.setText(hasAuthorLists.get(position).getOrder_num());
-        holder.title.setText(hasAuthorLists.get(position).getTitle());
+        holder.order_num.setText(hasAuthorLists.get(position).getOrderNumber());
+        holder.title.setText(hasAuthorLists.get(position).getContent());
         holder.tv_author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"点击了"+position,Toast.LENGTH_LONG).show();
+                onItemClickListener.onItemClick(v, position);
             }
         });
     }

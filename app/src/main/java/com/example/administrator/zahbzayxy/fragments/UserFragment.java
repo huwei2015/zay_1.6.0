@@ -76,26 +76,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     View view;
     //用户头像
     CircleImageView userHead_iv;
-    //未登录时点击头像右侧时的箭头
-    Button noLoginEditMessage_bt;
     LinearLayout userCenter_layout;
-    //未登录时的设置按钮
-//    @BindView(R.id.resetMessage_ic)
-//    ImageView getResetMessage_ic;
-    //已登录时的信息编辑
-//    @BindView(R.id.editMessage_logined)
-    //已登录时的信息设置
-//    @BindView(R.id.resetMessage_logined)
-//    ImageView rsetMessage_logined;
     //未登录时的界面
     @BindView(R.id.noLogin_layout)
     RelativeLayout noLoginLayout;
     //已登录时的界面
     @BindView(R.id.haveLogin_layout)
     RelativeLayout haveLoginLayout;
-    //已登录界面中的用户手机号
-    // @BindView(R.id.phonenum_tv)
-    //TextView phoneNum_tv;
     @BindView(R.id.name_tv)
     TextView nickName_tv;
     private LinearLayout myMonney_ll;
@@ -266,7 +253,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         switch (v.getId()) {
-            case R.id.tv_authorization://授权管理
+            case R.id.ll_authorization://授权管理
                 if (isLogin) {
                     startActivity(new Intent(context, AuthorizationActivity.class));
                 } else {
@@ -394,6 +381,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }else{
                     startActivity(new Intent(context, LoginActivity.class));
                 }
+                break;
             case R.id.common_problemRL://常见问题
                 if(isLogin){
                     Intent intent=new Intent(context, H5PageActivity.class);
