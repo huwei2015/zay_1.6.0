@@ -1,65 +1,69 @@
-package com.example.administrator.zahbzayxy.fragments;
-
+package com.example.administrator.zahbzayxy.activities;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
+import com.example.administrator.zahbzayxy.fragments.NoThroughFragment;
+import com.example.administrator.zahbzayxy.fragments.OnLineCourseFragment;
+import com.example.administrator.zahbzayxy.utils.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by huwei.
- * Data 2019-12-19.
- * Time 11:15.
- * 学习
+ * Data 2020-01-01.
+ * Time 12:40.
+ * 添加题库
  */
-public class LearningFragment extends Fragment {
+public class ChooseTopicActivity extends BaseActivity {
     private ViewPager learnViewPager;
     private TabLayout learnTabLayout;
     private List<String> learnTabList;
     private List<Fragment>learnVPList;
     private LessonFragmentPageAdapter pagerAdapter;
+    private ImageView img_back;
     FragmentManager fragmentManager;
-    private View view;
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_learning,container,false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_topic);
         initView();
         initViewPagerAndTable();
-        return view;
     }
+
     private void initView() {
-        learnTabLayout=view.findViewById(R.id.learn_tab);
-        learnViewPager=view.findViewById(R.id.learn_vp);
+        learnTabLayout= (TabLayout) findViewById(R.id.chooseTop_tab);
+        learnViewPager= (ViewPager) findViewById(R.id.chooseTop_vp);
+        img_back= (ImageView) findViewById(R.id.myChengJiBack_iv);
+        img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
+
     private void initViewPagerAndTable() {
         learnTabList=new ArrayList<>();
         learnVPList=new ArrayList<>();
-        learnTabList.add("在线课");
-        learnTabList.add("线下课");
-        learnTabList.add("离线课");
-        OnLineCourseFragment allOrderFragment=new OnLineCourseFragment();
+        learnTabList.add("未通过");
+        learnTabList.add("已通过");
+        NoThroughFragment allOrderFragment=new NoThroughFragment();
         OnLineCourseFragment allOrderFragment1=new OnLineCourseFragment();
-        OnLineCourseFragment allOrderFragment2=new OnLineCourseFragment();
         learnVPList.add(allOrderFragment);
         learnVPList.add(allOrderFragment1);
-        learnVPList.add(allOrderFragment2);
-        fragmentManager=getChildFragmentManager();
+        fragmentManager=getSupportFragmentManager();
         pagerAdapter=new LessonFragmentPageAdapter(fragmentManager,learnVPList,learnTabList);
         learnViewPager.setAdapter(pagerAdapter);
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(0)));
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(1)));
-        learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(2)));
         learnTabLayout.setupWithViewPager(learnViewPager);
     }
 }
