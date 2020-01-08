@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.example.administrator.zahbzayxy.R;
@@ -58,7 +60,12 @@ public class ShowFileWordImpl implements ShowFileInter {
                         ToastUtils.showLongInfo("获取服务器文件失败");
                         return;
                     }
-                    mActivity.startActivity(getWordFileIntent(filePath));
+                    try {
+                        mActivity.startActivity(getWordFileIntent(filePath));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ToastUtils.showLongInfo("未查询到打开该文件的应用");
+                    }
                 });
             }
 
@@ -81,9 +88,16 @@ public class ShowFileWordImpl implements ShowFileInter {
     // android获取一个用于打开Word文件的intent
     public Intent getWordFileIntent(String param) {
         Intent intent = new Intent("android.intent.action.VIEW");
+        Uri uri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            uri = FileProvider.getUriForFile(mActivity, mActivity.getPackageName() + ".fileprovider", new File(param));
+        } else {
+            uri = Uri.fromFile(new File(param));
+
+        }
         intent.addCategory("android.intent.category.DEFAULT");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Uri uri = Uri.fromFile(new File(param));
         intent.setDataAndType(uri, "application/msword");
         return intent;
     }

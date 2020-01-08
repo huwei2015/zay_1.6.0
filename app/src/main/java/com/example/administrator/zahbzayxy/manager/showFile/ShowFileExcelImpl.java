@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.example.administrator.zahbzayxy.manager.DownloadManager;
@@ -57,7 +59,12 @@ public class ShowFileExcelImpl implements ShowFileInter {
                         ToastUtils.showLongInfo("获取服务器文件失败");
                         return;
                     }
-                    mActivity.startActivity(getExcelFileIntent(filePath));
+                    try {
+                        mActivity.startActivity(getExcelFileIntent(filePath));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ToastUtils.showLongInfo("未查询到打开该文件的应用");
+                    }
                 });
             }
 
@@ -78,11 +85,18 @@ public class ShowFileExcelImpl implements ShowFileInter {
     }
 
     // android获取一个用于打开Excel文件的intent
-    public static Intent getExcelFileIntent(String param) {
+    public Intent getExcelFileIntent(String param) {
         Intent intent = new Intent("android.intent.action.VIEW");
+        Uri uri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            uri = FileProvider.getUriForFile(mActivity, mActivity.getPackageName() + ".fileprovider", new File(param));
+        } else {
+            uri = Uri.fromFile(new File(param));
+
+        }
         intent.addCategory("android.intent.category.DEFAULT");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Uri uri = Uri.fromFile(new File(param));
         intent.setDataAndType(uri, "application/vnd.ms-excel");
         return intent;
     }
