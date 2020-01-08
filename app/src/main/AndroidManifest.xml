@@ -2,12 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.administrator.zahbzayxy">
-
     <!-- 微信支付相关权限 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
-    <!-- 登录分享相关权限 -->
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" /> <!-- 登录分享相关权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,23 +14,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar" -->
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar" -->
     <!-- 允许相机对焦 -->
-    <uses-permission android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.hardware.camera.autofocus" /> <!-- HYY 添加 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-    <!-- HYY 添加 -->
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -51,9 +46,7 @@
             android:value="${UMENG_CHANNEL_VALUE}" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="59e5aab76e27a41290001478" />
-
-        <!-- 支付宝相关权限 -->
+            android:value="59e5aab76e27a41290001478" /> <!-- 支付宝相关权限 -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
@@ -71,7 +64,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SplashActivity"/>
+        <activity android:name=".activities.SplashActivity" />
         <activity
             android:name=".activities.ChangeAppActivity"
             android:screenOrientation="portrait" />
@@ -193,17 +186,15 @@
         <activity android:name=".activities.NewOrderDetailActivity" />
         <activity android:name=".activities.TestNewActivity" />
         <activity android:name=".activities.TestLookHaveDoneActivity" />
-        <activity android:name=".activities.ProfessionalActivity"/>
-        <activity android:name=".activities.TypeActivity"/>
-        <activity android:name=".activities.SkillsActivity"/>
-        <activity android:name=".activities.WelcomeActivity"/>
-        <activity android:name=".activities.AuthorizationActivity"/>
-        <activity android:name=".activities.ChooseTopicActivity"/>
+        <activity android:name=".activities.ProfessionalActivity" />
+        <activity android:name=".activities.TypeActivity" />
+        <activity android:name=".activities.SkillsActivity" />
+        <activity android:name=".activities.WelcomeActivity" />
+        <activity android:name=".activities.AuthorizationActivity" />
+        <activity android:name=".activities.ChooseTopicActivity" />
         <activity
             android:name=".activities.NewMyChengJiActivity"
-            android:exported="true" />
-
-        <!-- 分享 -->
+            android:exported="true" /> <!-- 分享 -->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -244,9 +235,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activities.AginDoErrorActivity" />
-
-        <!-- <activity android:name=".activities.NewMyRenZhengDetailActivity" /> -->
+        <activity android:name=".activities.AginDoErrorActivity" /> <!-- <activity android:name=".activities.NewMyRenZhengDetailActivity" /> -->
         <activity android:name=".activities.MyYouHuiJuanActivity" />
         <activity android:name=".activities.YouHuiJuanListActivity" />
         <activity
@@ -284,69 +273,63 @@
         <activity android:name=".activities.SearchTestActivity" />
         <activity android:name=".activities.SearchListActivity" />
         <activity android:name=".activities.SearcTestDetailActivity" />
-        <activity android:name=".activities.MyExamActivity"/>
-        <activity android:name=".activities.CertificateOneCunActivity"/>
-        <activity android:name=".activities.ZhengShuDetailActivity"
-            android:screenOrientation="sensor" android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activities.WorkActivity"/>
-        <activity android:name=".activities.jobsActivity"/>
-        <activity android:name=".activities.FaceRecognitionForOfflineActivity"/>
-        <activity android:name=".activities.ExamRecordActivity"/>
-        <activity android:name=".activities.ExamResultActivity"/>
-        <activity android:name=".activities.MsgListActivity"/>
-        <activity android:name=".activities.MySignUpActivity"/>
-        <activity android:name=".activities.ServiceActivity"/>
-        <activity android:name=".activities.PrivacyActivity"/>
-        <activity android:name=".activities.AccountSecurityActivity"/>
-        <activity android:name=".activities.MyFileActivitiy"/>
-        <!--联系我们-->/
-        <activity android:name=".activities.ContacActivity"/>/
-        <activity android:name=".activities.FaceRecognitionActivity"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activities.FaceCollectActivity"
-                  android:screenOrientation="portrait">
-        </activity>
-	<activity android:name=".activities.PortraitDisplayActivity"
-        android:screenOrientation="portrait">
-    </activity>
-        <activity android:name=".activities.TestActivity"/>
-
-        <!-- HYY 添加 start-->
+        <activity android:name=".activities.MyExamActivity" />
+        <activity android:name=".activities.CertificateOneCunActivity" />
+        <activity
+            android:name=".activities.ZhengShuDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="sensor" />
+        <activity android:name=".activities.WorkActivity" />
+        <activity android:name=".activities.jobsActivity" />
+        <activity android:name=".activities.FaceRecognitionForOfflineActivity" />
+        <activity android:name=".activities.ExamRecordActivity" />
+        <activity android:name=".activities.ExamResultActivity" />
+        <activity android:name=".activities.MsgListActivity" />
+        <activity android:name=".activities.MySignUpActivity" />
+        <activity android:name=".activities.ServiceActivity" />
+        <activity android:name=".activities.PrivacyActivity" />
+        <activity android:name=".activities.AccountSecurityActivity" />
+        <activity android:name=".activities.MyFileActivitiy" /> <!-- 联系我们 -->
+        <activity android:name=".activities.ContacActivity" />
+        <activity
+            android:name=".activities.FaceRecognitionActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.FaceCollectActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.PortraitDisplayActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.TestActivity" /> <!-- HYY 添加 start -->
         <!-- 课程推荐（只有在线课）列表页 -->
-        <activity android:name=".activities.RecommendCourseActivity"/>
-        <!-- 在线课、线下课、题库、书籍分类选择 -->
-        <activity android:name=".activities.SelectClassifyActivity" android:theme="@style/MyDialogStyleRight" />
-        <!-- 在线课列表页 -->
-        <activity android:name=".activities.OnlineCourseActivity"/>
-        <!-- 线下课列表页 -->
-        <activity android:name=".activities.OfflineCourseActivity"/>
-        <!-- 线下课详情页 -->
-        <activity android:name=".activities.OfflineDetailActivity"/>
-        <!-- 直播课列表页 -->
-        <activity android:name=".activities.LiveCourseActivity"/>
-        <!-- 直播课播放页 -->
-        <activity android:name=".activities.LivePlayActivity"/>
-        <!-- 题库列表页 -->
-        <activity android:name=".activities.QueslibActivity"/>
-        <!-- 书籍列表页 -->
-        <activity android:name=".activities.BooksActivity"/>
-        <!-- h5首页扫码签到页 -->
-        <activity android:name=".activities.SignInActivity"/>
-        <!-- 签到成功页 -->
-        <activity android:name=".activities.SigninSuccessActivity"
-            android:theme="@style/MyDialogStyleBottom"/>
-        <!-- 扫码二维码 -->
+        <activity android:name=".activities.RecommendCourseActivity" /> <!-- 在线课、线下课、题库、书籍分类选择 -->
+        <activity
+            android:name=".activities.SelectClassifyActivity"
+            android:theme="@style/MyDialogStyleRight" /> <!-- 在线课列表页 -->
+        <activity android:name=".activities.OnlineCourseActivity" /> <!-- 线下课列表页 -->
+        <activity android:name=".activities.OfflineCourseActivity" /> <!-- 线下课详情页 -->
+        <activity android:name=".activities.OfflineDetailActivity" /> <!-- 直播课列表页 -->
+        <activity android:name=".activities.LiveCourseActivity" /> <!-- 直播课播放页 -->
+        <activity android:name=".activities.LivePlayActivity" /> <!-- 题库列表页 -->
+        <activity android:name=".activities.QueslibActivity" /> <!-- 书籍列表页 -->
+        <activity android:name=".activities.BooksActivity" /> <!-- h5首页扫码签到页 -->
+        <activity android:name=".activities.SignInActivity" /> <!-- 签到成功页 -->
+        <activity
+            android:name=".activities.SigninSuccessActivity"
+            android:theme="@style/MyDialogStyleBottom" /> <!-- 扫码二维码 -->
         <activity
             android:name=".activities.ScanQRCodeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
-        </activity>
-        <!-- 原生跳H5  常见问题、使用手册 -->
-        <activity android:name=".activities.H5PageActivity"/>
-        <!-- HYY 添加 end-->
+            android:windowSoftInputMode="stateAlwaysHidden"></activity> <!-- 原生跳H5  常见问题、使用手册 -->
+        <activity android:name=".activities.H5PageActivity" /> <!-- HYY 添加 end -->
+        <activity
+            android:name=".activities.ShowPdfActivity"
+            android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activities.ShowImgActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

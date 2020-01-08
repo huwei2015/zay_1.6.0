@@ -394,6 +394,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }else{
                     startActivity(new Intent(context, LoginActivity.class));
                 }
+                break;
             case R.id.common_problemRL://常见问题
                 if(isLogin){
                     Intent intent=new Intent(context, H5PageActivity.class);

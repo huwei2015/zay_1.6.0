@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,8 +26,14 @@ import com.example.administrator.zahbzayxy.adapters.AllFileAdapter;
 import com.example.administrator.zahbzayxy.beans.AllFileBean;
 import com.example.administrator.zahbzayxy.beans.FileDelBean;
 import com.example.administrator.zahbzayxy.interfaceserver.AllFileInterface;
+import com.example.administrator.zahbzayxy.manager.ShowFileManager;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +63,8 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
     String del_id;
     String file_path;
     List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
+    private ShowFileManager mShowFile;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -66,6 +75,8 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_all_file, container, false);
+        EventBus.getDefault().register(this);
+        mShowFile = new ShowFileManager((Activity) mContext);
         initView();
         initPullToRefreshListView();
         return view;
@@ -103,6 +114,7 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         pullToRefreshRecyclerView.setEmptyView(emptyView);
+        mShowFile.setLoadingView(mLoadingBar);
     }
 
     /**
@@ -114,7 +126,7 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
        allFileInterface.getAllFileData(currentPage,pageSize,null,token).enqueue(new Callback<AllFileBean>() {
            @Override
            public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
-               if(response !=null && response.body() !=null && response.body().getData().getData().size() > 0){
+               if(response !=null && response.body() !=null &&response.body().getData() != null&& response.body().getData().getData().size() > 0){
                    String code = response.body().getCode();
                    if(code.equals("00000")){
                        isVisible(true);
@@ -139,6 +151,22 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
        });
     }
     public void getDelData(){
+        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
+        builder.setTitle("确定删除吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                toDelete();
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    private void toDelete() {
         final AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
         allFileInterface.getDelData(del_id,token).enqueue(new Callback<FileDelBean>() {
             @Override
@@ -146,20 +174,10 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
-                        builder.setTitle("确定删除吗？");
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                    allFileAdapter.notifyDataSetChanged();
-                                    initPullToRefreshListView();
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        allFileAdapter.notifyDataSetChanged();
+                        initPullToRefreshListView();
+                    } else {
+                        ToastUtils.showLongInfo("文件删除失败");
                     }
                 }
 
@@ -167,7 +185,7 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
 
             @Override
             public void onFailure(Call<FileDelBean> call, Throwable t) {
-
+                ToastUtils.showLongInfo("文件删除失败");
             }
         });
     }
@@ -225,9 +243,18 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
     //Item点击事件
     @Override
     public void OnItemCilck(View view, int position) {
-        Toast.makeText(mContext,"点击了"+position,Toast.LENGTH_LONG).show();
-           file_path= allFileListBeanList.get(position).getAttaPath();
-           Log.i("hw","hw=============="+file_path);
+        file_path= allFileListBeanList.get(position).getAttaPath();
+        if("1".equals(allFileListBeanList.get(position).getAttaFormat())){
+            mShowFile.setFileType(ShowFileManager.SHOW_FILE_IMG);
+        } else if("2".equals(allFileListBeanList.get(position).getAttaFormat())){
+            mShowFile.setFileType(ShowFileManager.SHOW_FILE_WORD);
+        } else if("3".equals(allFileListBeanList.get(position).getAttaFormat())){
+            mShowFile.setFileType(ShowFileManager.SHOW_FILE_EXCEL);
+        } else if("4".equals(allFileListBeanList.get(position).getAttaFormat())){
+            mShowFile.setFileType(ShowFileManager.SHOW_FILE_PDF);
+        }
+        mShowFile.openFile(allFileListBeanList.get(position).getAttaName(), file_path);
+           Log.i("hw","hw=============="+file_path + " file name = " + allFileListBeanList.get(position).getAttaName());
     }
 
     @Override
@@ -236,5 +263,18 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
        del_id= allFileListBeanList.get(position).getId();
         //删除文件接口
         getDelData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventUploadFile(String login){
+        if ("fileUploadSuccess".equals(login)) {
+            initPullToRefreshListView();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

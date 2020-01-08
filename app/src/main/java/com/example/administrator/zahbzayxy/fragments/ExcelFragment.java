@@ -1,12 +1,16 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +23,12 @@ import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.AllFileAdapter;
 import com.example.administrator.zahbzayxy.beans.AllFileBean;
+import com.example.administrator.zahbzayxy.beans.FileDelBean;
 import com.example.administrator.zahbzayxy.interfaceserver.AllFileInterface;
+import com.example.administrator.zahbzayxy.manager.ShowFileManager;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +53,8 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
     AllFileAdapter allFileAdapter;
     LinearLayout ll_list;
     List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
+    String del_id;
+    private ShowFileManager mShowFile;
 
     @Override
     public void onAttach(Context context) {
@@ -57,12 +66,14 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_excel,container,false);
+        mShowFile = new ShowFileManager((Activity) mContext);
         initView();
         initPullToRefreshListView();
         return view;
     }
     private void initView() {
         mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
+        mShowFile.setLoadingView(mLoadingBar);
         pullToRefreshRecyclerView = view.findViewById(R.id.excel_recyclerView);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
@@ -74,6 +85,7 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
         allFileAdapter = new AllFileAdapter(mContext, allFileListBeanList);
+        initEvent();
 //        //添加数据源
         pullToRefreshRecyclerView.setAdapter(allFileAdapter);
         pullToRefreshRecyclerView.setLayoutManager(layoutManager);
@@ -106,6 +118,7 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
                         hideLoadingBar();
                         List<AllFileBean.AllFileListBean> data = response.body().getData().getData();
                         if(data.size() > 0) {
+                            allFileListBeanList = data;
                             allFileAdapter.setList(data);
                         }else{
                             isVisible(false);
@@ -117,6 +130,61 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
             @Override
             public void onFailure(Call<AllFileBean> call, Throwable t) {
 
+            }
+        });
+    }
+
+    private void initEvent() {
+        allFileAdapter.setOnDelClickListener((View view, int position) -> {
+            del_id= allFileListBeanList.get(position).getId();
+            Log.i("zahb","zahb================"+del_id);
+            //删除文件接口
+            getDelData();
+        });
+
+        allFileAdapter.setOnItemCilkLiener((View view, int position) -> {
+            mShowFile.setFileType(ShowFileManager.SHOW_FILE_EXCEL);
+            String filePath = allFileListBeanList.get(position).getAttaPath();
+            mShowFile.openFile(allFileListBeanList.get(position).getAttaName(), filePath);
+        });
+    }
+
+    public void getDelData(){
+        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
+        builder.setTitle("确定删除吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                toDelete();
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    private void toDelete() {
+        final AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
+        allFileInterface.getDelData(del_id,token).enqueue(new Callback<FileDelBean>() {
+            @Override
+            public void onResponse(Call<FileDelBean> call, Response<FileDelBean> response) {
+                if(response !=null && response.body() !=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000")){
+                        allFileAdapter.notifyDataSetChanged();
+                        initPullToRefreshListView();
+                    } else {
+                        ToastUtils.showLongInfo("文件删除失败");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<FileDelBean> call, Throwable t) {
+                ToastUtils.showLongInfo("文件删除失败");
             }
         });
     }

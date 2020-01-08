@@ -1,6 +1,8 @@
 package com.example.administrator.zahbzayxy.activities;
 
 
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -8,7 +10,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -20,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
@@ -29,10 +35,17 @@ import com.example.administrator.zahbzayxy.fragments.PdfFragment;
 import com.example.administrator.zahbzayxy.fragments.PicFragment;
 import com.example.administrator.zahbzayxy.fragments.WordFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
+import com.example.administrator.zahbzayxy.manager.DownloadManager;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +80,9 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     private Bitmap bitmap;
     private byte[] bitmapByte;
     String photo_name;//拍照名称
+    private ProgressBarLayout mLoading;
+    private int mPosition = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +118,21 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
         myYouHuiJuan_tab.addTab(myYouHuiJuan_tab.newTab().setText(myYouHuiJuanTabList.get(3)));
         myYouHuiJuan_tab.addTab(myYouHuiJuan_tab.newTab().setText(myYouHuiJuanTabList.get(4)));
         myYouHuiJuan_tab.setupWithViewPager(myYouHuiJuan_vp);
+        myYouHuiJuan_vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.i("=====position======", position + "");
+                mPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void initView() {
@@ -113,6 +144,7 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
         tv_updateFile.setOnClickListener(this);
         tv_updateImg = (TextView) findViewById(R.id.tv_pic);
         tv_updateImg.setOnClickListener(this);
+        mLoading = (ProgressBarLayout) findViewById(R.id.my_file_loading_layout);
     }
 
     public void myYouHuiJuanBackOnClick(View view) {
@@ -140,7 +172,25 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case 345:
+                    String filePath = getPath(MyFileActivitiy.this, data.getData());
+                    if (TextUtils.isEmpty(filePath)) {
+                        ToastUtils.showLongInfo("获取文件失败，请重试");
+                        return;
+                    }
+                    String endFile = filePath.substring(filePath.lastIndexOf("/") + 1);
+                    if (TextUtils.isEmpty(endFile)) {
+                        ToastUtils.showLongInfo("文件类型错误，请重新选择");
+                        return;
+                    }
+                    mLoading.setShowContent("上传中...");
+                    mLoading.setVisibility(View.VISIBLE);
+                    //TODO 这里只是暂时这么处理，需要考虑OOM的问题
+                    byte[] file = file2Bytes(new File(filePath));
+                    updatePhoto(file, endFile);
+                    break;
                 case 112:
+                    mLoading.setShowContent("上传中...");
+                    mLoading.setVisibility(View.VISIBLE);
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage,
@@ -153,34 +203,151 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                     bitmap = bmpTopath(picturePath);
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片
-                    updatePhoto(this.bitmapByte);
-                    Toast.makeText(MyFileActivitiy.this, "图片上传成功", Toast.LENGTH_SHORT).show();
+                    updatePhoto(this.bitmapByte, System.currentTimeMillis() + ".jpg");
                     break;
             }
         }
     }
 
-    private void updatePhoto(byte[] url) {
+    private byte[] file2Bytes(File file) {
+        int byte_size = 1024;
+        byte[] b = new byte[byte_size];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(byte_size);
+            for (int length; (length = fileInputStream.read(b)) != -1; ) {
+                outputStream.write(b, 0, length);
+            }
+            fileInputStream.close();
+            outputStream.close();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    public String getPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{split[1]};
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    private String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {column};
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    private boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    private boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    private boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    private void updatePhoto(byte[] url, String fileEndStr) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), url);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", System.currentTimeMillis()+".jpg", requestBody);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileEndStr, requestBody);
         UserInfoInterface aClass = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         aClass.updateFile(token, body).enqueue(new Callback<OneCunBean>() {
             @Override
             public void onResponse(Call<OneCunBean> call, Response<OneCunBean> response) {
-                OneCunBean body = response.body();
-                if (body != null && body.getErrMsg() != null) {
-                    String photoUrl = body.getData().getPhotoUrl();
-                    Log.e("photoUrlphotoUrl", photoUrl);
-                    if (!TextUtils.isEmpty(photoUrl)) {
-                        EventBus.getDefault().post(photoUrl);
+                Log.i("zahb","zahb================"+response.toString());
+                mLoading.setVisibility(View.GONE);
+                EventBus.getDefault().post("fileUploadSuccess");
+                try {
+                    OneCunBean body = response.body();
+                    if (body != null && body.getErrMsg() != null) {
+                        String photoUrl = body.getData().getPhotoUrl();
+                        Log.e("photoUrlphotoUrl", photoUrl);
+                        if (!TextUtils.isEmpty(photoUrl)) {
+                            EventBus.getDefault().post(photoUrl);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<OneCunBean> call, Throwable t) {
-                Toast.makeText(MyFileActivitiy.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("photoFailure", t.getMessage());
+                mLoading.setVisibility(View.GONE);
+                EventBus.getDefault().post("fileUploadSuccess");
+                try {
+                    Toast.makeText(MyFileActivitiy.this, "上传失败", Toast.LENGTH_SHORT).show();
+                    Log.e("photoFailure", t.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -214,6 +381,7 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
     public Bitmap bmpTopath(String path) {
         //先得到图片的参数类的对象Options
         BitmapFactory.Options options = new BitmapFactory.Options();
