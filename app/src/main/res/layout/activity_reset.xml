@@ -340,7 +340,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:text="v1.5.5"
                 android:textSize="18sp" />
         </RelativeLayout>
     </LinearLayout>

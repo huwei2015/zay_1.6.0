@@ -165,6 +165,7 @@ dependencies {
     implementation 'com.androidkun:pulltorefreshrecyclerview:1.1.0'
     implementation 'com.alibaba:fastjson:1.2.47'
     implementation files('libs\\zxing.jar')
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     /*兼容webview*/
 }
 //apt {

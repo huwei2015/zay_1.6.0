@@ -2,6 +2,7 @@ package com.example.administrator.zahbzayxy.interfaceserver;
 
 import com.example.administrator.zahbzayxy.beans.AllHaveDoTestBean;
 import com.example.administrator.zahbzayxy.beans.ExamResultBean;
+import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
 import com.example.administrator.zahbzayxy.beans.PrictaceErrorBean;
 import com.example.administrator.zahbzayxy.beans.SearchTestBean;
 import com.example.administrator.zahbzayxy.beans.TestCommitBean;
@@ -137,4 +138,10 @@ public interface TestGroupInterface {
     static final String getResult = "userExam/examResult";
     @POST(value = getResult)
     Call<ExamResultBean> getExamResult(@Query("token") String token, @Query("examScoreId") int examScoreId);
+
+    //学习导航
+    static final String LearnNavigationData = "/data/usercenter/course/cate_online";
+    @POST(value = LearnNavigationData)
+    Call<LearnNavigationBean> getLearnNavigationData(@Query("isAchieve") Integer isAchieve,
+                                                     @Query("token") String token);
 }

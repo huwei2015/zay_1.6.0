@@ -2,11 +2,14 @@ package com.example.administrator.zahbzayxy.interfacecommit;
 
 import android.app.Person;
 
+import com.example.administrator.zahbzayxy.beans.AuthStateBean;
+import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
+import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
@@ -107,4 +110,27 @@ public interface UserInfoInterface {
     static final String userCenter = "userCenter";
     @POST(value = userCenter)
     Call<UserCenter> getUserCenter(@Query("token") String token);
+
+    //授权列表
+    static final String auth = "order/auth/list";
+    @POST(value = auth)
+    Call<HasAuthorBean> getAuthData(@Query("token") String token,
+                                    @Query("orderStatus") int orderStatus,
+                                    @Query("pageNo") int pageNo,
+                                    @Query("pageSize") int pageSize,
+                                    @Query("orderNumber") String orderNumber);
+
+    //授权列表
+    static final String un_auth = "order/auth/list";
+    @POST(value = un_auth)
+    Call<StayAuthorBean> getUnAuthData(@Query("token") String token,
+                                       @Query("orderStatus") int orderStatus,
+                                       @Query("pageNo") int pageNo,
+                                       @Query("pageSize") int pageSize,
+                                       @Query("orderNumber") String orderNumber);
+
+    //授权状态接口
+    static final String auth_state = "order/auth";
+    @POST(value = auth_state)
+    Call<AuthStateBean> getStateData(@Query("token") String token, @Query("orderNumber") String orderNumber);
 }
