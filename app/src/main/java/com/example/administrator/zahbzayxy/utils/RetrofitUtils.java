@@ -3,6 +3,7 @@ package com.example.administrator.zahbzayxy.utils;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -40,10 +41,10 @@ public class RetrofitUtils{
    // private  static String BASE_URL = "http://120.26.212.51:28080/" ;
 
     //线上测试地址
-    // private  static String BASE_URL = "http://app.test.zayxy.com";
+     private  static String BASE_URL = "http://app.test.zayxy.com";
     //     private  static String BASE_URL = "http://app1.zayxy.com";
-      private  static String BASE_URL = "http://192.168.120.239";
-    //   private  static String BASE_URL = "http://192.168.10.196";
+    //    private  static String BASE_URL = "http://192.168.120.239";
+//      private  static String BASE_URL = "http://192.168.10.196";
     private static RetrofitUtils mInstance;
     private static Retrofit mRetrofit;
 
@@ -66,7 +67,10 @@ public class RetrofitUtils{
         });
         logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addNetworkInterceptor(logInterceptor)
+                .addNetworkInterceptor(logInterceptor).
+                        connectTimeout(30, TimeUnit.SECONDS).
+                        readTimeout(30, TimeUnit.SECONDS).
+                        writeTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor(){
                                     @Override
                                     public Response intercept(Chain chain) throws IOException {
