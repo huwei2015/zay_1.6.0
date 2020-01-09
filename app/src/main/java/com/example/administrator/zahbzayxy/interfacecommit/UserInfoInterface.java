@@ -9,8 +9,10 @@ import com.example.administrator.zahbzayxy.beans.MyAmountBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
+import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.beans.UpdateBean;
 import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoResetBean;
@@ -70,7 +72,7 @@ public interface UserInfoInterface {
     static final String updateFile = "user/attachment/upload";
     @Multipart
     @POST(value = updateFile)
-    Call<OneCunBean> updateFile(@Query("token") String token,
+    Call<UpdateBean> updateFile(@Query("token") String token,
                                 @Part MultipartBody.Part oneInchPhoto);
 
     //账户余额
@@ -141,4 +143,16 @@ public interface UserInfoInterface {
                          @Query("pageSize") int pageSize,
                          @Query("classifyId") int classifyId,
                          @Query("token") String token);
+
+    //我的报名
+    static final String my_sign ="/data/usercenter/apply/list";
+    @GET(value = my_sign)
+    Call<SignBean> getSignData(@Query("pageNo") int pageNo,
+                               @Query("pageSize") int pageSize,
+                               @Query("token") String token);
+
+    //报名详情
+//    static final String my_sign_detail ="/data/usercenter/apply/detail";
+//    @GET(value = my_sign_detail)
+//    Call
 }

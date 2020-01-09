@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
+import com.example.administrator.zahbzayxy.beans.UpdateBean;
 import com.example.administrator.zahbzayxy.fragments.ExcelFragment;
 import com.example.administrator.zahbzayxy.fragments.FileAllFragment;
 import com.example.administrator.zahbzayxy.fragments.PdfFragment;
@@ -79,7 +80,6 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     boolean bPermission = false;
     private Bitmap bitmap;
     private byte[] bitmapByte;
-    String photo_name;//拍照名称
     private ProgressBarLayout mLoading;
     private int mPosition = 0;
 
@@ -318,28 +318,22 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), url);
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", fileEndStr, requestBody);
         UserInfoInterface aClass = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        aClass.updateFile(token, body).enqueue(new Callback<OneCunBean>() {
+        aClass.updateFile(token, body).enqueue(new Callback<UpdateBean>() {
             @Override
-            public void onResponse(Call<OneCunBean> call, Response<OneCunBean> response) {
-                Log.i("zahb","zahb================"+response.toString());
+            public void onResponse(Call<UpdateBean> call, Response<UpdateBean> response) {
                 mLoading.setVisibility(View.GONE);
-                EventBus.getDefault().post("fileUploadSuccess");
-                try {
-                    OneCunBean body = response.body();
-                    if (body != null && body.getErrMsg() != null) {
-                        String photoUrl = body.getData().getPhotoUrl();
-                        Log.e("photoUrlphotoUrl", photoUrl);
-                        if (!TextUtils.isEmpty(photoUrl)) {
-                            EventBus.getDefault().post(photoUrl);
-                        }
+                String code = response.body().getCode();
+                if(code.equals("00000")){
+                    boolean data = response.body().isData();
+                    if(data){
+                        EventBus.getDefault().post("fileUploadSuccess");
+                        Toast.makeText(MyFileActivitiy.this, "上传成功", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<OneCunBean> call, Throwable t) {
+            public void onFailure(Call<UpdateBean> call, Throwable t) {
                 mLoading.setVisibility(View.GONE);
                 EventBus.getDefault().post("fileUploadSuccess");
                 try {

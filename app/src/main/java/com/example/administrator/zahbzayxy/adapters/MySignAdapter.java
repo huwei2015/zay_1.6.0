@@ -9,8 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.beans.ExamBean;
 import com.example.administrator.zahbzayxy.beans.SignBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,27 +24,47 @@ import java.util.List;
 public class MySignAdapter extends RecyclerView.Adapter<MySignAdapter.SignViewHodler>{
     private Context mContext;
     private List<SignBean.SignListBean> signListBeans;
+    private onItemClickListener onItemClickListener;
+    public interface onItemClickListener{
+       void onClick(View view,int position);
+    }
+
+    public void setOnItemClickListener(MySignAdapter.onItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public MySignAdapter(Context mContext, List<SignBean.SignListBean> signListBeans) {
         this.mContext = mContext;
         this.signListBeans = signListBeans;
     }
 
+    public void setList(List<SignBean.SignListBean> signListBeans) {
+        this.signListBeans = signListBeans;
+        notifyDataSetChanged();
+    }
+
+    public void addList(List<SignBean.SignListBean> signListBeans) {
+        this.signListBeans.addAll(signListBeans);
+        notifyDataSetChanged();
+    }
+
+
+
     @Override
     public SignViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SignViewHodler(LayoutInflater.from(parent.getContext()).inflate(R.layout.sign_item, parent, false));
+        return new SignViewHodler(LayoutInflater.from(mContext).inflate(R.layout.sign_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(SignViewHodler holder, final int position) {
-        holder.tv_sign_title.setText(signListBeans.get(position).getTitle());
-        holder.tv_time.setText(signListBeans.get(position).getTime());
-        holder.tv_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext,"点击了"+position,Toast.LENGTH_LONG).show();
-            }
-        });
+        holder.tv_sign_title.setText(signListBeans.get(position).getActivityName());
+        holder.tv_time.setText(signListBeans.get(position).getApplyTime());
+       holder.tv_detail.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               onItemClickListener.onClick(v,position);
+           }
+       });
     }
 
     @Override

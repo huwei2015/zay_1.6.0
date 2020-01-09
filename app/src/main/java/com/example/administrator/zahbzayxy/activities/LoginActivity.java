@@ -29,6 +29,7 @@ import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.BinaryCastUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.utils.UUID;
 import com.google.gson.Gson;
 import com.umeng.socialize.UMAuthListener;
@@ -173,7 +174,8 @@ public class LoginActivity extends BaseActivity{
                     } else if (code.equals("00009")) {
                         Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_SHORT).show();
                     } else if (code.equals("99999")) {
-                        Toast.makeText(LoginActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                        Object errMsg = response.body().getErrMsg();
+                        Toast.makeText(LoginActivity.this, String.valueOf(errMsg), Toast.LENGTH_SHORT).show();
                     } else if (code.equals("00000") && body != null) {
                         LoginBean loginBean = response.body();
                         // TODO 拿到token 判断登陆是否成功
@@ -216,7 +218,7 @@ public class LoginActivity extends BaseActivity{
             }
             public void onFailure(Call<LoginBean> call, Throwable t) {
                 String message = t.getMessage();
-               Toast.makeText(LoginActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+               Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
