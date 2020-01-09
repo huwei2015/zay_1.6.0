@@ -3,12 +3,15 @@ package com.example.administrator.zahbzayxy.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class ShowImgActivity extends BaseActivity {
@@ -19,6 +22,7 @@ public class ShowImgActivity extends BaseActivity {
     private ImageView mImg, mBackImg;
     private TextView mTitleTv;
     private String mFileName, mFileUrl;
+    private ProgressBarLayout mLoading;
 
 
     @Override
@@ -34,6 +38,7 @@ public class ShowImgActivity extends BaseActivity {
         mBackImg = (ImageView) findViewById(R.id.show_img_back_img);
         mImg = (ImageView) findViewById(R.id.show_img_view);
         mTitleTv = (TextView) findViewById(R.id.show_img_title_tv);
+        mLoading = (ProgressBarLayout) findViewById(R.id.show_img_loading_layout);
     }
 
     private void initData(){
@@ -51,7 +56,18 @@ public class ShowImgActivity extends BaseActivity {
             return;
         }
         mTitleTv.setText(mFileName);
-        Picasso.with(ShowImgActivity.this).load(mFileUrl).placeholder(R.mipmap.icon_big).into(mImg);
+        mLoading.setVisibility(View.VISIBLE);
+        Picasso.with(ShowImgActivity.this).load(mFileUrl).placeholder(R.mipmap.icon_big).into(mImg, new Callback() {
+            @Override
+            public void onSuccess() {
+                mLoading.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError() {
+                mLoading.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initEvent() {
