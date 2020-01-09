@@ -313,10 +313,17 @@
         <activity android:name=".activities.LivePlayActivity" /> <!-- 题库列表页 -->
         <activity android:name=".activities.QueslibActivity" /> <!-- 书籍列表页 -->
         <activity android:name=".activities.BooksActivity" /> <!-- h5首页扫码签到页 -->
-        <activity android:name=".activities.SignInActivity" /> <!-- 签到成功页 -->
+        <activity android:name=".activities.SignInActivity" android:launchMode="singleTop"/> <!-- 签到成功页 -->
         <activity
             android:name=".activities.SigninSuccessActivity"
             android:theme="@style/MyDialogStyleBottom" /> <!-- 扫码二维码 -->
+        <activity android:name=".activities.PermissionActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.ScanQRCodeActivity"
             android:configChanges="orientation|keyboardHidden"
