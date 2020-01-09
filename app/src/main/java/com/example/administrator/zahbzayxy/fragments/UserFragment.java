@@ -114,7 +114,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     /**********FHS Start**********/
     private AlertDialog dialog;
     boolean isLogin;
-
+    int messageNum;//消息数量
     /**********FHS Start**********/
 
     //HYY添加
@@ -166,11 +166,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                         }
 
-                        int messageNum = data.getMessageNum();//消息
-                        if(messageNum == 0){
-                            tab_unread_message.setVisibility(View.INVISIBLE);
-                        }else{
+                        messageNum = data.getMessageNum();//消息
+                        if(messageNum > 0){
+                            tab_unread_message.setVisibility(View.VISIBLE);
                             tab_unread_message.setText(String.valueOf(messageNum));
+                        }else{
+                            tab_unread_message.setVisibility(View.INVISIBLE);
                         }
                         int shopCarNum = data.getShopCarNum();//购物车数量
                         tv_shop_num.setText(String.valueOf(shopCarNum));
@@ -353,7 +354,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.img_msg://消息
                 if (isLogin) {
-                    startActivity(new Intent(context, MsgListActivity.class));
+                    Intent intent = new Intent(context,MsgListActivity.class);
+                    intent.putExtra("messageNum",messageNum);
+                    startActivity(intent);
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
@@ -423,11 +426,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initIsLogin() {
-
         SharedPreferences sharedPreferences = context.getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         isLogin = sharedPreferences.getBoolean("isLogin", false);
-        if (isLogin == true) {//退出登录
+        if (isLogin == true) {
             noLoginLayout.setVisibility(View.GONE);
             haveLoginLayout.setVisibility(View.VISIBLE);
         } else if (isLogin == false) {
@@ -435,6 +437,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             haveLoginLayout.setVisibility(View.GONE);
             ll_role.setVisibility(View.VISIBLE);
             ll_no_role.setVisibility(View.INVISIBLE);
+            ll_authorization.setVisibility(View.INVISIBLE);
+            tab_unread_message.setVisibility(View.INVISIBLE);
+            tv_account.setText("0.0");
+            tv_couponNum.setText("0");
+            tv_order.setText("0");
+            tv_shop_num.setText("0");
         }
     }
 
@@ -540,6 +548,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Log.e("eventbusWechatImg", image);
             //  Picasso.with(getContext()).load(image).placeholder(R.mipmap.icon_touxiang).into(userHead_iv);
             initUserInfo();
+            initUserCenter();
         }
     }
 
@@ -668,6 +677,5 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             dialog = null;
         }
     }
-
 
 }

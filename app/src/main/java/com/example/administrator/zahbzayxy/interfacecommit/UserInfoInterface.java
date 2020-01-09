@@ -133,4 +133,12 @@ public interface UserInfoInterface {
     static final String auth_state = "order/auth";
     @POST(value = auth_state)
     Call<AuthStateBean> getStateData(@Query("token") String token, @Query("orderNumber") String orderNumber);
+
+    //系统消息
+    static final String system_msg= "/announcement/announcementByPage";
+    @GET(value = system_msg)
+    Call<?> getSystemMsg(@Query("pageNo") int pageNo,
+                         @Query("pageSize") int pageSize,
+                         @Query("classifyId") int classifyId,
+                         @Query("token") String token);
 }

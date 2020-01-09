@@ -73,7 +73,6 @@ public class UserInfoRunnable implements Runnable {
                 UserInfoRunnable task = new UserInfoRunnable(context,handler);
                 threadPool.submit(task);
             }
-            else {}
 
         }
         catch (Exception e){
