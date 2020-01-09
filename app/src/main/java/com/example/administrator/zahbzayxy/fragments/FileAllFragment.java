@@ -132,12 +132,14 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                    if(code.equals("00000")){
                        isVisible(true);
                        hideLoadingBar();
-                       allFileListBeanList = response.body().getData().getData();
+                       List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
                        if(currentPage == 1) {
-                           allFileAdapter.setList(allFileListBeanList);
+                           allFileListBeanList.clear();
+                           allFileAdapter.setList(list);
                        }else{
-                           allFileAdapter.addList(allFileListBeanList);
+                           allFileAdapter.addList(list);
                        }
+                       allFileListBeanList.addAll(list);
                    }
                }else {
                    isVisible(false);
