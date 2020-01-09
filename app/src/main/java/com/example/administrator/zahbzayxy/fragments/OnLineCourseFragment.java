@@ -29,10 +29,12 @@ import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.TestNavigationBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
+import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.ColorBar;
 import com.example.administrator.zahbzayxy.utils.DisplayUtil;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.Indicator;
+import com.example.administrator.zahbzayxy.utils.NumberFormatUtils;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 
@@ -62,6 +64,10 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private PullToRefreshRecyclerView recyclerview;
     private TextView tv_addTopic;
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
+    private int mLearnType = 0;
+    private OnLineManager mOnLineManager;
+    private boolean mIsShow;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -71,6 +77,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mIsShow = true;
         view=inflater.inflate(R.layout.fragment_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
@@ -79,9 +86,30 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
+        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview);
+        mOnLineManager.setLoadingView(mLoadingBar);
+        loadData();
         initNavigationData();
         initDate();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        loadData();
+    }
+
+    private void loadData() {
+        if (getUserVisibleHint() && mIsShow) {
+            if (mLearnType == 0) {
+                mOnLineManager.loadDAta();
+            }
+        }
+    }
+
+    public void setLearnType(int learnType) {
+        this.mLearnType = learnType;
     }
 
     private void initDate() {
@@ -107,7 +135,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         recyclerview.setPullRefreshEnabled(false);
         //设置刷新回调
         recyclerview.setPullToRefreshListener(this);
-//        recyclerview.setLoadMoreResource(R.drawable.account);//修改加载图标
         //主动触发下拉刷新操作
 //        recyclerview.onRefresh();
         //设置EmptyView
@@ -132,8 +159,8 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
                         String code = response.body().getCode();
                         if(code.equals("00000")){
                             navigationList = response.body().getData().getData();
-//                            navigationList.addAll(data);
-////                            adapter.notifyDataSetChanged();
+                            setCourseList(0,0);
+                            Log.i("======navigationList===", navigationList.toString());
                         }
                     }
                 }
@@ -144,6 +171,35 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
                 }
             });
     }
+
+
+    private void setCourseList(int position, int isAchieve) {
+//        showLoadingBar(true);
+        SharedPreferences tokenDb = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
+        String token = tokenDb.getString("token", "");
+        int cateId = NumberFormatUtils.parseInt(navigationList.get(position).getCateId());
+
+        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
+        aClass.getOnLineCourseList(1, 10, cateId, isAchieve, token).enqueue(new Callback<OnlineCourseBean>() {
+            @Override
+            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
+                hideLoadingBar();
+                if (response != null && response.body() != null) {
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     @Override
     public void onRefresh() {
 

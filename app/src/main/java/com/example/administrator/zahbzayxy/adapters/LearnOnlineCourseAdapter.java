@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,8 +25,15 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
     private List<OnlineCourseBean.OnLineListBean> onLineListBeans;
 
     public LearnOnlineCourseAdapter(Context mContext, List<OnlineCourseBean.OnLineListBean> onLineListBeans) {
+        if (onLineListBeans == null) onLineListBeans = new ArrayList<>();
         this.mContext = mContext;
         this.onLineListBeans = onLineListBeans;
+    }
+
+    public void setData(List<OnlineCourseBean.OnLineListBean> data) {
+        if (data == null) data = new ArrayList<>();
+        this.onLineListBeans = data;
+        notifyDataSetChanged();
     }
 
     @Override

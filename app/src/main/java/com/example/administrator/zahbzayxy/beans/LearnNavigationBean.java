@@ -47,6 +47,13 @@ public class LearnNavigationBean {
         public void setData(List<LearnListBean> data) {
             this.data = data;
         }
+
+        @Override
+        public String toString() {
+            return "LearnNavigationData{" +
+                    "data=" + data +
+                    '}';
+        }
     }
     public static class LearnListBean{
         private String cateId;
@@ -67,5 +74,22 @@ public class LearnNavigationBean {
         public void setCateId(String cateId) {
             this.cateId = cateId;
         }
+
+        @Override
+        public String toString() {
+            return "LearnListBean{" +
+                    "cateId='" + cateId + '\'' +
+                    ", cateName='" + cateName + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "LearnNavigationBean{" +
+                "code='" + code + '\'' +
+                ", errMsg='" + errMsg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

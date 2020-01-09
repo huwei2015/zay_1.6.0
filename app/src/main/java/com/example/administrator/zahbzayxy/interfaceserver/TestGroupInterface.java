@@ -3,6 +3,7 @@ package com.example.administrator.zahbzayxy.interfaceserver;
 import com.example.administrator.zahbzayxy.beans.AllHaveDoTestBean;
 import com.example.administrator.zahbzayxy.beans.ExamResultBean;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
+import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PrictaceErrorBean;
 import com.example.administrator.zahbzayxy.beans.SearchTestBean;
 import com.example.administrator.zahbzayxy.beans.TestCommitBean;
@@ -144,4 +145,13 @@ public interface TestGroupInterface {
     @POST(value = LearnNavigationData)
     Call<LearnNavigationBean> getLearnNavigationData(@Query("isAchieve") Integer isAchieve,
                                                      @Query("token") String token);
+
+    //在线课查询接口
+    static final String OnLineCourseUrl = "/data/usercenter/course/listCourseOnlineByCate";
+    @POST(value = OnLineCourseUrl)
+    Call<OnlineCourseBean> getOnLineCourseList(@Query("pageNo") Integer pageNo,
+                                               @Query("pageSize") Integer pageSize,
+                                               @Query("cateId") Integer cateId,
+                                               @Query("isAchieve") Integer isAchieve,
+                                               @Query("token") String token);
 }

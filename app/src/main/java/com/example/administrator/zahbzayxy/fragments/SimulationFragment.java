@@ -154,7 +154,6 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             int size = data.size();
                             navigationList.addAll(data);
                             set(fixedIndicatorView,size);
-//                                downLoadTestExpandedData(data.get(0).getCenterId());
                         }
                     }else {
                         Toast.makeText(mContext, ""+errMsg, Toast.LENGTH_SHORT).show();
