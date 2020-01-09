@@ -31,15 +31,15 @@
             android:id="@+id/tab_unread_message"
             android:layout_width="14dp"
             android:layout_height="14dp"
+            android:layout_gravity="top|right"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/tv_msg"
             android:background="@drawable/shape_unread_message_bg"
             android:gravity="center"
-            android:layout_marginTop="6dp"
-            android:layout_toEndOf="@+id/tv_msg"
             android:textColor="@android:color/white"
             android:textSize="8sp"
-            android:text="2"
-            android:layout_gravity="top|right"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

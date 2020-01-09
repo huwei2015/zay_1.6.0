@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,14 +21,26 @@ import java.util.List;
  * 待授权
  */
 public class StayAuthorAdapter extends RecyclerView.Adapter<StayAuthorAdapter.StayAuthorViewHodler>{
-    private Context mContext;
-    private List<StayAuthorBean.StayAuthorList> stayAuthorLists;
+    Context mContext;
+    private List<StayAuthorBean.StayAuthBeanList> stayAuthorLists;
 
-    public StayAuthorAdapter(Context mContext, List<StayAuthorBean.StayAuthorList> stayAuthorLists) {
+    public StayAuthorAdapter(Context mContext, List<StayAuthorBean.StayAuthBeanList> stayAuthorLists) {
         this.mContext = mContext;
         this.stayAuthorLists = stayAuthorLists;
     }
+    public StayAuthorAdapter(Context context) {
+        mContext=context;
+        stayAuthorLists = new ArrayList<>();
+    }
 
+    public void setList(List<StayAuthorBean.StayAuthBeanList> stayAuthorLists){
+        this.stayAuthorLists= stayAuthorLists;
+        notifyDataSetChanged();
+    }
+    public void addList(List<StayAuthorBean.StayAuthBeanList> stayAuthorLists){
+        this.stayAuthorLists = stayAuthorLists;
+        notifyDataSetChanged();
+    }
     @Override
     public StayAuthorAdapter.StayAuthorViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
         return new StayAuthorAdapter.StayAuthorViewHodler(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_stayauthor, parent, false));
@@ -35,14 +48,8 @@ public class StayAuthorAdapter extends RecyclerView.Adapter<StayAuthorAdapter.St
 
     @Override
     public void onBindViewHolder(StayAuthorViewHodler holder, final int position) {
-        holder.order_num.setText(stayAuthorLists.get(position).getOrder_num());
-        holder.title.setText(stayAuthorLists.get(position).getTitle());
-        holder.tv_author.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext,"点击了"+position,Toast.LENGTH_LONG).show();
-            }
-        });
+        holder.order_num.setText(stayAuthorLists.get(position).getOrderNumber());
+        holder.title.setText(stayAuthorLists.get(position).getContent());
     }
     @Override
     public int getItemCount() {

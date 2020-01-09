@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +21,20 @@ import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
+import com.example.administrator.zahbzayxy.adapters.LearnNavigationAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestNavigationAdapter;
+import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.TestNavigationBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
+import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.ColorBar;
 import com.example.administrator.zahbzayxy.utils.DisplayUtil;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.Indicator;
+import com.example.administrator.zahbzayxy.utils.NumberFormatUtils;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 
@@ -52,13 +57,17 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private Context context;
     private String token;
     private ImageView img_add;
-    private TestNavigationAdapter adapter;
+    private LearnNavigationAdapter adapter;
     private ProgressBarLayout mLoadingBar;
-    private List<TestNavigationBean.DataBean>navigationList=new ArrayList<>();
+    private List<LearnNavigationBean.LearnListBean>navigationList=new ArrayList<>();
     private LearnOnlineCourseAdapter learnOnlineCourseAdapter;
     private PullToRefreshRecyclerView recyclerview;
     private TextView tv_addTopic;
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
+    private int mLearnType = 0;
+    private OnLineManager mOnLineManager;
+    private boolean mIsShow;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -68,6 +77,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mIsShow = true;
         view=inflater.inflate(R.layout.fragment_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
@@ -76,9 +86,30 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
+        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview);
+        mOnLineManager.setLoadingView(mLoadingBar);
+        loadData();
         initNavigationData();
         initDate();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        loadData();
+    }
+
+    private void loadData() {
+        if (getUserVisibleHint() && mIsShow) {
+            if (mLearnType == 0) {
+                mOnLineManager.loadDAta();
+            }
+        }
+    }
+
+    public void setLearnType(int learnType) {
+        this.mLearnType = learnType;
     }
 
     private void initDate() {
@@ -104,7 +135,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         recyclerview.setPullRefreshEnabled(false);
         //设置刷新回调
         recyclerview.setPullToRefreshListener(this);
-//        recyclerview.setLoadMoreResource(R.drawable.account);//修改加载图标
         //主动触发下拉刷新操作
 //        recyclerview.onRefresh();
         //设置EmptyView
@@ -118,50 +148,57 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private void initNavigationData() {
             SharedPreferences tokenDb = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
             token = tokenDb.getString("token","");
-            adapter=new TestNavigationAdapter(navigationList,context);
+            adapter=new LearnNavigationAdapter(context,navigationList);
 //            testNavigation_gv.setAdapter(adapter);
             TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-            aClass.getTestNavigationData(token).enqueue(new Callback<TestNavigationBean>() {
+            aClass.getLearnNavigationData(0,token).enqueue(new Callback<LearnNavigationBean>() {
                 @Override
-                public void onResponse(Call<TestNavigationBean> call, Response<TestNavigationBean> response) {
+                public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
                     hideLoadingBar();
-                    TestNavigationBean body = response.body();
-                    if (body!=null){
-                        String code = body.getCode();
-                        Object errMsg = body.getErrMsg();
-                        if (errMsg==null){
-                            final List<TestNavigationBean.DataBean> data = body.getData();
-                            if (data!=null){
-                                navigationList.clear();
-                                int size = data.size();
-                                navigationList.addAll(data);
-                                set(fixedIndicatorView,size);
-//                                downLoadTestExpandedData(data.get(0).getCenterId());
-                            }
-                        }else {
-                            Toast.makeText(context, ""+errMsg, Toast.LENGTH_SHORT).show();
+                    if(response !=null && response.body()!=null){
+                        String code = response.body().getCode();
+                        if(code.equals("00000")){
+                            navigationList = response.body().getData().getData();
+                            setCourseList(0,0);
+                            Log.i("======navigationList===", navigationList.toString());
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<TestNavigationBean> call, Throwable t) {
-
+                public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
+                    Toast.makeText(context,t.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
     }
-    private void set(Indicator indicator, int count) {
-        indicator.setAdapter(new MyAdapter(navigationList,indicator));
 
-        indicator.setScrollBar(new ColorBar(context, context.getResources().getColor(R.color.transparent), 10));//设置选中下划线
 
-        float unSelectSize = 14;
-        float selectSize = unSelectSize * 1.1f;
-        int selectColor = context.getResources().getColor(R.color.lightBlue);
-        int unSelectColor =context.getResources().getColor(R.color.black);
-        indicator.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColor, unSelectColor).setSize(selectSize, unSelectSize));
-        indicator.setCurrentItem(0,true);
+    private void setCourseList(int position, int isAchieve) {
+//        showLoadingBar(true);
+        SharedPreferences tokenDb = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
+        String token = tokenDb.getString("token", "");
+        int cateId = NumberFormatUtils.parseInt(navigationList.get(position).getCateId());
+
+        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
+        aClass.getOnLineCourseList(1, 10, cateId, isAchieve, token).enqueue(new Callback<OnlineCourseBean>() {
+            @Override
+            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
+                hideLoadingBar();
+                if (response != null && response.body() != null) {
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
+
 
     @Override
     public void onRefresh() {
@@ -182,45 +219,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
             case R.id.img_add://添加题库
                 startActivity(new Intent(getActivity(), QueslibActivity.class));
                 break;
-        }
-    }
-
-    private class MyAdapter extends Indicator.IndicatorAdapter {
-        private List<TestNavigationBean.DataBean>list;
-        private Indicator indicator;
-
-        public MyAdapter(List<TestNavigationBean.DataBean>list, Indicator indicator) {
-            super();
-            this.list=list;
-            this.indicator=indicator;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.tab_top, parent, false);
-            }
-            TextView textView = (TextView) convertView;
-            //用了固定宽度可以避免TextView文字大小变化，tab宽度变化导致tab抖动现象
-            textView.setWidth(DisplayUtil.dipToPix(context,80));
-            String centerName = list.get(position).getCenterName();
-            textView.setText(centerName);
-
-            indicator.setOnIndicatorItemClickListener(new Indicator.OnIndicatorItemClickListener() {
-                @Override
-                public boolean onItemClick(View clickItemView, int position) {
-//                    myPostion=position;
-//                    downLoadTestExpandedData(list.get(myPostion).getCenterId());
-                    return false;
-                }
-            });
-
-            return convertView;
         }
     }
     public void showLoadingBar(boolean transparent) {

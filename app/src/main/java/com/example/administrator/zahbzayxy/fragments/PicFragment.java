@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,8 +25,10 @@ import com.example.administrator.zahbzayxy.adapters.AllFileAdapter;
 import com.example.administrator.zahbzayxy.beans.AllFileBean;
 import com.example.administrator.zahbzayxy.beans.FileDelBean;
 import com.example.administrator.zahbzayxy.interfaceserver.AllFileInterface;
+import com.example.administrator.zahbzayxy.manager.ShowFileManager;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +58,7 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
     String del_id;
     String file_path;
+    private ShowFileManager mShowFile;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -65,6 +69,7 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_pic,container,false);
+        mShowFile = new ShowFileManager((Activity) mContext);
         initView();
         initPullToRefreshListView();
         return view;
@@ -196,27 +201,33 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
         }
     }
     public void getDelData(){
-        AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
+        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
+        builder.setTitle("确定删除吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                toDelete();
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    private void toDelete() {
+        final AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
         allFileInterface.getDelData(del_id,token).enqueue(new Callback<FileDelBean>() {
             @Override
             public void onResponse(Call<FileDelBean> call, Response<FileDelBean> response) {
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        final AlertDialog.Builder builder= new AlertDialog.Builder(mContext);
-                        builder.setTitle("确定删除吗？");
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                allFileAdapter.notifyDataSetChanged();
-                               initPullToRefreshListView();
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        allFileAdapter.notifyDataSetChanged();
+                        initPullToRefreshListView();
+                    } else {
+                        ToastUtils.showLongInfo("文件删除失败");
                     }
                 }
 
@@ -224,13 +235,15 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
 
             @Override
             public void onFailure(Call<FileDelBean> call, Throwable t) {
-
+                ToastUtils.showLongInfo("文件删除失败");
             }
         });
     }
     @Override
     public void OnItemCilck(View view, int position) {
         file_path=allFileListBeanList.get(position).getAttaPath();
+        mShowFile.setFileType(ShowFileManager.SHOW_FILE_IMG);
+        mShowFile.openFile(allFileListBeanList.get(position).getAttaName(), file_path);
     }
 
     @Override

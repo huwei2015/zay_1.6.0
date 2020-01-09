@@ -1,5 +1,8 @@
 package com.example.administrator.zahbzayxy.beans;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by huwei.
  * Data 2019-12-17.
@@ -8,8 +11,7 @@ package com.example.administrator.zahbzayxy.beans;
  */
 public class SignBean {
     private String code;
-    private String errMsg;
-    private SignListBean data;
+    private List<SignListBean> applyList;
 
     public String getCode() {
         return code;
@@ -19,40 +21,50 @@ public class SignBean {
         this.code = code;
     }
 
-    public String getErrMsg() {
-        return errMsg;
+    public List<SignListBean> getApplyList() {
+        return applyList;
     }
 
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
+    public void setApplyList(List<SignListBean> applyList) {
+        this.applyList = applyList;
     }
 
-    public SignListBean getData() {
-        return data;
-    }
+    public static class SignListBean implements Serializable {
+        private int activityId;
+        private String activityName;
+        private int applyId;
+        private String applyTime;
 
-    public void setData(SignListBean data) {
-        this.data = data;
-    }
-
-    public static class SignListBean{
-        private String title;
-        private String time;
-
-        public String getTitle() {
-            return title;
+        public int getActivityId() {
+            return activityId;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setActivityId(int activityId) {
+            this.activityId = activityId;
         }
 
-        public String getTime() {
-            return time;
+        public String getActivityName() {
+            return activityName;
         }
 
-        public void setTime(String time) {
-            this.time = time;
+        public void setActivityName(String activityName) {
+            this.activityName = activityName;
+        }
+
+        public int getApplyId() {
+            return applyId;
+        }
+
+        public void setApplyId(int applyId) {
+            this.applyId = applyId;
+        }
+
+        public String getApplyTime() {
+            return applyTime;
+        }
+
+        public void setApplyTime(String applyTime) {
+            this.applyTime = applyTime;
         }
     }
 }

@@ -51,6 +51,9 @@ public class LearningFragment extends Fragment {
         OnLineCourseFragment allOrderFragment=new OnLineCourseFragment();
         OnLineCourseFragment allOrderFragment1=new OnLineCourseFragment();
         OnLineCourseFragment allOrderFragment2=new OnLineCourseFragment();
+        allOrderFragment.setLearnType(0);
+        allOrderFragment1.setLearnType(1);
+        allOrderFragment2.setLearnType(2);
         learnVPList.add(allOrderFragment);
         learnVPList.add(allOrderFragment1);
         learnVPList.add(allOrderFragment2);

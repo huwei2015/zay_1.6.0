@@ -2,12 +2,17 @@ package com.example.administrator.zahbzayxy.interfacecommit;
 
 import android.app.Person;
 
+import com.example.administrator.zahbzayxy.beans.AuthStateBean;
+import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
+import com.example.administrator.zahbzayxy.beans.SignBean;
+import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.beans.UpdateBean;
 import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoResetBean;
@@ -67,7 +72,7 @@ public interface UserInfoInterface {
     static final String updateFile = "user/attachment/upload";
     @Multipart
     @POST(value = updateFile)
-    Call<OneCunBean> updateFile(@Query("token") String token,
+    Call<UpdateBean> updateFile(@Query("token") String token,
                                 @Part MultipartBody.Part oneInchPhoto);
 
     //账户余额
@@ -107,4 +112,47 @@ public interface UserInfoInterface {
     static final String userCenter = "userCenter";
     @POST(value = userCenter)
     Call<UserCenter> getUserCenter(@Query("token") String token);
+
+    //授权列表
+    static final String auth = "order/auth/list";
+    @POST(value = auth)
+    Call<HasAuthorBean> getAuthData(@Query("token") String token,
+                                    @Query("orderStatus") int orderStatus,
+                                    @Query("pageNo") int pageNo,
+                                    @Query("pageSize") int pageSize,
+                                    @Query("orderNumber") String orderNumber);
+
+    //授权列表
+    static final String un_auth = "order/auth/list";
+    @POST(value = un_auth)
+    Call<StayAuthorBean> getUnAuthData(@Query("token") String token,
+                                       @Query("orderStatus") int orderStatus,
+                                       @Query("pageNo") int pageNo,
+                                       @Query("pageSize") int pageSize,
+                                       @Query("orderNumber") String orderNumber);
+
+    //授权状态接口
+    static final String auth_state = "order/auth";
+    @POST(value = auth_state)
+    Call<AuthStateBean> getStateData(@Query("token") String token, @Query("orderNumber") String orderNumber);
+
+    //系统消息
+    static final String system_msg= "/announcement/announcementByPage";
+    @GET(value = system_msg)
+    Call<?> getSystemMsg(@Query("pageNo") int pageNo,
+                         @Query("pageSize") int pageSize,
+                         @Query("classifyId") int classifyId,
+                         @Query("token") String token);
+
+    //我的报名
+    static final String my_sign ="/data/usercenter/apply/list";
+    @GET(value = my_sign)
+    Call<SignBean> getSignData(@Query("pageNo") int pageNo,
+                               @Query("pageSize") int pageSize,
+                               @Query("token") String token);
+
+    //报名详情
+//    static final String my_sign_detail ="/data/usercenter/apply/detail";
+//    @GET(value = my_sign_detail)
+//    Call
 }

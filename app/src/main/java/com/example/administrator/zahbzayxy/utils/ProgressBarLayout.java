@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +36,12 @@ public class ProgressBarLayout extends RelativeLayout {
         imgProgress = view.findViewById(R.id.imgProgress);
         tvProgress = view.findViewById(R.id.tvProgress);
         addView(view);
+    }
+
+    public void setShowContent(String content) {
+        if (!TextUtils.isEmpty(content) && tvProgress != null) {
+            tvProgress.setText(content);
+        }
     }
 
     public void show() {

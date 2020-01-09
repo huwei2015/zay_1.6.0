@@ -76,26 +76,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     View view;
     //用户头像
     CircleImageView userHead_iv;
-    //未登录时点击头像右侧时的箭头
-    Button noLoginEditMessage_bt;
     LinearLayout userCenter_layout;
-    //未登录时的设置按钮
-//    @BindView(R.id.resetMessage_ic)
-//    ImageView getResetMessage_ic;
-    //已登录时的信息编辑
-//    @BindView(R.id.editMessage_logined)
-    //已登录时的信息设置
-//    @BindView(R.id.resetMessage_logined)
-//    ImageView rsetMessage_logined;
     //未登录时的界面
     @BindView(R.id.noLogin_layout)
     RelativeLayout noLoginLayout;
     //已登录时的界面
     @BindView(R.id.haveLogin_layout)
     RelativeLayout haveLoginLayout;
-    //已登录界面中的用户手机号
-    // @BindView(R.id.phonenum_tv)
-    //TextView phoneNum_tv;
     @BindView(R.id.name_tv)
     TextView nickName_tv;
     private LinearLayout myMonney_ll;
@@ -127,7 +114,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     /**********FHS Start**********/
     private AlertDialog dialog;
     boolean isLogin;
-
+    int messageNum;//消息数量
     /**********FHS Start**********/
 
     //HYY添加
@@ -179,11 +166,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                         }
 
-                        int messageNum = data.getMessageNum();//消息
-                        if(messageNum == 0){
-                            tab_unread_message.setVisibility(View.INVISIBLE);
-                        }else{
+                        messageNum = data.getMessageNum();//消息
+                        if(messageNum > 0){
+                            tab_unread_message.setVisibility(View.VISIBLE);
                             tab_unread_message.setText(String.valueOf(messageNum));
+                        }else{
+                            tab_unread_message.setVisibility(View.INVISIBLE);
                         }
                         int shopCarNum = data.getShopCarNum();//购物车数量
                         tv_shop_num.setText(String.valueOf(shopCarNum));
@@ -266,7 +254,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         switch (v.getId()) {
-            case R.id.tv_authorization://授权管理
+            case R.id.ll_authorization://授权管理
                 if (isLogin) {
                     startActivity(new Intent(context, AuthorizationActivity.class));
                 } else {
@@ -366,7 +354,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.img_msg://消息
                 if (isLogin) {
-                    startActivity(new Intent(context, MsgListActivity.class));
+                    Intent intent = new Intent(context,MsgListActivity.class);
+                    intent.putExtra("messageNum",messageNum);
+                    startActivity(intent);
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
@@ -394,6 +384,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }else{
                     startActivity(new Intent(context, LoginActivity.class));
                 }
+                break;
             case R.id.common_problemRL://常见问题
                 if(isLogin){
                     Intent intent=new Intent(context, H5PageActivity.class);
@@ -435,11 +426,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initIsLogin() {
-
         SharedPreferences sharedPreferences = context.getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         isLogin = sharedPreferences.getBoolean("isLogin", false);
-        if (isLogin == true) {//退出登录
+        if (isLogin == true) {
             noLoginLayout.setVisibility(View.GONE);
             haveLoginLayout.setVisibility(View.VISIBLE);
         } else if (isLogin == false) {
@@ -447,6 +437,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             haveLoginLayout.setVisibility(View.GONE);
             ll_role.setVisibility(View.VISIBLE);
             ll_no_role.setVisibility(View.INVISIBLE);
+            ll_authorization.setVisibility(View.INVISIBLE);
+            tab_unread_message.setVisibility(View.INVISIBLE);
+            tv_account.setText("0.0");
+            tv_couponNum.setText("0");
+            tv_order.setText("0");
+            tv_shop_num.setText("0");
         }
     }
 
@@ -552,6 +548,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Log.e("eventbusWechatImg", image);
             //  Picasso.with(getContext()).load(image).placeholder(R.mipmap.icon_touxiang).into(userHead_iv);
             initUserInfo();
+            initUserCenter();
         }
     }
 
@@ -680,6 +677,5 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             dialog = null;
         }
     }
-
 
 }
