@@ -27,6 +27,7 @@ import com.example.administrator.zahbzayxy.beans.AllFileBean;
 import com.example.administrator.zahbzayxy.beans.FileDelBean;
 import com.example.administrator.zahbzayxy.interfaceserver.AllFileInterface;
 import com.example.administrator.zahbzayxy.manager.ShowFileManager;
+import com.example.administrator.zahbzayxy.utils.FileUtils;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
@@ -244,14 +245,19 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
     @Override
     public void OnItemCilck(View view, int position) {
         file_path= allFileListBeanList.get(position).getAttaPath();
-        if("1".equals(allFileListBeanList.get(position).getAttaFormat())){
+        String fileEnd = file_path.substring(file_path.lastIndexOf(".") + 1);
+        int type = FileUtils.fileType(fileEnd);
+        if(type == 1){
             mShowFile.setFileType(ShowFileManager.SHOW_FILE_IMG);
-        } else if("2".equals(allFileListBeanList.get(position).getAttaFormat())){
+        } else if(type == 2){
             mShowFile.setFileType(ShowFileManager.SHOW_FILE_WORD);
-        } else if("3".equals(allFileListBeanList.get(position).getAttaFormat())){
+        } else if(type == 4){
             mShowFile.setFileType(ShowFileManager.SHOW_FILE_EXCEL);
-        } else if("4".equals(allFileListBeanList.get(position).getAttaFormat())){
+        } else if(type == 3){
             mShowFile.setFileType(ShowFileManager.SHOW_FILE_PDF);
+        } else {
+            ToastUtils.showLongInfo("暂不支持该类型文件的预览");
+            return;
         }
         mShowFile.openFile(allFileListBeanList.get(position).getAttaName(), file_path);
            Log.i("hw","hw=============="+file_path + " file name = " + allFileListBeanList.get(position).getAttaName());

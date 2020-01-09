@@ -57,7 +57,7 @@ public class ShowImgActivity extends BaseActivity {
         }
         mTitleTv.setText(mFileName);
         mLoading.setVisibility(View.VISIBLE);
-        Picasso.with(ShowImgActivity.this).load(mFileUrl).placeholder(R.mipmap.icon_big).into(mImg, new Callback() {
+        Picasso.with(ShowImgActivity.this).load(mFileUrl).into(mImg, new Callback() {
             @Override
             public void onSuccess() {
                 mLoading.setVisibility(View.GONE);
@@ -66,6 +66,8 @@ public class ShowImgActivity extends BaseActivity {
             @Override
             public void onError() {
                 mLoading.setVisibility(View.GONE);
+                ToastUtils.showLongInfo("图片读取失败");
+                finish();
             }
         });
     }
