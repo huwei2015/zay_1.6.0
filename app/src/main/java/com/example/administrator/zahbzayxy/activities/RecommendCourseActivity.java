@@ -39,6 +39,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * HYY 推荐课程列表
+ */
 public class RecommendCourseActivity extends BaseActivity{
 
     private TextView recommedn_back_iv;

@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.interfacecommit;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.administrator.zahbzayxy.beans.BookBean;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
@@ -111,4 +112,10 @@ public interface IndexInterface {
     );
 
 
+    //签到接口
+    static final String signInPath="signin/save/info";
+    @GET(value = signInPath)
+    Call<JSONObject> saveSignIn(@Query("courseId") Integer courseId,
+                                @Query("token") String token
+    );
 }

@@ -47,22 +47,20 @@ import com.example.administrator.zahbzayxy.activities.LivePlayActivity;
 import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.activities.MsgListActivity;
 import com.example.administrator.zahbzayxy.activities.MyLessonActivity;
-import com.example.administrator.zahbzayxy.activities.MyTiKuActivity;
 import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineDetailActivity;
 import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
+//import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
-import com.example.administrator.zahbzayxy.activities.SignInActivity;
 import com.example.administrator.zahbzayxy.activities.TestDetailActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.DataHelper;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
-import com.example.administrator.zahbzayxy.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -464,6 +462,22 @@ public class NewHomeFragment extends Fragment {
                 }
             }
 
+        }
+
+        /**
+         * HYY 在线课详情
+         * @param key
+         * @param isDatacenter  只针对在线课，在线课各有数据中心课程和SAAS平台课程
+         */
+        @JavascriptInterface
+        public void onlineCourseDetail(int key,String isDatacenter){
+            Log.i("=====",key+"-------"+key);
+            Intent intent=new Intent(context, LessonThiredActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putInt("courseId",key);
+            bundle.putString("isDatacenter",isDatacenter);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
         }
 
         @JavascriptInterface

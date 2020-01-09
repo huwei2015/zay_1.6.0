@@ -71,6 +71,7 @@ public class AllOnlineCourseBean {
             private String originalPrice;
             private int isRecommend;
             private int isNew;
+            private String isDatacenter;
 
             private int courseId1;
             private String courseName1;
@@ -85,6 +86,23 @@ public class AllOnlineCourseBean {
             private String originalPrice1;
             private int isRecommend1;
             private int isNew1;
+            private String isDatacenter1;
+
+            public String getIsDatacenter() {
+                return isDatacenter;
+            }
+
+            public void setIsDatacenter(String isDatacenter) {
+                this.isDatacenter = isDatacenter;
+            }
+
+            public String getIsDatacenter1() {
+                return isDatacenter1;
+            }
+
+            public void setIsDatacenter1(String isDatacenter1) {
+                this.isDatacenter1 = isDatacenter1;
+            }
 
             public int getIsNew() {
                 return isNew;

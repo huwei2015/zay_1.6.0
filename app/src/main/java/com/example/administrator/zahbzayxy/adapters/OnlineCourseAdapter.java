@@ -156,12 +156,14 @@ public class OnlineCourseAdapter extends BaseAdapter {
         }
 
         final int courseId=courseListBean.getCourseId();
+        final String isDatacenter=courseListBean.getIsDatacenter();
         myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context, LessonThiredActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putInt("courseId",courseId);
+                bundle.putString("isDatacenter",isDatacenter);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
@@ -191,12 +193,14 @@ public class OnlineCourseAdapter extends BaseAdapter {
                 myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
             final int courseId1=courseListBean.getCourseId1();
+            final String isDatacenter1=courseListBean.getIsDatacenter1();
             myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(context, LessonThiredActivity.class);
                     Bundle bundle=new Bundle();
                     bundle.putInt("courseId",courseId1);
+                    bundle.putString("isDatacenter",isDatacenter1);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

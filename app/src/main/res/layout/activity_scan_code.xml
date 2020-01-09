@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
@@ -7,16 +8,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <SurfaceView
-            android:id="@+id/preview_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center" />
 
-        <com.example.administrator.zahbzayxy.zxing.view.ViewfinderView
-            android:id="@+id/viewfinder_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
+        <com.zhangke.qrcodeview.QRCodeView
+            android:id="@+id/qr_code_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:showSlider="true"
+            app:sliderColor="@android:color/holo_green_dark"
+            app:showPoint="true"
+            app:pointColor="@color/colorAccent"
+            app:frameColor="@android:color/white"/>
 
         <include
             android:id="@+id/include1"
@@ -24,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             layout="@layout/activity_title" />
-
     </RelativeLayout>
 
 </FrameLayout>

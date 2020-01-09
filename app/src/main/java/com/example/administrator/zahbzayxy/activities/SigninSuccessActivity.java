@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -48,8 +49,8 @@ public class SigninSuccessActivity extends BaseActivity{
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "提示：点击窗口外部关闭窗口！",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getApplicationContext(), "提示：点击窗口外部关闭窗口！",
+//						Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -57,6 +58,8 @@ public class SigninSuccessActivity extends BaseActivity{
         suc_closeIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });

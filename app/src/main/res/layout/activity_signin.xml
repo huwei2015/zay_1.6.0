@@ -77,9 +77,9 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/courseNameTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="金属非金属矿山主要负责人培训课程（地下课程 -实训）"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/signin_name_color"
@@ -94,6 +94,7 @@
                 android:layout_marginTop="35dp"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/signInBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/signin_circle"
