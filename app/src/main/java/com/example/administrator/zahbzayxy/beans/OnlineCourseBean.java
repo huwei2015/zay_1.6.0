@@ -41,11 +41,6 @@ public class OnlineCourseBean {
     }
 
     public static class OnLineListBean implements Serializable{
-        private ImageView img_icon;
-        private String title;
-        private String time;
-        private String state;
-
         private int totalPage;
         private List<UserCoursesBean> userCourses;
         private boolean isLastPage;
@@ -53,38 +48,6 @@ public class OnlineCourseBean {
         private int currentPage;
         private int totalRecord;
         private boolean isFirstPage;
-
-        public ImageView getImg_icon() {
-            return img_icon;
-        }
-
-        public void setImg_icon(ImageView img_icon) {
-            this.img_icon = img_icon;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public void setState(String state) {
-            this.state = state;
-        }
 
         public int getTotalPage() {
             return totalPage;
@@ -242,6 +205,23 @@ public class OnlineCourseBean {
 
         public void setMainCourseId(int mainCourseId) {
             this.mainCourseId = mainCourseId;
+        }
+
+        @Override
+        public String toString() {
+            return "UserCoursesBean{" +
+                    "play=" + play +
+                    ", beginDate='" + beginDate + '\'' +
+                    ", courseName='" + courseName + '\'' +
+                    ", learnTimePercent='" + learnTimePercent + '\'' +
+                    ", timeState=" + timeState +
+                    ", userCourseId=" + userCourseId +
+                    ", endDate='" + endDate + '\'' +
+                    ", totalHours=" + totalHours +
+                    ", currPlaySelectionId=" + currPlaySelectionId +
+                    ", imagePath='" + imagePath + '\'' +
+                    ", mainCourseId=" + mainCourseId +
+                    '}';
         }
     }
 }

@@ -30,6 +30,10 @@ import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +73,7 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_pic,container,false);
+        EventBus.getDefault().register(this);
         mShowFile = new ShowFileManager((Activity) mContext);
         initView();
         initPullToRefreshListView();
@@ -120,14 +125,14 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
                     if(code.equals("00000")){
                         isVisible(true);
                         hideLoadingBar();
-                        allFileListBeanList = response.body().getData().getData();
-                        if(currentPage == 1){
-                            allFileAdapter.setList(allFileListBeanList);
-                            allFileAdapter.notifyDataSetChanged();
+                        List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
+                        if(currentPage == 1) {
+                            allFileListBeanList.clear();
+                            allFileAdapter.setList(list);
                         }else{
-                            allFileAdapter.addList(allFileListBeanList);
-                            allFileAdapter.notifyDataSetChanged();
+                            allFileAdapter.addList(list);
                         }
+                        allFileListBeanList.addAll(list);
                     }
                 }else{
                     isVisible(false);
@@ -250,5 +255,18 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     public void onDelClick(View view, int position) {
         del_id=allFileListBeanList.get(position).getId();
         getDelData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventUploadFile(String login){
+        if ("fileUploadSuccess".equals(login)) {
+            initPullToRefreshListView();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }
