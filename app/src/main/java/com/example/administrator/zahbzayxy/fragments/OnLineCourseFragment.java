@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +69,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private int mLearnType = 0;
     private OnLineManager mOnLineManager;
     private boolean mIsShow;
+    private CheckBox mFilterCb;
 
     @Override
     public void onAttach(Context context) {
@@ -83,14 +86,13 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
         recyclerview =view.findViewById(R.id.recyclerview);
         tv_addTopic=view.findViewById(R.id.tv_chooseTopic);//选择题库
+        mFilterCb = view.findViewById(R.id.on_line_filter_course_check);
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
-        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview);
+        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
         mOnLineManager.setLoadingView(mLoadingBar);
         loadData();
-        initNavigationData();
-        initDate();
         return view;
     }
 
@@ -110,93 +112,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
 
     public void setLearnType(int learnType) {
         this.mLearnType = learnType;
-    }
-
-    private void initDate() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        for(int i =0; i < 6; i++){
-            OnlineCourseBean.OnLineListBean onLineListBean = new OnlineCourseBean.OnLineListBean();
-            onLineListBean.setTitle("危险化学品经营单位主要负责人和相关人员培训课程");
-            onLineListBean.setTime("学习时间:2019.12.1");
-            onLineListBean.setState("完成");
-            onLineListBeanList.add(onLineListBean);
-        }
-//        //初始化adapter
-        learnOnlineCourseAdapter = new LearnOnlineCourseAdapter(getActivity(), onLineListBeanList);
-//        //添加数据源
-        recyclerview.setAdapter(learnOnlineCourseAdapter);
-        recyclerview.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        recyclerview.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        recyclerview.setLoadingMoreEnabled(false);
-        //是否开启上拉刷新
-        recyclerview.setPullRefreshEnabled(false);
-        //设置刷新回调
-        recyclerview.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-//        recyclerview.onRefresh();
-        //设置EmptyView
-        View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
-        emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        recyclerview.setEmptyView(emptyView);
-
-    }
-
-    private void initNavigationData() {
-            SharedPreferences tokenDb = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
-            token = tokenDb.getString("token","");
-            adapter=new LearnNavigationAdapter(context,navigationList);
-//            testNavigation_gv.setAdapter(adapter);
-            TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-            aClass.getLearnNavigationData(0,token).enqueue(new Callback<LearnNavigationBean>() {
-                @Override
-                public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
-                    hideLoadingBar();
-                    if(response !=null && response.body()!=null){
-                        String code = response.body().getCode();
-                        if(code.equals("00000")){
-                            navigationList = response.body().getData().getData();
-                            setCourseList(0,0);
-                            Log.i("======navigationList===", navigationList.toString());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
-                    Toast.makeText(context,t.getMessage(),Toast.LENGTH_LONG).show();
-                }
-            });
-    }
-
-
-    private void setCourseList(int position, int isAchieve) {
-//        showLoadingBar(true);
-        SharedPreferences tokenDb = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
-        String token = tokenDb.getString("token", "");
-        int cateId = NumberFormatUtils.parseInt(navigationList.get(position).getCateId());
-
-        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOnLineCourseList(1, 10, cateId, isAchieve, token).enqueue(new Callback<OnlineCourseBean>() {
-            @Override
-            public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
-                hideLoadingBar();
-                if (response != null && response.body() != null) {
-                    String code = response.body().getCode();
-                    if (code.equals("00000")) {
-                        List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
 

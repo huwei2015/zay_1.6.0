@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/on_line_item_type_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:visibility="gone"
@@ -13,12 +14,14 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/on_line_item_type_img"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:src="@mipmap/icon" />
 
         <TextView
+            android:id="@+id/on_line_item_type_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

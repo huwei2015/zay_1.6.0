@@ -30,6 +30,17 @@
         android:background="@color/white"
         android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/on_line_filter_course_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            android:button="@drawable/on_line_filter_bg"
+            android:text="过滤已学完"
+            />
+
         <TextView
             android:id="@+id/tv_chooseTopic"
             android:layout_width="wrap_content"
