@@ -12,6 +12,7 @@ import com.example.administrator.zahbzayxy.beans.PayCardBean;
 import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.beans.TimeData;
 import com.example.administrator.zahbzayxy.beans.UpdateBean;
 import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
@@ -139,10 +140,10 @@ public interface UserInfoInterface {
     //系统消息
     static final String system_msg= "/announcement/announcementByPage";
     @GET(value = system_msg)
-    Call<?> getSystemMsg(@Query("pageNo") int pageNo,
-                         @Query("pageSize") int pageSize,
-                         @Query("classifyId") int classifyId,
-                         @Query("token") String token);
+    Call<TimeData> getSystemMsg(@Query("pageNo") int pageNo,
+                                @Query("pageSize") int pageSize,
+                                @Query("classifyId") int classifyId,
+                                @Query("token") String token);
 
     //我的报名
     static final String my_sign ="/data/usercenter/apply/list";

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -42,12 +43,25 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="40dp"
-        android:id="@+id/activity_rlview"
+    <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/my_file_loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
 
-</RelativeLayout>
+        <com.androidkun.PullToRefreshRecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <include layout="@layout/layout_empty_view" />
+
+</LinearLayout>

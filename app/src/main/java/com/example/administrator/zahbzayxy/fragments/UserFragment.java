@@ -355,7 +355,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             case R.id.img_msg://消息
                 if (isLogin) {
                     Intent intent = new Intent(context,MsgListActivity.class);
-                    intent.putExtra("messageNum",messageNum);
+                    intent.putExtra("messageNum",String.valueOf(messageNum));
                     startActivity(intent);
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));

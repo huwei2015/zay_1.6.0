@@ -43,7 +43,7 @@
         android:layout_marginTop="10dp"
         android:scrollbars="none"
         android:background="@color/white"
-        ></com.handmark.pulltorefresh.library.PullToRefreshListView>
+        />
     </LinearLayout>
 
     <RelativeLayout
@@ -64,7 +64,7 @@
             android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:background="@color/light_Gray_New"
-            android:layout_height="1dp"></LinearLayout>
+            android:layout_height="1dp"/>
         <TextView
             android:id="@+id/add_tiku_tv"
             android:text="购买更多题库"

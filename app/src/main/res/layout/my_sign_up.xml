@@ -27,9 +27,26 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
-    <com.androidkun.PullToRefreshRecyclerView
-        android:id="@+id/recyclerview"
+    <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/my_file_loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <com.androidkun.PullToRefreshRecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/light_Gray"
+            android:dividerHeight="10dp" />
+    </LinearLayout>
+    <include layout="@layout/layout_empty_view" />
 
 </LinearLayout>
