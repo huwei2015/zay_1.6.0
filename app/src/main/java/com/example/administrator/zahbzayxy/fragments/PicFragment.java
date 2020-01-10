@@ -120,10 +120,14 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
         allFileInterface.getAllFileData(currentPage,pageSize,1,token).enqueue(new Callback<AllFileBean>() {
             @Override
             public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
-                if(response !=null && response.body() !=null && response.body().getData().getData().size() > 0){
+                if(response !=null && response.body() !=null && response.body().getData().getData() != null){
+                    if (currentPage == 1 && response.body().getData().getData().size() > 0) {
+                        isVisible(false);
+                    } else {
+                        isVisible(true);
+                    }
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        isVisible(true);
                         hideLoadingBar();
                         List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
                         if(currentPage == 1) {
@@ -135,7 +139,11 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
                         allFileListBeanList.addAll(list);
                     }
                 }else{
-                    isVisible(false);
+                    if (currentPage > 1){
+                        isVisible(false);
+                    } else {
+                        currentPage--;
+                    }
                 }
             }
 

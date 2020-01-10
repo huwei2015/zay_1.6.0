@@ -66,21 +66,29 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         userInfoInterface.getSignData(currPage, PageSize, token).enqueue(new Callback<SignBean>() {
             @Override
             public void onResponse(Call<SignBean> call, Response<SignBean> response) {
-                    if(response !=null && response.body() !=null && response.body().getApplyList().size() > 0){
-                    String code = response.body().getCode();
-                    if(code.equals("00000")){
-                        hideLoadingBar();
+                if (response != null && response.body() != null) {
+                    if (currPage == 1 && response.body().getApplyList().size() == 0) {
+                        isVisible(false);
+                    } else {
                         isVisible(true);
+                    }
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        hideLoadingBar();
                         signListBeanList = response.body().getApplyList();
-                        if (currPage == 1){
+                        if (currPage == 1) {
                             mySignAdapter.setList(signListBeanList);
-                        }else{
+                        } else {
                             mySignAdapter.addList(signListBeanList);
                         }
                     }
-                }else{
+                } else {
+                    if (currPage > 1){
                         isVisible(false);
+                    } else {
+                        currPage--;
                     }
+                }
             }
 
             @Override
