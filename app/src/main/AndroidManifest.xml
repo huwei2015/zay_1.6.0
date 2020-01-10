@@ -318,11 +318,6 @@
             android:name=".activities.SigninSuccessActivity"
             android:theme="@style/MyDialogStyleBottom" /> <!-- 扫码二维码 -->
         <activity android:name=".activities.PermissionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.ScanQRCodeActivity"
