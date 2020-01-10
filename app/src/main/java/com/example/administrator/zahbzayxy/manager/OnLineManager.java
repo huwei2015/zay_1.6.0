@@ -116,7 +116,6 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
-                        mLearnList.addAll(mLearnList);
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                     }
