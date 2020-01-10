@@ -29,6 +29,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.CateTextView;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.DisplayUtil;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
 import com.example.administrator.zahbzayxy.utils.Utils;
@@ -67,11 +68,12 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
         cateId = getIntent().getIntExtra("cateId",0);
         cateType = getIntent().getStringExtra("cateType");
         s_cateId = getIntent().getIntExtra("s_cateId",0);
-
+        layout = (LinearLayout) findViewById(R.id.pop_layout);
         initView();
         getSP();
         Integer level=3;
         if(cateId>0){
+            layout.setPadding(0, DisplayUtil.dipToPix(getApplicationContext(),16),0,0);
             all_classify_layout.setVisibility(View.GONE);
             level=2;
         }
@@ -79,7 +81,7 @@ public class SelectClassifyActivity  extends BaseActivity implements ListClassif
         adapter = new ListClassifyAdapter(totalList, SelectClassifyActivity.this, token,level,s_cateId);
         classifyLv.setAdapter(adapter);
         downLoadData();
-		layout = (LinearLayout) findViewById(R.id.pop_layout);
+
 
         // 添加选择窗口范围监听可以优先获取触点，即不再执行onTouchEvent()函数，点击其他地方时执行onTouchEvent()函数销毁Activity
 		layout.setOnClickListener(new View.OnClickListener() {

@@ -16,11 +16,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.zahbzayxy.MainActivity;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
@@ -31,6 +34,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ScreenUtil;
 import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -69,6 +73,10 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private TextView shikanTV;
     private static final int ONLINECOURSE_SIGN=3;
     private RelativeLayout rl_empty;
+    private ImageView back_top;
+    private boolean scrollFlag = false;// 标记是否滑动
+    private int lastVisibleItemPosition = 0;// 标记上次滑动位置
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_course);
@@ -384,6 +392,69 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
             }
         });
 
+        //返回顶部
+        back_top=(ImageView) findViewById(R.id.back_top);
+        back_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setListViewPos(0);
+            }
+        });
+
+        recLv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:// 是当屏幕停止滚动时
+                        scrollFlag = false;
+                        // 判断滚动到底部
+                        if (recLv.getRefreshableView().getLastVisiblePosition() == (recLv.getRefreshableView().getCount() - 1)) {
+                            back_top.setVisibility(View.VISIBLE);
+                        }
+                        // 判断滚动到顶部
+                        if (recLv.getRefreshableView().getFirstVisiblePosition() == 0) {
+                            back_top.setVisibility(View.GONE);
+                        }
+
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:// 滚动时
+                        scrollFlag = true;
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:// 是当用户由于之前划动屏幕并抬起手指，屏幕产生惯性滑动时
+                        scrollFlag = false;
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (scrollFlag
+                        && ScreenUtil.getScreenViewBottomHeight(recLv.getRefreshableView()) >= ScreenUtil
+                        .getScreenHeight(OnlineCourseActivity.this)) {
+                    if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
+                        back_top.setVisibility(View.VISIBLE);
+                    } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
+                        back_top.setVisibility(View.GONE);
+                    } else {
+                        return;
+                    }
+                    lastVisibleItemPosition = firstVisibleItem;
+                }
+            }
+        });
+    }
+    /**
+     * 滚动ListView到指定位置
+     *
+     * @param pos
+     */
+    private void setListViewPos(int pos) {
+        if (android.os.Build.VERSION.SDK_INT >= 8) {
+            recLv.getRefreshableView().smoothScrollToPosition(pos);
+        } else {
+            recLv.getRefreshableView().setSelection(pos);
+        }
     }
 
     @Override

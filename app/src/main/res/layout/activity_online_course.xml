@@ -125,7 +125,18 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
        />
-    <!---->
+
+    <ImageView
+        android:id="@+id/back_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/zhiding"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:visibility="gone"
+        />
     <include
         layout ="@layout/layout_empty_view1"/>
 
