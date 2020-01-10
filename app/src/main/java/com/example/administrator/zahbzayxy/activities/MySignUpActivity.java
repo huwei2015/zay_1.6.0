@@ -83,10 +83,8 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
                         }
                     }
                 } else {
-                    if (currPage > 1){
+                    if (currPage == 1){
                         isVisible(false);
-                    } else {
-                        currPage--;
                     }
                 }
             }

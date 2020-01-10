@@ -141,15 +141,19 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                            allFileListBeanList.clear();
                            allFileAdapter.setList(list);
                        }else{
+                           if (list == null || list.size() == 0) {
+                               pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                               ToastUtils.showShortInfo("没有更多数据了");
+                           }
                            allFileAdapter.addList(list);
                        }
                        allFileListBeanList.addAll(list);
                    }
                } else {
-                   if (currentPage > 1){
+                   if (currentPage == 1){
                        isVisible(false);
                    } else {
-                       currentPage--;
+
                    }
                }
            }
