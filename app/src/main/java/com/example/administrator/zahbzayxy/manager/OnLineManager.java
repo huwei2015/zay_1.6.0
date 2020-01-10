@@ -1,6 +1,5 @@
 package com.example.administrator.zahbzayxy.manager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -49,6 +48,7 @@ public class OnLineManager implements PullToRefreshListener {
     private List<OnlineCourseBean.UserCoursesBean> mBeforeList = new ArrayList<>();
     private int mPage = 1;
     private int mPosition = 0;
+    private int mIsAchieve = 0;
 
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
@@ -85,6 +85,11 @@ public class OnLineManager implements PullToRefreshListener {
 
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
             showLoadingBar(true);
+            mPage = 1;
+            mCoursesList.clear();
+            mBeforeList.clear();
+            mOneWeekList.clear();
+            mRefreshRecyclerView.setLoadingMoreEnabled(true);
             setCourseList(mPosition, isChecked ? 1 : 0);
         });
     }
@@ -94,12 +99,9 @@ public class OnLineManager implements PullToRefreshListener {
     }
 
     public void loadDAta() {
+        mPosition = 0;
+        mFilterCb.setChecked(false);
         showLoadingBar(true);
-        mPage = 1;
-        mCoursesList.clear();
-        mBeforeList.clear();
-        mOneWeekList.clear();
-        mRefreshRecyclerView.setLoadingMoreEnabled(true);
         initNavigationData();
     }
 
@@ -114,8 +116,9 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
+                        mLearnList.addAll(mLearnList);
                         setTitle();
-                        setCourseList(0, 0);
+                        setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                     }
                 }
             }
@@ -142,6 +145,8 @@ public class OnLineManager implements PullToRefreshListener {
     }
 
     private void setCourseList(int position, int isAchieve) {
+        if (mLearnList == null || mLearnList.size() == 0) return;
+        mIsAchieve = isAchieve;
         mPosition = position;
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
@@ -213,9 +218,12 @@ public class OnLineManager implements PullToRefreshListener {
     private void setItemClick(OnLineTitleAdapter adapter) {
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             if (mPosition == position) return;
-            mRefreshRecyclerView.setLoadingMoreEnabled(true);
+            mPage = 1;
             mCoursesList.clear();
-            setCourseList(position, 0);
+            mBeforeList.clear();
+            mOneWeekList.clear();
+            mRefreshRecyclerView.setLoadingMoreEnabled(true);
+            setCourseList(position, mIsAchieve);
         });
     }
 
@@ -235,12 +243,12 @@ public class OnLineManager implements PullToRefreshListener {
         mBeforeList.clear();
         mOneWeekList.clear();
         mRefreshRecyclerView.setLoadingMoreEnabled(true);
-        setCourseList(mPosition, 0);
+        setCourseList(mPosition, mIsAchieve);
     }
 
     @Override
     public void onLoadMore() {
         mPage++;
-        setCourseList(mPosition, 0);
+        setCourseList(mPosition, mIsAchieve);
     }
 }
