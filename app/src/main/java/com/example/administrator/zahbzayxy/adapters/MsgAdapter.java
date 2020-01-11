@@ -24,17 +24,46 @@ import java.util.List;
  * Data 2019-12-13.
  * Time 11:20.
  */
-public class MsgAdapter extends RecyclerView.Adapter {
+public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     private Context mContext;
-    private List<TimeData> data;
+    private List<TimeData.MsgList> data;
+    private onClickItemListener onClickItemListener;
+    public interface onClickItemListener{
+        void onClick(View view,int position);
+    }
 
-    public MsgAdapter(Context mContext, List<TimeData> data) {
+    public void setOnClickItemListener(MsgAdapter.onClickItemListener onClickItemListener) {
+        this.onClickItemListener = onClickItemListener;
+    }
+
+    public MsgAdapter(Context mContext, List<TimeData.MsgList> data) {
         this.mContext = mContext;
         this.data = data;
     }
+    public void setList(List<TimeData.MsgList> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
+    public void addList(List<TimeData.MsgList> data) {
+        this.data =data;
+        notifyDataSetChanged();
+    }
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.msg_content,parent,false));
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.tv_title.setText(data.get(position).getTitle());
+        holder.tv_time.setText(data.get(position).getNewCreateTime());
+        holder.rl_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickItemListener.onClick(v,position);
+            }
+        });
     }
 
     @Override
@@ -43,19 +72,18 @@ public class MsgAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-
-    }
-
-    @Override
     public int getItemCount() {
-        return data.size();
+        return data !=null ? data.size():0;
     }
 
-    class ViewHolderTitle extends RecyclerView.ViewHolder {
-        private TextView tv_title;
-        public ViewHolderTitle(View itemView) {
+   static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_title,tv_time;
+        private RelativeLayout rl_item;
+        public ViewHolder(View itemView) {
             super(itemView);
+            tv_title = itemView.findViewById(R.id.tv_title);
+            tv_time=itemView.findViewById(R.id.tv_time);
+            rl_item=itemView.findViewById(R.id.rl_item);
         }
     }
 

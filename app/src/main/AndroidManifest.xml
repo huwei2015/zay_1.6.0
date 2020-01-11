@@ -339,6 +339,7 @@
         <activity
             android:name=".activities.ShowImgActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.H5MsgDetailActivity"/>
     </application>
 
 </manifest>

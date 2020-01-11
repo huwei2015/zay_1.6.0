@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
@@ -18,6 +21,7 @@ import com.example.administrator.zahbzayxy.adapters.MySignAdapter;
 import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
@@ -42,7 +46,10 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
     private int currPage = 1;
     private int PageSize = 10;
     private String token;
-
+    private TextView tv_msg;
+    RelativeLayout rl_empty;
+    LinearLayout ll_list;
+    private ProgressBarLayout mLoadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,27 +59,39 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
+        showLoadingBar(false);
         SharedPreferences sharedPreferences = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getSignData(currPage, PageSize, token).enqueue(new Callback<SignBean>() {
             @Override
             public void onResponse(Call<SignBean> call, Response<SignBean> response) {
-                    if(response !=null && response.body() !=null){
-                        String code = response.body().getCode();
-                        if(code.equals("00000")){
-                            signListBeanList = response.body().getApplyList();
-                            if (currPage == 1){
-                                mySignAdapter.setList(signListBeanList);
-                            }else{
-                                mySignAdapter.addList(signListBeanList);
-                            }
+                if (response != null && response.body() != null) {
+                    if (currPage == 1 && response.body().getApplyList().size() == 0) {
+                        isVisible(false);
+                    } else {
+                        isVisible(true);
+                    }
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        hideLoadingBar();
+                        signListBeanList = response.body().getApplyList();
+                        if (currPage == 1) {
+                            mySignAdapter.setList(signListBeanList);
+                        } else {
+                            mySignAdapter.addList(signListBeanList);
                         }
                     }
+                } else {
+                    if (currPage == 1){
+                        isVisible(false);
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<SignBean> call, Throwable t) {
+                hideLoadingBar();
                 String message = t.getMessage();
                 ToastUtils.showInfo(message,5000);
             }
@@ -81,6 +100,10 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
 
     private void initView() {
         recyclerView = (PullToRefreshRecyclerView) findViewById(R.id.recyclerview);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.my_file_loading_layout);
+        rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        ll_list= (LinearLayout) findViewById(R.id.ll_list);
+        tv_msg= (TextView) findViewById(R.id.tv_msg);
         myChengJiBack_iv = (ImageView) findViewById(R.id.myChengJiBack_iv);
         myChengJiBack_iv.setOnClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -128,7 +151,14 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
             }
         }, 2000);
     }
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
 
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
     @Override
     public void onLoadMore() {
         recyclerView.postDelayed(new Runnable() {
@@ -150,5 +180,15 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View view, int position) {
 
+    }
+    private void isVisible(boolean flag){
+        if(flag){
+            ll_list.setVisibility(View.VISIBLE);
+            rl_empty.setVisibility(View.GONE);
+        }else{
+            rl_empty.setVisibility(View.VISIBLE);
+            ll_list.setVisibility(View.GONE);
+            tv_msg.setText("暂无报名信息");
+        }
     }
 }

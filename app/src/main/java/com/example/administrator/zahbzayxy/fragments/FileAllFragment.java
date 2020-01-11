@@ -127,22 +127,34 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
        allFileInterface.getAllFileData(currentPage,pageSize,null,token).enqueue(new Callback<AllFileBean>() {
            @Override
            public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
-               if(response !=null && response.body() !=null &&response.body().getData() != null&& response.body().getData().getData().size() > 0){
+               if(response !=null && response.body() !=null &&response.body().getData() != null){
+                   if (currentPage == 1 && response.body().getData().getData().size() == 0) {
+                       isVisible(false);
+                   } else {
+                       isVisible(true);
+                   }
                    String code = response.body().getCode();
                    if(code.equals("00000")){
-                       isVisible(true);
                        hideLoadingBar();
                        List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
                        if(currentPage == 1) {
                            allFileListBeanList.clear();
                            allFileAdapter.setList(list);
                        }else{
+                           if (list == null || list.size() == 0) {
+                               pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                               ToastUtils.showShortInfo("没有更多数据了");
+                           }
                            allFileAdapter.addList(list);
                        }
                        allFileListBeanList.addAll(list);
                    }
-               }else {
-                   isVisible(false);
+               } else {
+                   if (currentPage == 1){
+                       isVisible(false);
+                   } else {
+
+                   }
                }
            }
 
