@@ -131,8 +131,11 @@ public class PMyRecommendAdapter extends BaseAdapter {
         }
 
         AllOnlineCourseBean.DataBean.CourseListBean courseListBean = list.get(position);
-        myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
-
+        if(courseListBean.getIsRecommend()==1){
+            myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName(),R.mipmap.recommend_course));
+        }else{
+            myViewHold.rec_courseName1.setText(courseListBean.getCourseName());
+        }
 
         myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getSalePrice()));
         if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
@@ -158,12 +161,16 @@ public class PMyRecommendAdapter extends BaseAdapter {
         });
 
         if (!TextUtils.isEmpty(courseListBean.getCourseName1())) {
-            myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName1(),R.mipmap.recommend_course));
+            if(courseListBean.getIsRecommend1()==1){
+                myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context,courseListBean.getCourseName1(),R.mipmap.recommend_course));
+            }else{
+                myViewHold.rec_courseName2.setText(courseListBean.getCourseName1());
+            }
             myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getSalePrice1()));
             if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
                 Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
-            if (courseListBean.getIsTrailers() == 1) {
+            if (courseListBean.getIsTrailers1() == 1) {
                 myViewHold.rec_sign_shikan2.setVisibility(View.VISIBLE);
             } else {
                 myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);

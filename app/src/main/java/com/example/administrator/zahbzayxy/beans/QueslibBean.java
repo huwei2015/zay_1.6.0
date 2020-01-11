@@ -73,6 +73,7 @@ public class QueslibBean {
             private String updateTime;
             private int isRecommend;
             private int isNew;
+            private int isFree;
 
             private int id1;
             private String quesLibName1;
@@ -83,6 +84,23 @@ public class QueslibBean {
             private String updateTime1;
             private int isRecommend1;
             private int isNew1;
+            private int isFree1;
+
+            public int getIsFree() {
+                return isFree;
+            }
+
+            public void setIsFree(int isFree) {
+                this.isFree = isFree;
+            }
+
+            public int getIsFree1() {
+                return isFree1;
+            }
+
+            public void setIsFree1(int isFree1) {
+                this.isFree1 = isFree1;
+            }
 
             public int getIsNew() {
                 return isNew;

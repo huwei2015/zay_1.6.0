@@ -43,15 +43,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * HYY 推荐课程列表
+ * HYY 试看课程列表
  */
-public class RecommendCourseActivity extends BaseActivity{
+public class TrailersCourseActivity extends BaseActivity{
 
     private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
     private TextView zuixinTV;
-    private TextView shikanTV;
+    private TextView isrecmooendTV;
     private ProgressBarLayout mLoadingBar;
 
     private List<AllOnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
@@ -66,16 +66,16 @@ public class RecommendCourseActivity extends BaseActivity{
     private boolean scrollFlag = false;// 标记是否滑动
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
 
-    private Integer isTrailers;
+    private Integer isRecommend;
     private Integer isNew;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommend_course);
-        Utils.setFullScreen(RecommendCourseActivity.this,getWindow());
+        setContentView(R.layout.activity_trailers_course);
+        Utils.setFullScreen(TrailersCourseActivity.this,getWindow());
         initView();
         getSP();
-        adapter = new PMyRecommendAdapter(totalList, RecommendCourseActivity.this, token, handler);
+        adapter = new PMyRecommendAdapter(totalList, TrailersCourseActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
     }
@@ -109,7 +109,7 @@ public class RecommendCourseActivity extends BaseActivity{
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,isTrailers,isNew,1).enqueue(new Callback<AllOnlineCourseBean>() {
+        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,isRecommend,1,isNew,1).enqueue(new Callback<AllOnlineCourseBean>() {
             @Override
             public void onResponse(Call<AllOnlineCourseBean> call, Response<AllOnlineCourseBean> response) {
                 int code1 = response.code();
@@ -121,18 +121,18 @@ public class RecommendCourseActivity extends BaseActivity{
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrailersCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrailersCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
 
                         } else if (code.equals("99999")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrailersCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
                             List<AllOnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
@@ -142,7 +142,7 @@ public class RecommendCourseActivity extends BaseActivity{
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(RecommendCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TrailersCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -182,7 +182,7 @@ public class RecommendCourseActivity extends BaseActivity{
         }
     }
     private boolean zxFlag=true;
-    private boolean skFlag=true;
+    private boolean tjFlag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
         recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
@@ -198,25 +198,25 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecommendCourseActivity.this, SelectClassifyActivity.class);
+                Intent intent = new Intent(TrailersCourseActivity.this, SelectClassifyActivity.class);
                 intent.putExtra("cateType", "online_cate");
                 intent.putExtra("s_cateId", cateId);
                 startActivityForResult(intent,RECOMMEND_SIGN);
             }
         });
 
-        shikanTV=(TextView)findViewById(R.id.shikanTV);
-        shikanTV.setOnClickListener(new View.OnClickListener() {
+        isrecmooendTV=(TextView)findViewById(R.id.recmooendTV);
+        isrecmooendTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(skFlag) {
+                if(tjFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon);
+                            R.mipmap.tuijian_sel);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    skFlag=false;
+                    tjFlag=false;
                     totalList.clear();
-                    isTrailers=1;
+                    isRecommend=1;
 
                     Drawable drawableLeft2 = getResources().getDrawable(
                             R.mipmap.jt_down);
@@ -226,12 +226,12 @@ public class RecommendCourseActivity extends BaseActivity{
                     isNew=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
+                            R.mipmap.tuijian);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
+                    tjFlag=true;
                     totalList.clear();
-                    isTrailers=null;
+                    isRecommend=null;
                 }
                 downLoadData(1);
             }
@@ -251,11 +251,11 @@ public class RecommendCourseActivity extends BaseActivity{
                     isNew=1;
 
                     Drawable drawableLeft1 = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
-                    shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
-                    shikanTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
-                    isTrailers=null;
+                            R.mipmap.tuijian);
+                    isrecmooendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    isrecmooendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    tjFlag=true;
+                    isRecommend=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
@@ -309,7 +309,7 @@ public class RecommendCourseActivity extends BaseActivity{
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (scrollFlag
                         && ScreenUtil.getScreenViewBottomHeight(recLv.getRefreshableView()) >= ScreenUtil
-                        .getScreenHeight(RecommendCourseActivity.this)) {
+                        .getScreenHeight(TrailersCourseActivity.this)) {
                     if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
                         back_top.setVisibility(View.VISIBLE);
                     } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
@@ -349,7 +349,7 @@ public class RecommendCourseActivity extends BaseActivity{
 
 
     public void downLoadOnClick(View view) {
-        Intent intent = new Intent(RecommendCourseActivity.this, DownloadListActivity.class);
+        Intent intent = new Intent(TrailersCourseActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
 
@@ -422,13 +422,13 @@ public class RecommendCourseActivity extends BaseActivity{
         if (upLoadAlertDialog != null) {
             upLoadAlertDialog.dismiss();
         }
-        upLoadAlertDialog = new AlertDialog.Builder(RecommendCourseActivity.this)
+        upLoadAlertDialog = new AlertDialog.Builder(TrailersCourseActivity.this)
                 .setTitle("提示")
                 .setMessage(R.string.upload_portrait_prompt)
                 .setNegativeButton(R.string.btn_go_to_upload, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(RecommendCourseActivity.this, EditMessageActivity.class));
+                        startActivity(new Intent(TrailersCourseActivity.this, EditMessageActivity.class));
                         return;
                     }
                 }).create();

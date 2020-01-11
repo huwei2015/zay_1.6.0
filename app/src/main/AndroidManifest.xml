@@ -302,7 +302,14 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TestActivity" /> <!-- HYY 添加 start -->
         <!-- 课程推荐（只有在线课）列表页 -->
-        <activity android:name=".activities.RecommendCourseActivity" /> <!-- 在线课、线下课、题库、书籍分类选择 -->
+        <activity android:name=".activities.RecommendCourseActivity" />
+        <!-- 题库推荐列表页 -->
+        <activity android:name=".activities.RecommendQueslibActivity" />
+        <!-- 课程试看（只有在线课）列表页 -->
+        <activity android:name=".activities.TrailersCourseActivity" />
+        <!-- 题库试用列表页 -->
+        <activity android:name=".activities.TrailersQueslibActivity" />
+        <!-- 在线课、线下课、题库、书籍分类选择 -->
         <activity
             android:name=".activities.SelectClassifyActivity"
             android:theme="@style/MyDialogStyleRight" /> <!-- 在线课列表页 -->

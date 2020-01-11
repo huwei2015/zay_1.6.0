@@ -73,6 +73,7 @@ public class LiveCourseActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_course);
+        status = getIntent().getStringExtra("status");
         Utils.setFullScreen(LiveCourseActivity.this,getWindow());
         initView();
         getSP();
@@ -237,8 +238,16 @@ public class LiveCourseActivity extends BaseActivity{
                  downLoadData(1);
             }
         });
+
+
         //预约直播
         lveingyyTV= (TextView)findViewById(R.id.lveingyyTV);
+        if("2".equals(status)){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy_sel);
+            lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            lveingyyTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            v2Flag=false;
+        }
         lveingyyTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

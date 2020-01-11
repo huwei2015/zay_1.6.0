@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light_Gray"
-    tools:context="com.example.administrator.zahbzayxy.activities.RecommendCourseActivity">
+    android:background="@color/bg_light_Gray">
 
     <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
         android:id="@+id/load_bar_layout_course"
@@ -12,7 +11,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone" />
-
 
     <RelativeLayout
         android:id="@+id/top_layout"
@@ -36,7 +34,7 @@
             android:layout_width="wrap_content"
             android:gravity="center"
             android:textColor="@color/white"
-            android:text="推荐"
+            android:text="试看"
             android:textSize="18sp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content" />
@@ -56,11 +54,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/shikanTV"
+                android:id="@+id/recmooendTV"
                 android:layout_width="wrap_content"
                 android:textColor="@color/zx_text_color"
-                android:drawableLeft="@mipmap/play_icon_nosel"
-                android:text=" 试看"
+                android:drawableLeft="@mipmap/tuijian"
+                android:text=" 推荐"
                 android:paddingLeft="20dp"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
@@ -74,16 +72,6 @@
                 android:paddingLeft="10dp"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
-            <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:textColor="@color/zx_text_color"
-                android:drawableRight="@mipmap/jt_down"
-                android:text="热度 "
-                android:paddingLeft="10dp"
-                android:textSize="14sp"
-                android:layout_height="wrap_content" />
-                -->
         </LinearLayout>
 
         <LinearLayout

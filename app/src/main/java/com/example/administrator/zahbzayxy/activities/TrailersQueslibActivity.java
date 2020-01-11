@@ -22,8 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.adapters.PMyRecommendAdapter;
-import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
+import com.example.administrator.zahbzayxy.adapters.QueslibAdapter;
+import com.example.administrator.zahbzayxy.beans.QueslibBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
@@ -43,44 +43,46 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * HYY 推荐课程列表
+ * 推荐题库
  */
-public class RecommendCourseActivity extends BaseActivity{
+public class TrailersQueslibActivity extends BaseActivity{
 
     private TextView recommedn_back_iv;
     private PullToRefreshListView recLv;
     private TextView sel_classifyTV;
-    private TextView zuixinTV;
-    private TextView shikanTV;
     private ProgressBarLayout mLoadingBar;
 
-    private List<AllOnlineCourseBean.DataBean.CourseListBean> totalList = new ArrayList<>();
+    private List<QueslibBean.DataBean.QueslibListBean> totalList = new ArrayList<>();
+
     private static String token;
-    PMyRecommendAdapter adapter;
+    QueslibAdapter adapter;
     private int pageSize = 10;
     private int pager = 1;
+    private Integer s_cateId=0;
+    private Integer isRecommend;
+    private Integer isNew;
+    private TextView zuixinTV;
+    private TextView isrecmmendTV;
+    private static final int QUESLIB_SIGN=6;
+
     private RelativeLayout rl_empty;
-    private static final int RECOMMEND_SIGN=1;
-    private int cateId=0;
+
     private ImageView back_top;
     private boolean scrollFlag = false;// 标记是否滑动
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
-
-    private Integer isTrailers;
-    private Integer isNew;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommend_course);
-        Utils.setFullScreen(RecommendCourseActivity.this,getWindow());
+        setContentView(R.layout.activity_trailers_queslib);
+        Utils.setFullScreen(TrailersQueslibActivity.this,getWindow());
         initView();
         getSP();
-        adapter = new PMyRecommendAdapter(totalList, RecommendCourseActivity.this, token, handler);
+        adapter = new QueslibAdapter(totalList, TrailersQueslibActivity.this, token, handler);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
     }
 
     private void initPullToRefreshLv() {
+
         recLv.setMode(PullToRefreshBase.Mode.BOTH);
         recLv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -109,40 +111,39 @@ public class RecommendCourseActivity extends BaseActivity{
     private void downLoadData(int pager) {
         showLoadingBar(false);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,isTrailers,isNew,1).enqueue(new Callback<AllOnlineCourseBean>() {
+        aClass.queslibList(pager,pageSize,token,s_cateId==0?null:s_cateId,isRecommend, 1,isNew,1).enqueue(new Callback<QueslibBean>() {
             @Override
-            public void onResponse(Call<AllOnlineCourseBean> call, Response<AllOnlineCourseBean> response) {
+            public void onResponse(Call<QueslibBean> call, Response<QueslibBean> response) {
                 int code1 = response.code();
-                AllOnlineCourseBean body = response.body();
+                QueslibBean body = response.body();
                 String s = new Gson().toJson(body);
-                Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                Log.e("data", s);
+                if (body != null && body.getData().getQueslibList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrailersQueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putBoolean("isLogin", false);
                             edit.commit();
                         } else if (dbIsLogin() == false) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(TrailersQueslibActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("99999")) {
                             initViewVisible(false);
-                            Toast.makeText(RecommendCourseActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrailersQueslibActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
-                            List<AllOnlineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
+                            List<QueslibBean.DataBean.QueslibListBean> courseList = body.getData().getQueslibList();
                             totalList.addAll(courseList);
                             adapter.notifyDataSetChanged();
                         } else {
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
                             if (errMsg != null) {
-                                Toast.makeText(RecommendCourseActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TrailersQueslibActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -155,7 +156,7 @@ public class RecommendCourseActivity extends BaseActivity{
             }
 
             @Override
-            public void onFailure(Call<AllOnlineCourseBean> call, Throwable t) {
+            public void onFailure(Call<QueslibBean> call, Throwable t) {
                 initViewVisible(false);
                 String message = t.getMessage();
                 // Log.e("myLessonerror",message);
@@ -182,6 +183,7 @@ public class RecommendCourseActivity extends BaseActivity{
         }
     }
     private boolean zxFlag=true;
+    private boolean tjFlag=true;
     private boolean skFlag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
@@ -198,25 +200,25 @@ public class RecommendCourseActivity extends BaseActivity{
         sel_classifyTV.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecommendCourseActivity.this, SelectClassifyActivity.class);
-                intent.putExtra("cateType", "online_cate");
-                intent.putExtra("s_cateId", cateId);
-                startActivityForResult(intent,RECOMMEND_SIGN);
+                Intent intent = new Intent(TrailersQueslibActivity.this, SelectClassifyActivity.class);
+                intent.putExtra("cateType", "queslib_cate");
+                intent.putExtra("s_cateId", s_cateId);
+                startActivityForResult(intent,QUESLIB_SIGN);
             }
         });
 
-        shikanTV=(TextView)findViewById(R.id.shikanTV);
-        shikanTV.setOnClickListener(new View.OnClickListener() {
+        isrecmmendTV=(TextView)findViewById(R.id.recommendTV);
+        isrecmmendTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(skFlag) {
+                if(tjFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon);
+                            R.mipmap.tuijian_sel);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    skFlag=false;
+                    tjFlag=false;
                     totalList.clear();
-                    isTrailers=1;
+                    isRecommend=1;
 
                     Drawable drawableLeft2 = getResources().getDrawable(
                             R.mipmap.jt_down);
@@ -226,12 +228,12 @@ public class RecommendCourseActivity extends BaseActivity{
                     isNew=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
+                            R.mipmap.tuijian);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
-                    skFlag=true;
+                    tjFlag=true;
                     totalList.clear();
-                    isTrailers=null;
+                    isRecommend=null;
                 }
                 downLoadData(1);
             }
@@ -245,17 +247,18 @@ public class RecommendCourseActivity extends BaseActivity{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down_sel);
                     ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    //((TextView) v).setCompoundDrawablePadding(4);
                     ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
 
                     Drawable drawableLeft1 = getResources().getDrawable(
-                            R.mipmap.play_icon_nosel);
-                    shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
-                    shikanTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                            R.mipmap.tuijian);
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft1, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     skFlag=true;
-                    isTrailers=null;
+                    isRecommend=null;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
@@ -309,7 +312,7 @@ public class RecommendCourseActivity extends BaseActivity{
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (scrollFlag
                         && ScreenUtil.getScreenViewBottomHeight(recLv.getRefreshableView()) >= ScreenUtil
-                        .getScreenHeight(RecommendCourseActivity.this)) {
+                        .getScreenHeight(TrailersQueslibActivity.this)) {
                     if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
                         back_top.setVisibility(View.VISIBLE);
                     } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
@@ -321,7 +324,6 @@ public class RecommendCourseActivity extends BaseActivity{
                 }
             }
         });
-
     }
 
     /**
@@ -337,6 +339,20 @@ public class RecommendCourseActivity extends BaseActivity{
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case QUESLIB_SIGN :
+                if (resultCode == Activity.RESULT_OK) {
+                    s_cateId = data.getIntExtra("cateId",0);
+                    totalList.clear();
+                    downLoadData(1);
+                }
+                break;
+            default:break;
+        }
+    }
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
         mLoadingBar.show();
@@ -346,10 +362,8 @@ public class RecommendCourseActivity extends BaseActivity{
         mLoadingBar.hide();
     }
 
-
-
     public void downLoadOnClick(View view) {
-        Intent intent = new Intent(RecommendCourseActivity.this, DownloadListActivity.class);
+        Intent intent = new Intent(TrailersQueslibActivity.this, DownloadListActivity.class);
         startActivity(intent);
     }
 
@@ -380,29 +394,11 @@ public class RecommendCourseActivity extends BaseActivity{
             return;
         }
 
-
         final int userCourseId = msg.getData().getInt("userCourseId", 0);
         final int courseId = msg.getData().getInt("coruseId", 0);
         final String token = msg.getData().getString("token");
 
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("===============",requestCode+"====="+resultCode);
-        switch(requestCode){
-            case RECOMMEND_SIGN :
-                if (resultCode == Activity.RESULT_OK) {
-                    int s_cateId = data.getIntExtra("cateId",0);
-                    cateId=s_cateId;
-                    totalList.clear();
-                    downLoadData(1);
-                }
-                break;
-            default:break;
-        }
     }
 
 
@@ -422,13 +418,13 @@ public class RecommendCourseActivity extends BaseActivity{
         if (upLoadAlertDialog != null) {
             upLoadAlertDialog.dismiss();
         }
-        upLoadAlertDialog = new AlertDialog.Builder(RecommendCourseActivity.this)
+        upLoadAlertDialog = new AlertDialog.Builder(TrailersQueslibActivity.this)
                 .setTitle("提示")
                 .setMessage(R.string.upload_portrait_prompt)
                 .setNegativeButton(R.string.btn_go_to_upload, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(RecommendCourseActivity.this, EditMessageActivity.class));
+                        startActivity(new Intent(TrailersQueslibActivity.this, EditMessageActivity.class));
                         return;
                     }
                 }).create();

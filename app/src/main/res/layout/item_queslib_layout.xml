@@ -46,7 +46,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName1"
+                android:id="@+id/queslibName1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -70,12 +70,12 @@
                     android:layout_height="wrap_content" />
 
                 <ImageView
-                    android:id="@+id/rec_sign_shikan1"
+                    android:id="@+id/rec_sign_shiyone1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentRight="true"
-                    android:src="@mipmap/shikan"/>
+                    android:src="@mipmap/shiyong"/>
             </RelativeLayout>
 
         </LinearLayout>
@@ -124,7 +124,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName2"
+                android:id="@+id/queslibName2"
                 android:text="防爆电气执业资格培训"
                 android:textColor="@color/cname_color"
                 android:textSize="14sp"
@@ -147,12 +147,12 @@
                     android:layout_height="wrap_content" />
 
                 <ImageView
-                    android:id="@+id/rec_sign_shikan2"
+                    android:id="@+id/rec_sign_shiyone2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentRight="true"
-                    android:src="@mipmap/shikan"/>
+                    android:src="@mipmap/shiyong"/>
             </RelativeLayout>
 
         </LinearLayout>

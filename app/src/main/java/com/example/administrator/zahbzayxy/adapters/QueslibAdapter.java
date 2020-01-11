@@ -117,12 +117,12 @@ public class QueslibAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_queslib_layout, parent, false);
             myViewHold.recPic1 = convertView.findViewById(R.id.recPic1);
             myViewHold.recPic2 = convertView.findViewById(R.id.recPic2);
-            myViewHold.rec_courseName1 = convertView.findViewById(R.id.rec_courseName1);
-            myViewHold.rec_courseName2 = convertView.findViewById(R.id.rec_courseName2);
+            myViewHold.queslibName1 = convertView.findViewById(R.id.queslibName1);
+            myViewHold.queslibName2 = convertView.findViewById(R.id.queslibName2);
             myViewHold.rec_price1 = convertView.findViewById(R.id.rec_price1);
             myViewHold.rec_price2 = convertView.findViewById(R.id.rec_price2);
-            myViewHold.rec_sign_shikan1 = convertView.findViewById(R.id.rec_sign_shikan1);
-            myViewHold.rec_sign_shikan2 = convertView.findViewById(R.id.rec_sign_shikan2);
+            myViewHold.rec_sign_shiyone1 = convertView.findViewById(R.id.rec_sign_shiyone1);
+            myViewHold.rec_sign_shiyone2 = convertView.findViewById(R.id.rec_sign_shiyone2);
             myViewHold.left_layout=convertView.findViewById(R.id.left_layout);
             myViewHold.right_layout=convertView.findViewById(R.id.right_layout);
             myViewHold.sign_zxIV1= convertView.findViewById(R.id.sign_zxIV1);
@@ -132,24 +132,28 @@ public class QueslibAdapter extends BaseAdapter {
             myViewHold = (QueslibAdapter.myViewHold) convertView.getTag();
         }
 
-        QueslibBean.DataBean.QueslibListBean courseListBean = list.get(position);
-        if(courseListBean.getIsRecommend()==1){
-            myViewHold.rec_courseName1.setText(TextAndPictureUtil.getText(context,courseListBean.getQuesLibName(),R.mipmap.recommend_course));
+        QueslibBean.DataBean.QueslibListBean queslib = list.get(position);
+        if(queslib.getIsRecommend()==1){
+            myViewHold.queslibName1.setText(TextAndPictureUtil.getText(context,queslib.getQuesLibName(),R.mipmap.rec_queslib));
         }else{
-            myViewHold.rec_courseName1.setText(courseListBean.getQuesLibName());
+            myViewHold.queslibName1.setText(queslib.getQuesLibName());
         }
 
-        myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getsPrice()));
-        if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
-            Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
+        myViewHold.rec_price1.setText("￥" + String.valueOf(queslib.getsPrice()));
+        if (!TextUtils.isEmpty(queslib.getImagePath())) {
+            Picasso.with(context).load(queslib.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
-
-        if(courseListBean.getIsNew()==1){
+        if (queslib.getIsFree() == 1) {
+            myViewHold.rec_sign_shiyone1.setVisibility(View.VISIBLE);
+        } else {
+            myViewHold.rec_sign_shiyone1.setVisibility(View.INVISIBLE);
+        }
+        if(queslib.getIsNew()==1){
             myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
         }else{
             myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
         }
-        final int id=courseListBean.getId();
+        final int id=queslib.getId();
         myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,29 +165,29 @@ public class QueslibAdapter extends BaseAdapter {
             }
         });
         //=============================================================================第二个值
-        if (!TextUtils.isEmpty(courseListBean.getQuesLibName1())) {
-            if(courseListBean.getIsRecommend1()==1) {
-                myViewHold.rec_courseName2.setText(TextAndPictureUtil.getText(context, courseListBean.getQuesLibName1(), R.mipmap.recommend_course));
+        if (!TextUtils.isEmpty(queslib.getQuesLibName1())) {
+            if(queslib.getIsRecommend1()==1) {
+                myViewHold.queslibName2.setText(TextAndPictureUtil.getText(context, queslib.getQuesLibName1(), R.mipmap.rec_queslib));
             }else{
-                myViewHold.rec_courseName2.setText(courseListBean.getQuesLibName1());
+                myViewHold.queslibName2.setText(queslib.getQuesLibName1());
             }
-            myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getsPrice1()));
-            if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
-                Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
+            myViewHold.rec_price2.setText("￥" + String.valueOf(queslib.getsPrice1()));
+            if (!TextUtils.isEmpty(queslib.getImagePath1())) {
+                Picasso.with(context).load(queslib.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
-//            if (courseListBean.getIsTrailers1() == 1) {
-//                myViewHold.rec_sign_shikan2.setVisibility(View.VISIBLE);
-//            } else {
-//                myViewHold.rec_sign_shikan2.setVisibility(View.INVISIBLE);
-//            }
+            if (queslib.getIsFree1() == 1) {
+                myViewHold.rec_sign_shiyone2.setVisibility(View.VISIBLE);
+            } else {
+                myViewHold.rec_sign_shiyone2.setVisibility(View.INVISIBLE);
+            }
 
-            if(courseListBean.getIsNew1()==1){
-                myViewHold.sign_zxIV1.setVisibility(View.VISIBLE);
+            if(queslib.getIsNew1()==1){
+                myViewHold.sign_zxIV2.setVisibility(View.VISIBLE);
             }else{
-                myViewHold.sign_zxIV1.setVisibility(View.INVISIBLE);
+                myViewHold.sign_zxIV2.setVisibility(View.INVISIBLE);
             }
             myViewHold.right_layout.setVisibility(View.VISIBLE);
-            final int id1=courseListBean.getId1();
+            final int id1=queslib.getId1();
             myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -209,8 +213,8 @@ public class QueslibAdapter extends BaseAdapter {
 
     static class myViewHold {
         ImageRadiusView recPic1,recPic2;
-        TextView rec_courseName1, rec_courseName2, rec_price1, rec_price2;
-        ImageView rec_sign_shikan1,rec_sign_shikan2,sign_zxIV1,sign_zxIV2;
+        TextView queslibName1, queslibName2, rec_price1, rec_price2;
+        ImageView rec_sign_shiyone1,rec_sign_shiyone2,sign_zxIV1,sign_zxIV2;
         LinearLayout left_layout,right_layout;
     }
 

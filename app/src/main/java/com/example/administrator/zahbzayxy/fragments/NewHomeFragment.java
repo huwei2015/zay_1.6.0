@@ -54,8 +54,11 @@ import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
 //import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
+import com.example.administrator.zahbzayxy.activities.RecommendQueslibActivity;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.activities.TestDetailActivity;
+import com.example.administrator.zahbzayxy.activities.TrailersCourseActivity;
+import com.example.administrator.zahbzayxy.activities.TrailersQueslibActivity;
 import com.example.administrator.zahbzayxy.utils.AppUrls;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.DataHelper;
@@ -397,6 +400,13 @@ public class NewHomeFragment extends Fragment {
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
+                //试看
+                if("isTrailers".equals(pageType)){
+                    Intent intent=new Intent(context, TrailersCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
                 if("detail".equals(pageType)) {
                     Intent intent=new Intent(context, LessonThiredActivity.class);
                     Bundle bundle=new Bundle();
@@ -427,6 +437,14 @@ public class NewHomeFragment extends Fragment {
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
+                //预约
+                if("yuyue".equals(pageType)){
+                    Intent intent=new Intent(context, LiveCourseActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtra("status", 2);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
                 if("detail".equals(pageType)) {
                     Intent intent = new Intent(context, LivePlayActivity.class);
                     intent.putExtra("webinar_id", key);
@@ -436,6 +454,20 @@ public class NewHomeFragment extends Fragment {
             if("queslib".equals(dataType)){
                 if("list".equals(pageType)){
                     Intent intent=new Intent(context, QueslibActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+                //推荐
+                if("recommend".equals(pageType)){
+                    Intent intent=new Intent(context, RecommendQueslibActivity.class);
+                    Bundle bundle=new Bundle();
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+                //试看
+                if("isTrailers".equals(pageType)){
+                    Intent intent=new Intent(context, TrailersQueslibActivity.class);
                     Bundle bundle=new Bundle();
                     intent.putExtras(bundle);
                     context.startActivity(intent);
