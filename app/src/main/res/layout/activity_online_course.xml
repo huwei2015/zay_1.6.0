@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light_Gray"
-    tools:context="com.example.administrator.zahbzayxy.activities.RecommendCourseActivity">
+    tools:context="com.example.administrator.zahbzayxy.activities.OnlineCourseActivity">
 
     <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
-        android:id="@+id/load_bar_layout_course"
+        android:id="@+id/load_bar_layout_online_course"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -112,9 +112,6 @@
             </LinearLayout>
     </RelativeLayout>
 
-
-
-
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/recLv"
         android:layout_below="@+id/func_layout"
@@ -137,6 +134,7 @@
         android:layout_marginBottom="15dp"
         android:visibility="gone"
         />
+
     <include
         layout ="@layout/layout_empty_view1"/>
 

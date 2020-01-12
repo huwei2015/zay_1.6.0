@@ -7,7 +7,7 @@
     tools:context="com.example.administrator.zahbzayxy.activities.RecommendCourseActivity">
 
     <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
-        android:id="@+id/load_bar_layout_course"
+        android:id="@+id/load_bar_layout_queslib"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

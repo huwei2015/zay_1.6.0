@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light_Gray"
-    tools:context="com.example.administrator.zahbzayxy.activities.RecommendCourseActivity">
+    tools:context="com.example.administrator.zahbzayxy.activities.TrailersQueslibActivity">
 
     <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
-        android:id="@+id/load_bar_layout_course"
+        android:id="@+id/load_bar_layout_trailers_queslib"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

@@ -66,7 +66,6 @@ public class RecommendQueslibActivity extends BaseActivity{
     private Integer isTrailers;
     private Integer isNew;
     private TextView zuixinTV;
-    private TextView isrecmmendTV;
     private TextView shikanTV;
     private static final int QUESLIB_SIGN=6;
 
@@ -114,7 +113,7 @@ public class RecommendQueslibActivity extends BaseActivity{
     }
 
     private void downLoadData(int pager) {
-        showLoadingBar(false);
+        showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.queslibList(pager,pageSize,token,s_cateId==0?null:s_cateId,1, isTrailers,isNew,1).enqueue(new Callback<QueslibBean>() {
             @Override
@@ -191,7 +190,7 @@ public class RecommendQueslibActivity extends BaseActivity{
     private boolean tjFlag=true;
     private boolean skFlag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_recommend_queslib);
         recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
@@ -211,11 +210,6 @@ public class RecommendQueslibActivity extends BaseActivity{
                 startActivityForResult(intent,QUESLIB_SIGN);
             }
         });
-
-        isrecmmendTV=(TextView)findViewById(R.id.recommendTV);
-        Drawable drawableLeft = getResources().getDrawable(R.mipmap.tuijian_sel);
-        isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-        isrecmmendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
 
         shikanTV=(TextView)findViewById(R.id.shikanTV);
         shikanTV.setOnClickListener(new View.OnClickListener() {
@@ -366,6 +360,7 @@ public class RecommendQueslibActivity extends BaseActivity{
     }
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.bringToFront();
         mLoadingBar.show();
     }
 

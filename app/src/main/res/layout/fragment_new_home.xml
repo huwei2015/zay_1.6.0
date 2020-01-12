@@ -5,6 +5,13 @@
     android:orientation="vertical"
     tools:context="com.example.administrator.zahbzayxy.fragments.NewHomeFragment">
 
+   <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+       android:id="@+id/load_bar_layout_index"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:gravity="center"
+       android:visibility="gone" />
+
    <WebView
        android:id="@+id/home_wv"
        android:layout_width="match_parent"

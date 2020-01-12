@@ -111,7 +111,7 @@ public class LiveCourseActivity extends BaseActivity{
     }
 
     private void downLoadData(int pager) {
-        showLoadingBar(false);
+        showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.liveCourseList(pager,pageSize,token,status,1).enqueue(new Callback<LiveCourseBean>() {
             @Override
@@ -193,7 +193,7 @@ public class LiveCourseActivity extends BaseActivity{
     private boolean v2Flag=true;
     private boolean v3Flag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_live);
         back_index_iv = (TextView) findViewById(R.id.back_index_iv);
         back_index_iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -381,6 +381,7 @@ public class LiveCourseActivity extends BaseActivity{
 
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.bringToFront();
         mLoadingBar.show();
     }
 

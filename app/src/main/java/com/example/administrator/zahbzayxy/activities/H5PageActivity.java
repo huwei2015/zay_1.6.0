@@ -21,7 +21,7 @@ import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
 
 /**
- * 跳转h5页面，如常见问题，用户手册
+ * HYY 跳转h5页面，如常见问题，用户手册
  */
 public class H5PageActivity extends BaseActivity{
 

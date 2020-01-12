@@ -123,7 +123,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     }
 
     private void downLoadData(int pager) {
-        showLoadingBar(false);
+        showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.onlineCourseList(pager,pageSize,token,s_cateId==0?null:s_cateId,isRecommend, isTrailers,isNew,1).enqueue(new Callback<AllOnlineCourseBean>() {
             @Override
@@ -245,7 +245,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
     private boolean tjFlag=true;
     private boolean skFlag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_online_course);
         gundongRV = (RecyclerView) findViewById(R.id.gundongRV);
         recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
@@ -474,6 +474,7 @@ public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter
 
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.bringToFront();
         mLoadingBar.show();
     }
 

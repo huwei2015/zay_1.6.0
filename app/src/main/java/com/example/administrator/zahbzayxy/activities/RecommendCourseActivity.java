@@ -107,7 +107,7 @@ public class RecommendCourseActivity extends BaseActivity{
     }
 
     private void downLoadData(int pager) {
-        showLoadingBar(false);
+        showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.onlineCourseList(pager, pageSize,token,cateId==0?null:cateId,1,isTrailers,isNew,1).enqueue(new Callback<AllOnlineCourseBean>() {
             @Override
@@ -184,7 +184,7 @@ public class RecommendCourseActivity extends BaseActivity{
     private boolean zxFlag=true;
     private boolean skFlag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_recommend_course);
         recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
@@ -339,6 +339,7 @@ public class RecommendCourseActivity extends BaseActivity{
 
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.bringToFront();
         mLoadingBar.show();
     }
 

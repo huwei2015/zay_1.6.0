@@ -121,7 +121,7 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
     }
 
     private void downLoadData(int pager) {
-        showLoadingBar(false);
+        showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
         aClass.bookList(pager,pageSize,token,s_cateId==0?null:s_cateId,isNew,1).enqueue(new Callback<BookBean>() {
             @Override
@@ -241,7 +241,7 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
     }
     private boolean zxFlag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_course);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_books);
         gundongRV = (RecyclerView) findViewById(R.id.gundongRV);
         recommedn_back_iv = (TextView) findViewById(R.id.recommedn_back_iv);
         recLv = (PullToRefreshListView) findViewById(R.id.recLv);
@@ -364,6 +364,7 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
 
     public void showLoadingBar(boolean transparent) {
         mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.bringToFront();
         mLoadingBar.show();
     }
 
