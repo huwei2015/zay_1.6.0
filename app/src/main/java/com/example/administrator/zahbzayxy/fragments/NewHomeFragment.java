@@ -52,6 +52,7 @@ import com.example.administrator.zahbzayxy.activities.NewMyTikuActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.OfflineDetailActivity;
 import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
+import com.example.administrator.zahbzayxy.activities.PayUiActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
 //import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
@@ -456,7 +457,7 @@ public class NewHomeFragment extends Fragment {
                 if("yuyue".equals(pageType)){
                     Intent intent=new Intent(context, LiveCourseActivity.class);
                     Bundle bundle=new Bundle();
-                    intent.putExtra("status", 2);
+                    intent.putExtra("status", "2");
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
@@ -535,6 +536,21 @@ public class NewHomeFragment extends Fragment {
             context.startActivity(intent);
         }
 
+        /**
+         * 报名在线支付
+         * @param orderNumber
+         * @param price
+         */
+        @JavascriptInterface
+        public void onlinePay(String orderNumber,String price){
+            Intent intent=new Intent(context, PayUiActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("orderNumber",orderNumber);
+            bundle.putString("testPrice",price);
+            bundle.putBoolean("isLessonOrder",true);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
 
     }
 
