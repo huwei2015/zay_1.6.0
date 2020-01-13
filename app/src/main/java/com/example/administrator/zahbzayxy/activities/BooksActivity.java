@@ -239,6 +239,7 @@ public class BooksActivity extends BaseActivity implements Lv1CateAdapter.OnClic
             return false;
         }
     }
+
     private boolean zxFlag=true;
     private void initView() {
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_books);

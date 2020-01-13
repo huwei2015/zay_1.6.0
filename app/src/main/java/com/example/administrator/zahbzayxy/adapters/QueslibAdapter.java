@@ -62,7 +62,6 @@ public class QueslibAdapter extends BaseAdapter {
     private OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        //item点击事件
         void onItemClick(View view, int position);
     }
 
