@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,6 +59,8 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private CheckBox mFilterCb;
     private View mOneView;
     private RelativeLayout mSelectLayout;
+    private FrameLayout mFrameLayout;
+    private boolean mLoadView = false;
 
     @Override
     public void onAttach(Context context) {
@@ -70,6 +74,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         view=inflater.inflate(R.layout.fragment_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
+        mFrameLayout = view.findViewById(R.id.buyCar_container);
         recyclerview =view.findViewById(R.id.recyclerview);
         tv_addTopic=view.findViewById(R.id.tv_chooseTopic);//选择题库
         mFilterCb = view.findViewById(R.id.on_line_filter_course_check);
@@ -77,14 +82,24 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         mSelectLayout = view.findViewById(R.id.on_line_select_layout);
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
+        mFrameLayout.setVisibility(View.GONE);
         img_add.setOnClickListener(this);
-        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
-        mOffLineManager = new OffLineCourseManager(context, recyclerview);
+            mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
+            mOffLineManager = new OffLineCourseManager(context, recyclerview);
         mOnLineManager.setLoadingView(mLoadingBar);
+        mOffLineManager.setFragment(OnLineCourseFragment.this);
         loadData();
+        mLoadView = true;
         return view;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && mLoadView) {
+            loadData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
 
     private void loadData() {
         if (mLearnType == 0) {

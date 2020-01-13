@@ -20,6 +20,8 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
 
     private List<DownloaderWrapper> downloadInfos;
     private LayoutInflater mInflater;
+    private OnDownLoadedItemClickListener mDownloadedListener;
+    private OnDownLoadingItemClickListener mDownloadingListener;
 
     private Context context;
 
@@ -37,26 +39,76 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
     }
 
     @Override
+    public int getItemViewType(int position) {
+        int type = 0;
+        if (downloadInfos != null && downloadInfos.size() > 0 && position < downloadInfos.size()) {
+            DownloaderWrapper wrapper = downloadInfos.get(position);
+            // 1、下载中 2、已完成
+            if (wrapper.getType() == 1) {
+                type = 1;
+            } else {
+                type = 0;
+            }
+        }
+        return type;
+    }
+
+    @Override
     public OffLineCourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.download_single_layout, parent, false);
-        return new OffLineCourseViewHolder(view);
+        View view;
+        if (viewType == 0) {
+            view = mInflater.inflate(R.layout.downloaded_single_layout, parent, false);
+        } else {
+            view = mInflater.inflate(R.layout.download_single_layout, parent, false);
+        }
+        return new OffLineCourseViewHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(OffLineCourseViewHolder holder, int position) {
         DownloaderWrapper wrapper = downloadInfos.get(position);
+        int type = wrapper.getType();
 
-        holder.titleView.setText(wrapper.getDownloadInfo().getName());
-        holder.statusView.setText(getStatusStr(wrapper.getStatus()) + "");
-
-        if (wrapper.getStatus() == Downloader.DOWNLOAD) {
-            holder.speedView.setText(wrapper.getSpeed(context));
-            holder.progressView.setText(wrapper.getDownloadProgressText(context));
-            holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
+        if (position == 0) {
+            holder.typeLayout.setVisibility(View.VISIBLE);
+        } else if (position < downloadInfos.size()) {
+            int preType = downloadInfos.get(position - 1).getType();
+            if (preType == type) {
+                holder.typeLayout.setVisibility(View.GONE);
+            } else {
+                holder.typeLayout.setVisibility(View.VISIBLE);
+            }
         } else {
-            holder.speedView.setText("");
-            holder.progressView.setText(wrapper.getDownloadProgressText(context));
-            holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
+            holder.typeLayout.setVisibility(View.GONE);
+        }
+
+
+        if (type == 1) {
+            holder.titleView.setText(wrapper.getDownloadInfo().getName());
+            holder.statusView.setText(getStatusStr(wrapper.getStatus()) + "");
+            holder.typeTv.setText("下载中");
+            if (wrapper.getStatus() == Downloader.DOWNLOAD) {
+                holder.speedView.setText(wrapper.getSpeed(context));
+                holder.progressView.setText(wrapper.getDownloadProgressText(context));
+                holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
+            } else {
+                holder.speedView.setText("");
+                holder.progressView.setText(wrapper.getDownloadProgressText(context));
+                holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
+            }
+            holder.mDownloadingRootLayout.setOnClickListener(v -> {
+                if (mDownloadingListener != null) {
+                    mDownloadingListener.onClick(position);
+                }
+            });
+        } else {
+            holder.titleView.setText(wrapper.getDownloadInfo().getName());
+            holder.typeTv.setText("已完成");
+            holder.mDownedRootLayout.setOnClickListener(v -> {
+                if (mDownloadedListener != null) {
+                    mDownloadedListener.onClick(position);
+                }
+            });
         }
     }
 
@@ -92,17 +144,53 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
         TextView speedView;
         TextView progressView;
         ProgressBar downloadProgressBar;
+        LinearLayout typeLayout;
+        TextView typeTv;
+        View downedLineView, downingLineView;
+        private LinearLayout mDownedRootLayout, mDownloadingRootLayout;
 
-        public OffLineCourseViewHolder(View itemView) {
+        public OffLineCourseViewHolder(View itemView, int type) {
             super(itemView);
 
-            titleView = (TextView) itemView.findViewById(R.id.download_title);
-            statusView = (TextView) itemView.findViewById(R.id.download_status);
-            speedView = (TextView) itemView.findViewById(R.id.download_speed);
-            progressView = (TextView) itemView.findViewById(R.id.download_progress);
-            downloadProgressBar = (ProgressBar) itemView.findViewById(R.id.download_progressBar);
-            downloadProgressBar.setMax(100);
+            // 0、已完成  1、下载中
+            if (type == 0) {
+                titleView = itemView.findViewById(R.id.downloaded_title);
+                typeLayout = itemView.findViewById(R.id.off_line_course_type_layout);
+                typeTv = itemView.findViewById(R.id.off_line_course_type_tv);
+                mDownedRootLayout = itemView.findViewById(R.id.off_line_downloaded_layout);
+                downedLineView = itemView.findViewById(R.id.downloaded_line_view);
+                downedLineView.setVisibility(View.VISIBLE);
+            } else {
+                titleView = (TextView) itemView.findViewById(R.id.download_title);
+                statusView = (TextView) itemView.findViewById(R.id.download_status);
+                speedView = (TextView) itemView.findViewById(R.id.download_speed);
+                progressView = (TextView) itemView.findViewById(R.id.download_progress);
+                downloadProgressBar = (ProgressBar) itemView.findViewById(R.id.download_progressBar);
+                mDownloadingRootLayout = itemView.findViewById(R.id.off_line_downloading_layout);
+                typeLayout = itemView.findViewById(R.id.off_line_course_type_layout);
+                typeTv = itemView.findViewById(R.id.off_line_course_type_tv);
+                downingLineView = itemView.findViewById(R.id.downloading_line_view);
+                downingLineView.setVisibility(View.VISIBLE);
+                downloadProgressBar.setMax(100);
+            }
         }
+    }
+
+
+    public void setOnDownLoadedItemClickListener(OnDownLoadedItemClickListener listener) {
+        this.mDownloadedListener = listener;
+    }
+
+    public void setOnDownLoadingItemClickListener(OnDownLoadingItemClickListener listener) {
+        this.mDownloadingListener = listener;
+    }
+
+    public interface OnDownLoadedItemClickListener{
+        void onClick(int position);
+    }
+
+    public interface OnDownLoadingItemClickListener{
+        void onClick(int position);
     }
 
 }

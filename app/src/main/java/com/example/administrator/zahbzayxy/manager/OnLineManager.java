@@ -45,7 +45,7 @@ public class OnLineManager implements PullToRefreshListener {
     private OnLineTitleAdapter mTitleAdapter;
     private LearnOnlineCourseAdapter mCourseAdapter;
     private CheckBox mFilterCb;
-    List<OnlineCourseBean.UserCoursesBean> mCoursesList = new ArrayList<>();
+    private List<OnlineCourseBean.UserCoursesBean> mCoursesList = new ArrayList<>();
     private List<OnlineCourseBean.UserCoursesBean> mOneWeekList = new ArrayList<>();
     private List<OnlineCourseBean.UserCoursesBean> mBeforeList = new ArrayList<>();
     private int mPage = 1;
@@ -60,12 +60,14 @@ public class OnLineManager implements PullToRefreshListener {
         this.mRefreshRecyclerView = refreshRecyclerView;
         this.mFilterCb = filterCb;
         mTitleAdapter = new OnLineTitleAdapter(mContext, mLearnList, mFixedIndicatorView);
-        mCourseAdapter = new LearnOnlineCourseAdapter(mContext, null);
+        mCourseAdapter = new LearnOnlineCourseAdapter(mContext, mCoursesList);
         setItemClick(mTitleAdapter);
-        setView();
     }
 
+    private boolean mLoad = false;
     private void setView() {
+        if (mLoad) return;
+        mLoad = true;
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRefreshRecyclerView.setAdapter(mCourseAdapter);
@@ -110,14 +112,19 @@ public class OnLineManager implements PullToRefreshListener {
         mCourseType = type;
         mPosition = 0;
         mFilterCb.setChecked(false);
+        setView();
+        initNavigationData();
         if (mCourseType == 0) {
             showLoadingBar(true);
         }
-        initNavigationData();
+
     }
 
     private void initNavigationData() {
         if (mCourseType == 0) {
+            mCoursesList.clear();
+            mBeforeList.clear();
+            mOneWeekList.clear();
             loadOnLineTitleData();
         } else {
             loadOffLineTitleData();
@@ -127,6 +134,7 @@ public class OnLineManager implements PullToRefreshListener {
     private void loadOffLineTitleData(){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
+        Log.i("token", token);
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
         aClass.getOffLinTitle(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
@@ -145,6 +153,7 @@ public class OnLineManager implements PullToRefreshListener {
             @Override
             public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.i("=====offline title=====", t.getMessage());
                 hideLoadingBar();
             }
         });
@@ -269,9 +278,12 @@ public class OnLineManager implements PullToRefreshListener {
                             mPage--;
                             return;
                         }
-                        mCoursesList = setDataList(beanList);
+                        beanList = setDataList(beanList);
+                        mCoursesList.clear();
+                        mCoursesList.addAll(beanList);
+                        Log.i("mCoursesList", mCoursesList.toString());
                         mCourseAdapter.setData(mCoursesList);
-                        if (mPage == 1) mRefreshRecyclerView.scrollToPosition(0);
+//                        if (mPage == 1) mRefreshRecyclerView.scrollToPosition(0);
                         return;
                     }
                 }

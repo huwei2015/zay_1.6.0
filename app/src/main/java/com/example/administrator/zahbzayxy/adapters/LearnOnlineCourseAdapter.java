@@ -2,6 +2,7 @@ package com.example.administrator.zahbzayxy.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,10 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
     }
 
     public void setData(List<OnlineCourseBean.UserCoursesBean> data) {
-        if (data == null) data = new ArrayList<>();
+        if (data == null) {
+            data = new ArrayList<>();
+        }
+
         this.onLineListBeans = data;
         notifyDataSetChanged();
     }

@@ -4,12 +4,15 @@
     android:paddingTop="5dp"
     android:paddingBottom="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/off_line_downloading_layout"
+    >
 
     <LinearLayout
         android:id="@+id/off_line_course_type_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:orientation="vertical"
         android:visibility="gone"
         >
@@ -89,4 +92,13 @@
         android:progressDrawable="@drawable/download_progress_drawable"
         android:layout_width="match_parent"
         android:layout_height="5dp" />
+
+    <View
+        android:id="@+id/downloading_line_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#F8F8F8"
+        android:visibility="gone"
+        />
 </LinearLayout>

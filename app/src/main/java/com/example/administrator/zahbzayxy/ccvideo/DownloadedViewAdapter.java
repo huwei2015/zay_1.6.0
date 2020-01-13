@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.administrator.zahbzayxy.R;
@@ -43,7 +44,7 @@ public class DownloadedViewAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 
 		if (convertView == null) {
-			RelativeLayout layout = (RelativeLayout) View.inflate(context, R.layout.downloaded_single_layout, null);
+			LinearLayout layout = (LinearLayout) View.inflate(context, R.layout.downloaded_single_layout, null);
 			convertView = layout;
 			TextView titleView = (TextView) layout.findViewById(R.id.downloaded_title);
 
