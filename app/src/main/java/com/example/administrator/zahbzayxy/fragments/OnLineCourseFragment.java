@@ -89,6 +89,7 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private void loadData() {
         if (mLearnType == 0) {
             mOnLineManager.loadDAta(0);
+            tv_addTopic.setVisibility(View.GONE);
         } else if (mLearnType == 1){
             mOnLineManager.loadDAta(1);
             tv_addTopic.setVisibility(View.GONE);
