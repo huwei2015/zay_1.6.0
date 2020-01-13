@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -16,6 +17,7 @@ import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnLineTitleAdapter;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
+import com.example.administrator.zahbzayxy.beans.OfflineCourseLearnBean;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
@@ -49,6 +51,7 @@ public class OnLineManager implements PullToRefreshListener {
     private int mPage = 1;
     private int mPosition = 0;
     private int mIsAchieve = 0;
+    private int mCourseType = 0;
 
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
@@ -98,18 +101,60 @@ public class OnLineManager implements PullToRefreshListener {
         this.mLoadingBar = loadingView;
     }
 
-    public void loadDAta() {
+    /**
+     * 加载数据
+     * @param type 0，在线课程  1，线下课程
+     */
+    public void loadDAta(int type) {
+        Log.i("=====mLearnType======", "type = " + type);
+        mCourseType = type;
         mPosition = 0;
         mFilterCb.setChecked(false);
-        showLoadingBar(true);
+        if (mCourseType == 0) {
+            showLoadingBar(true);
+        }
         initNavigationData();
     }
 
     private void initNavigationData() {
+        if (mCourseType == 0) {
+            loadOnLineTitleData();
+        } else {
+            loadOffLineTitleData();
+        }
+    }
+
+    private void loadOffLineTitleData(){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getLearnNavigationData(0, token).enqueue(new Callback<LearnNavigationBean>() {
+        aClass.getOffLinTitle(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
+            @Override
+            public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
+                if (response != null && response.body() != null) {
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        mLearnList = response.body().getData().getData();
+                        Log.i("=====offline title=====", mLearnList.toString());
+                        setTitle();
+                        setCourseList(mPosition, mFilterCb.isChecked()?1:0);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
+                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
+                hideLoadingBar();
+            }
+        });
+    }
+
+    private void loadOnLineTitleData(){
+        SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        String token = tokenDb.getString("token", "");
+        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
+        aClass.getLearnNavigationData(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
                 if (response != null && response.body() != null) {
@@ -144,9 +189,65 @@ public class OnLineManager implements PullToRefreshListener {
     }
 
     private void setCourseList(int position, int isAchieve) {
-        if (mLearnList == null || mLearnList.size() == 0) return;
+        if (mLearnList == null || mLearnList.size() == 0){
+            hindLoading();
+            hideLoadingBar();
+            return;
+        }
         mIsAchieve = isAchieve;
         mPosition = position;
+        if (mCourseType == 0) {
+            onLineCourseList(position, isAchieve);
+        } else {
+            offLineCourseList(position, isAchieve);
+        }
+    }
+
+    private void offLineCourseList(int position, int isAchieve) {
+        SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        String token = tokenDb.getString("token", "");
+        int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
+
+        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
+        aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token).enqueue(new Callback<OfflineCourseLearnBean>() {
+            @Override
+            public void onResponse(Call<OfflineCourseLearnBean> call, Response<OfflineCourseLearnBean> response) {
+                hindLoading();
+                hideLoadingBar();
+//                if (response != null && response.body() != null) {
+//                    String code = response.body().getCode();
+//                    if (code.equals("00000")) {
+//                        List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
+//                        if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
+//                            mRefreshRecyclerView.setLoadingMoreEnabled(false);
+//                            ToastUtils.showShortInfo("数据加载完毕");
+//                            mPage--;
+//                            return;
+//                        }
+//                        mCoursesList = setDataList(beanList);
+//                        mCourseAdapter.setData(mCoursesList);
+//                        if (mPage == 1) mRefreshRecyclerView.scrollToPosition(0);
+//                        return;
+//                    }
+//                }
+//                if (mPage > 1) {
+//                    mPage--;
+//                }
+            }
+
+            @Override
+            public void onFailure(Call<OfflineCourseLearnBean> call, Throwable t) {
+                hindLoading();
+                hideLoadingBar();
+                if (mPage > 1) {
+                    mPage--;
+                }
+                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void onLineCourseList(int position, int isAchieve){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
@@ -161,6 +262,7 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
+                        Log.i("beanList", beanList.toString());
                         if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
                             mRefreshRecyclerView.setLoadingMoreEnabled(false);
                             ToastUtils.showShortInfo("数据加载完毕");

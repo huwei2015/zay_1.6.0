@@ -16,6 +16,8 @@ public class DownloaderWrapper {
     Downloader downloader;
     DownloadInfo downloadInfo;
     long lastStart;
+    // 1、下载中 2、已完成
+    private int type;
 
     public DownloaderWrapper(final DownloadInfo downloadInfo) {
         this.downloadInfo = downloadInfo;
@@ -109,5 +111,13 @@ public class DownloaderWrapper {
     public void cancel() {
     	downloadInfo.setStatus(Downloader.PAUSE);
         downloader.cancel();
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

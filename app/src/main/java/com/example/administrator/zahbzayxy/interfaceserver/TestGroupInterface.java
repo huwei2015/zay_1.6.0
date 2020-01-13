@@ -3,6 +3,7 @@ package com.example.administrator.zahbzayxy.interfaceserver;
 import com.example.administrator.zahbzayxy.beans.AllHaveDoTestBean;
 import com.example.administrator.zahbzayxy.beans.ExamResultBean;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
+import com.example.administrator.zahbzayxy.beans.OfflineCourseLearnBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PrictaceErrorBean;
 import com.example.administrator.zahbzayxy.beans.SearchTestBean;
@@ -154,4 +155,19 @@ public interface TestGroupInterface {
                                                @Query("cateId") Integer cateId,
                                                @Query("isAchieve") Integer isAchieve,
                                                @Query("token") String token);
+
+    //线下课导航
+    static final String offLineTitleUrl = "/data/usercenter/courseoffline/cate_online";
+    @POST(value = offLineTitleUrl)
+    Call<LearnNavigationBean> getOffLinTitle(@Query("isStudyFinish") Integer isStudyFinish,
+                                                     @Query("token") String token);
+
+    //线下课查询接口
+    static final String offLineCourseUrl = "/data/usercenter/courseoffline/listCourseOfflineByCate";
+    @POST(value = offLineCourseUrl)
+    Call<OfflineCourseLearnBean> getOffLineCourseList(@Query("pageNo") Integer pageNo,
+                                                      @Query("pageSize") Integer pageSize,
+                                                      @Query("cateId") Integer cateId,
+                                                      @Query("isStudyFinish") Integer isStudyFinish,
+                                                      @Query("token") String token);
 }

@@ -6,11 +6,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidkun.PullToRefreshRecyclerView;
@@ -22,6 +24,7 @@ import com.example.administrator.zahbzayxy.adapters.LearnNavigationAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
+import com.example.administrator.zahbzayxy.manager.OffLineCourseManager;
 import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
@@ -50,7 +53,10 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
     private int mLearnType = 0;
     private OnLineManager mOnLineManager;
+    private OffLineCourseManager mOffLineManager;
     private CheckBox mFilterCb;
+    private View mOneView;
+    private RelativeLayout mSelectLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -67,10 +73,13 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         recyclerview =view.findViewById(R.id.recyclerview);
         tv_addTopic=view.findViewById(R.id.tv_chooseTopic);//选择题库
         mFilterCb = view.findViewById(R.id.on_line_filter_course_check);
+        mOneView = view.findViewById(R.id.on_line_view_one);
+        mSelectLayout = view.findViewById(R.id.on_line_select_layout);
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
         mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
+        mOffLineManager = new OffLineCourseManager(context, recyclerview);
         mOnLineManager.setLoadingView(mLoadingBar);
         loadData();
         return view;
@@ -79,7 +88,18 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
 
     private void loadData() {
         if (mLearnType == 0) {
-            mOnLineManager.loadDAta();
+            mOnLineManager.loadDAta(0);
+        } else if (mLearnType == 1){
+            mOnLineManager.loadDAta(1);
+            tv_addTopic.setVisibility(View.GONE);
+            img_add.setVisibility(View.GONE);
+        } else if (mLearnType == 2) {
+            fixedIndicatorView.setVisibility(View.GONE);
+            mOneView.setVisibility(View.GONE);
+            mSelectLayout.setVisibility(View.GONE);
+            recyclerview.setLoadingMoreEnabled(false);
+            recyclerview.setPullRefreshEnabled(false);
+            mOffLineManager.initData();
         }
     }
 
@@ -96,6 +116,22 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     @Override
     public void onLoadMore() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mLearnType == 2) {
+            mOffLineManager.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mLearnType == 2) {
+            mOffLineManager.onPause();
+        }
     }
 
     @Override
