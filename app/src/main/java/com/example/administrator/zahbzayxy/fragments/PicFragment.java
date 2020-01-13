@@ -121,7 +121,7 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
             @Override
             public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
                 if(response !=null && response.body() !=null && response.body().getData().getData() != null){
-                    if (currentPage == 1 && response.body().getData().getData().size() > 0) {
+                    if (currentPage == 1 && response.body().getData().getData().size() == 0) {
                         isVisible(false);
                     } else {
                         isVisible(true);
