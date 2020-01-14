@@ -55,7 +55,7 @@ public class ShowImgActivity extends BaseActivity {
             finish();
             return;
         }
-        mTitleTv.setText(mFileName);
+//        mTitleTv.setText(mFileName);
         mLoading.setVisibility(View.VISIBLE);
         Picasso.with(ShowImgActivity.this).load(mFileUrl).into(mImg, new Callback() {
             @Override

@@ -29,6 +29,7 @@ import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.TimeComparator;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +69,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
         exam_archives_back= (ImageView) findViewById(R.id.exam_archives_back);
         SharedPreferences sharedPreferences = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
+        Log.i("hw","hw============="+token);
         exam_archives_back.setOnClickListener(this);
         tab_unread_message= (TextView) findViewById(R.id.tab_unread_message);
         if(!TextUtils.isEmpty(messageNum)){
@@ -106,14 +108,21 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
         recyclerView.setEmptyView(emptyView);
     }
     private void initData() {
+        mLoadingBar.setShowContent("加载中");
+        mLoadingBar.setVisibility(View.VISIBLE);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        userInfoInterface.getSystemMsg(currenPage,PageSize,3,token).enqueue(new Callback<TimeData>() {
+        userInfoInterface.getSystemMsg(currenPage,PageSize,3,token,"yes").enqueue(new Callback<TimeData>() {
             @Override
             public void onResponse(Call<TimeData> call, Response<TimeData> response) {
                     if(response !=null && response.body()!=null ){
-                        String code = response.body().getCode();
-                        if(code.equals("00000") && response.body().getData().getAllTopAnnounceList().size() > 0){
+                        if (currenPage == 1 && response.body().getData().getAllTopAnnounceList().size() == 0) {
+                            emptyLayout(false);
+                        } else {
                             emptyLayout(true);
+                        }
+                        String code = response.body().getCode();
+                        if(code.equals("00000")){
+                            mLoadingBar.setVisibility(View.GONE);
                             msgLists = response.body().getData().getAllTopAnnounceList();
                             if(currenPage ==1 ){
                                 adapter.setList(msgLists);
@@ -128,6 +137,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onFailure(Call<TimeData> call, Throwable t) {
+                mLoadingBar.setVisibility(View.GONE);
                 ToastUtils.showInfo(t.getMessage(),5000);
             }
         });
@@ -186,6 +196,13 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view, int position) {
         Intent intent = new Intent(MsgListActivity.this,H5MsgDetailActivity.class);
         intent.putExtra("id",String.valueOf(msgLists.get(position).getId()));
+        intent.putExtra("type","msg");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 }

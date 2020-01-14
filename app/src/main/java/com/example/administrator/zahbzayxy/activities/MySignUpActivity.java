@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -55,37 +56,29 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_sign_up);
         initView();
-        initData();
     }
 
     private void initData() {
-        showLoadingBar(false);
+       showLoadingBar(false);
         SharedPreferences sharedPreferences = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getSignData(currPage, PageSize, token).enqueue(new Callback<SignBean>() {
             @Override
             public void onResponse(Call<SignBean> call, Response<SignBean> response) {
-                if (response != null && response.body() != null) {
-                    if (currPage == 1 && response.body().getApplyList().size() == 0) {
-                        isVisible(false);
-                    } else {
-                        isVisible(true);
-                    }
+                if (response != null && response.body() != null && response.body().getApplyList().size() > 0) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         hideLoadingBar();
                         signListBeanList = response.body().getApplyList();
                         if (currPage == 1) {
-                            mySignAdapter.setList(signListBeanList);
-                        } else {
+                           mySignAdapter.setList(signListBeanList);
+                        }else{
                             mySignAdapter.addList(signListBeanList);
                         }
                     }
                 } else {
-                    if (currPage == 1){
                         isVisible(false);
-                    }
                 }
             }
 
@@ -110,6 +103,7 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //初始化adapter
         mySignAdapter = new MySignAdapter(MySignUpActivity.this, signListBeanList);
+        mySignAdapter.setOnItemClickListener(this);
         //添加数据源
         recyclerView.setAdapter(mySignAdapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -159,6 +153,7 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
     public void hideLoadingBar() {
         mLoadingBar.hide();
     }
+
     @Override
     public void onLoadMore() {
         recyclerView.postDelayed(new Runnable() {
@@ -176,10 +171,19 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         }, 2000);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
     //item点击事件
     @Override
     public void onClick(View view, int position) {
-
+        Intent intent = new Intent(MySignUpActivity.this,H5MsgDetailActivity.class);
+        intent.putExtra("activityId",String.valueOf(signListBeanList.get(position).getActivityId()));
+        intent.putExtra("type","sign");
+        startActivity(intent);
     }
     private void isVisible(boolean flag){
         if(flag){
