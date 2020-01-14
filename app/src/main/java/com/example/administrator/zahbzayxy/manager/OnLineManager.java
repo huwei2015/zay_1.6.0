@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.adapters.LearnOfflineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnLineTitleAdapter;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
@@ -44,10 +45,15 @@ public class OnLineManager implements PullToRefreshListener {
     private ProgressBarLayout mLoadingBar;
     private OnLineTitleAdapter mTitleAdapter;
     private LearnOnlineCourseAdapter mCourseAdapter;
+    private LearnOfflineCourseAdapter mOffLineAdapter;
     private CheckBox mFilterCb;
     private List<OnlineCourseBean.UserCoursesBean> mCoursesList = new ArrayList<>();
     private List<OnlineCourseBean.UserCoursesBean> mOneWeekList = new ArrayList<>();
     private List<OnlineCourseBean.UserCoursesBean> mBeforeList = new ArrayList<>();
+
+    private List<OfflineCourseLearnBean.UserCoursesBean> mOfflineList = new ArrayList<>();
+    private List<OfflineCourseLearnBean.UserCoursesBean> mOfflineNewList = new ArrayList<>();
+    private List<OfflineCourseLearnBean.UserCoursesBean> mOfflineMoreList = new ArrayList<>();
     private int mPage = 1;
     private int mPosition = 0;
     private int mIsAchieve = 0;
@@ -61,7 +67,10 @@ public class OnLineManager implements PullToRefreshListener {
         this.mFilterCb = filterCb;
         mTitleAdapter = new OnLineTitleAdapter(mContext, mLearnList, mFixedIndicatorView);
         mCourseAdapter = new LearnOnlineCourseAdapter(mContext, mCoursesList);
+        mOffLineAdapter = new LearnOfflineCourseAdapter(mContext, mOfflineList);
         setItemClick(mTitleAdapter);
+        mFilterCb.setChecked(false);
+        initEvent();
     }
 
     private boolean mLoad = false;
@@ -70,7 +79,11 @@ public class OnLineManager implements PullToRefreshListener {
         mLoad = true;
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRefreshRecyclerView.setAdapter(mCourseAdapter);
+        if (mCourseType == 0) {
+            mRefreshRecyclerView.setAdapter(mCourseAdapter);
+        } else {
+            mRefreshRecyclerView.setAdapter(mOffLineAdapter);
+        }
         mRefreshRecyclerView.setLayoutManager(layoutManager);
         //设置是否显示上次刷新时间
         mRefreshRecyclerView.displayLastRefreshTime(true);
@@ -91,11 +104,19 @@ public class OnLineManager implements PullToRefreshListener {
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
             showLoadingBar(true);
             mPage = 1;
-            mCoursesList.clear();
-            mBeforeList.clear();
-            mOneWeekList.clear();
+            clearList();
             mRefreshRecyclerView.setLoadingMoreEnabled(true);
             setCourseList(mPosition, isChecked ? 1 : 0);
+        });
+    }
+
+    private void initEvent(){
+        mCourseAdapter.setOnLearnOnlineItemClickListener(position -> {
+            // 在线课点击事件处理
+        });
+
+        mOffLineAdapter.setOnLearnOfflineItemClickListener(position -> {
+            // 线下课点击事件处理
         });
     }
 
@@ -103,15 +124,31 @@ public class OnLineManager implements PullToRefreshListener {
         this.mLoadingBar = loadingView;
     }
 
+    private void clearList(){
+        mCoursesList.clear();
+        mBeforeList.clear();
+        mOneWeekList.clear();
+
+        mOfflineList.clear();
+        mOfflineNewList.clear();
+        mOfflineMoreList.clear();
+    }
+
+    private int mLoadType = 0;
+
     /**
      * 加载数据
      * @param type 0，在线课程  1，线下课程
      */
     public void loadDAta(int type) {
-        Log.i("=====mLearnType======", "type = " + type);
         mCourseType = type;
         mPosition = 0;
-        mFilterCb.setChecked(false);
+
+        mLoadType = 0;
+        mPage = 1;
+        clearList();
+        mRefreshRecyclerView.setLoadingMoreEnabled(true);
+//        mFilterCb.setChecked(false);
         setView();
         initNavigationData();
         if (mCourseType == 0) {
@@ -127,6 +164,9 @@ public class OnLineManager implements PullToRefreshListener {
             mOneWeekList.clear();
             loadOnLineTitleData();
         } else {
+            mOfflineList.clear();
+            mOfflineNewList.clear();
+            mOfflineMoreList.clear();
             loadOffLineTitleData();
         }
     }
@@ -143,7 +183,6 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
-                        Log.i("=====offline title=====", mLearnList.toString());
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                     }
@@ -153,7 +192,6 @@ public class OnLineManager implements PullToRefreshListener {
             @Override
             public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.i("=====offline title=====", t.getMessage());
                 hideLoadingBar();
             }
         });
@@ -223,25 +261,29 @@ public class OnLineManager implements PullToRefreshListener {
             public void onResponse(Call<OfflineCourseLearnBean> call, Response<OfflineCourseLearnBean> response) {
                 hindLoading();
                 hideLoadingBar();
-//                if (response != null && response.body() != null) {
-//                    String code = response.body().getCode();
-//                    if (code.equals("00000")) {
-//                        List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
-//                        if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
-//                            mRefreshRecyclerView.setLoadingMoreEnabled(false);
-//                            ToastUtils.showShortInfo("数据加载完毕");
-//                            mPage--;
-//                            return;
-//                        }
-//                        mCoursesList = setDataList(beanList);
-//                        mCourseAdapter.setData(mCoursesList);
-//                        if (mPage == 1) mRefreshRecyclerView.scrollToPosition(0);
-//                        return;
-//                    }
-//                }
-//                if (mPage > 1) {
-//                    mPage--;
-//                }
+                if (response != null && response.body() != null) {
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        List<OfflineCourseLearnBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
+                        if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
+                            mRefreshRecyclerView.setLoadingMoreEnabled(false);
+                            ToastUtils.showShortInfo("数据加载完毕");
+                            mPage--;
+                            return;
+                        }
+                        beanList = setOfflineDataList(beanList);
+                        mOfflineList.clear();
+                        mOfflineList.addAll(beanList);
+                        mOffLineAdapter.setData(mOfflineList);
+                        if (mPage == 1) {
+                            mRefreshRecyclerView.scrollToPosition(0);
+                        }
+                        return;
+                    }
+                }
+                if (mPage > 1) {
+                    mPage--;
+                }
             }
 
             @Override
@@ -281,9 +323,10 @@ public class OnLineManager implements PullToRefreshListener {
                         beanList = setDataList(beanList);
                         mCoursesList.clear();
                         mCoursesList.addAll(beanList);
-                        Log.i("mCoursesList", mCoursesList.toString());
                         mCourseAdapter.setData(mCoursesList);
-//                        if (mPage == 1) mRefreshRecyclerView.scrollToPosition(0);
+                        if (mPage == 1) {
+                            mRefreshRecyclerView.scrollToPosition(0);
+                        }
                         return;
                     }
                 }
@@ -323,18 +366,39 @@ public class OnLineManager implements PullToRefreshListener {
         return list;
     }
 
+    private List<OfflineCourseLearnBean.UserCoursesBean> setOfflineDataList(List<OfflineCourseLearnBean.UserCoursesBean> data) {
+        if (data == null || data.size() == 0) return mOfflineList;
+
+        for (OfflineCourseLearnBean.UserCoursesBean bean : data) {
+            if (bean != null) {
+                int isNew = bean.getIsNew();
+                if (isNew == 0) {
+                    mOfflineMoreList.add(bean);
+                } else {
+                    mOfflineNewList.add(bean);
+                }
+            }
+        }
+
+        List<OfflineCourseLearnBean.UserCoursesBean> list = new ArrayList<>();
+        list.addAll(mOfflineNewList);
+        list.addAll(mOfflineMoreList);
+        return list;
+    }
+
     private void hindLoading() {
-        mRefreshRecyclerView.setRefreshComplete();
-        mRefreshRecyclerView.setLoadMoreComplete();
+        if (mLoadType == 1) {
+            mRefreshRecyclerView.setRefreshComplete();
+        } else if (mLoadType == 2) {
+            mRefreshRecyclerView.setLoadMoreComplete();
+        }
     }
 
     private void setItemClick(OnLineTitleAdapter adapter) {
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             if (mPosition == position) return;
             mPage = 1;
-            mCoursesList.clear();
-            mBeforeList.clear();
-            mOneWeekList.clear();
+            clearList();
             mRefreshRecyclerView.setLoadingMoreEnabled(true);
             setCourseList(position, mIsAchieve);
         });
@@ -351,16 +415,16 @@ public class OnLineManager implements PullToRefreshListener {
 
     @Override
     public void onRefresh() {
+        mLoadType = 1;
         mPage = 1;
-        mCoursesList.clear();
-        mBeforeList.clear();
-        mOneWeekList.clear();
+        clearList();
         mRefreshRecyclerView.setLoadingMoreEnabled(true);
         setCourseList(mPosition, mIsAchieve);
     }
 
     @Override
     public void onLoadMore() {
+        mLoadType = 2;
         mPage++;
         setCourseList(mPosition, mIsAchieve);
     }
