@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.ViewHodler>{
     private Context mcontext;
-    private List<NotThroughBean.ThrougListBean> througListBeans;
+    private List<NotThroughBean.THrougListData> througListBeans;
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -31,7 +31,7 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
         void onItemClick(View view, int position);
     }
 
-    public NotThrougAdapter(Context mcontext, List<NotThroughBean.ThrougListBean> througListBeans) {
+    public NotThrougAdapter(Context mcontext, List<NotThroughBean.THrougListData> througListBeans) {
         this.mcontext = mcontext;
         this.througListBeans = througListBeans;
     }
@@ -43,7 +43,7 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHodler holder, final int position) {
-        holder.title.setText(througListBeans.get(position).getTitle());
+        holder.title.setText(througListBeans.get(position).getQuesLibName());
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

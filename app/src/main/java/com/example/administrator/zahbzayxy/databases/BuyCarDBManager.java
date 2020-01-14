@@ -1,12 +1,8 @@
 package com.example.administrator.zahbzayxy.databases;
 
 import android.content.Context;
-
 import com.example.administrator.zahbzayxy.beans.BuyCarBean;
 import com.example.administrator.zahbzayxy.beans.BuyCarBeanDao;
-import com.example.administrator.zahbzayxy.beans.DaoMaster;
-import com.example.administrator.zahbzayxy.beans.DaoSession;
-
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;

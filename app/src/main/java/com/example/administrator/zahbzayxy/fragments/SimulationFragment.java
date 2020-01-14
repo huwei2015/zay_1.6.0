@@ -11,20 +11,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
 import com.example.administrator.zahbzayxy.activities.PLookCuoTiActivity;
+import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.SearchTestActivity;
 import com.example.administrator.zahbzayxy.activities.TestContentActivity1;
 import com.example.administrator.zahbzayxy.activities.TestPracticeAcivity;
+import com.example.administrator.zahbzayxy.adapters.SimulationAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestNavigationAdapter;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
+import com.example.administrator.zahbzayxy.beans.SimulationBean;
 import com.example.administrator.zahbzayxy.beans.TestNavigationBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
+import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.BarChartManager;
 import com.example.administrator.zahbzayxy.utils.ColorBar;
 import com.example.administrator.zahbzayxy.utils.DisplayUtil;
@@ -32,6 +38,7 @@ import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.Indicator;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.github.mikephil.charting.charts.BarChart;
 
 import java.util.ArrayList;
@@ -47,7 +54,7 @@ import retrofit2.Response;
  * Time 10:05.
  * 模拟考试
  */
-public class SimulationFragment extends Fragment implements View.OnClickListener{
+public class SimulationFragment extends Fragment implements View.OnClickListener {
     private View view;
     private FixedIndicatorView fixedIndicatorView;
     private ProgressBarLayout mLoadingBar;
@@ -57,8 +64,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private String token;
     private TextView tv_choose;
     private ImageView img_add;
-    private TestNavigationAdapter adapter;
-    private List<TestNavigationBean.DataBean>navigationList=new ArrayList<>();
+    private SimulationAdapter adapter;
+    private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
     private int quesLibId;
     private int userLibId;
     private int packageId;
@@ -80,90 +87,40 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         initNavigationData();
         return view;
     }
-
-    private class MyAdapter extends Indicator.IndicatorAdapter {
-        private List<TestNavigationBean.DataBean>list;
-        private Indicator indicator;
-
-        public MyAdapter(List<TestNavigationBean.DataBean>list, Indicator indicator) {
-            super();
-            this.list=list;
-            this.indicator=indicator;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.tab_top, parent, false);
-            }
-            TextView textView = (TextView) convertView;
-            //用了固定宽度可以避免TextView文字大小变化，tab宽度变化导致tab抖动现象
-            textView.setWidth(DisplayUtil.dipToPix(mContext,80));
-            String centerName = list.get(position).getCenterName();
-            textView.setText(centerName);
-
-            indicator.setOnIndicatorItemClickListener(new Indicator.OnIndicatorItemClickListener() {
-                @Override
-                public boolean onItemClick(View clickItemView, int position) {
-//                    myPostion=position;
-//                    downLoadTestExpandedData(list.get(myPostion).getCenterId());
-                    return false;
-                }
-            });
-
-            return convertView;
-        }
-    }
-
-    private void set(Indicator indicator, int count) {
-        indicator.setAdapter(new MyAdapter(navigationList,indicator));
-
-        indicator.setScrollBar(new ColorBar(mContext, mContext.getResources().getColor(R.color.transparent), 10));//设置选中下划线
+    private void set() {
+        adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
+        adapter.setData(navigationList);
+        fixedIndicatorView.setAdapter(adapter);
+        fixedIndicatorView.setScrollBar(new ColorBar(mContext, mContext.getResources().getColor(R.color.transparent), 6));//设置选中下划线
 
         float unSelectSize = 14;
         float selectSize = unSelectSize * 1.1f;
         int selectColor = mContext.getResources().getColor(R.color.lightBlue);
         int unSelectColor =mContext.getResources().getColor(R.color.black);
-        indicator.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColor, unSelectColor).setSize(selectSize, unSelectSize));
-        indicator.setCurrentItem(0,true);
+        fixedIndicatorView.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColor, unSelectColor).setSize(selectSize, unSelectSize));
+        fixedIndicatorView.setCurrentItem(0,true);
     }
 
     private void initNavigationData() {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token","");
-        adapter=new TestNavigationAdapter(navigationList,mContext);
-//            testNavigation_gv.setAdapter(adapter);
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getTestNavigationData(token).enqueue(new Callback<TestNavigationBean>() {
+        aClass.getSimulationDate(token).enqueue(new Callback<SimulationBean>() {
             @Override
-            public void onResponse(Call<TestNavigationBean> call, Response<TestNavigationBean> response) {
+            public void onResponse(Call<SimulationBean> call, Response<SimulationBean> response) {
                 hideLoadingBar();
-                TestNavigationBean body = response.body();
-                if (body!=null){
-                    String code = body.getCode();
-                    Object errMsg = body.getErrMsg();
-                    if (errMsg==null){
-                        final List<TestNavigationBean.DataBean> data = body.getData();
-                        if (data!=null){
-                            navigationList.clear();
-                            int size = data.size();
-                            navigationList.addAll(data);
-                            set(fixedIndicatorView,size);
-                        }
-                    }else {
-                        Toast.makeText(mContext, ""+errMsg, Toast.LENGTH_SHORT).show();
+                if(response !=null && response.body() !=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000")){
+                      set();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<TestNavigationBean> call, Throwable t) {
-
+            public void onFailure(Call<SimulationBean> call, Throwable t) {
+                ToastUtils.showInfo(t.getMessage(),5000);
+                Log.i("huwei","huwei======"+t.getMessage());
             }
         });
     }
@@ -267,8 +224,10 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(searchIntent);
                 break;
             case R.id.tv_choose://选择题库
+                startActivity(new Intent(getActivity(),ChooseTopicActivity.class));
                 break;
             case R.id.img_add:
+                startActivity(new Intent(getActivity(), QueslibActivity.class));
                 break;
         }
     }
@@ -281,4 +240,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mLoadingBar.hide();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initNavigationData();
+    }
 }

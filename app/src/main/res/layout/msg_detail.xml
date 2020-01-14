@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_top"
@@ -27,9 +28,24 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
-    <WebView
-        android:id="@+id/webView"
-        android:layout_below="@+id/rl_top"
+    <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/my_file_loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_below="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <include layout="@layout/layout_empty_view" />
+</LinearLayout>

@@ -191,7 +191,7 @@
         <activity android:name=".activities.SkillsActivity" />
         <activity android:name=".activities.WelcomeActivity" />
         <activity android:name=".activities.AuthorizationActivity" />
-        <activity android:name=".activities.ChooseTopicActivity" />
+        <activity android:name=".activities.ChooseTopicActivity" /><!-- 添加题库 -->
         <activity
             android:name=".activities.NewMyChengJiActivity"
             android:exported="true" /> <!-- 分享 -->

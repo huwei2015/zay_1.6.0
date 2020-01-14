@@ -46,7 +46,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     }
 
     public void addList(List<TimeData.MsgList> data) {
-        this.data =data;
+        this.data.addAll(data);
         notifyDataSetChanged();
     }
     @Override
@@ -58,6 +58,11 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tv_title.setText(data.get(position).getTitle());
         holder.tv_time.setText(data.get(position).getNewCreateTime());
+        if(data.get(position).isyRead() == true){
+            holder.tv_title.setTextColor(mContext.getResources().getColor(R.color.price_color));
+        }else{
+            holder.tv_title.setTextColor(mContext.getResources().getColor(R.color.black));
+        }
         holder.rl_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,5 +1,7 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,9 +16,17 @@ import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.NotThrougAdapter;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
+import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
+import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.vo.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by huwei.
@@ -28,24 +38,52 @@ public class NoThroughFragment extends Fragment implements PullToRefreshListener
     private PullToRefreshRecyclerView pullToRefreshRecyclerView;
     private NotThrougAdapter througAdapter;
     private View view;
-    private List<NotThroughBean.ThrougListBean> notPassListBeans = new ArrayList<>();
+    private Context mContext;
+    private String token;
+    private int  currenPage =1;
+    private int pageSize =10;
+    private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_no_through,container,false);
         initView();
+        initData();
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
+    private void initData(){
+        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
+        userInfoInterface.getQuestionData(currenPage,pageSize,250,"0",token).enqueue(new Callback<NotThroughBean>() {
+            @Override
+            public void onResponse(Call<NotThroughBean> call, Response<NotThroughBean> response) {
+                        if(response !=null && response.body() !=null){
+                            String code = response.body().getCode();
+                            if(code.equals("00000")){
+                                notPassListBeans =response.body().getData().getData();
+                            }
+                        }
+            }
+
+            @Override
+            public void onFailure(Call<NotThroughBean> call, Throwable t) {
+                ToastUtils.showInfo(t.getMessage(),5000);
+            }
+        });
+    }
     private void initView() {
+        SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         pullToRefreshRecyclerView=view.findViewById(R.id.pull_recycleview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        for (int i =0; i < 10; i++){
-            NotThroughBean.ThrougListBean througListBean = new NotThroughBean.ThrougListBean();
-            througListBean.setTitle("主要负责人-初训-煤炭生产经营单位(董事长-总经理)");
-            notPassListBeans.add(througListBean);
-        }
+
 //        //初始化adapter
         througAdapter = new NotThrougAdapter(getActivity(), notPassListBeans);
         througAdapter.setOnItemClickListener(this);

@@ -6,6 +6,7 @@ import com.example.administrator.zahbzayxy.beans.AuthStateBean;
 import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
+import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
 import com.example.administrator.zahbzayxy.beans.PayCardBean;
@@ -143,7 +144,8 @@ public interface UserInfoInterface {
     Call<TimeData> getSystemMsg(@Query("pageNo") int pageNo,
                                 @Query("pageSize") int pageSize,
                                 @Query("classifyId") int classifyId,
-                                @Query("token") String token);
+                                @Query("token") String token,
+                                @Query("sysMsglist") String sysMsglist);
 
     //我的报名
     static final String my_sign ="/data/usercenter/apply/list";
@@ -152,8 +154,12 @@ public interface UserInfoInterface {
                                @Query("pageSize") int pageSize,
                                @Query("token") String token);
 
-    //报名详情
-//    static final String my_sign_detail ="/data/usercenter/apply/detail";
-//    @GET(value = my_sign_detail)
-//    Call
+    //模拟题库选择
+    static final String simulation_question ="/data/usercenter/queslib/queslib_listmock";
+    @POST(value = simulation_question)
+    Call<NotThroughBean> getQuestionData(@Query("pageNo") int pageNo,
+                                         @Query("pageSize") int pageSize,//套餐名称
+                                         @Query("cateId") int cateId,//题库id
+                                         @Query("isTimeEnd") String isTimeEnd,
+                                         @Query("token") String token);
 }
