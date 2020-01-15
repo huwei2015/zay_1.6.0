@@ -30,7 +30,7 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody,T>
             } catch (IOException e) {
                 e.printStackTrace();
                 SimpleBean simpleBean = new SimpleBean();
-                return null;
+                return gson.fromJson(convert(simpleBean), type);
             }
             Buffer buffer = source.buffer();
             String responseBodyString = buffer.clone().readString(Charset.forName("UTF-8"));

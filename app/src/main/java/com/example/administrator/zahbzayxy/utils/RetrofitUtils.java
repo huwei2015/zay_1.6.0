@@ -83,7 +83,7 @@ public class RetrofitUtils{
                                     }).build();
         builder.client(httpClient);
         mRetrofit = builder.baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(MyGsonConverterFactory.create())
             .build();
 }
 

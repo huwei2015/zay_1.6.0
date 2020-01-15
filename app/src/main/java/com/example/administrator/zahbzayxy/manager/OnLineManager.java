@@ -232,6 +232,7 @@ public class OnLineManager implements PullToRefreshListener {
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
                         if (mLearnList == null || mLearnList.size() == 0) {
+                            hideLoadingBar();
                             isVisible(false);
                             return;
                         } else {
@@ -239,8 +240,10 @@ public class OnLineManager implements PullToRefreshListener {
                         }
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
+                        return;
                     }
                 }
+                hideLoadingBar();
             }
 
             @Override
