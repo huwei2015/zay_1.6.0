@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.androidkun.PullToRefreshRecyclerView
-        android:id="@+id/recyclerview"
+    <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/nb_allOrder_load_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <com.androidkun.PullToRefreshRecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/light_Gray"
+            android:dividerHeight="10dp" />
+    </LinearLayout>
+    <include layout="@layout/layout_empty_view" />
+</RelativeLayout>

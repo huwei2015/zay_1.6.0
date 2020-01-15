@@ -1,5 +1,8 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,47 +10,97 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.NotPassAdapter;
 import com.example.administrator.zahbzayxy.beans.NotPassBean;
+import com.example.administrator.zahbzayxy.beans.NotThroughBean;
+import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
+import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by huwei.
  * Data 2019-12-20.
  * Time 13:33.
- * 考试未通过
+ * 考试正式未通过
  */
 public class NotPassFragment extends Fragment implements PullToRefreshListener {
     private View view;
     private NotPassAdapter notPassAdapter;
     private PullToRefreshRecyclerView refreshRecyclerView;
-    private List<NotPassBean.NotPassListBean> notPassListBeans = new ArrayList<>();
+    private List<NotPassBean.NotListData> notPassListBeans = new ArrayList<>();
+    private int currentPage =1;
+    private int PageSize = 10;
+    private String token;
+    private Context mContext;
+    private RelativeLayout rl_empty;
+    TextView tv_msg;
+    LinearLayout ll_list;
+    private ProgressBarLayout mLoadingBar;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_not_pass,container,false);
         initView();
+        initData();
         return view;
     }
+    private void initData(){
+        showLoadingBar(false);
+        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
+        userInfoInterface.getExamData(currentPage,PageSize,0,token).enqueue(new Callback<NotPassBean>() {
+            @Override
+            public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
+                    if(response !=null && response.body() !=null){
+                        String code = response.body().getCode();
+                        if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
+                            emptyLayout(true);
+                            hideLoadingBar();
+                            List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
+                            notPassListBeans.addAll(data);
+                            notPassAdapter.setList(notPassListBeans);
+                        }else{
+                            hideLoadingBar();
+                            emptyLayout(false);
+                        }
+                    }
+            }
 
+            @Override
+            public void onFailure(Call<NotPassBean> call, Throwable t) {
+                hideLoadingBar();
+            }
+        });
+    }
     private void initView() {
+        SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         refreshRecyclerView=view.findViewById(R.id.recyclerview);
+        rl_empty= view.findViewById(R.id.rl_empty_layout);//空页面
+        ll_list = view.findViewById(R.id.ll_list);
+        tv_msg = view.findViewById(R.id.tv_msg);
+        mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        for (int i =0; i < 6; i++){
-            NotPassBean.NotPassListBean notPassListBean = new NotPassBean.NotPassListBean();
-            notPassListBean.setTitle("特种作业人员-初训-煤矿井下爆破作业");
-            notPassListBean.setTime("到期时间:2019.12.21");
-            notPassListBean.setAccount("考试次数：1/2");
-            notPassListBean.setState("入口已关闭");
-            notPassListBeans.add(notPassListBean);
-        }
 //        //初始化adapter
         notPassAdapter = new NotPassAdapter(getActivity(), notPassListBeans);
 //        //添加数据源
@@ -62,7 +115,7 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
         //设置刷新回调
         refreshRecyclerView.setPullToRefreshListener(this);
         //主动触发下拉刷新操作
-        refreshRecyclerView.onRefresh();
+//        refreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -78,5 +131,24 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     @Override
     public void onLoadMore() {
 
+    }
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+    private void emptyLayout(boolean isVisible){
+        if(isVisible){
+            refreshRecyclerView.setVisibility(View.VISIBLE);
+            rl_empty.setVisibility(View.GONE);
+        }else{
+            rl_empty.setVisibility(View.VISIBLE);
+            refreshRecyclerView.setVisibility(View.GONE);
+            tv_msg.setText("暂无未通过数据");
+        }
     }
 }

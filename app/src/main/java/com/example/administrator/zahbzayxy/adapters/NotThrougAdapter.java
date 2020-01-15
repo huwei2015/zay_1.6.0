@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
+import com.example.administrator.zahbzayxy.beans.TimeData;
 
 import java.util.List;
 
@@ -34,6 +35,11 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
     public NotThrougAdapter(Context mcontext, List<NotThroughBean.THrougListData> througListBeans) {
         this.mcontext = mcontext;
         this.througListBeans = througListBeans;
+    }
+
+    public void setList(List<NotThroughBean.THrougListData> througListBeans) {
+        this.througListBeans = througListBeans;
+        notifyDataSetChanged();
     }
 
     @Override

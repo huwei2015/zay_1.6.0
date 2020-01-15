@@ -88,7 +88,6 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         return view;
     }
     private void set() {
-        adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setData(navigationList);
         fixedIndicatorView.setAdapter(adapter);
         fixedIndicatorView.setScrollBar(new ColorBar(mContext, mContext.getResources().getColor(R.color.transparent), 6));//设置选中下划线
@@ -112,7 +111,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                      set();
+                        navigationList=response.body().getData().getData();
+                        adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
+                        set();
                     }
                 }
             }

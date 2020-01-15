@@ -1,11 +1,13 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +34,9 @@ import retrofit2.Response;
  * Created by huwei.
  * Data 2020-01-02.
  * Time 11:40.
- * 未通过
+ * 选择题库未过期
  */
-public class NoThroughFragment extends Fragment implements PullToRefreshListener,NotThrougAdapter.OnItemClickListener{
+public class ChooseNoThroughFragment extends Fragment implements PullToRefreshListener,NotThrougAdapter.OnItemClickListener{
     private PullToRefreshRecyclerView pullToRefreshRecyclerView;
     private NotThrougAdapter througAdapter;
     private View view;
@@ -43,6 +45,7 @@ public class NoThroughFragment extends Fragment implements PullToRefreshListener
     private int  currenPage =1;
     private int pageSize =10;
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,13 +63,16 @@ public class NoThroughFragment extends Fragment implements PullToRefreshListener
 
     private void initData(){
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        userInfoInterface.getQuestionData(currenPage,pageSize,250,"0",token).enqueue(new Callback<NotThroughBean>() {
+        userInfoInterface.getQuestionData(currenPage,pageSize,301,"0",token).enqueue(new Callback<NotThroughBean>() {
             @Override
             public void onResponse(Call<NotThroughBean> call, Response<NotThroughBean> response) {
                         if(response !=null && response.body() !=null){
                             String code = response.body().getCode();
                             if(code.equals("00000")){
-                                notPassListBeans =response.body().getData().getData();
+                                List<NotThroughBean.THrougListData> data = response.body().getData().getqLibs().getData();
+                                notPassListBeans.addAll(data);
+                               througAdapter.setList(notPassListBeans);
+
                             }
                         }
             }
@@ -83,11 +89,10 @@ public class NoThroughFragment extends Fragment implements PullToRefreshListener
         pullToRefreshRecyclerView=view.findViewById(R.id.pull_recycleview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-//        //初始化adapter
+        //初始化adapter
         througAdapter = new NotThrougAdapter(getActivity(), notPassListBeans);
         througAdapter.setOnItemClickListener(this);
-//        //添加数据源
+        //添加数据源
         pullToRefreshRecyclerView.setAdapter(througAdapter);
         pullToRefreshRecyclerView.setLayoutManager(layoutManager);
         //设置是否显示上次刷新时间

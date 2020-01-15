@@ -6,6 +6,7 @@ import com.example.administrator.zahbzayxy.beans.AuthStateBean;
 import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
+import com.example.administrator.zahbzayxy.beans.NotPassBean;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.beans.OneCunBean;
 import com.example.administrator.zahbzayxy.beans.PUserHeadPhotoBean;
@@ -162,4 +163,11 @@ public interface UserInfoInterface {
                                          @Query("cateId") int cateId,//题库id
                                          @Query("isTimeEnd") String isTimeEnd,
                                          @Query("token") String token);
+    //考试-正式考试
+    static final String exam_formal="/data/usercenter/queslib/queslib_listexam";
+    @POST(value = exam_formal)
+    Call<NotPassBean> getExamData(@Query("pageNo") int pageNo,
+                                  @Query("pageSize") int pageSize,
+                                  @Query("isScorePass") int isScorePass,
+                                  @Query("token") String token);
 }

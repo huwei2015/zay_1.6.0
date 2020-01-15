@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.beans;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by huwei.
@@ -11,7 +12,15 @@ import java.io.Serializable;
 public class SimulationBean {
     private String code;
     private String errMsg;
-    private SimulationList data;
+    private SimulatDataList data;
+
+    public SimulatDataList getData() {
+        return data;
+    }
+
+    public void setData(SimulatDataList data) {
+        this.data = data;
+    }
 
     public String getCode() {
         return code;
@@ -29,17 +38,21 @@ public class SimulationBean {
         this.errMsg = errMsg;
     }
 
-    public SimulationList getData() {
-        return data;
-    }
+   public static class SimulatDataList {
+        private List<SimulationList> data;
 
-    public void setData(SimulationList data) {
-        this.data = data;
-    }
+       public List<SimulationList> getData() {
+           return data;
+       }
+
+       public void setData(List<SimulationList> data) {
+           this.data = data;
+       }
+   }
 
     public static class SimulationList implements Serializable{
+        private int id;
         private String cateName;
-         private int id;
          private String parentId;
          private String platformId;
          private String catePath;

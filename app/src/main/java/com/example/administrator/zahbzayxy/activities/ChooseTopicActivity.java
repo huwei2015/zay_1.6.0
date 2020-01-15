@@ -9,7 +9,8 @@ import android.widget.ImageView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
-import com.example.administrator.zahbzayxy.fragments.NoThroughFragment;
+import com.example.administrator.zahbzayxy.fragments.ChooseNoThroughFragment;
+import com.example.administrator.zahbzayxy.fragments.ChooseThroughFragment;
 import com.example.administrator.zahbzayxy.fragments.OnLineCourseFragment;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 
@@ -53,12 +54,12 @@ public class ChooseTopicActivity extends BaseActivity {
     private void initViewPagerAndTable() {
         learnTabList=new ArrayList<>();
         learnVPList=new ArrayList<>();
-        learnTabList.add("未通过");
-        learnTabList.add("已通过");
-        NoThroughFragment allOrderFragment=new NoThroughFragment();
-        OnLineCourseFragment allOrderFragment1=new OnLineCourseFragment();
-        learnVPList.add(allOrderFragment);
-        learnVPList.add(allOrderFragment1);
+        learnTabList.add("未过期");
+        learnTabList.add("已过期");
+        ChooseNoThroughFragment chooseNoThroughFragment=new ChooseNoThroughFragment();
+        ChooseThroughFragment chooseThroughFragment=new ChooseThroughFragment();
+        learnVPList.add(chooseNoThroughFragment);
+        learnVPList.add(chooseThroughFragment);
         fragmentManager=getSupportFragmentManager();
         pagerAdapter=new LessonFragmentPageAdapter(fragmentManager,learnVPList,learnTabList);
         learnViewPager.setAdapter(pagerAdapter);

@@ -1,5 +1,8 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,15 +10,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.adapters.AlreadyAdapter;
-import com.example.administrator.zahbzayxy.beans.AlreadyBean;
+import com.example.administrator.zahbzayxy.adapters.NotPassAdapter;
+import com.example.administrator.zahbzayxy.beans.NotPassBean;
+import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
+import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by huwei.
@@ -25,9 +38,22 @@ import java.util.List;
  */
 public class AlreadyFragment extends Fragment implements PullToRefreshListener {
     private PullToRefreshRecyclerView refreshRecyclerView;
-    private AlreadyAdapter alreadyAdapter;
-    private List<AlreadyBean.AlreadyListBean> alreadyListBeanList = new ArrayList<>();
+    private NotPassAdapter alreadyAdapter;
+    private List<NotPassBean.NotListData> notPassListBeans = new ArrayList<>();
     private View view;
+    private int currentPage =1;
+    private int PageSize = 10;
+    private String token;
+    private Context mContext;
+    private RelativeLayout rl_empty;
+    TextView tv_msg;
+    LinearLayout ll_list;
+    private ProgressBarLayout mLoadingBar;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,21 +61,53 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
         initView();
         return view;
     }
+    private void initData(){
+        showLoadingBar(false);
+        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
+        userInfoInterface.getExamData(currentPage,PageSize,1,token).enqueue(new Callback<NotPassBean>() {
+            @Override
+            public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
+                if(response !=null && response.body() !=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
+                        emptyLayout(true);
+                        hideLoadingBar();
+                        List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
+                        notPassListBeans.addAll(data);
+                        alreadyAdapter.setList(notPassListBeans);
+                    }else{
+                        hideLoadingBar();
+                        emptyLayout(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NotPassBean> call, Throwable t) {
+                hideLoadingBar();
+                emptyLayout(false);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
 
     private void initView() {
+        SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         refreshRecyclerView= view.findViewById(R.id.recycle);
+        rl_empty= view.findViewById(R.id.rl_empty_layout);//空页面
+        ll_list = view.findViewById(R.id.ll_list);
+        tv_msg = view.findViewById(R.id.tv_msg);
+        mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        for (int i =0; i < 6; i++){
-            AlreadyBean.AlreadyListBean alreadyListBean = new AlreadyBean.AlreadyListBean();
-            alreadyListBean.setTitle("特种作业人员-初训-煤矿井下爆破作业");
-            alreadyListBean.setTime("到期时间:2019.12.21");
-            alreadyListBean.setAccount("考试次数：1/2");
-            alreadyListBean.setRecord("考试记录》");
-            alreadyListBeanList.add(alreadyListBean);
-        }
-//        //初始化adapter
-        alreadyAdapter = new AlreadyAdapter(getActivity(), alreadyListBeanList);
+        //初始化adapter
+        alreadyAdapter = new NotPassAdapter(getActivity(), notPassListBeans);
 //        //添加数据源
         refreshRecyclerView.setAdapter(alreadyAdapter);
         refreshRecyclerView.setLayoutManager(layoutManager);
@@ -79,5 +137,25 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
     @Override
     public void onLoadMore() {
 
+    }
+
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+    private void emptyLayout(boolean isVisible){
+        if(isVisible){
+            refreshRecyclerView.setVisibility(View.VISIBLE);
+            rl_empty.setVisibility(View.GONE);
+        }else{
+            rl_empty.setVisibility(View.VISIBLE);
+            refreshRecyclerView.setVisibility(View.GONE);
+            tv_msg.setText("暂无已通过数据");
+        }
     }
 }

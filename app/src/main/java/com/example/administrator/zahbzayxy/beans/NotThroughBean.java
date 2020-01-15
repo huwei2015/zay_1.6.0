@@ -39,6 +39,17 @@ public class NotThroughBean {
     }
 
     public static class ThrougListBean implements Serializable{
+        private ThrougDataBean qLibs;
+
+        public ThrougDataBean getqLibs() {
+            return qLibs;
+        }
+
+        public void setqLibs(ThrougDataBean qLibs) {
+            this.qLibs = qLibs;
+        }
+    }
+    public static class ThrougDataBean implements Serializable{
         private int currentPage;
         private int pageSize;
         private int totalPage;
@@ -103,7 +114,6 @@ public class NotThroughBean {
             this.data = data;
         }
     }
-
     public static class THrougListData implements Serializable{
         private int viewScoreLine;
         private String quesLibName;

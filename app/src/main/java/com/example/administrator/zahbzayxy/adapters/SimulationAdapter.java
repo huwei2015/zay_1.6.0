@@ -55,7 +55,6 @@ public class SimulationAdapter extends Indicator.IndicatorAdapter{
         textView.setWidth(DisplayUtil.dipToPix(mContext, 80));
         String centerName = mDataList.get(position).getCateName();
         textView.setText(centerName);
-
         mIndicator.setOnIndicatorItemClickListener((View clickItemView, int viewPosition) -> {
             if (mItemClickListener != null) {
                 mItemClickListener.onClick(clickItemView, viewPosition);

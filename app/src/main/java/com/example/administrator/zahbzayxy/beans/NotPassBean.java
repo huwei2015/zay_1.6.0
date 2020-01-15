@@ -3,6 +3,7 @@ package com.example.administrator.zahbzayxy.beans;
 import android.widget.ImageView;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by huwei.
@@ -40,59 +41,207 @@ public class NotPassBean {
     }
 
     public static class NotPassListBean implements Serializable{
-        private ImageView imageView;
-        private String title;
-        private String time;
-        private String account;
-        private String state;
-        private String record;
+        private NotDataBean qLibs;
 
-        public ImageView getImageView() {
-            return imageView;
+        public NotDataBean getqLibs() {
+            return qLibs;
         }
 
-        public void setImageView(ImageView imageView) {
-            this.imageView = imageView;
+        public void setqLibs(NotDataBean qLibs) {
+            this.qLibs = qLibs;
+        }
+    }
+    public static class NotDataBean implements Serializable{
+        private int currentPage;
+        private int pageSize;
+        private int totalPage;
+        private int totalRecord;
+        private boolean isFirstPage;
+        private boolean isLastPage;
+        private List<NotListData> data;
+
+        public int getCurrentPage() {
+            return currentPage;
         }
 
-        public String getTitle() {
-            return title;
+        public void setCurrentPage(int currentPage) {
+            this.currentPage = currentPage;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public int getPageSize() {
+            return pageSize;
         }
 
-        public String getTime() {
-            return time;
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
         }
 
-        public void setTime(String time) {
-            this.time = time;
+        public int getTotalPage() {
+            return totalPage;
         }
 
-        public String getAccount() {
-            return account;
+        public void setTotalPage(int totalPage) {
+            this.totalPage = totalPage;
         }
 
-        public void setAccount(String account) {
-            this.account = account;
+        public int getTotalRecord() {
+            return totalRecord;
         }
 
-        public String getState() {
-            return state;
+        public void setTotalRecord(int totalRecord) {
+            this.totalRecord = totalRecord;
         }
 
-        public void setState(String state) {
-            this.state = state;
+        public boolean isFirstPage() {
+            return isFirstPage;
         }
 
-        public String getRecord() {
-            return record;
+        public void setFirstPage(boolean firstPage) {
+            isFirstPage = firstPage;
         }
 
-        public void setRecord(String record) {
-            this.record = record;
+        public boolean isLastPage() {
+            return isLastPage;
+        }
+
+        public void setLastPage(boolean lastPage) {
+            isLastPage = lastPage;
+        }
+
+        public List<NotListData> getData() {
+            return data;
+        }
+
+        public void setData(List<NotListData> data) {
+            this.data = data;
+        }
+    }
+    public static class NotListData implements Serializable{
+        private int isLimitCount;
+         private int quesLibPackageId;
+         private String quesLibName;
+         private String imagePath;
+         private int timeInvalid;
+         private int passScore;
+         private int totalScore;
+         private int examShow;
+         private int userExamNum;
+         private int  id;
+         private String packageName;
+         private String endTime;
+         private int quesLibExamNum;
+         private int quesLibId;
+
+        public int getIsLimitCount() {
+            return isLimitCount;
+        }
+
+        public void setIsLimitCount(int isLimitCount) {
+            this.isLimitCount = isLimitCount;
+        }
+
+        public int getQuesLibPackageId() {
+            return quesLibPackageId;
+        }
+
+        public void setQuesLibPackageId(int quesLibPackageId) {
+            this.quesLibPackageId = quesLibPackageId;
+        }
+
+        public String getQuesLibName() {
+            return quesLibName;
+        }
+
+        public void setQuesLibName(String quesLibName) {
+            this.quesLibName = quesLibName;
+        }
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public void setImagePath(String imagePath) {
+            this.imagePath = imagePath;
+        }
+
+        public int getTimeInvalid() {
+            return timeInvalid;
+        }
+
+        public void setTimeInvalid(int timeInvalid) {
+            this.timeInvalid = timeInvalid;
+        }
+
+        public int getPassScore() {
+            return passScore;
+        }
+
+        public void setPassScore(int passScore) {
+            this.passScore = passScore;
+        }
+
+        public int getTotalScore() {
+            return totalScore;
+        }
+
+        public void setTotalScore(int totalScore) {
+            this.totalScore = totalScore;
+        }
+
+        public int getExamShow() {
+            return examShow;
+        }
+
+        public void setExamShow(int examShow) {
+            this.examShow = examShow;
+        }
+
+        public int getUserExamNum() {
+            return userExamNum;
+        }
+
+        public void setUserExamNum(int userExamNum) {
+            this.userExamNum = userExamNum;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getPackageName() {
+            return packageName;
+        }
+
+        public void setPackageName(String packageName) {
+            this.packageName = packageName;
+        }
+
+        public String getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
+        }
+
+        public int getQuesLibExamNum() {
+            return quesLibExamNum;
+        }
+
+        public void setQuesLibExamNum(int quesLibExamNum) {
+            this.quesLibExamNum = quesLibExamNum;
+        }
+
+        public int getQuesLibId() {
+            return quesLibId;
+        }
+
+        public void setQuesLibId(int quesLibId) {
+            this.quesLibId = quesLibId;
         }
     }
 }
