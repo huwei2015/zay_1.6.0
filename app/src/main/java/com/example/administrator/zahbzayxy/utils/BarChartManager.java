@@ -2,6 +2,7 @@ package com.example.administrator.zahbzayxy.utils;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -38,6 +39,7 @@ public class BarChartManager {
         rightAxis = mBarChart.getAxisRight();
         xAxis = mBarChart.getXAxis();
     }
+
     /**
      * 初始化LineChart
      */
@@ -89,10 +91,16 @@ public class BarChartManager {
 //      X轴字体样式
         xAxis.setTypeface(Typeface.DEFAULT_BOLD);
 //      设置X轴文字剧中对齐
-        xAxis.setCenterAxisLabels(true);
+        xAxis.setCenterAxisLabels(false);
+        //设置是否绘制X轴上的对应值(标签)
+        xAxis.setDrawLabels(true);
+        xAxis.setAxisMaximum(30f + 0.5f);
+        xAxis.setAxisMinimum(0f);
+        xAxis.setLabelCount(6, false);
 //
 //       保证Y轴从0开始，不然会上移一点
-        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setDrawAxisLine(true);
         rightAxis.setAxisMinimum(0f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setTextColor(Color.parseColor("#d5d5d5"));
@@ -100,45 +108,50 @@ public class BarChartManager {
         rightAxis.setEnabled(false); //右侧Y轴不显示
     }
 
-    public void showMoreBarChart(final List<Float> xAxisValues, List<List<Float>> yAxisValues, List<String> labels, List<Integer> colours) {
+    public void showMoreBarChart(final List<Float> xAxisValues, List<Float> yAxisValues, List<String> labels, List<Integer> colours) {
         initLineChart();
         BarData data = new BarData();
-        for (int i = 0; i < yAxisValues.size(); i++) {
+        for (int j = 0; j < yAxisValues.size(); j++) {
             ArrayList<BarEntry> entries = new ArrayList<>();
-            for (int j = 0; j < yAxisValues.get(i).size(); j++) {
+            Float score = yAxisValues.get(j);
+            BarEntry barEntry = new BarEntry(xAxisValues.get(j), score);
+            entries.add(barEntry);
+            BarDataSet barDataSet = new BarDataSet(entries, labels.get(0));
 
-                entries.add(new BarEntry(xAxisValues.get(j), yAxisValues.get(i).get(j)));
+            if (score >= 60) {
+                barDataSet.setColor(Color.parseColor("#6AA5FF"));
+                barDataSet.setValueTextColor(Color.parseColor("#001631E1"));
+            } else {
+                barDataSet.setColor(Color.parseColor("#F66255"));
+                barDataSet.setValueTextColor(Color.parseColor("#00C42417"));
             }
-            BarDataSet barDataSet = new BarDataSet(entries, labels.get(i));
-
-            barDataSet.setColor(colours.get(i));
-            barDataSet.setValueTextColor(colours.get(i));
-            barDataSet.setValueTextSize(10f);
             barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             data.addDataSet(barDataSet);
         }
-        int amount = yAxisValues.size();
 
-        float groupSpace = 0.3f; //柱状图组之间的间距
-        float barSpace = (float) ((1 - 0.12) / amount / 10); // x4 DataSet
-        float barWidth = (float) ((1 - 0.3) / amount / 10 * 9); // x4 DataSet
+        int groupSize = 1;
+        float barWidth = (float) ((1 - 0.3) / groupSize / 10 * 9); // x4 DataSet
 
         // (0.2 + 0.02) * 4 + 0.08 = 1.00 -> interval per "group"
-        xAxis.setLabelCount(xAxisValues.size() - 1, false);
+        xAxis.setLabelCount(xAxisValues.size() , false);
         data.setBarWidth(barWidth);
-        final String[] xValues = {"5", "10", "15", "20", "25","30"};
+        final String[] xValues = {"5", "10", "15", "20", "25", "30"};
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                for (int i=0;i<xAxisValues.size();i++){
-                    if(value==(xAxisValues.get(i)-1)) {
-                        return xValues[i];
+                int arg = (int) value;
+                if (arg > 0 && (arg%5 == 0)) {
+                    int position = (arg/5) - 1;
+                    if (position < xValues.length) {
+                        return xValues[position];
+                    } else {
+                        return "";
                     }
+                } else {
+                    return "";
                 }
-                return "";
             }
         });
-        data.groupBars(0, groupSpace, barSpace);
         mBarChart.setData(data);
     }
 

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:visibility="gone"
-        android:background="#ccc"
+        android:background="@color/bg_light_Gray"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

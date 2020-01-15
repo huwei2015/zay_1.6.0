@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
@@ -28,6 +29,8 @@ import com.example.administrator.zahbzayxy.utils.NumberFormatUtils;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +61,8 @@ public class OnLineManager implements PullToRefreshListener {
     private int mPosition = 0;
     private int mIsAchieve = 0;
     private int mCourseType = 0;
+    private View emptyView;
+    private TextView tv_msg;
 
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
@@ -96,9 +101,10 @@ public class OnLineManager implements PullToRefreshListener {
         //主动触发下拉刷新操作
 //        mRefreshRecyclerView.onRefresh();
         //设置EmptyView
-        View emptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
+        emptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
+        tv_msg = emptyView.findViewById(R.id.tv_msg);
         mRefreshRecyclerView.setEmptyView(emptyView);
 
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
@@ -108,6 +114,17 @@ public class OnLineManager implements PullToRefreshListener {
             mRefreshRecyclerView.setLoadingMoreEnabled(true);
             setCourseList(mPosition, isChecked ? 1 : 0);
         });
+    }
+
+    private void isVisible(boolean flag) {
+        if (flag) {
+            mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            mRefreshRecyclerView.setVisibility(View.GONE);
+            tv_msg.setText("暂无课程信息");
+        }
     }
 
     private void initEvent(){
@@ -183,6 +200,12 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
+                        if (mLearnList == null || mLearnList.size() == 0) {
+                            isVisible(false);
+                            return;
+                        } else {
+                            isVisible(true);
+                        }
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                     }
@@ -208,6 +231,12 @@ public class OnLineManager implements PullToRefreshListener {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
+                        if (mLearnList == null || mLearnList.size() == 0) {
+                            isVisible(false);
+                            return;
+                        } else {
+                            isVisible(true);
+                        }
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                     }
@@ -271,6 +300,12 @@ public class OnLineManager implements PullToRefreshListener {
                             mPage--;
                             return;
                         }
+                        if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
+                            isVisible(false);
+                            return;
+                        } else {
+                            isVisible(true);
+                        }
                         beanList = setOfflineDataList(beanList);
                         mOfflineList.clear();
                         mOfflineList.addAll(beanList);
@@ -319,6 +354,12 @@ public class OnLineManager implements PullToRefreshListener {
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
                             return;
+                        }
+                        if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
+                            isVisible(false);
+                            return;
+                        } else {
+                            isVisible(true);
                         }
                         beanList = setDataList(beanList);
                         mCoursesList.clear();

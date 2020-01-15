@@ -148,39 +148,27 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private void showBarChartMore() {
         BarChartManager barChartManager = new BarChartManager(mChart);
         List<Float> xAxisValues = new ArrayList<>();
-        List<List<Float>> yAxisValues = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Integer> colours = new ArrayList<>();
         List<Float> x1 = new ArrayList<>();//及格
-        List<Float> x2 = new ArrayList<>();//未及格
-        xAxisValues.add(1.0f);
-        xAxisValues.add(2.0f);
-        xAxisValues.add(3.0f);
-        xAxisValues.add(4.0f);
-        xAxisValues.add(5.0f);
-        xAxisValues.add(5.0f);
+        // x轴坐标，固定这么给
+        for (int i = 1; i < 31; i++) {
+            xAxisValues.add((float) i);
+        }
 
-        x1.add(10f);
+        // TODO x1 是真正要绘制的数据，有了真数据以后需要替换真数据
+        x1.add(80f);
         x1.add(25f);
         x1.add(30f);
         x1.add(43f);
+        x1.add(70f);
         x1.add(50f);
-        x1.add(50f);
+        x1.add(90f);
 
-        x2.add(50f);
-        x2.add(40f);
-        x2.add(33f);
-        x2.add(20f);
-        x2.add(10f);
-        x2.add(10f);
-        yAxisValues.add(x1);
-        yAxisValues.add(x2);
-        labels.add("");
         labels.add("");
         colours.add(Color.parseColor("#1631E1"));
-        colours.add(Color.parseColor("#C42417"));
-        barChartManager.showMoreBarChart(xAxisValues, yAxisValues, labels, colours);
-        barChartManager.setXAxis(6, 0, 5);
+        barChartManager.showMoreBarChart(xAxisValues, x1, labels, colours);
+        barChartManager.setYAxis(100, 0, 5);
     }
 
     @Override

@@ -95,21 +95,24 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        isVisible = isVisibleToUser;
         if (isVisibleToUser && mLoadView) {
             loadData();
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
+    private boolean isVisible;
 
-    private void loadData() {
-        if (mLearnType == 0) {
+    public void loadData() {
+        if (!isVisible) return;
+        if (mLearnType == 0 && mOnLineManager != null) {
             mOnLineManager.loadDAta(0);
             tv_addTopic.setVisibility(View.GONE);
-        } else if (mLearnType == 1){
+        } else if (mLearnType == 1 && mOnLineManager != null){
             mOnLineManager.loadDAta(1);
             tv_addTopic.setVisibility(View.GONE);
             img_add.setVisibility(View.GONE);
-        } else if (mLearnType == 2) {
+        } else if (mLearnType == 2 && mOffLineManager != null) {
             fixedIndicatorView.setVisibility(View.GONE);
             mOneView.setVisibility(View.GONE);
             mSelectLayout.setVisibility(View.GONE);

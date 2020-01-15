@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,20 @@ public class LearningFragment extends Fragment {
         initViewPagerAndTable();
         return view;
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden && learnVPList != null && learnVPList.size() > 0) {
+            // 当前fragment展示的时候
+            for (Fragment fragment : learnVPList){
+                if (fragment == null) return;
+                OnLineCourseFragment mf = (OnLineCourseFragment) fragment;
+                mf.loadData();
+            }
+        }
+    }
+
     private void initView() {
         learnTabLayout=view.findViewById(R.id.learn_tab);
         learnViewPager=view.findViewById(R.id.learn_vp);
