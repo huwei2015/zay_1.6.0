@@ -156,9 +156,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                         if (dataBean != null) {
                             SimulationInfoBean.QuesLib  quesLib = dataBean.getQuesLib();
                             String quesLibName = quesLib.getQuesLibName();
+                            // 名称
                             mExamTitle.setText(quesLibName + "");
+                            // 题库设置的及格分数
                             mPassScoreTv.setText(quesLib.getPassScore() + "");
+                            // 及格次数
                             mPassCountTv.setText(dataBean.getPassNum() + "");
+                            // 分数的集合
                             List<SimulationInfoBean.StatScore> scoreList = dataBean.getStatScore();
                             if (scoreList == null) scoreList = new ArrayList<>();
                             showBarChartMore(scoreList, quesLib.getPassScore());
@@ -195,13 +199,19 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mChart.setDrawGridBackground(false);
         mChart.setExtraBottomOffset(15f);//整体剧底边15f
     }
+
+    /**
+     *  设置图表数据
+     * @param scoreList 分数的集合
+     * @param passScore  题库设置的及格分数
+     */
     private void showBarChartMore(List<SimulationInfoBean.StatScore> scoreList, int passScore) {
         BarChartManager barChartManager = new BarChartManager(mChart);
         List<Float> xAxisValues = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Integer> colours = new ArrayList<>();
         List<Float> x1 = new ArrayList<>();//及格
-        // x轴坐标
+        // x轴坐标，是固定值。最少30个，如果题库返回的分数超过30个，则按照实际集合设置x轴坐标
         int positionCount = 31;
         if ((scoreList.size() + 1) > positionCount) {
             positionCount = scoreList.size() + 1;
