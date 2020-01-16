@@ -8,6 +8,7 @@ import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PrictaceErrorBean;
 import com.example.administrator.zahbzayxy.beans.SearchTestBean;
 import com.example.administrator.zahbzayxy.beans.SimulationBean;
+import com.example.administrator.zahbzayxy.beans.SimulationInfoBean;
 import com.example.administrator.zahbzayxy.beans.TestCommitBean;
 import com.example.administrator.zahbzayxy.beans.TestContentBean;
 import com.example.administrator.zahbzayxy.beans.TestDetailBean;
@@ -177,4 +178,10 @@ public interface TestGroupInterface {
     static final String simulationUrl ="/data/usercenter/queslib/queslib_cate";
     @POST(value = simulationUrl)
     Call<SimulationBean> getSimulationDate(@Query("token") String token);
+
+    //学员模考记录及统计
+    static final String queslibUrl ="/data/usercenter/queslib/queslib_score";
+    @POST(value = queslibUrl)
+    Call<SimulationInfoBean> getSimulationData(@Query("cateId") Integer cateId,
+                                               @Query("token") String token);
 }

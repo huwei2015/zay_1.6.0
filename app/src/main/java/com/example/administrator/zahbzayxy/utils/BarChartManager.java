@@ -108,7 +108,7 @@ public class BarChartManager {
         rightAxis.setEnabled(false); //右侧Y轴不显示
     }
 
-    public void showMoreBarChart(final List<Float> xAxisValues, List<Float> yAxisValues, List<String> labels, List<Integer> colours) {
+    public void showMoreBarChart(final List<Float> xAxisValues, List<Float> yAxisValues, List<String> labels, int passScore) {
         initLineChart();
         BarData data = new BarData();
         for (int j = 0; j < yAxisValues.size(); j++) {
@@ -118,7 +118,7 @@ public class BarChartManager {
             entries.add(barEntry);
             BarDataSet barDataSet = new BarDataSet(entries, labels.get(0));
 
-            if (score >= 60) {
+            if (score >= passScore) {
                 barDataSet.setColor(Color.parseColor("#6AA5FF"));
                 barDataSet.setValueTextColor(Color.parseColor("#001631E1"));
             } else {

@@ -28,6 +28,7 @@ import com.example.administrator.zahbzayxy.adapters.SimulationAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestNavigationAdapter;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
 import com.example.administrator.zahbzayxy.beans.SimulationBean;
+import com.example.administrator.zahbzayxy.beans.SimulationInfoBean;
 import com.example.administrator.zahbzayxy.beans.TestNavigationBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
 import com.example.administrator.zahbzayxy.manager.OnLineManager;
@@ -62,7 +63,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private BarChart mChart;
     private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search;
     private String token;
-    private TextView tv_choose;
+    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv;
     private ImageView img_add;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
@@ -70,6 +71,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private int userLibId;
     private int packageId;
     private String quesLibName;
+    private int mLoadDataPosition;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -82,8 +85,15 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         view=inflater.inflate(R.layout.fragment_simulation,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
+        mExamTitle = view.findViewById(R.id.simulation_exam_title_tv);
+        mPassScoreTv = view.findViewById(R.id.text_score);
+        mPassCountTv = view.findViewById(R.id.text_account);
+
+        adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
+        adapter.setOnItemClickListener((View clickItemView, int position) -> {
+            loadData(position);
+        });
         initView();
-        showBarChartMore();
         initNavigationData();
         return view;
     }
@@ -112,14 +122,56 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     String code = response.body().getCode();
                     if(code.equals("00000")){
                         navigationList=response.body().getData().getData();
-                        adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
+                        Log.i("===navigationList===", navigationList.toString());
                         set();
+                        loadData(0);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<SimulationBean> call, Throwable t) {
+                ToastUtils.showInfo(t.getMessage(),5000);
+                Log.i("huwei","huwei======"+t.getMessage());
+            }
+        });
+    }
+
+    private void loadData(int position){
+        mLoadDataPosition = position;
+        if (navigationList == null || navigationList.size() == 0 || position >= navigationList.size()) {
+            return;
+        }
+        int createId = navigationList.get(position).getId();
+        SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = tokenDb.getString("token","");
+        Log.i("=====queslib_score===", "createId：" + createId + "token = " + token);
+        TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
+        aClass.getSimulationData(createId, token).enqueue(new Callback<SimulationInfoBean>() {
+            @Override
+            public void onResponse(Call<SimulationInfoBean> call, Response<SimulationInfoBean> response) {
+                hideLoadingBar();
+                if(response !=null && response.body() !=null){
+                    Log.i("====loadData===", response.body().toString());
+                    String code = response.body().getCode();
+                    if("00000".equals(code)){
+                        SimulationInfoBean.SimulationDataBean dataBean = response.body().getData();
+                        if (dataBean != null) {
+                            SimulationInfoBean.QuesLib  quesLib = dataBean.getQuesLib();
+                            String quesLibName = quesLib.getQuesLibName();
+                            mExamTitle.setText(quesLibName + "");
+                            mPassScoreTv.setText(quesLib.getPassScore() + "");
+                            mPassCountTv.setText(dataBean.getPassNum() + "");
+                            List<SimulationInfoBean.StatScore> scoreList = dataBean.getStatScore();
+                            if (scoreList == null) scoreList = new ArrayList<>();
+                            showBarChartMore(scoreList, quesLib.getPassScore());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimulationInfoBean> call, Throwable t) {
                 ToastUtils.showInfo(t.getMessage(),5000);
                 Log.i("huwei","huwei======"+t.getMessage());
             }
@@ -146,29 +198,33 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mChart.setDrawGridBackground(false);
         mChart.setExtraBottomOffset(15f);//整体剧底边15f
     }
-    private void showBarChartMore() {
+    private void showBarChartMore(List<SimulationInfoBean.StatScore> scoreList, int passScore) {
         BarChartManager barChartManager = new BarChartManager(mChart);
         List<Float> xAxisValues = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Integer> colours = new ArrayList<>();
         List<Float> x1 = new ArrayList<>();//及格
-        // x轴坐标，固定这么给
-        for (int i = 1; i < 31; i++) {
+        // x轴坐标
+        int positionCount = 31;
+        if ((scoreList.size() + 1) > positionCount) {
+            positionCount = scoreList.size() + 1;
+        }
+        for (int i = 1; i < positionCount; i++) {
             xAxisValues.add((float) i);
         }
 
-        // TODO x1 是真正要绘制的数据，有了真数据以后需要替换真数据
-        x1.add(80f);
-        x1.add(25f);
-        x1.add(30f);
-        x1.add(43f);
-        x1.add(70f);
-        x1.add(50f);
-        x1.add(90f);
+        if (scoreList.size() == 0) {
+            // 没有数据时填充一个空，否则，有数据的图标和无数据的图标显示的高度不一致
+            x1.add(0f);
+        } else {
+            for (SimulationInfoBean.StatScore statScore : scoreList) {
+                x1.add((float) statScore.getTotalScore());
+            }
+        }
 
         labels.add("");
         colours.add(Color.parseColor("#1631E1"));
-        barChartManager.showMoreBarChart(xAxisValues, x1, labels, colours);
+        barChartManager.showMoreBarChart(xAxisValues, x1, labels, passScore);
         barChartManager.setYAxis(100, 0, 5);
     }
 

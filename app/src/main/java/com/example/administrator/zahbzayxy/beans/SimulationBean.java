@@ -141,5 +141,21 @@ public class SimulationBean {
         public void setUpdaterId(String updaterId) {
             this.updaterId = updaterId;
         }
+
+        @Override
+        public String toString() {
+            return "SimulationList{" +
+                    "id=" + id +
+                    ", cateName='" + cateName + '\'' +
+                    ", parentId='" + parentId + '\'' +
+                    ", platformId='" + platformId + '\'' +
+                    ", catePath='" + catePath + '\'' +
+                    ", putawayStatus='" + putawayStatus + '\'' +
+                    ", isDelete='" + isDelete + '\'' +
+                    ", createTime='" + createTime + '\'' +
+                    ", creatorId='" + creatorId + '\'' +
+                    ", updaterId='" + updaterId + '\'' +
+                    '}';
+        }
     }
 }
