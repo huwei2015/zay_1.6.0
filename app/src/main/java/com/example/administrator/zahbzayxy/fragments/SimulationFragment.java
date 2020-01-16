@@ -64,7 +64,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search;
     private String token;
     private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv;
-    private ImageView img_add;
+    private ImageView img_add, mScoreSimpleImg;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
     private int quesLibId;
@@ -88,6 +88,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mExamTitle = view.findViewById(R.id.simulation_exam_title_tv);
         mPassScoreTv = view.findViewById(R.id.text_score);
         mPassCountTv = view.findViewById(R.id.text_account);
+        mScoreSimpleImg = view.findViewById(R.id.simulation_score_simple_im);
 
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
@@ -155,6 +156,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                         SimulationInfoBean.SimulationDataBean dataBean = response.body().getData();
                         if (dataBean != null) {
                             SimulationInfoBean.QuesLib  quesLib = dataBean.getQuesLib();
+                            // 是否拥有查看图表的权限 1、有 0、没有
+                            int scoreLine = quesLib.getViewScoreLine();
                             String quesLibName = quesLib.getQuesLibName();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
@@ -162,10 +165,17 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             mPassScoreTv.setText(quesLib.getPassScore() + "");
                             // 及格次数
                             mPassCountTv.setText(dataBean.getPassNum() + "");
-                            // 分数的集合
-                            List<SimulationInfoBean.StatScore> scoreList = dataBean.getStatScore();
-                            if (scoreList == null) scoreList = new ArrayList<>();
-                            showBarChartMore(scoreList, quesLib.getPassScore());
+                            if (scoreLine == 0) {
+                                mScoreSimpleImg.setVisibility(View.VISIBLE);
+                                mChart.setVisibility(View.GONE);
+                            } else {
+                                mScoreSimpleImg.setVisibility(View.GONE);
+                                mChart.setVisibility(View.VISIBLE);
+                                // 分数的集合
+                                List<SimulationInfoBean.StatScore> scoreList = dataBean.getStatScore();
+                                if (scoreList == null) scoreList = new ArrayList<>();
+                                showBarChartMore(scoreList, quesLib.getPassScore());
+                            }
                         }
                     }
                 }
