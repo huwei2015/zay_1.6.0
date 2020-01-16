@@ -122,7 +122,6 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     String code = response.body().getCode();
                     if(code.equals("00000")){
                         navigationList=response.body().getData().getData();
-                        Log.i("===navigationList===", navigationList.toString());
                         set();
                         loadData(0);
                     }
@@ -145,14 +144,12 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         int createId = navigationList.get(position).getId();
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token","");
-        Log.i("=====queslib_score===", "createId：" + createId + "token = " + token);
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
         aClass.getSimulationData(createId, token).enqueue(new Callback<SimulationInfoBean>() {
             @Override
             public void onResponse(Call<SimulationInfoBean> call, Response<SimulationInfoBean> response) {
                 hideLoadingBar();
                 if(response !=null && response.body() !=null){
-                    Log.i("====loadData===", response.body().toString());
                     String code = response.body().getCode();
                     if("00000".equals(code)){
                         SimulationInfoBean.SimulationDataBean dataBean = response.body().getData();
