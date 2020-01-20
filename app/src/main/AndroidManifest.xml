@@ -192,6 +192,8 @@
         <activity android:name=".activities.WelcomeActivity" />
         <activity android:name=".activities.AuthorizationActivity" />
         <activity android:name=".activities.ChooseTopicActivity" /><!-- 添加题库 -->
+        <activity android:name=".activities.UpIdCardActivity"/><!-- 上传身份证正反面 -->
+        <activity android:name=".activities.UpdateCertificateActivity"/><!-- 上传学历证书 -->
         <activity
             android:name=".activities.NewMyChengJiActivity"
             android:exported="true" /> <!-- 分享 -->

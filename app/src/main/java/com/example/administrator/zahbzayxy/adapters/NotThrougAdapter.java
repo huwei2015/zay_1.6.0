@@ -50,6 +50,7 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
     @Override
     public void onBindViewHolder(ViewHodler holder, final int position) {
         holder.title.setText(througListBeans.get(position).getQuesLibName());
+        holder.tv_type.setText(througListBeans.get(position).getPackageName());
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,10 +65,11 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
     }
 
     static class ViewHodler extends RecyclerView.ViewHolder{
-        private TextView title;
+        private TextView title,tv_type;
         public ViewHodler(View itemView) {
             super(itemView);
             title =itemView.findViewById(R.id.title);
+            tv_type=itemView.findViewById(R.id.tv_title);
         }
     }
 }

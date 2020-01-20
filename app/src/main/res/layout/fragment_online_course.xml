@@ -5,17 +5,10 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
-        android:id="@+id/load_bar_layout_evaluating"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" />
-
     <com.example.administrator.zahbzayxy.utils.FixedIndicatorView
         android:id="@+id/singleTab_fixedIndicatorView"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:background="@color/white" />
 
@@ -29,6 +22,7 @@
         android:id="@+id/on_line_select_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:visibility="gone"
         android:background="@color/white"
         android:orientation="horizontal">
 
@@ -69,17 +63,25 @@
             android:src="@mipmap/add_topic" />
     </RelativeLayout>
 
-    <com.androidkun.PullToRefreshRecyclerView
-        android:id="@+id/recyclerview"
+    <LinearLayout
+        android:id="@+id/ll_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/buyCar_container"
-        android:background="@color/light_Gray"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </FrameLayout>
+        <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+            android:id="@+id/load_bar_layout_evaluating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <com.androidkun.PullToRefreshRecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/light_Gray"
+            android:dividerHeight="10dp" />
+    </LinearLayout>
+    <include layout="@layout/layout_empty_view" />
 </LinearLayout>

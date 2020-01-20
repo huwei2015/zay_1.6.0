@@ -44,6 +44,7 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
     private int pageSize =10;
     private RelativeLayout rl_empty;
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
+    private int id;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,10 +62,10 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
 
     private void initData(){
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        userInfoInterface.getQuestionData(currenPage,pageSize,301,"1",token).enqueue(new Callback<NotThroughBean>() {
+        userInfoInterface.getQuestionData(currenPage,pageSize,id,"1",token).enqueue(new Callback<NotThroughBean>() {
             @Override
             public void onResponse(Call<NotThroughBean> call, Response<NotThroughBean> response) {
-                if(response !=null && response.body() !=null && response.body().getData().getqLibs().getData().size() > 0){
+                if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
                         emptyLayout(true);
@@ -138,5 +139,8 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
             rl_empty.setVisibility(View.VISIBLE);
             pullToRefreshRecyclerView.setVisibility(View.GONE);
         }
+    }
+    public void setParamse(int  id){
+        this.id =id;
     }
 }

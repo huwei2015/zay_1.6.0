@@ -76,6 +76,16 @@ public class SimulationInfoBean implements Serializable {
 
         private String packageName;
         private String quesLibName;
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
         private int passScore;
         private int viewScoreLine;
         private int quesLibId;

@@ -51,15 +51,14 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private List<LearnNavigationBean.LearnListBean>navigationList=new ArrayList<>();
     private LearnOnlineCourseAdapter learnOnlineCourseAdapter;
     private PullToRefreshRecyclerView recyclerview;
-    private TextView tv_addTopic;
+    private TextView tv_addTopic,on_line_filter_course_check;
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
     private int mLearnType = 0;
     private OnLineManager mOnLineManager;
     private OffLineCourseManager mOffLineManager;
     private CheckBox mFilterCb;
-    private View mOneView;
+    private View mOneView,on_line_view_one;
     private RelativeLayout mSelectLayout;
-    private FrameLayout mFrameLayout;
     private boolean mLoadView = false;
 
     @Override
@@ -74,15 +73,15 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         view=inflater.inflate(R.layout.fragment_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
-        mFrameLayout = view.findViewById(R.id.buyCar_container);
         recyclerview =view.findViewById(R.id.recyclerview);
         tv_addTopic=view.findViewById(R.id.tv_chooseTopic);//选择题库
+        on_line_filter_course_check=view.findViewById(R.id.on_line_filter_course_check);//过滤
+        on_line_view_one=view.findViewById(R.id.on_line_view_one);//分割线
         mFilterCb = view.findViewById(R.id.on_line_filter_course_check);
         mOneView = view.findViewById(R.id.on_line_view_one);
         mSelectLayout = view.findViewById(R.id.on_line_select_layout);
         tv_addTopic.setOnClickListener(this);
         img_add=view.findViewById(R.id.img_add);//添加题库
-        mFrameLayout.setVisibility(View.GONE);
         img_add.setOnClickListener(this);
             mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
             mOffLineManager = new OffLineCourseManager(context, recyclerview);
@@ -108,6 +107,9 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
         if (mLearnType == 0 && mOnLineManager != null) {
             mOnLineManager.loadDAta(0);
             tv_addTopic.setVisibility(View.GONE);
+//            on_line_filter_course_check.setVisibility(View.GONE);
+//            img_add.setVisibility(View.GONE);
+//            on_line_view_one.setVisibility(View.GONE);
         } else if (mLearnType == 1 && mOnLineManager != null){
             mOnLineManager.loadDAta(1);
             tv_addTopic.setVisibility(View.GONE);

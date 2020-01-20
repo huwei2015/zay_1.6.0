@@ -88,6 +88,24 @@ public class UserInfoBean {
         private String occupaName;//职业名称
         private String workTypeName;//工种名称
         private String occupaSkillLevel;//职业技能等级
+        private String eduCerPath;//学历证书
+        private String idCardPath;//身份证
+
+        public String getEduCerPath() {
+            return eduCerPath;
+        }
+
+        public void setEduCerPath(String eduCerPath) {
+            this.eduCerPath = eduCerPath;
+        }
+
+        public String getIdCardPath() {
+            return idCardPath;
+        }
+
+        public void setIdCardPath(String idCardPath) {
+            this.idCardPath = idCardPath;
+        }
 
         public String getOccupaName() {
             return occupaName;

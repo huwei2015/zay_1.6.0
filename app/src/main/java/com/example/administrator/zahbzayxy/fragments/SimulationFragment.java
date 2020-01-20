@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
+import com.example.administrator.zahbzayxy.activities.NewMyChengJiActivity;
 import com.example.administrator.zahbzayxy.activities.PLookCuoTiActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.SearchTestActivity;
@@ -61,9 +62,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private ProgressBarLayout mLoadingBar;
     private Context mContext;
     private BarChart mChart;
-    private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search;
+    private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search,ll_text;
     private String token;
-    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv;
+    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,tv_more;
     private ImageView img_add, mScoreSimpleImg;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
@@ -72,7 +73,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private int packageId;
     private String quesLibName;
     private int mLoadDataPosition;
-
+    int createId;//导航id
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -89,7 +90,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mPassScoreTv = view.findViewById(R.id.text_score);
         mPassCountTv = view.findViewById(R.id.text_account);
         mScoreSimpleImg = view.findViewById(R.id.simulation_score_simple_im);
-
+        tv_questionName=view.findViewById(R.id.tv_questionName);//题库类型
+        ll_text=view.findViewById(R.id.ll_text);
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             loadData(position);
@@ -142,7 +144,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         if (navigationList == null || navigationList.size() == 0 || position >= navigationList.size()) {
             return;
         }
-        int createId = navigationList.get(position).getId();
+        createId = navigationList.get(position).getId();
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token","");
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
@@ -161,16 +163,25 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             String quesLibName = quesLib.getQuesLibName();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
+                            tv_questionName.setText(quesLib.getPackageName());//题库类型
                             // 题库设置的及格分数
                             mPassScoreTv.setText(quesLib.getPassScore() + "");
                             // 及格次数
                             mPassCountTv.setText(dataBean.getPassNum() + "");
+                            //题库套餐id
+                            packageId = quesLib.getQuesLibPackageId();
+                            //题库id
+                            quesLibId = quesLib.getQuesLibId();
+                            //用户题库id
+                            userLibId = quesLib.getId();
                             if (scoreLine == 0) {
                                 mScoreSimpleImg.setVisibility(View.VISIBLE);
                                 mChart.setVisibility(View.GONE);
+                                ll_text.setVisibility(View.GONE);
                             } else {
                                 mScoreSimpleImg.setVisibility(View.GONE);
                                 mChart.setVisibility(View.VISIBLE);
+                                ll_text.setVisibility(View.VISIBLE);
                                 // 分数的集合
                                 List<SimulationInfoBean.StatScore> scoreList = dataBean.getStatScore();
                                 if (scoreList == null) scoreList = new ArrayList<>();
@@ -208,6 +219,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mChart.setDrawBarShadow(false);
         mChart.setDrawGridBackground(false);
         mChart.setExtraBottomOffset(15f);//整体剧底边15f
+        tv_more=view.findViewById(R.id.tv_more);//模考-更多
+        tv_more.setOnClickListener(this);
     }
 
     /**
@@ -247,30 +260,31 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()){
             case R.id.ll_practice://顺序练习
-                Intent intentPractice = new Intent(getActivity(), TestPracticeAcivity.class);
+                intent = new Intent(getActivity(), TestPracticeAcivity.class);
                 Bundle bundlePractice = new Bundle();
                 bundlePractice.putInt("quesLibId", quesLibId);
                 bundlePractice.putString("paperName", quesLibName);
                 bundlePractice.putInt("packageId", packageId);
                 bundlePractice.putInt("userLibId",userLibId);
                 Log.e("aaaaaaaaaquslibslid", quesLibId + "");
-                intentPractice.putExtras(bundlePractice);
-                startActivity(intentPractice);
+                intent.putExtras(bundlePractice);
+                startActivity(intent);
                 break;
             case R.id.ll_erropic://我的错题
-                Intent intent1 = new Intent(getActivity(), PLookCuoTiActivity.class);
+                intent = new Intent(getActivity(), PLookCuoTiActivity.class);
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("quesLibId", quesLibId);
                 bundle1.putInt("userLibId", userLibId);
                 bundle1.putInt("packageId", packageId);
                 Log.e("qusLibsId", String.valueOf(quesLibId) + ",1111," + userLibId + "," + packageId);
-                intent1.putExtras(bundle1);
-                startActivity(intent1);
+                intent.putExtras(bundle1);
+                startActivity(intent);
                 break;
             case R.id.ll_exam://模拟考试
-                Intent intent = new Intent(getActivity(), TestContentActivity1.class);
+                intent = new Intent(getActivity(), TestContentActivity1.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("quesLibId", quesLibId);
                 bundle.putInt("userLibId", userLibId);
@@ -279,17 +293,22 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_search://快速搜题
-                Intent searchIntent = new Intent(getActivity(), SearchTestActivity.class);
+                intent = new Intent(getActivity(), SearchTestActivity.class);
                 Bundle searchBundle = new Bundle();
                 searchBundle.putInt("quesLibId", quesLibId);
-                searchIntent.putExtras(searchBundle);
-                startActivity(searchIntent);
+                intent.putExtras(searchBundle);
+                startActivity(intent);
                 break;
             case R.id.tv_choose://选择题库
-                startActivity(new Intent(getActivity(),ChooseTopicActivity.class));
+                intent = new Intent(getActivity(),ChooseTopicActivity.class);
+                intent.putExtra("id",String.valueOf(createId));
+                startActivity(intent);
                 break;
             case R.id.img_add:
                 startActivity(new Intent(getActivity(), QueslibActivity.class));
+                break;
+            case R.id.tv_more://模考题库-更多
+                startActivity(new Intent(getActivity(), NewMyChengJiActivity.class));
                 break;
         }
     }

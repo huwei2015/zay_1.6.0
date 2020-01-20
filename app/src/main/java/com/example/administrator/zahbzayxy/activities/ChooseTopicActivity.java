@@ -30,6 +30,7 @@ public class ChooseTopicActivity extends BaseActivity {
     private List<Fragment>learnVPList;
     private LessonFragmentPageAdapter pagerAdapter;
     private ImageView img_back;
+    private String question_id;//题库id
     FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class ChooseTopicActivity extends BaseActivity {
     }
 
     private void initView() {
+        question_id=getIntent().getStringExtra("id");
         learnTabLayout= (TabLayout) findViewById(R.id.chooseTop_tab);
         learnViewPager= (ViewPager) findViewById(R.id.chooseTop_vp);
         img_back= (ImageView) findViewById(R.id.myChengJiBack_iv);
@@ -58,6 +60,8 @@ public class ChooseTopicActivity extends BaseActivity {
         learnTabList.add("已过期");
         ChooseNoThroughFragment chooseNoThroughFragment=new ChooseNoThroughFragment();
         ChooseThroughFragment chooseThroughFragment=new ChooseThroughFragment();
+        chooseNoThroughFragment.setParamse(Integer.parseInt(question_id));//传值
+        chooseThroughFragment.setParamse(Integer.parseInt(question_id));
         learnVPList.add(chooseNoThroughFragment);
         learnVPList.add(chooseThroughFragment);
         fragmentManager=getSupportFragmentManager();

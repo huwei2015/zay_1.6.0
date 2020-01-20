@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +65,8 @@ public class OnLineManager implements PullToRefreshListener {
     private int mCourseType = 0;
     private View emptyView;
     private TextView tv_msg;
-
+    LinearLayout ll_list;
+    private RelativeLayout rl_empty;
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
         this.mContext = context;
@@ -105,6 +108,8 @@ public class OnLineManager implements PullToRefreshListener {
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         tv_msg = emptyView.findViewById(R.id.tv_msg);
+        ll_list = emptyView.findViewById(R.id.ll_list);
+        rl_empty= emptyView.findViewById(R.id.rl_empty_layout);
         mRefreshRecyclerView.setEmptyView(emptyView);
 
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
@@ -119,9 +124,9 @@ public class OnLineManager implements PullToRefreshListener {
     private void isVisible(boolean flag) {
         if (flag) {
             mRefreshRecyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+            rl_empty.setVisibility(View.GONE);
         } else {
-            emptyView.setVisibility(View.VISIBLE);
+            rl_empty.setVisibility(View.VISIBLE);
             mRefreshRecyclerView.setVisibility(View.GONE);
             tv_msg.setText("暂无课程信息");
         }
@@ -232,8 +237,8 @@ public class OnLineManager implements PullToRefreshListener {
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
                         if (mLearnList == null || mLearnList.size() == 0) {
-                            hideLoadingBar();
                             isVisible(false);
+                            hideLoadingBar();
                             return;
                         } else {
                             isVisible(true);
@@ -241,6 +246,8 @@ public class OnLineManager implements PullToRefreshListener {
                         setTitle();
                         setCourseList(mPosition, mFilterCb.isChecked()?1:0);
                         return;
+                    }else{
+                        isVisible(false);
                     }
                 }
                 hideLoadingBar();

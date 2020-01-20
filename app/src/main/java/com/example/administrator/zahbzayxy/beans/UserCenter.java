@@ -50,7 +50,6 @@ public class UserCenter {
         private String userLevelStr;
         private int messageNum;
         private boolean agreementAdmin;
-
         public String getUserName() {
             return userName;
         }

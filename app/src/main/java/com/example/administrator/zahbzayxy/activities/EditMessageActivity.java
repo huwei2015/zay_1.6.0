@@ -77,7 +77,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
     private String phone;
     private RelativeLayout headPhoto_layout, nickName_layout, nameSet_layout, sexSet_layout, personId_layout,
             phone_layout, gangWei_layout, danWei_layout, changPw_layout, culture_layout, one_inch_layout,work_layout;
-    private RelativeLayout faceRecognitionLayout,professional_layout,type_layout,skills_layout;
+    private RelativeLayout faceRecognitionLayout,professional_layout,type_layout,skills_layout,idCard,culture_layout_copy;
     Dialog dialog;
     //获取到的token
     private String token;
@@ -88,7 +88,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
     private int educationalLevel;
     private String culture;
     private RelativeLayout cancle;
-    private ImageView headPhoto_iv, finish_iv, faceIdentifyIV, one_inch_view;
+    private ImageView headPhoto_iv, finish_iv, faceIdentifyIV, one_inch_view,eduCer_inch_view;
     private boolean isLogin;
     private String path;
 
@@ -102,7 +102,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
     private byte[] bitmapByte;
     private Bitmap bmp1;
     private String oneInchPhoto;
-
+    private String eduCerPath;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_message);
@@ -149,6 +149,9 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
         tv_type= (TextView) findViewById(R.id.tv_type);//输入工种名称
         skills_layout= (RelativeLayout) findViewById(R.id.skills_layout);//职业技能等级
         tv_skills= (TextView) findViewById(R.id.tv_skills);//输入职业技能等级
+        eduCer_inch_view= (ImageView) findViewById(R.id.eduCer_inch_view);
+//        idCard= (RelativeLayout) findViewById(R.id.idCard);
+        culture_layout_copy= (RelativeLayout) findViewById(R.id.culture_layout_copy);//上传证书
         /**********************FHS Start******************/
         //人脸对比照片
         faceRecognitionLayout = (RelativeLayout) findViewById(R.id.face_recognition_layout);
@@ -181,6 +184,8 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
         professional_layout.setOnClickListener(this);
         type_layout.setOnClickListener(this);
         skills_layout.setOnClickListener(this);
+//        idCard.setOnClickListener(this);
+        culture_layout_copy.setOnClickListener(this);
         finish_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,7 +288,11 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
                         if (!TextUtils.isEmpty(oneInchPhoto)) {
                             Picasso.with(EditMessageActivity.this).load(oneInchPhoto).into(one_inch_view);
                         }
-
+                        //学历证书
+                        eduCerPath = data.getEduCerPath();
+                        if(!TextUtils.isEmpty(eduCerPath)){
+                            Picasso.with(EditMessageActivity.this).load(eduCerPath).into(eduCer_inch_view);
+                        }
                         String quarters = data.getQuarters();//岗位
                         if (!TextUtils.isEmpty(quarters)) {
                             gangWei_tv.setText(quarters);
@@ -440,6 +449,14 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
             case R.id.skills_layout:
                 intent = new Intent(EditMessageActivity.this,SkillsActivity.class);
                 startActivityForResult(intent, 13);
+                break;
+//            case R.id.idCard://上传身份证正反面
+//                intent = new Intent(EditMessageActivity.this,UpIdCardActivity.class);
+//                startActivityForResult(intent,14);
+//                break;
+            case R.id.culture_layout_copy://上传学历证书
+                intent = new Intent(EditMessageActivity.this,UpdateCertificateActivity.class);
+                startActivityForResult(intent,15);
                 break;
         }
     }
@@ -801,6 +818,8 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
                     String occupaSkillLevel=data.getStringExtra("occupaSkillLevel");
                     tv_skills.setText(occupaSkillLevel);
                     break;
+                case 15://学历证书
+                    data.getStringExtra("");
                 default:
                     break;
             }

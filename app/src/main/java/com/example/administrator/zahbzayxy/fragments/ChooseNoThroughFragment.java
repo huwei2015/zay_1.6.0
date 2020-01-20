@@ -53,6 +53,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     TextView tv_msg;
     LinearLayout ll_list;
     private ProgressBarLayout mLoadingBar;
+    private int id;
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
 
     @Nullable
@@ -73,12 +74,13 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     private void initData(){
         showLoadingBar(false);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        userInfoInterface.getQuestionData(currenPage,pageSize,301,"0",token).enqueue(new Callback<NotThroughBean>() {
+        userInfoInterface.getQuestionData(currenPage,pageSize,id,"0",token).enqueue(new Callback<NotThroughBean>() {
             @Override
             public void onResponse(Call<NotThroughBean> call, Response<NotThroughBean> response) {
                         if(response !=null && response.body() !=null){
                             String code = response.body().getCode();
                             if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
+                                hideLoadingBar();
                                 emptyLayout(true);
                                 List<NotThroughBean.THrougListData> data = response.body().getData().getqLibs().getData();
                                 notPassListBeans.addAll(data);
@@ -117,7 +119,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
         //设置是否显示上次刷新时间
         pullToRefreshRecyclerView.displayLastRefreshTime(true);
         //是否开启上拉加载
-        pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
+        pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
         //是否开启上拉刷新
         pullToRefreshRecyclerView.setPullRefreshEnabled(false);
         //设置刷新回调
@@ -164,5 +166,9 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
 
     public void hideLoadingBar() {
         mLoadingBar.hide();
+    }
+
+    public void setParamse(int  id){
+        this.id =id;
     }
 }

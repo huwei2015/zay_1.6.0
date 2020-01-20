@@ -15,6 +15,7 @@ import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.TimeData;
+import com.example.administrator.zahbzayxy.beans.UpBean;
 import com.example.administrator.zahbzayxy.beans.UpdateBean;
 import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
@@ -170,4 +171,16 @@ public interface UserInfoInterface {
                                   @Query("pageSize") int pageSize,
                                   @Query("isScorePass") int isScorePass,
                                   @Query("token") String token);
+    //学历证书上传
+    static final String certificate = "/userCenter/uploadEduCer";
+    @Multipart
+    @POST(value = certificate)
+    Call<UpBean> getCertificateData(@Part MultipartBody.Part oneInchPhoto,
+                                    @Query("token") String token);
+    //上传身份正反面
+    static final String up_idcard ="/userCenter/uploadIdCard";
+    @Multipart
+    @POST(value = up_idcard)
+    Call<UpBean> getIdCardData(@Part MultipartBody.Part oneInchPhoto,
+                          @Query("token") String token);
 }
