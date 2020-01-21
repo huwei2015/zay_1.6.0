@@ -29,6 +29,7 @@ import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.StickyGridAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestContentAdapter;
 import com.example.administrator.zahbzayxy.beans.GridItem;
+import com.example.administrator.zahbzayxy.beans.NewTestContentBean;
 import com.example.administrator.zahbzayxy.beans.TestCommitBean;
 import com.example.administrator.zahbzayxy.beans.TestContentBean;
 import com.example.administrator.zahbzayxy.beans.TestResultBean;
@@ -67,7 +68,7 @@ public class TestContentActivity1 extends BaseActivity {
     PopupWindow window;
     private ImageView back_tset_iv;
     //请求结果的list
-    List<TestContentBean.DataBean.QuesDataBean> totalList = new ArrayList<>();
+    List<NewTestContentBean.DataBean.QuesDataBean> totalList = new ArrayList<>();
     //查看结果的list
     private static List<TestResultBean.ExamDetailsBean> listResult = new ArrayList<>();
     //保存用户成绩的list
@@ -94,6 +95,9 @@ public class TestContentActivity1 extends BaseActivity {
     private int singleScore;
     private int multipleScore;
     private int judgeScore;
+    private int factScore;
+    private int notFactScore;
+    private int shortScore;
     private int totalScore;
     private AutoScrollTextView testName;
     private int examTime;
@@ -171,25 +175,35 @@ public class TestContentActivity1 extends BaseActivity {
 
     private void initDownLoadData() {
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        Call<TestContentBean> testContentData = aClass.getTestContentData(userLibId, quesLibId, token,examType);
-        testContentData.enqueue(new Callback<TestContentBean>() {
+        Call<NewTestContentBean> testContentData = aClass.getNewTestContentData(userLibId, quesLibId, token,examType);
+        testContentData.enqueue(new Callback<NewTestContentBean>() {
             private int quesId;
             private int passScore;
+            // 单选分数
             private int singleScoreTotal;
+            // 多选分数
             private int multipleScoreTotal;
+            // 判断题分数
             private int judgeScoreTotal;
-            private int singleNum, multiNum, jungeNum;
+            // 主观案例
+            private int factScoreTotal;
+            // 客观案例
+            private int notFactScoreTotal;
+            // 简答题
+            private int shortScoreTotal;
+
+            private int singleNum, multiNum, jungeNum, zhuNUm, keNum, shortNum;
 
             @Override
             @SuppressLint("HandlerLeak")
-            public void onResponse(Call<TestContentBean> call, Response<TestContentBean> response) {
+            public void onResponse(Call<NewTestContentBean> call, Response<NewTestContentBean> response) {
                 String s = new Gson().toJson(response);
                 Log.e("response", s);
-                TestContentBean body = response.body();
+                NewTestContentBean body = response.body();
                 if (response != null & body != null) {
                     String s2 = new Gson().toJson(response.toString());
                     Log.e("testContent", s);
-                    TestContentBean.DataBean data = body.getData();
+                    NewTestContentBean.DataBean data = body.getData();
                     String code = body.getCode();
                     if (code.equals("99999")) {
                         Toast.makeText(TestContentActivity1.this, "系统异常", Toast.LENGTH_SHORT).show();
@@ -206,7 +220,11 @@ public class TestContentActivity1 extends BaseActivity {
                         judgeScoreTotal = data.getJudgeScore();
                         multipleScoreTotal = data.getMultipleScore();
                         singleScoreTotal = data.getSingleScore();
+                        factScoreTotal = data.getFactScore();
+                        notFactScoreTotal = data.getNotFactScore();
+                        shortScoreTotal = data.getShortScore();
                         putNewExamScoreId = data.getExamScoreId();
+
                         Log.e("体型分数aaaaaaa", judgeScoreTotal + multipleScoreTotal + singleScoreTotal + "");
                         paperName = data.getPaperName();
                         if (!TextUtils.isEmpty(paperName)) {
@@ -253,12 +271,13 @@ public class TestContentActivity1 extends BaseActivity {
                         //  shengyu=examTime;
                         String s1 = new Gson().toJson(body);
                         Log.e("getTestData", s1);
-                        List<TestContentBean.DataBean.QuesDataBean> quesData = body.getData().getQuesData();
+                        List<NewTestContentBean.DataBean.QuesDataBean> quesData = body.getData().getQuesData();
                         size = quesData.size();
                         if (size > 0) {
                             dijige.setText((position + 1) + "/" + size);
                         }
                         //先求得每种题型的个数
+                        // quesType 1、单选 2、多选 3、判断 4、主管案例 5、客观案例 6、简单题
                         listToPost.clear();
                         for (int i = 0; i < size; i++) {
                             int quesType = quesData.get(i).getQuesType();
@@ -267,8 +286,14 @@ public class TestContentActivity1 extends BaseActivity {
                                 singleNum++;
                             } else if (quesType == 2) {
                                 multiNum++;
-                            } else {
+                            } else if (quesType == 3) {
                                 jungeNum++;
+                            } else if (quesType == 4) {
+                                zhuNUm++;
+                            } else if (quesType == 5) {
+                                keNum++;
+                            } else if (quesType == 6) {
+                                shortNum++;
                             }
 
                             //提交给服务端的做题结果
@@ -289,6 +314,16 @@ public class TestContentActivity1 extends BaseActivity {
                         if (judgeScoreTotal > 0 & jungeNum != 0) {
                             judgeScore = judgeScoreTotal / jungeNum;
                         }
+                        if (factScoreTotal > 0 && zhuNUm != 0) {
+                            factScore = factScoreTotal / zhuNUm;
+                        }
+                        if (notFactScoreTotal > 0 && keNum != 0) {
+                            notFactScore = notFactScoreTotal / keNum;
+                        }
+                        if (shortScoreTotal > 0 && shortNum != 0) {
+                            shortScore = shortScoreTotal / shortNum;
+                        }
+
 
                         //提交结果的list
                         listResult.clear();
@@ -305,13 +340,16 @@ public class TestContentActivity1 extends BaseActivity {
                         madapter.setJudgeScore(judgeScore);
                         madapter.setMultipleScore(multipleScore);
                         madapter.setSingleScore(singleScore);
+                        madapter.setFactScore(factScore);
+                        madapter.setNotFactScore(notFactScore);
+                        madapter.setShortScore(shortScore);
                         madapter.notifyDataSetChanged();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<TestContentBean> call, Throwable t) {
+            public void onFailure(Call<NewTestContentBean> call, Throwable t) {
                 String msg = t.getMessage();
                 Toast.makeText(TestContentActivity1.this, msg, Toast.LENGTH_SHORT).show();
             }
@@ -614,6 +652,24 @@ public class TestContentActivity1 extends BaseActivity {
                         toLeft_tv.setVisibility(View.VISIBLE);
                         toRight_tv.setVisibility(View.VISIBLE);
                         position = position - 1;
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition == 1){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                madapter.setChildPosition(childPosition - 2);
+                                position += 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition == 1){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                madapter.setKeChildPosition(kePosition - 2);
+                                position += 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         dijige.setText((position + 1) + "/" + size);
                         madapter.notifyDataSetChanged();
@@ -625,6 +681,23 @@ public class TestContentActivity1 extends BaseActivity {
                         toLeft_tv.setVisibility(View.VISIBLE);
                         toRight_tv.setVisibility(View.VISIBLE);
                         position = position + 1;
+                        Log.i("=====adapter====", "rightButton setUp");
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         dijige.setText((position + 1) + "/" + size);
                         madapter.notifyDataSetChanged();
@@ -643,6 +716,24 @@ public class TestContentActivity1 extends BaseActivity {
                 //左
                 toLeft_tv.setVisibility(View.VISIBLE);
                 position = position - 1;
+                int childPosition = madapter.getChildPosition();
+                if (childPosition >= 0) {
+                    if (childPosition == 1){
+                        madapter.setChildPosition(-1);
+                    } else {
+                        madapter.setChildPosition(childPosition - 2);
+                        position += 1;
+                    }
+                }
+                int kePosition = madapter.getKeChildPosition();
+                if (kePosition >= 0) {
+                    if (kePosition == 1){
+                        madapter.setKeChildPosition(-1);
+                    } else {
+                        madapter.setKeChildPosition(kePosition - 2);
+                        position += 1;
+                    }
+                }
                 recyclerview.scrollToPosition(position);
                 dijige.setText((position + 1) + "/" + size);
                 madapter.notifyDataSetChanged();
@@ -661,7 +752,24 @@ public class TestContentActivity1 extends BaseActivity {
             if (position < size - 1) {
                 toRight_tv.setVisibility(View.VISIBLE);
                 toLeft_tv.setVisibility(View.VISIBLE);
+                Log.i("=====adapter====", "rightButton click");
                 position = position + 1;
+                int childPosition = madapter.getChildPosition();
+                if (childPosition >= 0) {
+                    if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                        madapter.setChildPosition(-1);
+                    } else {
+                        position -= 1;
+                    }
+                }
+                int kePosition = madapter.getKeChildPosition();
+                if (kePosition >= 0) {
+                    if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                        madapter.setKeChildPosition(-1);
+                    } else {
+                        position -= 1;
+                    }
+                }
                 recyclerview.scrollToPosition(position);
                 dijige.setText((position + 1) + "/" + size);
             }
@@ -773,6 +881,9 @@ public class TestContentActivity1 extends BaseActivity {
         List<TestResultBean.ExamDetailsBean> oneList = new ArrayList<>();
         List<TestResultBean.ExamDetailsBean> twoList = new ArrayList<>();
         List<TestResultBean.ExamDetailsBean> threeList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> fourList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> fiveList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> sixList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             TestResultBean.ExamDetailsBean examDetailsBean = listToPost.get(i);
@@ -800,7 +911,7 @@ public class TestContentActivity1 extends BaseActivity {
                 }
                 twoList.add(examDetailsBean1);
 
-            } else {//判断
+            } else if (questionType == 3) {//判断
                 int j = i + 1;
                 TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
                 examDetailsBean1.setLocation(j);
@@ -811,15 +922,51 @@ public class TestContentActivity1 extends BaseActivity {
                 }
                 threeList.add(examDetailsBean1);
 
+            } else if (questionType == 4) {//主观案例题
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (!TextUtils.isEmpty(userAnswerIds)) {
+                    if (!userAnswerIds.equals("0")) {
+                        examDetailsBean1.setIsRight(1);
+                    }
+                }
+                fourList.add(examDetailsBean1);
+            } else if (questionType == 5) {//客观案例题
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (!TextUtils.isEmpty(userAnswerIds)) {
+                    if (!userAnswerIds.equals("0")) {
+                        examDetailsBean1.setIsRight(1);
+                    }
+                }
+                fiveList.add(examDetailsBean1);
+            } else if (questionType == 6) {//简答题
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (!TextUtils.isEmpty(userAnswerIds)) {
+                    if (!userAnswerIds.equals("0")) {
+                        examDetailsBean1.setIsRight(1);
+                    }
+                }
+                sixList.add(examDetailsBean1);
             }
         }
         List<GridItem> mGirdList = new ArrayList<GridItem>();
         GridItem item1 = null;
         GridItem item2 = null;
         GridItem item3 = null;
+        GridItem item4 = null;
+        GridItem item5 = null;
+        GridItem item6 = null;
         int size1 = oneList.size();
         int size2 = twoList.size();
         int size3 = threeList.size();
+        int size4 = fourList.size();
+        int size5 = fiveList.size();
+        int size6 = sixList.size();
         if (size1 > 0) {
             for (int i = 0; i < size1; i++) {
                 TestResultBean.ExamDetailsBean examDetailsBean = oneList.get(i);
@@ -848,6 +995,36 @@ public class TestContentActivity1 extends BaseActivity {
                 item3 = new GridItem(location + "," + isRight, i + "", 2, "判断", isRight);
                 Log.e("isRight", isRight + "判断,11111");
                 mGirdList.add(item3);
+            }
+        }
+        if (size4 > 0) {
+            for (int i = 0; i < size4; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = fourList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item4 = new GridItem(location + "," + isRight, i + "", 3, "主观案例题", isRight);
+                Log.e("isRight", isRight + "主观案例题,11111");
+                mGirdList.add(item4);
+            }
+        }
+        if (size5 > 0) {
+            for (int i = 0; i < size5; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = fiveList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item5 = new GridItem(location + "," + isRight, i + "", 4, "客观案例题", isRight);
+                Log.e("isRight", isRight + "客观案例题,11111");
+                mGirdList.add(item5);
+            }
+        }
+        if (size6 > 0) {
+            for (int i = 0; i < size6; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = sixList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item6 = new GridItem(location + "," + isRight, i + "", 5, "简答题", isRight);
+                Log.e("isRight", isRight + "客观案例题,11111");
+                mGirdList.add(item6);
             }
         }
         stickyGridAdapter = new StickyGridAdapter(TestContentActivity1.this, mGirdList, recyclerview, popUpWindow1, madapter, size, dijige);

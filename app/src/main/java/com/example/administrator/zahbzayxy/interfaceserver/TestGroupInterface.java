@@ -3,6 +3,7 @@ package com.example.administrator.zahbzayxy.interfaceserver;
 import com.example.administrator.zahbzayxy.beans.AllHaveDoTestBean;
 import com.example.administrator.zahbzayxy.beans.ExamResultBean;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
+import com.example.administrator.zahbzayxy.beans.NewTestContentBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCourseLearnBean;
 import com.example.administrator.zahbzayxy.beans.OnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.PrictaceErrorBean;
@@ -41,6 +42,7 @@ public interface TestGroupInterface {
     static final String testDetailPath="quesLib/quesLibDetail";
     static final String testIsBuyPath="quesLib/userIsBuy";
     static final String testContentPath="quesLib/examPaper_v1";
+    static final String testContentNewPath="quesLibAdd/examPaper_v1";
     static final String saveExamScorePath="userExam/saveExamScore";
     static final String testPracticePath="ques/syncQues";
     static final String testSubmitOrderPath="shopOrder/submitQuesLibOrder";
@@ -67,6 +69,12 @@ public interface TestGroupInterface {
                                             @Query("quesLibId")Integer quesLibId,
                                             @Query("token")String token,
                                             @Query("examType") int examType);
+    // TODO 取试卷增加新试题类型 新增接口
+    @GET(value=testContentNewPath)
+    Call<NewTestContentBean> getNewTestContentData(@Query("userLibId")Integer userLibId,
+                                                   @Query("quesLibId")Integer quesLibId,
+                                                   @Query("token")String token,
+                                                   @Query("examType") int examType);
 
 //保存用户成绩
     @FormUrlEncoded

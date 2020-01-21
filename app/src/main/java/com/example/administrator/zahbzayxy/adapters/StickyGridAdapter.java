@@ -108,6 +108,8 @@ public class StickyGridAdapter extends BaseAdapter implements
 
             public void onClick(View v) {
                 Integer integer = Integer.valueOf(s);
+                adapter.setChildPosition(-1);
+                adapter.setKeChildPosition(-1);
                 myRecyclerView.scrollToPosition(integer-1);
                 adapter.notifyDataSetChanged();
                 dijige.setText((integer)+"/"+numSize);
