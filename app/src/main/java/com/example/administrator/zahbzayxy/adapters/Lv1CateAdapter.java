@@ -39,11 +39,21 @@ public class Lv1CateAdapter extends RecyclerView.Adapter<Lv1CateAdapter.ViewHold
         public void setSelectedNum(int num);
     }
 
-    public Lv1CateAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context,RecyclerView gundongRV){
+    public void setOnClickListener(OnClickListener mOnClickListener) {
+        this.mOnClickListener = mOnClickListener;
+    }
+
+    public Lv1CateAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, RecyclerView gundongRV){
         this.lists=list;
         this.context=context;
         this.gundongRV=gundongRV;
         mOnClickListener = (OnClickListener) context;
+    }
+
+    public Lv1CateAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, RecyclerView gundongRV,int isFragment){
+        this.lists=list;
+        this.context=context;
+        this.gundongRV=gundongRV;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -1,6 +1,9 @@
 package com.example.administrator.zahbzayxy.databases;
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.example.administrator.zahbzayxy.beans.DaoMaster;
+import com.example.administrator.zahbzayxy.beans.DaoSession;
 import com.example.administrator.zahbzayxy.beans.SaveUserErrorDbBean;
 import com.example.administrator.zahbzayxy.beans.SaveUserErrorDbBeanDao;
 import org.greenrobot.greendao.query.Query;
