@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
@@ -13,6 +15,9 @@ android {
         versionCode 160
         versionName "1.6.0"
         multiDexEnabled true
+        //打包添加时间
+        def time = new SimpleDateFormat("yyyyMMdd").format(new Date())
+        setProperty("archivesBaseName", "liaocheng-$versionName-${time}")
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
         flavorDimensions "versionCode"
         javaCompileOptions {
@@ -85,12 +90,16 @@ android {
             storePassword "123456"
             keyAlias "zayxy"
             keyPassword "123456"
+            //禁用v2签名方式
+            v2SigningEnabled false
         }
         release {
             storeFile file("../keyStorePath.jks")
             storePassword "123456"
             keyAlias "zayxy"
             keyPassword "123456"
+            //禁用v2签名方式
+            v2SigningEnabled false
         }
     }
     compileOptions {

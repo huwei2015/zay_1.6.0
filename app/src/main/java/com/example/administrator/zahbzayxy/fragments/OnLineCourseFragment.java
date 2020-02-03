@@ -40,7 +40,7 @@ import java.util.List;
  * Time 16:28.
  * 学习在线课
  */
-public class OnLineCourseFragment extends Fragment implements PullToRefreshListener,View.OnClickListener{
+public class OnLineCourseFragment extends Fragment implements View.OnClickListener{
     private View view;
     private FixedIndicatorView fixedIndicatorView;
     private Context context;
@@ -60,7 +60,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
     private View mOneView,on_line_view_one;
     private RelativeLayout mSelectLayout;
     private boolean mLoadView = false;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -126,17 +125,6 @@ public class OnLineCourseFragment extends Fragment implements PullToRefreshListe
 
     public void setLearnType(int learnType) {
         this.mLearnType = learnType;
-    }
-
-
-    @Override
-    public void onRefresh() {
-
-    }
-
-    @Override
-    public void onLoadMore() {
-
     }
 
     @Override

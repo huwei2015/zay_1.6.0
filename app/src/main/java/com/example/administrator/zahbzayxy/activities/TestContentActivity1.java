@@ -806,8 +806,8 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        shengyu = 0;
-        stopThread = true;
+//        shengyu = 0;
+//        stopThread = true;
         Log.e("isdestroy", shengyu + "stop," + shengyu);
     }
 
