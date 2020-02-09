@@ -92,6 +92,11 @@ public class NavBooksFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_books,container,false);
         initView();
         getSP();
+        isInit=true;
+        return view;
+    }
+
+    public void getData(){
         adapter = new BooksAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
@@ -99,7 +104,7 @@ public class NavBooksFragment extends Fragment{
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList, mContext,gundongRV,1);//初始化适配器
+        cateAdapter=new Lv1CateAdapter(catesList, mContext,gundongRV,1,cateId);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
         downLoadCatesData();
         cateAdapter.setOnClickListener(new Lv1CateAdapter.OnClickListener() {
@@ -111,7 +116,6 @@ public class NavBooksFragment extends Fragment{
                 downLoadData(1);
             }
         });
-        return view;
     }
 
     private void initPullToRefreshLv() {
@@ -266,6 +270,7 @@ public class NavBooksFragment extends Fragment{
         recommedn_back_iv = view.findViewById(R.id.recommedn_back_iv);
         recLv = view.findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
+        rl_empty.setVisibility(View.GONE);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
 
@@ -417,6 +422,22 @@ public class NavBooksFragment extends Fragment{
                 }
                 break;
             default:break;
+        }
+    }
+
+    private static boolean isInit=false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser  && isInit){
+            totalList.clear();
+            catesList.clear();
+            cateId=0;
+            s_cateId=0;
+            isNew=null;
+            getData();
+        }else{
+            isInit = false;
         }
     }
 }

@@ -25,33 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
-import com.example.administrator.zahbzayxy.activities.NewMyChengJiActivity;
-import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
-import com.example.administrator.zahbzayxy.activities.PLookCuoTiActivity;
-import com.example.administrator.zahbzayxy.activities.QueslibActivity;
-import com.example.administrator.zahbzayxy.activities.SearchTestActivity;
 import com.example.administrator.zahbzayxy.activities.SelectClassifyActivity;
-import com.example.administrator.zahbzayxy.activities.TestContentActivity1;
-import com.example.administrator.zahbzayxy.activities.TestPracticeAcivity;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnlineCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.SimulationAdapter;
 import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
-import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
-import com.example.administrator.zahbzayxy.beans.SimulationBean;
-import com.example.administrator.zahbzayxy.beans.SimulationInfoBean;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
-import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
-import com.example.administrator.zahbzayxy.utils.BarChartManager;
-import com.example.administrator.zahbzayxy.utils.ColorBar;
-import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ScreenUtil;
-import com.example.administrator.zahbzayxy.utils.ToastUtils;
-import com.github.mikephil.charting.charts.BarChart;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -111,6 +93,11 @@ public class NavOnlineCourseFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_online_course,container,false);
         initView();
         getSP();
+        isInit=true;//设置已经
+        return view;
+    }
+
+    public void getData(){
         adapter = new OnlineCourseAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
@@ -118,7 +105,7 @@ public class NavOnlineCourseFragment extends Fragment{
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList,mContext,gundongRV,1);//初始化适配器
+        cateAdapter=new Lv1CateAdapter(catesList,mContext,gundongRV,1,cateId);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
         downLoadCatesData();
         cateAdapter.setOnClickListener(new Lv1CateAdapter.OnClickListener() {
@@ -130,8 +117,8 @@ public class NavOnlineCourseFragment extends Fragment{
                 downLoadData(1);
             }
         });
-        return view;
     }
+
     private void initPullToRefreshLv() {
 
         recLv.setMode(PullToRefreshBase.Mode.BOTH);
@@ -288,6 +275,7 @@ public class NavOnlineCourseFragment extends Fragment{
         gundongRV =  view.findViewById(R.id.gundongRV);
         recLv =  view.findViewById(R.id.recLv);
         rl_empty =  view.findViewById(R.id.rl_empty_layout);
+        rl_empty.setVisibility(View.GONE);
         sel_classifyTV =  view.findViewById(R.id.sel_classify);
         recommedn_back_iv=view.findViewById(R.id.recommedn_back_iv);
         top_layout=view.findViewById(R.id.top_layout);
@@ -518,6 +506,7 @@ public class NavOnlineCourseFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        onCreate(null);
     }
 
     @Override
@@ -532,6 +521,25 @@ public class NavOnlineCourseFragment extends Fragment{
                 }
                 break;
             default:break;
+        }
+    }
+
+    private static boolean isInit=false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.i("==============-----",isVisibleToUser+"======"+cateId+"======="+s_cateId);
+        if (isVisibleToUser  && isInit){
+            totalList.clear();
+            catesList.clear();
+            cateId=0;
+            s_cateId=0;
+            isRecommend=null;
+            isTrailers=null;
+            isNew=null;
+            getData();
+        }else{
+            isInit = false;
         }
     }
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
@@ -32,9 +33,9 @@ public class NewHomeFragment extends Fragment {
     private List<Fragment>homeVPList;
     private HomeFragmentAdapter pagerAdapter;
     FragmentManager fragmentManager;
-    Context context;
 
     private ImageView scanCodeIV;
+    private RelativeLayout indexNav;
 
     @Nullable
     @Override
@@ -52,12 +53,13 @@ public class NewHomeFragment extends Fragment {
         scanCodeIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, ScanQRCodeActivity.class);
+                Intent intent=new Intent(view.getContext(), ScanQRCodeActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
-                context.startActivity(intent);
+                view.getContext().startActivity(intent);
             }
         });
+        indexNav=view.findViewById(R.id.indexNav);
     }
     private void initViewPagerAndTable() {
         homeTabList=new ArrayList<>();
@@ -69,6 +71,7 @@ public class NewHomeFragment extends Fragment {
         homeTabList.add("题库");
         homeTabList.add("书籍");
         NavIndexFragment nv1=new NavIndexFragment();
+        nv1.setNavIndexFragment(indexNav);
         NavOnlineCourseFragment nv2=new NavOnlineCourseFragment();
         NavOfflineCourseFragment nv3=new NavOfflineCourseFragment();
         NavLiveCourseFragment nv4=new NavLiveCourseFragment();

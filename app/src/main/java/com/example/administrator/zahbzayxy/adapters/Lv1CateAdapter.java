@@ -50,10 +50,11 @@ public class Lv1CateAdapter extends RecyclerView.Adapter<Lv1CateAdapter.ViewHold
         mOnClickListener = (OnClickListener) context;
     }
 
-    public Lv1CateAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, RecyclerView gundongRV,int isFragment){
+    public Lv1CateAdapter(List<CourseCatesBean.DataBean.Cates> list, Context context, RecyclerView gundongRV,int isFragment,int cateId){
         this.lists=list;
         this.context=context;
         this.gundongRV=gundongRV;
+        this.cateId=cateId;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -106,6 +107,12 @@ public class Lv1CateAdapter extends RecyclerView.Adapter<Lv1CateAdapter.ViewHold
         holder.recyText.setText(lists.get(position).getCateName());
         holder.recyText.setStr("0");
         holder.recyText.setDataId(lists.get(position).getId());
+        if(lists.get(position).getId()==cateId){
+            Drawable drawableLeft = context.getResources().getDrawable(
+                    R.mipmap.catelv1_sel);
+            holder.recyText.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawableLeft);
+            holder.recyText.setTextColor(context.getResources().getColor(R.color.shikan_text_color));
+        }
     }
 
     @Override

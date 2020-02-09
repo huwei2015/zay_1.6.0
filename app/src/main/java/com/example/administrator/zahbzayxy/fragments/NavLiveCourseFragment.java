@@ -91,10 +91,14 @@ public class NavLiveCourseFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_live_course,container,false);
         initView();
         getSP();
+        isInit=true;//设置已经
+        return view;
+    }
+
+    public void getData(){
         adapter = new LiveCourseAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
-        return view;
     }
 
     private void initPullToRefreshLv() {
@@ -212,6 +216,7 @@ public class NavLiveCourseFragment extends Fragment{
         back_index_iv = view.findViewById(R.id.back_index_iv);
         recLv = view.findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
+        rl_empty.setVisibility(View.GONE);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
         //直播中
@@ -413,6 +418,20 @@ public class NavLiveCourseFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        onCreate(null);
+    }
+
+    private static boolean isInit=false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser  && isInit){
+            totalList.clear();
+            status=null;
+            getData();
+        }else{
+            isInit = false;
+        }
     }
 
 }

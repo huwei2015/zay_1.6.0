@@ -1,5 +1,7 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -22,6 +24,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -36,12 +39,14 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.Runnables.UserInfoRunnable;
 import com.example.administrator.zahbzayxy.activities.BooksActivity;
 import com.example.administrator.zahbzayxy.activities.BuyActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
+import com.example.administrator.zahbzayxy.activities.H5PageActivity;
 import com.example.administrator.zahbzayxy.activities.LessonThiredActivity;
 import com.example.administrator.zahbzayxy.activities.LiveCourseActivity;
 import com.example.administrator.zahbzayxy.activities.LivePlayActivity;
@@ -95,9 +100,13 @@ public class NavIndexFragment extends Fragment {
     private DataHelper mDataHelper=new DataHelper();
 
     public NavIndexFragment() {
-        // Required empty public constructor
+
     }
 
+    private RelativeLayout indexNav;
+    public void setNavIndexFragment(RelativeLayout indexNav) {
+        this.indexNav=indexNav;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -137,6 +146,7 @@ public class NavIndexFragment extends Fragment {
         }
         Log.d("HomeFragment", "onResume");
         /*****************FHS Start****************/
+        mwebView.reload();
     }
 
     private void initWebView() {
@@ -166,7 +176,25 @@ public class NavIndexFragment extends Fragment {
         appInterface = new WebAppInterface(mContext);
         mwebView.addJavascriptInterface(appInterface, "home");
 
-
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager manager = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
+        manager.getDefaultDisplay().getMetrics(dm);
+        mwebView.setOnTouchListener(new View.OnTouchListener() {//viewpager与webview滑 动冲突问题
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        int point = (int) event.getX();
+                        if (point > 0 && point < 50 || point > dm.widthPixels - 50 && point < dm.widthPixels) {
+                            mwebView.requestDisallowInterceptTouchEvent(false);
+                        } else {
+                            mwebView.requestDisallowInterceptTouchEvent(true);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
         mwebView.setWebChromeClient(new WebChromeClient() {
 
             // For Android < 3.0
@@ -243,7 +271,12 @@ public class NavIndexFragment extends Fragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                //showLoadingBar(false);
+                showLoadingBar(false);
+//                if(url.indexOf("/index/app_index")!=-1){
+//                    indexNav.setVisibility(View.VISIBLE);
+//                }else{
+//                    indexNav.setVisibility(View.GONE);
+//                }
                 Log.i("hw", "==========onPageStarted=========" + url + "|" + view);
             }
 
@@ -251,7 +284,7 @@ public class NavIndexFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 Log.i("hw", "=====onPageFinished======" + Thread.currentThread().getName() + "i" + Thread.currentThread().getId());
-                //hideLoadingBar();
+                hideLoadingBar();
             }
         });
 
@@ -550,6 +583,16 @@ public class NavIndexFragment extends Fragment {
             bundle.putString("orderNumber",orderNumber);
             bundle.putString("testPrice",price);
             bundle.putBoolean("isLessonOrder",true);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
+
+        @JavascriptInterface
+        public void turnH5Page(String url,String titleText){
+            Intent intent=new Intent(context, H5PageActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("url",url);
+            bundle.putString("title",titleText);
             intent.putExtras(bundle);
             context.startActivity(intent);
         }

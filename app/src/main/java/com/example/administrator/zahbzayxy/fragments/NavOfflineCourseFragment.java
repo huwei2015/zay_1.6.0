@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.OfflineCourseActivity;
+import com.example.administrator.zahbzayxy.activities.PayUiActivity;
 import com.example.administrator.zahbzayxy.activities.SelectClassifyActivity;
 import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
 import com.example.administrator.zahbzayxy.adapters.OfflineCourseAdapter;
@@ -95,6 +96,11 @@ public class NavOfflineCourseFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_offline_course,container,false);
         initView();
         getSP();
+        isInit=true;//设置已经
+        return view;
+    }
+
+    public void getData(){
         adapter = new OfflineCourseAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
         initPullToRefreshLv();
@@ -102,7 +108,7 @@ public class NavOfflineCourseFragment extends Fragment{
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
-        cateAdapter=new Lv1CateAdapter(catesList, mContext,gundongRV,1);//初始化适配器
+        cateAdapter=new Lv1CateAdapter(catesList, mContext,gundongRV,1,cateId);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
         downLoadCatesData();
         cateAdapter.setOnClickListener(new Lv1CateAdapter.OnClickListener() {
@@ -114,8 +120,8 @@ public class NavOfflineCourseFragment extends Fragment{
                 downLoadData(1);
             }
         });
-        return view;
     }
+
     private void initPullToRefreshLv() {
 
         recLv.setMode(PullToRefreshBase.Mode.BOTH);
@@ -272,6 +278,7 @@ public class NavOfflineCourseFragment extends Fragment{
         recommedn_back_iv = view.findViewById(R.id.recommedn_back_iv);
         recLv =view. findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
+        rl_empty.setVisibility(View.GONE);
         sel_classifyTV = view.findViewById(R.id.sel_classify);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
@@ -444,6 +451,7 @@ public class NavOfflineCourseFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        onCreate(null);
     }
 
     @Override
@@ -458,6 +466,24 @@ public class NavOfflineCourseFragment extends Fragment{
                 }
                 break;
             default:break;
+        }
+    }
+
+    private static boolean isInit=false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser  && isInit){
+            totalList.clear();
+            catesList.clear();
+            cateId=0;
+            s_cateId=0;
+            isRecommend=null;
+            isTrailers=null;
+            isNew=null;
+            getData();
+        }else{
+            isInit = false;
         }
     }
 }
