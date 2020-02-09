@@ -270,7 +270,6 @@ public class NavBooksFragment extends Fragment{
         recommedn_back_iv = view.findViewById(R.id.recommedn_back_iv);
         recLv = view.findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
-        rl_empty.setVisibility(View.GONE);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
 
@@ -368,6 +367,13 @@ public class NavBooksFragment extends Fragment{
                 }
             }
         });
+
+        if(isNew!=null && isNew==1){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.jt_down_sel);
+            zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            zxFlag=false;
+        }
     }
 
 
@@ -432,9 +438,6 @@ public class NavBooksFragment extends Fragment{
         if (isVisibleToUser  && isInit){
             totalList.clear();
             catesList.clear();
-            cateId=0;
-            s_cateId=0;
-            isNew=null;
             getData();
         }else{
             isInit = false;

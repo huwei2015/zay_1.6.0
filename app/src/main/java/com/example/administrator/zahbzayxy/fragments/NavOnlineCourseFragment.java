@@ -275,7 +275,6 @@ public class NavOnlineCourseFragment extends Fragment{
         gundongRV =  view.findViewById(R.id.gundongRV);
         recLv =  view.findViewById(R.id.recLv);
         rl_empty =  view.findViewById(R.id.rl_empty_layout);
-        rl_empty.setVisibility(View.GONE);
         sel_classifyTV =  view.findViewById(R.id.sel_classify);
         recommedn_back_iv=view.findViewById(R.id.recommedn_back_iv);
         top_layout=view.findViewById(R.id.top_layout);
@@ -466,6 +465,25 @@ public class NavOnlineCourseFragment extends Fragment{
                 }
             }
         });
+
+        if(isRecommend!=null && isRecommend==1){
+            Drawable drawableLeft = getResources().getDrawable( R.mipmap.tuijian_sel);
+            isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+            isrecmmendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            tjFlag=false;
+        }
+        if(isTrailers!=null && isTrailers==1){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.play_icon);
+            shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+            shikanTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            skFlag=false;
+        }
+        if(isNew!=null && isNew==1){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.jt_down_sel);
+            zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            zxFlag=false;
+        }
     }
 
 
@@ -532,11 +550,6 @@ public class NavOnlineCourseFragment extends Fragment{
         if (isVisibleToUser  && isInit){
             totalList.clear();
             catesList.clear();
-            cateId=0;
-            s_cateId=0;
-            isRecommend=null;
-            isTrailers=null;
-            isNew=null;
             getData();
         }else{
             isInit = false;

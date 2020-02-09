@@ -278,7 +278,6 @@ public class NavOfflineCourseFragment extends Fragment{
         recommedn_back_iv = view.findViewById(R.id.recommedn_back_iv);
         recLv =view. findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
-        rl_empty.setVisibility(View.GONE);
         sel_classifyTV = view.findViewById(R.id.sel_classify);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
@@ -412,6 +411,20 @@ public class NavOfflineCourseFragment extends Fragment{
                 }
             }
         });
+
+
+        if(isRecommend!=null && isRecommend==1){
+            Drawable drawableLeft = getResources().getDrawable( R.mipmap.tuijian_sel);
+            isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+            isrecmmendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            tjFlag=false;
+        }
+        if(isNew!=null && isNew==1){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.jt_down_sel);
+            zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            zxFlag=false;
+        }
     }
 
     /**
@@ -476,11 +489,6 @@ public class NavOfflineCourseFragment extends Fragment{
         if (isVisibleToUser  && isInit){
             totalList.clear();
             catesList.clear();
-            cateId=0;
-            s_cateId=0;
-            isRecommend=null;
-            isTrailers=null;
-            isNew=null;
             getData();
         }else{
             isInit = false;

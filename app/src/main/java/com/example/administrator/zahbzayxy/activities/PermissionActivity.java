@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 
 /**
- * Created by ZhangKe on 2018/8/13.
+ * HYY
  */
 public class PermissionActivity extends BaseActivity {
 

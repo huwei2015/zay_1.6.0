@@ -216,7 +216,6 @@ public class NavLiveCourseFragment extends Fragment{
         back_index_iv = view.findViewById(R.id.back_index_iv);
         recLv = view.findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
-        rl_empty.setVisibility(View.GONE);
         top_layout=view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
         //直播中
@@ -379,6 +378,20 @@ public class NavLiveCourseFragment extends Fragment{
                 }
             }
         });
+
+        if(status!=null && "[3,4,5]".equals(status)){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end_sel);
+            lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            lveingendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            v3Flag=false;
+        }
+
+        if(status!=null && "1".equals(status)){
+            Drawable drawableLeft = getResources().getDrawable(R.mipmap.liveing);
+            lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+            lveingTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
+            v1Flag=false;
+        }
     }
 
     /**
@@ -427,7 +440,6 @@ public class NavLiveCourseFragment extends Fragment{
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser  && isInit){
             totalList.clear();
-            status=null;
             getData();
         }else{
             isInit = false;

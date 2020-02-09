@@ -68,7 +68,11 @@ public class H5PageActivity extends BaseActivity{
         backPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(h5Url.indexOf("/apply/apply_info")!=-1){
+                    CacheActivity.finishActivity();
+                }else{
+                    finish();
+                }
             }
         });
         titleText=(TextView)findViewById(R.id.titleText);
