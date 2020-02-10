@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -179,22 +180,22 @@ public class NavIndexFragment extends Fragment {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager manager = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
         manager.getDefaultDisplay().getMetrics(dm);
-        mwebView.setOnTouchListener(new View.OnTouchListener() {//viewpager与webview滑 动冲突问题
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        int point = (int) event.getX();
-                        if (point > 0 && point < 50 || point > dm.widthPixels - 50 && point < dm.widthPixels) {
-                            mwebView.requestDisallowInterceptTouchEvent(false);
-                        } else {
-                            mwebView.requestDisallowInterceptTouchEvent(true);
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
+//        mwebView.setOnTouchListener(new View.OnTouchListener() {//viewpager与webview滑 动冲突问题
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        int point = (int) event.getX();
+//                        if (point > 0 && point < 50 || point > dm.widthPixels - 50 && point < dm.widthPixels) {
+//                            mwebView.requestDisallowInterceptTouchEvent(false);
+//                        } else {
+//                            mwebView.requestDisallowInterceptTouchEvent(true);
+//                        }
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
         mwebView.setWebChromeClient(new WebChromeClient() {
 
             // For Android < 3.0
@@ -285,6 +286,11 @@ public class NavIndexFragment extends Fragment {
                 super.onPageFinished(view, url);
                 Log.i("hw", "=====onPageFinished======" + Thread.currentThread().getName() + "i" + Thread.currentThread().getId());
                 hideLoadingBar();
+                //
+                int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+                StringBuilder jsSb = new StringBuilder("javascript:initTouchSlop('").append(touchSlop).append("')");
+                mwebView.loadUrl(jsSb.toString());
+
             }
         });
 
@@ -597,6 +603,15 @@ public class NavIndexFragment extends Fragment {
             context.startActivity(intent);
         }
 
+        /**
+         * 解决滑动冲突
+         * @param request
+         */
+        @JavascriptInterface
+        public void requestEvent(boolean request) {
+            Log.i("you", "requestDisallowInterceptTouchEvent " + request+"  "+Thread.currentThread().getName());
+            mwebView.requestDisallowInterceptTouchEvent(request);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
