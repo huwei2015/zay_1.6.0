@@ -39,6 +39,7 @@ public class PageFragment extends Fragment {
                 public void onClick(View v) {
                     //getActivity().finish();
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.putExtra("loginMethod","home");
                     startActivity(intent);
                     getActivity().finish();
                 }
