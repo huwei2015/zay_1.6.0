@@ -176,26 +176,6 @@ public class NavIndexFragment extends Fragment {
 
         appInterface = new WebAppInterface(mContext);
         mwebView.addJavascriptInterface(appInterface, "home");
-
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager manager = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
-        manager.getDefaultDisplay().getMetrics(dm);
-//        mwebView.setOnTouchListener(new View.OnTouchListener() {//viewpager与webview滑 动冲突问题
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        int point = (int) event.getX();
-//                        if (point > 0 && point < 50 || point > dm.widthPixels - 50 && point < dm.widthPixels) {
-//                            mwebView.requestDisallowInterceptTouchEvent(false);
-//                        } else {
-//                            mwebView.requestDisallowInterceptTouchEvent(true);
-//                        }
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
         mwebView.setWebChromeClient(new WebChromeClient() {
 
             // For Android < 3.0
