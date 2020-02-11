@@ -156,7 +156,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             pullToRefreshRecyclerView.setVisibility(View.GONE);
-            tv_msg.setText("暂无未通过数据");
+            tv_msg.setText("暂无未过期数据");
         }
     }
     public void showLoadingBar(boolean transparent) {

@@ -9,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
@@ -43,6 +45,8 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
     private int  currenPage =1;
     private int pageSize =10;
     private RelativeLayout rl_empty;
+    TextView tv_msg;
+    LinearLayout ll_list;
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
     private int id;
     @Nullable
@@ -67,14 +71,14 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
             public void onResponse(Call<NotThroughBean> call, Response<NotThroughBean> response) {
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
-                    if(code.equals("00000")){
+                    if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
                         emptyLayout(true);
                         List<NotThroughBean.THrougListData> data = response.body().getData().getqLibs().getData();
                         notPassListBeans.addAll(data);
                         througAdapter.setList(notPassListBeans);
+                    }else{
+                        emptyLayout(false);
                     }
-                }else{
-                    emptyLayout(false);
                 }
             }
 
@@ -90,6 +94,8 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
         token = sharedPreferences.getString("token", "");
         pullToRefreshRecyclerView=view.findViewById(R.id.pull_recycleview);
         rl_empty=view.findViewById(R.id.rl_empty_layout);
+        ll_list = view.findViewById(R.id.ll_list);
+        tv_msg = view.findViewById(R.id.tv_msg);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //初始化adapter
@@ -138,6 +144,7 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             pullToRefreshRecyclerView.setVisibility(View.GONE);
+            tv_msg.setText("暂无已过期数据");
         }
     }
     public void setParamse(int  id){

@@ -120,11 +120,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="主要负责人-初训-煤炭生产经营单位(董事长)总经理"
                     android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_img"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -224,12 +224,13 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_des"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center"
-                android:paddingBottom="20dp"
                 android:text="表现不错，继续加油哦！"
+                android:layout_marginBottom="6dp"
                 android:textSize="16sp" />
 
             <View

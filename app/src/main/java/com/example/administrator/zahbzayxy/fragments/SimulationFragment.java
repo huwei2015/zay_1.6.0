@@ -62,9 +62,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private ProgressBarLayout mLoadingBar;
     private Context mContext;
     private BarChart mChart;
-    private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search,ll_text;
+    private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search,ll_text,ll_img;
     private String token;
-    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,tv_more;
+    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,tv_more,tv_des;
     private ImageView img_add, mScoreSimpleImg;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
@@ -91,7 +91,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mPassCountTv = view.findViewById(R.id.text_account);
         mScoreSimpleImg = view.findViewById(R.id.simulation_score_simple_im);
         tv_questionName=view.findViewById(R.id.tv_questionName);//题库类型
+        ll_img=view.findViewById(R.id.ll_img);//对错图标
         ll_text=view.findViewById(R.id.ll_text);
+        tv_des=view.findViewById(R.id.tv_des);
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             loadData(position);
@@ -142,6 +144,10 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private void loadData(int position){
         mLoadDataPosition = position;
         if (navigationList == null || navigationList.size() == 0 || position >= navigationList.size()) {
+            tv_questionName.setVisibility(View.GONE);
+            ll_img.setVisibility(View.GONE);
+            tv_des.setVisibility(View.GONE);
+            ll_text.setVisibility(View.GONE);
             return;
         }
         createId = navigationList.get(position).getId();

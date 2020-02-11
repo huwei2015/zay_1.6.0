@@ -30,6 +30,7 @@ import com.example.administrator.zahbzayxy.manager.OffLineCourseManager;
 import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +52,14 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
     private List<LearnNavigationBean.LearnListBean>navigationList=new ArrayList<>();
     private LearnOnlineCourseAdapter learnOnlineCourseAdapter;
     private PullToRefreshRecyclerView recyclerview;
-    private TextView tv_addTopic,on_line_filter_course_check;
+    private TextView tv_addTopic,on_line_filter_course_check,tv_msg;
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
     private int mLearnType = 0;
     private OnLineManager mOnLineManager;
     private OffLineCourseManager mOffLineManager;
     private CheckBox mFilterCb;
     private View mOneView,on_line_view_one;
-    private RelativeLayout mSelectLayout;
+    private RelativeLayout mSelectLayout,rl_empty;
     private boolean mLoadView = false;
     @Override
     public void onAttach(Context context) {
@@ -80,6 +81,8 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
         mOneView = view.findViewById(R.id.on_line_view_one);
         mSelectLayout = view.findViewById(R.id.on_line_select_layout);
         tv_addTopic.setOnClickListener(this);
+        rl_empty=view.findViewById(R.id.rl_empty_layout);//空布局
+        tv_msg=view.findViewById(R.id.tv_msg);//空布局显示文字
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
             mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
@@ -114,9 +117,12 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
             tv_addTopic.setVisibility(View.GONE);
             img_add.setVisibility(View.GONE);
         } else if (mLearnType == 2 && mOffLineManager != null) {
+            ToastUtils.showInfo("离线课",5000);
             fixedIndicatorView.setVisibility(View.GONE);
-            mOneView.setVisibility(View.GONE);
+            mOneView.setVisibility(View.GONE);//分割线
             mSelectLayout.setVisibility(View.GONE);
+            rl_empty.setVisibility(View.VISIBLE);
+            tv_msg.setText("暂无离线课程");
             recyclerview.setLoadingMoreEnabled(false);
             recyclerview.setPullRefreshEnabled(false);
             mOffLineManager.initData();
