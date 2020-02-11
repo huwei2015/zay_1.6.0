@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -10,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -213,7 +215,22 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(ResetActivity.this,AccountSecurityActivity.class));
                 break;
             case R.id.rl_households://注销账户
-                getLogout();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ResetActivity.this);
+                dialog.setTitle("提示");
+                dialog.setMessage("确定注销账号吗？");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getLogout();
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
                 break;
         }
     }
