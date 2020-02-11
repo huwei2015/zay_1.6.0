@@ -12,12 +12,12 @@ android {
         applicationId "com.example.administrator.zahbzayxy"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 160
-        versionName "1.6.0"
+        versionCode 161
+        versionName "1.6.1"
         multiDexEnabled true
         //打包添加时间
         def time = new SimpleDateFormat("yyyyMMdd").format(new Date())
-        setProperty("archivesBaseName", "liaocheng-$versionName-${time}")
+        setProperty("archivesBaseName", "zaykt-$versionName-${time}")
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "default_channel"]
         flavorDimensions "versionCode"
         javaCompileOptions {
