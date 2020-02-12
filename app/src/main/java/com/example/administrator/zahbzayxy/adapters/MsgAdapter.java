@@ -1,22 +1,21 @@
 package com.example.administrator.zahbzayxy.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.os.Trace;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.androidkun.adapter.ViewHolder;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.TimeData;
-import com.example.administrator.zahbzayxy.utils.DensityUtil;
-import com.example.administrator.zahbzayxy.utils.TimeFormat;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,8 +55,34 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        ViewHolder itemHolder = (ViewHolder) holder;
+        String str=data.get(position).getPeriod();
+        if(position>0){
+            String str2=data.get(position-1).getPeriod();
+            if(str.equals(str2)){
+                holder.tv_time.setVisibility(View.GONE);
+                holder.tvDot.setBackground(null);
+                itemHolder.tvBcLine.setVisibility(View.VISIBLE);
+            }else{
+                holder.tv_time.setVisibility(View.VISIBLE);
+                holder.tv_time.setText(str);
+                holder.tvDot.setBackground(mContext.getResources().getDrawable(R.drawable.timelline_dot_normal));
+                itemHolder.tvBcLine.setVisibility(View.GONE);
+            }
+        }else{
+            holder.tv_time.setText(str);
+            holder.tv_time.setVisibility(View.VISIBLE);
+            holder.tvDot.setBackground(mContext.getResources().getDrawable(R.drawable.timelline_dot_normal));
+            itemHolder.tvBcLine.setVisibility(View.GONE);
+        }
+        if (position == 0) {
+            // 第一行头的竖线不显示
+            itemHolder.tvTopLine.setVisibility(View.INVISIBLE);
+            itemHolder.tvBcLine.setVisibility(View.GONE);
+        }else{
+            itemHolder.tvTopLine.setVisibility(View.VISIBLE);
+        }
         holder.tv_title.setText(data.get(position).getTitle());
-        holder.tv_time.setText(data.get(position).getNewCreateTime());
         if(data.get(position).isyRead() == true){
             holder.tv_title.setTextColor(mContext.getResources().getColor(R.color.price_color));
         }else{
@@ -82,14 +107,18 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     }
 
    static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_title,tv_time;
+        private TextView tv_title,tv_time,tvTopLine,tvDot,tvBcLine;
         private RelativeLayout rl_item;
         public ViewHolder(View itemView) {
             super(itemView);
             tv_title = itemView.findViewById(R.id.tv_title);
             tv_time=itemView.findViewById(R.id.tv_time);
             rl_item=itemView.findViewById(R.id.rl_item);
+            tvTopLine=itemView.findViewById(R.id.tvTopLine);
+            tvDot=itemView.findViewById(R.id.tvDot);
+            tvBcLine=itemView.findViewById(R.id.tvBcLine);
         }
+
     }
 
 }
