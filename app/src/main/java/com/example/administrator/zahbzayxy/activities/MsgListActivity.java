@@ -42,6 +42,7 @@ import retrofit2.Response;
  * Created by huwei.
  * Data 2019-12-13.
  * Time 11:13.
+ * 消息列表
  */
 public class MsgListActivity extends BaseActivity implements View.OnClickListener, PullToRefreshListener,MsgAdapter.onClickItemListener{
     private PullToRefreshRecyclerView recyclerView;
