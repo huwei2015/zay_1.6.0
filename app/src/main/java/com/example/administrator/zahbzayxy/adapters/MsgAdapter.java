@@ -56,7 +56,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ViewHolder itemHolder = (ViewHolder) holder;
-        String str=data.get(position).getPeriod();
+        String str=data.get(position).getPeriod();//日期
         if(position>0){
             String str2=data.get(position-1).getPeriod();
             if(str.equals(str2)){
