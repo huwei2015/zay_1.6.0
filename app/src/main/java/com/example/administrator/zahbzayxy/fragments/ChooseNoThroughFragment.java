@@ -145,12 +145,32 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
 
     @Override
     public void onRefresh() {
-
+        pullToRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshRecyclerView.setRefreshComplete();
+                currenPage = 1;
+                initData();
+                pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
+            }
+        }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-
+        pullToRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshRecyclerView.setLoadMoreComplete();
+                if (notPassListBeans.size() < pageSize) {
+                    Toast.makeText(getContext(), "没有更多数据", Toast.LENGTH_SHORT).show();
+                    pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                    return;
+                }
+                currenPage++;
+                initData();
+            }
+        }, 2000);
     }
 
     //Item点击事件
