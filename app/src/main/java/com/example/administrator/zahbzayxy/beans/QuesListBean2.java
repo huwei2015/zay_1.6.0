@@ -11,7 +11,7 @@ public class QuesListBean2 implements Serializable {
     private String content;
     private int quesType;
 
-    public QuesListBean2(int biaoJi, int diffType, int id, String parsing, String content, int quesType, List<OptsBean> opts) {
+    public QuesListBean2(int biaoJi, int diffType, int id, String parsing, String content, int quesType, List<OptsBean> opts, List<QuesListBean2> children) {
         this.biaoJi = biaoJi;
         this.diffType = diffType;
         this.id = id;
@@ -19,6 +19,7 @@ public class QuesListBean2 implements Serializable {
         this.content = content;
         this.quesType = quesType;
         this.opts = opts;
+        this.children = children;
     }
 
     /**
@@ -30,6 +31,7 @@ public class QuesListBean2 implements Serializable {
      */
 
     private List<OptsBean> opts;
+    private List<QuesListBean2> children;
 
     public int getBiaoJi() {
         return biaoJi;
@@ -87,5 +89,11 @@ public class QuesListBean2 implements Serializable {
         this.quesType = quesType;
     }
 
+    public List<QuesListBean2> getChildren() {
+        return children;
+    }
 
+    public void setChildren(List<QuesListBean2> children) {
+        this.children = children;
+    }
 }

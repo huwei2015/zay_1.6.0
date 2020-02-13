@@ -45,6 +45,7 @@ public interface TestGroupInterface {
     static final String testContentNewPath="quesLibAdd/examPaper_v1";
     static final String saveExamScorePath="userExam/saveExamScore";
     static final String testPracticePath="ques/syncQues";
+    static final String testPracticeNewPath="quesAdd/syncQues";
     static final String testSubmitOrderPath="shopOrder/submitQuesLibOrder";
     String youHuiJuanListPath="shopOrder/quesLibOrderDetail";
     static final String testWaitPayDataPath="alipay/prePay";
@@ -83,6 +84,10 @@ public interface TestGroupInterface {
 //查看错题
     @GET(value=testPracticePath)
     Call<TestPracticeBean> getTestPracticeData(@Query("quesLibId")Integer quesLibId, @Query("token")String token);
+
+//顺序练习
+    @GET(value=testPracticeNewPath)
+    Call<TestPracticeBean> getTestPracticeDataNew(@Query("quesLibId")Integer quesLibId, @Query("token")String token);
 
 
     //查看错题新packageId
