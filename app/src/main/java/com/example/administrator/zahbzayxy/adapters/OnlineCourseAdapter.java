@@ -194,7 +194,7 @@ public class OnlineCourseAdapter extends BaseAdapter {
             }
             final int courseId1=courseListBean.getCourseId1();
             final String isDatacenter1=courseListBean.getIsDatacenter1();
-            myViewHold.left_layout.setOnClickListener(new View.OnClickListener() {
+            myViewHold.right_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(context, LessonThiredActivity.class);
