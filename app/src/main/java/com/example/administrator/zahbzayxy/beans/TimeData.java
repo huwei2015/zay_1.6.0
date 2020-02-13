@@ -71,6 +71,7 @@ public class TimeData {
         private int creatorId;
         private int updaterId;
         private boolean yRead;
+        private String period;
 
         public int getId() {
             return id;
@@ -246,6 +247,14 @@ public class TimeData {
 
         public void setyRead(boolean yRead) {
             this.yRead = yRead;
+        }
+
+        public String getPeriod() {
+            return period;
+        }
+
+        public void setPeriod(String period) {
+            this.period = period;
         }
     }
 

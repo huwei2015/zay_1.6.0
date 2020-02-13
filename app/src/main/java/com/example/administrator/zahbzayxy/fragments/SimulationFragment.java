@@ -312,6 +312,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.img_add:
                 startActivity(new Intent(getActivity(), QueslibActivity.class));
+//                  startActivity(new Intent(getActivity(), NavQueslibFragment.class));
                 break;
             case R.id.tv_more://模考题库-更多
                 startActivity(new Intent(getActivity(), NewMyChengJiActivity.class));

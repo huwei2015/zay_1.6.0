@@ -159,7 +159,7 @@ public class NavOfflineCourseFragment extends Fragment{
                 OfflineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("--------------------", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                if (body != null && body.getData()!=null && body.getData().getCourseList()!=null && body.getData().getCourseList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
@@ -223,7 +223,7 @@ public class NavOfflineCourseFragment extends Fragment{
                 CourseCatesBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCates().size() > 0) {
+                if (body != null &&  body.getData()!=null &&  body.getData().getCates()!=null && body.getData().getCates().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
