@@ -117,6 +117,7 @@ public class OfflineCourseLearnBean {
         private int isNew;
         private String classTime;
         private int isSign;
+        private int courseId;
 
         public String getCourseName() {
             return courseName;
@@ -214,6 +215,14 @@ public class OfflineCourseLearnBean {
             this.isSign = isSign;
         }
 
+        public int getCourseId() {
+            return courseId;
+        }
+
+        public void setCourseId(int courseId) {
+            this.courseId = courseId;
+        }
+
         @Override
         public String toString() {
             return "UserCoursesBean{" +
@@ -229,6 +238,7 @@ public class OfflineCourseLearnBean {
                     ", isNew=" + isNew +
                     ", classTime='" + classTime + '\'' +
                     ", isSign=" + isSign +
+                    ", courseId=" + courseId +
                     '}';
         }
     }
