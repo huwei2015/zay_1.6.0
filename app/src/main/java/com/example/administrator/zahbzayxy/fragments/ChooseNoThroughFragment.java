@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,7 +56,8 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     private ProgressBarLayout mLoadingBar;
     private int id;
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
-
+    private Button confirmSelData;
+    private int userLibId;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -132,6 +134,13 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         pullToRefreshRecyclerView.setEmptyView(emptyView);
+        confirmSelData=view.findViewById(R.id.confirmSelData);
+        confirmSelData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onParamsClickListener.onClick(userLibId);
+            }
+        });
     }
 
     @Override
@@ -147,8 +156,23 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     //Item点击事件
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(),"点击了"+position,Toast.LENGTH_LONG).show();
+        userLibId=notPassListBeans.get(position).getId();
     }
+
+    //设置接口的方法
+    public void setOnParamsClickListener(OnParamsClickListener onParamsClickListener){
+        this.onParamsClickListener = onParamsClickListener;
+    }
+    //定义变量
+    private OnParamsClickListener onParamsClickListener;
+    /**
+     * 当title被点击时，将title传递出去
+     */
+    //定义接口
+    public interface OnParamsClickListener {
+        void onClick(int userLibId);
+    }
+
     private void emptyLayout(boolean isVisible){
         if(isVisible){
             pullToRefreshRecyclerView.setVisibility(View.VISIBLE);

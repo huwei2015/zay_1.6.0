@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import com.example.administrator.zahbzayxy.activities.NewMyChengJiActivity;
 import com.example.administrator.zahbzayxy.activities.PLookCuoTiActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.SearchTestActivity;
+import com.example.administrator.zahbzayxy.activities.SelectClassifyActivity;
 import com.example.administrator.zahbzayxy.activities.TestContentActivity1;
 import com.example.administrator.zahbzayxy.activities.TestPracticeAcivity;
 import com.example.administrator.zahbzayxy.adapters.SimulationAdapter;
@@ -40,6 +42,7 @@ import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.Indicator;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.github.mikephil.charting.charts.BarChart;
 
@@ -74,6 +77,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private String quesLibName;
     private int mLoadDataPosition;
     int createId;//导航id
+    private Integer c_userLibId;//传值的话就用些值查询，不传的话取最新的一条
+
+    private  final static int CHOOSE_TOPIC=1001;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -96,6 +102,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         tv_des=view.findViewById(R.id.tv_des);
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
+            c_userLibId=null;
             loadData(position);
         });
         initView();
@@ -154,7 +161,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token","");
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getSimulationData(createId, token).enqueue(new Callback<SimulationInfoBean>() {
+        aClass.getSimulationData(createId,c_userLibId,token).enqueue(new Callback<SimulationInfoBean>() {
             @Override
             public void onResponse(Call<SimulationInfoBean> call, Response<SimulationInfoBean> response) {
                 hideLoadingBar();
@@ -169,7 +176,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             String quesLibName = quesLib.getQuesLibName();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
+                            mExamTitle.setText(TextAndPictureUtil.getTextCssStyle(mContext," "+quesLib.getPackageName()+" ",quesLibName));
                             tv_questionName.setText(quesLib.getPackageName());//题库类型
+                            tv_questionName.setVisibility(View.GONE);
                             // 题库设置的及格分数
                             mPassScoreTv.setText(quesLib.getPassScore() + "");
                             // 及格次数
@@ -308,7 +317,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
             case R.id.tv_choose://选择题库
                 intent = new Intent(getActivity(),ChooseTopicActivity.class);
                 intent.putExtra("id",String.valueOf(createId));
-                startActivity(intent);
+                startActivityForResult(intent,CHOOSE_TOPIC);
                 break;
             case R.id.img_add:
                 startActivity(new Intent(getActivity(), QueslibActivity.class));
@@ -332,5 +341,19 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         initNavigationData();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case CHOOSE_TOPIC :
+                if (resultCode == Activity.RESULT_OK) {
+                    c_userLibId = data.getIntExtra("userLibId",0);
+                    loadData(0);
+                }
+                break;
+            default:break;
+        }
     }
 }
