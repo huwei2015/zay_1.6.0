@@ -26,12 +26,10 @@ import com.example.administrator.zahbzayxy.beans.GridItem;
 import com.example.administrator.zahbzayxy.beans.OptsBean;
 import com.example.administrator.zahbzayxy.beans.QuesListBean;
 import com.example.administrator.zahbzayxy.beans.QuesListBean2;
-import com.example.administrator.zahbzayxy.beans.SaveUserErrorDbBean;
 import com.example.administrator.zahbzayxy.beans.SaveUserErrorPrcticeBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.TestPracticeBean;
 import com.example.administrator.zahbzayxy.beans.TestResultBean;
-import com.example.administrator.zahbzayxy.databases.SaveErrorDBManager;
 import com.example.administrator.zahbzayxy.databases.SaveListDBManager;
 import com.example.administrator.zahbzayxy.interfacecommit.PracticeInterface;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
@@ -41,6 +39,7 @@ import com.example.administrator.zahbzayxy.stickheadgv.StickyGridHeadersGridView
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,9 +118,17 @@ public class TestPracticeAcivity extends BaseActivity {
                 if (saveUserErrorDbBeen != null) {
                     List<QuesListBean> quesList = saveUserErrorDbBeen;
                     this.size = quesList.size();
+                    Gson gson = new Gson();
                     for (int j = 0; j < this.size; j++) {
                         QuesListBean item = quesList.get(j);
-                        QuesListBean2 bean = new QuesListBean2(item.getBiaoJi(), item.getDiffType(), item.getId(), item.getParsing(), item.getContent(), item.getQuesType(), JSON.parseArray(item.getOpts(), OptsBean.class));
+                        List<QuesListBean2> children = null;
+                        String childrenStr = item.getChildren();
+                        if (!TextUtils.isEmpty(childrenStr)) {
+                            children = gson.fromJson(childrenStr, new TypeToken<List<QuesListBean2>>(){}.getType());
+                        }
+                        QuesListBean2 bean = new QuesListBean2(item.getBiaoJi(), item.getDiffType(), item.getId(),
+                                item.getParsing(), item.getContent(), item.getQuesType(),
+                                JSON.parseArray(item.getOpts(), OptsBean.class), children);
                         //保存用户错题记录的
                         int quesType = quesList.get(j).getQuesType();
                         SaveUserErrorPrcticeBean.ErrorQuesBean errorQuesBean = new SaveUserErrorPrcticeBean.ErrorQuesBean();
@@ -152,7 +159,7 @@ public class TestPracticeAcivity extends BaseActivity {
         madapter = new TestPracticeAdapter(TestPracticeAcivity.this, totalList, saveErrorList, recyclerview, dijige);
         recyclerview.setAdapter(madapter);
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        Call<TestPracticeBean> testContentData = aClass.getTestPracticeData(quesLibId, token);
+        Call<TestPracticeBean> testContentData = aClass.getTestPracticeDataNew(quesLibId, token);
         testContentData.enqueue(new Callback<TestPracticeBean>() {
             @Override
             public void onResponse(Call<TestPracticeBean> call, Response<TestPracticeBean> response) {
@@ -171,7 +178,7 @@ public class TestPracticeAcivity extends BaseActivity {
                                     for (int i = 0; i < dataList.size(); i++) {
                                         QuesListBean2 item = dataList.get(i);
                                         QuesListBean saveUserErrorDbBean = new QuesListBean(id + 1, item.getBiaoJi(), quesLibId, item.getDiffType(), item.getId(),
-                                                item.getParsing(), item.getContent(), item.getQuesType(), JSON.toJSONString(item.getOpts()));
+                                                item.getParsing(), item.getContent(), item.getQuesType(), JSON.toJSONString(item.getOpts()), JSON.toJSONString(item.getChildren()));
                                         saveDb.insert(saveUserErrorDbBean);
                                         id++;
                                     }
@@ -239,6 +246,24 @@ public class TestPracticeAcivity extends BaseActivity {
                     if (position > 0) {
                         //左
                         position = position - 1;
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition == 1){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                madapter.setChildPosition(childPosition - 2);
+                                position += 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition == 1){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                madapter.setKeChildPosition(kePosition - 2);
+                                position += 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         madapter.notifyDataSetChanged();
                         dijige.setText((position + 1) + "/" + size);
@@ -249,6 +274,22 @@ public class TestPracticeAcivity extends BaseActivity {
                     //此处的100是题的个数  根据实际题的个数做更改
                     if (position < size - 1) {
                         position = position + 1;
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         dijige.setText((position + 1) + "/" + size);
                         madapter.notifyDataSetChanged();
@@ -265,6 +306,24 @@ public class TestPracticeAcivity extends BaseActivity {
         if (position > 0) {
             //左
             position = position - 1;
+            int childPosition = madapter.getChildPosition();
+            if (childPosition >= 0) {
+                if (childPosition == 1){
+                    madapter.setChildPosition(-1);
+                } else {
+                    madapter.setChildPosition(childPosition - 2);
+                    position += 1;
+                }
+            }
+            int kePosition = madapter.getKeChildPosition();
+            if (kePosition >= 0) {
+                if (kePosition == 1){
+                    madapter.setKeChildPosition(-1);
+                } else {
+                    madapter.setKeChildPosition(kePosition - 2);
+                    position += 1;
+                }
+            }
             recyclerview.scrollToPosition(position);
             madapter.notifyDataSetChanged();
             dijige.setText((position + 1) + "/" + size);
@@ -280,6 +339,22 @@ public class TestPracticeAcivity extends BaseActivity {
         //此处的100是题的个数  根据实际题的个数做更改
         if (position < size - 1) {
             position = position + 1;
+            int childPosition = madapter.getChildPosition();
+            if (childPosition >= 0) {
+                if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                    madapter.setChildPosition(-1);
+                } else {
+                    position -= 1;
+                }
+            }
+            int kePosition = madapter.getKeChildPosition();
+            if (kePosition >= 0) {
+                if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                    madapter.setKeChildPosition(-1);
+                } else {
+                    position -= 1;
+                }
+            }
             recyclerview.scrollToPosition(position);
             madapter.notifyDataSetChanged();
             dijige.setText((position + 1) + "/" + size);
@@ -341,6 +416,9 @@ public class TestPracticeAcivity extends BaseActivity {
         List<TestResultBean.ExamDetailsBean> oneList = new ArrayList<>();
         List<TestResultBean.ExamDetailsBean> twoList = new ArrayList<>();
         List<TestResultBean.ExamDetailsBean> threeList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> fourList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> fiveList = new ArrayList<>();
+        List<TestResultBean.ExamDetailsBean> sixList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             SaveUserErrorPrcticeBean.ErrorQuesBean errorQuesBean = saveErrorList.get(i);
@@ -368,7 +446,7 @@ public class TestPracticeAcivity extends BaseActivity {
                 }
                 twoList.add(examDetailsBean1);
 
-            } else {//判断
+            } else if (questionType == 3) {//判断
                 int j = i + 1;
                 TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
                 examDetailsBean1.setLocation(j);
@@ -379,16 +457,52 @@ public class TestPracticeAcivity extends BaseActivity {
                 }
                 threeList.add(examDetailsBean1);
 
+            } else if (questionType == 4) { //主观案例
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (isRight == 2) {
+                    examDetailsBean1.setIsRight(2);
+                } else if (isRight == 1) {
+                    examDetailsBean1.setIsRight(1);
+                }
+                fourList.add(examDetailsBean1);
+            } else if (questionType == 5) { //客观案例
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (isRight == 2) {
+                    examDetailsBean1.setIsRight(2);
+                } else if (isRight == 1) {
+                    examDetailsBean1.setIsRight(1);
+                }
+                fiveList.add(examDetailsBean1);
+            } else if (questionType == 6) { //简答题
+                int j = i + 1;
+                TestResultBean.ExamDetailsBean examDetailsBean1 = new TestResultBean.ExamDetailsBean();
+                examDetailsBean1.setLocation(j);
+                if (isRight == 2) {
+                    examDetailsBean1.setIsRight(2);
+                } else if (isRight == 1) {
+                    examDetailsBean1.setIsRight(1);
+                }
+                sixList.add(examDetailsBean1);
             }
         }
         List<GridItem> mGirdList = new ArrayList<GridItem>();
         GridItem item1 = null;
         GridItem item2 = null;
         GridItem item3 = null;
+        GridItem item4 = null;
+        GridItem item5 = null;
+        GridItem item6 = null;
         int size1 = oneList.size();
         int size2 = twoList.size();
         int size3 = threeList.size();
-        Log.e("sizeSelect", size1 + ",," + size2 + ",," + size3);
+        int size4 = fourList.size();
+        int size5 = fiveList.size();
+        int size6 = sixList.size();
+        Log.e("sizeSelect", size1 + ",," + size2 + ",," + size3 + ",," + size4 + ",," + size5 + ",," + size6);
         if (size1 > 0) {
             for (int i = 0; i < size1; i++) {
                 TestResultBean.ExamDetailsBean examDetailsBean = oneList.get(i);
@@ -417,6 +531,36 @@ public class TestPracticeAcivity extends BaseActivity {
                 item3 = new GridItem(location + "," + isRight, i + "", 2, "判断", isRight);
                 Log.e("isRight", isRight + "判断,11111");
                 mGirdList.add(item3);
+            }
+        }
+        if (size4 > 0) {
+            for (int i = 0; i < size4; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = fourList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item4 = new GridItem(location + "," + isRight, i + "", 3, "主观案例", isRight);
+                Log.e("isRight", isRight + "判断,11111");
+                mGirdList.add(item4);
+            }
+        }
+        if (size5 > 0) {
+            for (int i = 0; i < size5; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = fiveList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item5 = new GridItem(location + "," + isRight, i + "", 4, "客观案例", isRight);
+                Log.e("isRight", isRight + "判断,11111");
+                mGirdList.add(item5);
+            }
+        }
+        if (size6 > 0) {
+            for (int i = 0; i < size6; i++) {
+                TestResultBean.ExamDetailsBean examDetailsBean = sixList.get(i);
+                int location = examDetailsBean.getLocation();
+                int isRight = examDetailsBean.getIsRight();
+                item6 = new GridItem(location + "," + isRight, i + "", 5, "简答题", isRight);
+                Log.e("isRight", isRight + "判断,11111");
+                mGirdList.add(item6);
             }
         }
         stickyGridAdapter = new PracticeStickyGridAdapter(TestPracticeAcivity.this, mGirdList, recyclerview, popupWindow, madapter, size, dijige);

@@ -36,10 +36,12 @@ public class QuesListBean implements Serializable {
      */
 
     private String opts;
+    private String children;
 
-    @Generated(hash = 440628421)
+    @Generated(hash = 791778488)
     public QuesListBean(long mId, int biaoJi, int quesLibId, int diffType, int id,
-                        String parsing, String content, int quesType, String opts) {
+            String parsing, String content, int quesType, String opts,
+            String children) {
         this.mId = mId;
         this.biaoJi = biaoJi;
         this.quesLibId = quesLibId;
@@ -49,6 +51,7 @@ public class QuesListBean implements Serializable {
         this.content = content;
         this.quesType = quesType;
         this.opts = opts;
+        this.children = children;
     }
 
     @Generated(hash = 1477078327)
@@ -127,5 +130,11 @@ public class QuesListBean implements Serializable {
         this.quesLibId = quesLibId;
     }
 
+    public String getChildren() {
+        return children;
+    }
 
+    public void setChildren(String children) {
+        this.children = children;
+    }
 }

@@ -113,6 +113,8 @@ public class PracticeStickyGridAdapter extends BaseAdapter implements
                 Integer integer = Integer.valueOf(s);
                 myRecyclerView.scrollToPosition(integer-1);
                 adapter.notifyDataSetChanged();
+                adapter.setChildPosition(-1);
+                adapter.setKeChildPosition(-1);
                 dijige.setText((integer)+"/"+numSize);
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
