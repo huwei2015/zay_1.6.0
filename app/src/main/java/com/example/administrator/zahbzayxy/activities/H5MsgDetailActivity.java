@@ -76,7 +76,7 @@ public class H5MsgDetailActivity extends BaseActivity {
         if ("sign".equals(type)) {
             hideLoadingBar();
             url = RetrofitUtils.getBaseUrl() + "/user/apply_detail"+ "?activityId=" + activityId + "&token=" + token;
-            tv_title.setText("报名名详情");
+            tv_title.setText("报名详情");
         }else if("msg".equals(type)){
             hideLoadingBar();
             url = RetrofitUtils.getBaseUrl() + "/news/news_detail" + "?id=" + id + "&token=" + token + "&isRemoveHeader=" + 1;
