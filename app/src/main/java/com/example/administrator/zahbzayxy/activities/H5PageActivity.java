@@ -57,6 +57,8 @@ public class H5PageActivity extends BaseActivity{
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
 
+    private boolean backIndexFlag=false;
+
     private DataHelper mDataHelper=new DataHelper();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,8 @@ public class H5PageActivity extends BaseActivity{
         backPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(h5Url.indexOf("/apply/apply_info")!=-1){
+                if(backIndexFlag){
+                    backIndexFlag=false;
                     CacheActivity.finishActivity();
                 }else{
                     finish();
@@ -257,6 +260,14 @@ public class H5PageActivity extends BaseActivity{
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
+        }
+
+        /**
+         * 报名成功返回标识
+         */
+        @JavascriptInterface
+        public void isApplySuc(){
+            backIndexFlag=true;
         }
     }
 
