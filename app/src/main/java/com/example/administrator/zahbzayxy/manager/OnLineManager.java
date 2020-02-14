@@ -169,10 +169,10 @@ public class OnLineManager implements PullToRefreshListener {
 
         mOffLineAdapter.setOnLearnOfflineItemClickListener(position -> {
             // 线下课点击事件处理
-            OfflineCourseLearnBean.UserCoursesBean coursesBean = mOfflineList.get(position);
-            int userCourseId = coursesBean.getUserCourseId();
-            int courseId = coursesBean.getCourseId();
-            isPerfectPersonInfo(userCourseId, courseId);
+//            OfflineCourseLearnBean.UserCoursesBean coursesBean = mOfflineList.get(position);
+//            int userCourseId = coursesBean.getUserCourseId();
+//            int courseId = coursesBean.getCourseId();
+//            isPerfectPersonInfo(userCourseId, courseId);
         });
     }
 
