@@ -179,6 +179,7 @@ public class NewTestContentBean implements Serializable {
             private String content;
             private int quesType;
             private int isShowParsing;
+            private double score;
             private List<QuesDataBean> children;
             /**
              * isRightAnswer : 1
@@ -189,6 +190,14 @@ public class NewTestContentBean implements Serializable {
              */
 
             private List<OptsBean> opts;
+
+            public double getScore() {
+                return score;
+            }
+
+            public void setScore(double score) {
+                this.score = score;
+            }
 
             public int getDiffType() {
                 return diffType;

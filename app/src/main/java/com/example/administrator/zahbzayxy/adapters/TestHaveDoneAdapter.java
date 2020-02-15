@@ -132,6 +132,8 @@ public class TestHaveDoneAdapter extends BaseAdapter implements
         mViewHolder.tv_griditem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                adapter.setChildPosition(-1);
+                adapter.setKeChildPosition(-1);
                 Integer integer = Integer.valueOf(s);
                 myRecyclerView.scrollToPosition(integer - 1);
                 adapter.notifyDataSetChanged();

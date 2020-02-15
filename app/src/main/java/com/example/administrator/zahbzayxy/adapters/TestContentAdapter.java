@@ -104,6 +104,18 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
         this.judgeScore = judgeScore;
     }
 
+    public int getPostFactScore(){
+        return this.mPostFactScore;
+    }
+
+    public int getPostNotFactScore(){
+        return this.mPostNotFactScore;
+    }
+
+    public int getPostShortScore(){
+        return this.mPostShortScore;
+    }
+
     //把做题的分数传到activity
     public int getSingleScore() {
         return postSingleScore;
@@ -119,6 +131,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
 
     public int getWeiZhi() {
         return weiZhi;
+    }
+
+    public List<NewTestContentBean.DataBean.QuesDataBean> getDataList() {
+        return this.list;
     }
 
     public static List<TestResultBean.ExamDetailsBean> getListToPost() {
@@ -366,6 +382,11 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 }
                 TestResultBean.ExamDetailsBean resultToPost = listToPost.get(weiZhi);
                 if (quesType == 6) {//简单题
+                    String userAnswerStr = resultToPost.getUserAnswerIds();
+                    if (TextUtils.isEmpty(userAnswerStr)) {
+                        // 只在第一次提交答案的时候加一次分数
+                        mPostShortScore += mShortScore;
+                    }
                     resultToPost.setIsRight(1);
                     // 这里直接设置了答案
                     resultToPost.setUserAnswerIds(answer);
@@ -382,6 +403,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                         dijige.setText((weiZhi + 2) + "/" + size);
                     }
                 } else {//主管案例题
+                    String userAnswerStr = resultToPost.getUserAnswerIds();
+                    if (TextUtils.isEmpty(userAnswerStr)) {
+                        mPostFactScore += (mFactScore / list.get(weiZhi).getChildren().size());
+                    }
                     String answerPost = resultToPost.getUserAnswerIds();
                     try {
                         JSONObject json = null;
@@ -903,8 +928,12 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                     //判断提交是否做正确
                     if (qusAnswerNew.equals(userAnserNew)) {
                         isRight = 1;
-                        examDetailsBean.setIsRight(1);
-                        mPostNotFactScore += (mNotFactScore / list.get(weiZhi).getChildren().size());
+                        int userIsRight = examDetailsBean.getIsRight();
+                        if (userIsRight != 1) {
+                            // 之前已经作对了，就不需要再重复加分数了
+                            examDetailsBean.setIsRight(1);
+                            mPostNotFactScore += (mNotFactScore / list.get(weiZhi).getChildren().size());
+                        }
                     } else {
                         examDetailsBean.setIsRight(0);
                     }
@@ -981,9 +1010,11 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 optsBean.setTag(selectPosition == i ? 1 : 0);
                 optsList.set(i, optsBean);
                 if (i == selectPosition) {
-                    resultToPost.setIsRight(optsBean.getIsRightAnswer());
                     isRight = optsBean.getIsRightAnswer();
-                    if (optsBean.getIsRightAnswer() == 1) mPostNotFactScore += (mNotFactScore / list.get(weiZhi).getChildren().size());
+                    if (optsBean.getIsRightAnswer() == 1 && resultToPost.getIsRight() != 1){
+                        mPostNotFactScore += (mNotFactScore / list.get(weiZhi).getChildren().size());
+                    }
+                    resultToPost.setIsRight(optsBean.getIsRightAnswer());
                     mSelectArr[i].setTextColor(context.getResources().getColor(R.color.lightBlue));
                 } else {
                     mSelectArr[i].setTextColor(context.getResources().getColor(R.color.testBlack));

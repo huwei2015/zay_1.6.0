@@ -96,6 +96,15 @@ public class AllHaveDoTestBean {
             private int location;
 
             private int isShowParsing;
+            private List<QuesDetailsEntity> children;
+
+            public List<QuesDetailsEntity> getChildren() {
+                return children;
+            }
+
+            public void setChildren(List<QuesDetailsEntity> children) {
+                this.children = children;
+            }
 
             public int getIsShowParsing() {
                 return isShowParsing;

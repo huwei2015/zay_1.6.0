@@ -3,6 +3,8 @@ package com.example.administrator.zahbzayxy.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,16 @@ import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AllHaveDoTestBean;
+import com.example.administrator.zahbzayxy.beans.OptsBean;
+import com.example.administrator.zahbzayxy.beans.QuesListBean2;
+import com.example.administrator.zahbzayxy.beans.SaveUserErrorPrcticeBean;
+import com.example.administrator.zahbzayxy.myviews.EditTextWithScrollView;
 import com.example.administrator.zahbzayxy.myviews.MyRecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,16 +70,34 @@ public class TestLookHaveDongAdapter extends RecyclerView.Adapter<TestLookHaveDo
     public void setList(List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> list) {
         this.list = list;
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        int type = 0;
+        if (list != null && list.size() > 0) {
+            int quesType = list.get(position).getQuesType();
+            if (quesType == 6 || quesType == 4) {
+                type = 1;
+            }
+        }
+        return type;
+    }
+
     @Override
     public MyTestViewHold onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_test_qustion_layout, parent, false);
+        View view = null;
+        if (viewType == 1) {
+            view = inflater.inflate(R.layout.item_test_question_short_layout, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.item_test_qustion_layout, parent, false);
+        }
         mViewHold = new MyTestViewHold(view);
         return mViewHold;
     }
 
     @Override
     public void onBindViewHolder(MyTestViewHold holder, int position) {
-        holder.answer_layout.setVisibility(View.VISIBLE);
+        holder.setIsRecyclable(false);
         weiZhi = position;
         size=list.size();
         quesDetailsEntity = list.get(position);
@@ -81,18 +109,31 @@ public class TestLookHaveDongAdapter extends RecyclerView.Adapter<TestLookHaveDo
         optSize = opts.size();
         quesType=quesDetailsEntity.getQuesType();
         isShowParsing = quesDetailsEntity.getIsShowParsing();
+        if (quesType == 6 || quesType == 4) {
+            mViewHold.analysisTv.setText("购买独家解析题库可查看独家解析");
+            mViewHold.submitTv.setVisibility(View.GONE);
+        } else {
+            holder.answer_layout.setVisibility(View.VISIBLE);
+            setSelectArr(holder);
+            if (isShowParsing==1) {
+                mViewHold.parsing_iv.setVisibility(View.VISIBLE);
+                mViewHold.taocanSugest_tv.setVisibility(View.GONE);
+                mViewHold.parsing_tv.setVisibility(View.VISIBLE);
+                mViewHold.parsing_tv.setText(quesDetailsEntity.getParsing());
+                mViewHold.anser_tv.setVisibility(View.GONE);
+            }else {
+                mViewHold.parsing_tv.setText("");
+                mViewHold.parsing_iv.setVisibility(View.GONE);
+                mViewHold.taocanSugest_tv.setVisibility(View.VISIBLE);
+                mViewHold.taocanSugest_tv.setText("购买独家解析题库可查看独家解析");
+            }
+        }
 
-        if (isShowParsing==1) {
-            mViewHold.parsing_iv.setVisibility(View.VISIBLE);
-            mViewHold.taocanSugest_tv.setVisibility(View.GONE);
-            mViewHold.parsing_tv.setVisibility(View.VISIBLE);
-            mViewHold.parsing_tv.setText(quesDetailsEntity.getParsing());
-            mViewHold.anser_tv.setVisibility(View.GONE);
-        }else {
-            mViewHold.parsing_tv.setText("");
-            mViewHold.parsing_iv.setVisibility(View.GONE);
-            mViewHold.taocanSugest_tv.setVisibility(View.VISIBLE);
-            mViewHold.taocanSugest_tv.setText("购买独家解析题库可查看独家解析");
+        if (quesType != 4) {
+            mChildPosition = -1;
+        }
+        if (quesType != 5) {
+            mKePosition = -1;
         }
 
         //每个题的选项内容的集合
@@ -514,8 +555,169 @@ public class TestLookHaveDongAdapter extends RecyclerView.Adapter<TestLookHaveDo
                 }
             }
             quesDetailsEntity.setTag(1);
+        } else if (quesType==4) {//主管案例
+            holder.questionTypeTv.setText("主观案例题");
+            mKePosition = -1;
+            if (mChildPosition < 0) mChildPosition += 1;
+            holder.questionTypeTv.setText("[" + "主观案例题" + "]");
+            // 获取小题集合
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> childrenList = quesDetailsEntity.getChildren();
+            // 防止数组角标越界
+            if (mChildPosition < 0 || mChildPosition >= childrenList.size()) return;
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity children = childrenList.get(mChildPosition);
+            // 小题的题干
+            String childContent = children.getContent();
+            String content = list.get(position).getContent() + "<br />" + (mChildPosition + 1) + "、" + childContent;
+            holder.questionTitleTv.setText(Html.fromHtml(content));
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = children.getAnswerResult();
+            holder.answerEt.setText("未作答");
+            holder.answerEt.setEnabled(false);
+            boolean isRight = false;
+            if (answerResult != null) {
+                // 用户的答题
+                String userCount = answerResult.getUserAnswerIds();
+                if (!TextUtils.isEmpty(userCount)) {
+                    holder.answerEt.setText(userCount);
+                    isRight = true;
+                }
+            }
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity> optsList = children.getOpts();
+            if (optsList != null && optsList.size() > 0) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity optsEntity = optsList.get(0);
+                optsEntity.setOptsTag(isRight?1:2);
+                mViewHold.answerTv.setText("答案: " + Html.fromHtml(optsEntity.getContent()));
+            }
+            mChildPosition++;
+        } else if (quesType==5) {//客观案例
+            if (mKePosition < 0) mKePosition += 1;
+            mChildPosition = -1;
+            holder.selectorType_tv.setText("[" + "客观案例题" + "]");
+            // 获取小题集合
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> childrenList = quesDetailsEntity.getChildren();
+            // 防止数组角标越界
+            if (mKePosition < 0 || mKePosition >= childrenList.size()) return;
+            // 获取小题的bean
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity children = childrenList.get(mKePosition);
+            // 小题的题干
+            String childContent = children.getContent();
+            // 小题的选项集合
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity> optsList = children.getOpts();
+            // 重置选项的显示
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = children.getAnswerResult();
+            setShowSelectBtn(optsList, answerResult);
+            int localType = children.getQuesType();
+            String type = localType == 1 ? "[" + "单项题" + "]" : localType == 2 ? "[" + "多项题" + "]" : "[" + "判断题" + "]";
+
+            String content = list.get(position).getContent();
+            StringBuilder sb = new StringBuilder();
+            sb.append(content).append("<br />").append(type).append("<br />").append(mKePosition + 1).append("、").append(childContent);
+            holder.tv.setText(Html.fromHtml(sb.toString()));
+
+            StringBuffer mutilAnswer = new StringBuffer();
+            char s = 'A';
+            for (int i = 0; i < optsList.size(); i++) {
+                if (optsList.get(i).getIsRightAnswer() == 1) {
+                    mutilAnswer.append(s);
+                }
+                s++;
+            }
+            mViewHold.anser_tv.setText("答案:" + mutilAnswer);
+
+            mKePosition++;
+        } else if (quesType==6) {//简答题
+            holder.questionTypeTv.setText("[" + "简答题" + "]");
+            String questionContent = quesDetailsEntity.getContent();
+            holder.questionTitleTv.setText(Html.fromHtml(questionContent));
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = quesDetailsEntity.getAnswerResult();
+            holder.answerEt.setText("未作答");
+            holder.answerEt.setEnabled(false);
+            boolean isRight = false;
+            if (answerResult != null) {
+                // 用户的答题
+                String userCount = answerResult.getUserAnswerIds();
+                if (!TextUtils.isEmpty(userCount)) {
+                    holder.answerEt.setText(userCount);
+                    isRight = true;
+                }
+            }
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity> optsList = quesDetailsEntity.getOpts();
+            if (optsList != null && optsList.size() > 0) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity optsEntity = optsList.get(0);
+                optsEntity.setOptsTag(isRight?1:2);
+                mViewHold.answerTv.setText("答案: " + Html.fromHtml(optsEntity.getContent()));
+            }
         }
     }
+
+    private RadioButton[] mSelectArr = new RadioButton[6];
+    private int[] mSelectImgArr = new int[6];
+
+    private void setSelectArr(MyTestViewHold hold) {
+        mSelectArr[0] = hold.rbA;
+        mSelectArr[1] = hold.rbB;
+        mSelectArr[2] = hold.rbC;
+        mSelectArr[3] = hold.rbD;
+        mSelectArr[4] = hold.rbE;
+        mSelectArr[5] = hold.rbF;
+        mSelectImgArr[0] = R.mipmap.a_new;
+        mSelectImgArr[1] = R.mipmap.b_new;
+        mSelectImgArr[2] = R.mipmap.c_new;
+        mSelectImgArr[3] = R.mipmap.d_new;
+        mSelectImgArr[4] = R.mipmap.e_new;
+        mSelectImgArr[5] = R.mipmap.f_new;
+    }
+
+    /**
+     * 设置选择按钮展示
+     *
+     * @param optsList 展示的选项
+     * @param answerResult
+     */
+    private void setShowSelectBtn(List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity> optsList, AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult) {
+        if (optsList == null) optsList = new ArrayList<>();
+        for (int i = 0; i < mSelectArr.length; i++) {
+            RadioButton rb = mSelectArr[i];
+            rb.setButtonDrawable(mSelectImgArr[i]);
+            String userAnswerIds = answerResult.getUserAnswerIds();
+            if (i < optsList.size()) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity.OptsEntity optsEntity = optsList.get(i);
+                rb.setVisibility(View.VISIBLE);
+                rb.setText(Html.fromHtml(optsEntity.getContent()));
+                if (optsEntity.getIsRightAnswer() == 1) {
+                    rb.setButtonDrawable(R.mipmap.test_right);
+                } else {
+                    if (!TextUtils.isEmpty(userAnswerIds) && userAnswerIds.contains(String.valueOf(optsEntity.getOptId()))) {
+                        rb.setButtonDrawable(R.mipmap.test_error);
+                    }
+                }
+            } else {
+                rb.setVisibility(View.INVISIBLE);
+                rb.setText("");
+            }
+        }
+    }
+
+    // 用于标识主观案例题的小题位置，如果重置位置请重置为 -1
+    private int mChildPosition = -1;
+    private int mKePosition = -1;
+
+    public void setChildPosition(int position) {
+        mChildPosition = position;
+    }
+
+    public int getChildPosition() {
+        return mChildPosition;
+    }
+
+    public void setKeChildPosition(int position) {
+        this.mKePosition = position;
+    }
+
+    public int getKeChildPosition() {
+        return mKePosition;
+    }
+
+
     private void initFuYong() {
         if (quesType==1) {//单选
             mViewHold.rbA.setVisibility(View.VISIBLE);
@@ -774,6 +976,10 @@ public class TestLookHaveDongAdapter extends RecyclerView.Adapter<TestLookHaveDo
         RadioButton rbA,rbB,rbC,rbD,rbE,rbF;
         RelativeLayout answer_layout;
         TextView anser_tv,parsing_tv,parsing_iv,taocanSugest_tv;
+
+        TextView questionTypeTv, questionTitleTv, submitTv, answerTv, analysisTv;
+        EditTextWithScrollView answerEt;
+
         @SuppressLint("WrongViewCast")
         public MyTestViewHold(View itemView) {
             super(itemView);
@@ -792,7 +998,12 @@ public class TestLookHaveDongAdapter extends RecyclerView.Adapter<TestLookHaveDo
             parsing_iv= (TextView) itemView.findViewById(R.id.xiangjie_iv);
             taocanSugest_tv= (TextView) itemView.findViewById(R.id.taocan_suggest_tv);
 
-
+            questionTypeTv = itemView.findViewById(R.id.item_test_question_type_tv);
+            questionTitleTv = itemView.findViewById(R.id.item_test_question_title_tv);
+            answerEt = itemView.findViewById(R.id.item_test_question_answer_et);
+            submitTv = itemView.findViewById(R.id.item_test_question_submit_ev);
+            answerTv = itemView.findViewById(R.id.item_test_question_real_answer_tv);
+            analysisTv = itemView.findViewById(R.id.item_test_question_analysis_tv);
         }
     }
 }
