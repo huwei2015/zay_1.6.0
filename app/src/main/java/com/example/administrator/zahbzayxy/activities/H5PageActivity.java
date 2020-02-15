@@ -274,6 +274,7 @@ public class H5PageActivity extends BaseActivity{
             bundle.putString("orderNumber",orderNumber);
             bundle.putString("testPrice",price);
             bundle.putBoolean("isLessonOrder",true);
+            bundle.putInt("isApply",1);
             intent.putExtras(bundle);
             startActivity(intent);
             finish();

@@ -137,8 +137,15 @@ public class QueslibAdapter extends BaseAdapter {
         }else{
             myViewHold.queslibName1.setText(queslib.getQuesLibName());
         }
-
-        myViewHold.rec_price1.setText("￥" + String.valueOf(queslib.getsPrice()));
+        if("0".equals(queslib.getsPrice()) || "0.00".equals(queslib.getsPrice())){
+            myViewHold.rec_price1.setText("免费");
+        }else{
+            if("".equals(queslib.getsPrice())){
+                myViewHold.rec_price1.setText("");
+            }else {
+                myViewHold.rec_price1.setText("￥" + String.valueOf(queslib.getsPrice()));
+            }
+        }
         if (!TextUtils.isEmpty(queslib.getImagePath())) {
             Picasso.with(context).load(queslib.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
@@ -170,7 +177,15 @@ public class QueslibAdapter extends BaseAdapter {
             }else{
                 myViewHold.queslibName2.setText(queslib.getQuesLibName1());
             }
-            myViewHold.rec_price2.setText("￥" + String.valueOf(queslib.getsPrice1()));
+            if("0".equals(queslib.getsPrice1()) || "0.00".equals(queslib.getsPrice1())){
+                myViewHold.rec_price2.setText("免费");
+            }else{
+                if("".equals(queslib.getsPrice1())){
+                    myViewHold.rec_price2.setText("");
+                }else {
+                    myViewHold.rec_price2.setText("￥" + String.valueOf(queslib.getsPrice1()));
+                }
+            }
             if (!TextUtils.isEmpty(queslib.getImagePath1())) {
                 Picasso.with(context).load(queslib.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }

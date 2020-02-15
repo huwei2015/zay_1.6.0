@@ -68,8 +68,8 @@ public class QueslibBean {
             private String quesLibName;
             private String imagePath;
             private String quesCount;
-            private int oPrice;
-            private int sPrice;
+            private String oPrice;
+            private String sPrice;
             private String updateTime;
             private int isRecommend;
             private int isNew;
@@ -79,8 +79,8 @@ public class QueslibBean {
             private String quesLibName1;
             private String imagePath1;
             private String quesCount1;
-            private int oPrice1;
-            private int sPrice1;
+            private String oPrice1;
+            private String sPrice1;
             private String updateTime1;
             private int isRecommend1;
             private int isNew1;
@@ -150,19 +150,19 @@ public class QueslibBean {
                 this.quesCount = quesCount;
             }
 
-            public int getoPrice() {
+            public String getoPrice() {
                 return oPrice;
             }
 
-            public void setoPrice(int oPrice) {
+            public void setoPrice(String oPrice) {
                 this.oPrice = oPrice;
             }
 
-            public int getsPrice() {
+            public String getsPrice() {
                 return sPrice;
             }
 
-            public void setsPrice(int sPrice) {
+            public void setsPrice(String sPrice) {
                 this.sPrice = sPrice;
             }
 
@@ -214,19 +214,19 @@ public class QueslibBean {
                 this.quesCount1 = quesCount1;
             }
 
-            public int getoPrice1() {
+            public String getoPrice1() {
                 return oPrice1;
             }
 
-            public void setoPrice1(int oPrice1) {
+            public void setoPrice1(String oPrice1) {
                 this.oPrice1 = oPrice1;
             }
 
-            public int getsPrice1() {
+            public String getsPrice1() {
                 return sPrice1;
             }
 
-            public void setsPrice1(int sPrice1) {
+            public void setsPrice1(String sPrice1) {
                 this.sPrice1 = sPrice1;
             }
 

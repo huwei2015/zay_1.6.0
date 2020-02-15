@@ -74,6 +74,7 @@ public class PayUiActivity extends BaseActivity implements CompoundButton.OnChec
     private int quesLibId;
     private boolean isLessonOrder;
     private int isMechanism;
+    private int isApply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,6 +272,7 @@ public class PayUiActivity extends BaseActivity implements CompoundButton.OnChec
 
     private void inntView() {
         quesLibId = getIntent().getIntExtra("quesLibId",0);
+        isApply = getIntent().getIntExtra("isApply",0);
         back_iv= (ImageView) findViewById(R.id.payui_back);
         queRenPay_bt= (Button) findViewById(R.id.quRenPay_bt);
         zfb_cb= (CheckBox) findViewById(R.id.zfb_cb);
@@ -301,7 +303,11 @@ Log.e("orderPrice",testPrice+"");
         orderNumber = getIntent().getStringExtra("orderNumber");
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = tokenDb.getString("token","");
-        isMechanism = tokenDb.getInt("isMechanism", 0);
+        if(isApply==1){//报名支付
+            isMechanism = 0;
+        }else {
+            isMechanism = tokenDb.getInt("isMechanism", 0);
+        }
         Log.e("orderNumber,token",orderNumber+","+token+","+isMechanism);
 
         if (isMechanism!=0){
