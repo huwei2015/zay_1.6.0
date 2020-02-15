@@ -1,15 +1,20 @@
 package com.example.administrator.zahbzayxy.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.beans.TimeData;
+import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
 
 import java.util.List;
 
@@ -23,6 +28,17 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
     private Context mcontext;
     private List<NotThroughBean.THrougListData> througListBeans;
     private OnItemClickListener onItemClickListener;
+
+    private  int mPosition;
+    private boolean flag=false;
+
+    public int getmPosition() {
+        return mPosition;
+    }
+
+    public void setmPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -49,14 +65,24 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHodler holder, final int position) {
-        holder.title.setText(througListBeans.get(position).getQuesLibName());
-        holder.tv_type.setText(througListBeans.get(position).getPackageName());
+        holder.title.setText(TextAndPictureUtil.getTextCssStyle(mcontext," "+througListBeans.get(position).getPackageName()+" ",througListBeans.get(position).getQuesLibName()));
+        holder.title.setMovementMethod(LinkMovementMethod.getInstance());
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag=true;
                 onItemClickListener.onItemClick(v,position);
+                setmPosition(position);
+                notifyDataSetChanged();
             }
         });
+
+        if (position == getmPosition() && flag) {
+            holder.selLL.setBackground(mcontext.getResources().getDrawable(R.drawable.item_bg));
+        }else{
+            holder.selLL.setBackground(mcontext.getResources().getDrawable(R.drawable.item_bg_nosel));
+        }
+
     }
 
     @Override
@@ -65,11 +91,12 @@ public class NotThrougAdapter extends RecyclerView.Adapter<NotThrougAdapter.View
     }
 
     static class ViewHodler extends RecyclerView.ViewHolder{
-        private TextView title,tv_type;
+        private TextView title;
+        private LinearLayout selLL;
         public ViewHodler(View itemView) {
             super(itemView);
             title =itemView.findViewById(R.id.title);
-            tv_type=itemView.findViewById(R.id.tv_title);
+            selLL=itemView.findViewById(R.id.selLL);
         }
     }
 }

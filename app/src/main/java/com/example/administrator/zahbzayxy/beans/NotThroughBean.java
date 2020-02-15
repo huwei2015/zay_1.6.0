@@ -121,6 +121,15 @@ public class NotThroughBean {
         private String packageName;
         private int passScore;
         private int quesLibId;
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public int getViewScoreLine() {
             return viewScoreLine;

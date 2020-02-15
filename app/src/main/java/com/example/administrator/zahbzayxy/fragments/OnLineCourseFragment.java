@@ -109,15 +109,17 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
         if (mLearnType == 0 && mOnLineManager != null) {
             mOnLineManager.loadDAta(0);
             tv_addTopic.setVisibility(View.GONE);
-//            on_line_filter_course_check.setVisibility(View.GONE);
-//            img_add.setVisibility(View.GONE);
-//            on_line_view_one.setVisibility(View.GONE);
+            mSelectLayout.setVisibility(View.VISIBLE);
+            on_line_filter_course_check.setVisibility(View.VISIBLE);
+            img_add.setVisibility(View.VISIBLE);
+            on_line_view_one.setVisibility(View.VISIBLE);
         } else if (mLearnType == 1 && mOnLineManager != null){
             mOnLineManager.loadDAta(1);
             tv_addTopic.setVisibility(View.GONE);
             img_add.setVisibility(View.GONE);
+            mSelectLayout.setVisibility(View.VISIBLE);
+            on_line_filter_course_check.setVisibility(View.VISIBLE);
         } else if (mLearnType == 2 && mOffLineManager != null) {
-            ToastUtils.showInfo("离线课",5000);
             fixedIndicatorView.setVisibility(View.GONE);
             mOneView.setVisibility(View.GONE);//分割线
             mSelectLayout.setVisibility(View.GONE);

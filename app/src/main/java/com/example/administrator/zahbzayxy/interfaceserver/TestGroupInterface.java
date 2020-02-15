@@ -196,5 +196,6 @@ public interface TestGroupInterface {
     static final String queslibUrl ="/data/usercenter/queslib/queslib_score";
     @POST(value = queslibUrl)
     Call<SimulationInfoBean> getSimulationData(@Query("cateId") Integer cateId,
+                                               @Query("userLibId") Integer userLibId,
                                                @Query("token") String token);
 }

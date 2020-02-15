@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
@@ -73,6 +74,7 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
                         emptyLayout(true);
                         hideLoadingBar();
                         List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
+                        notPassListBeans.clear();
                         notPassListBeans.addAll(data);
                         alreadyAdapter.setList(notPassListBeans);
                     }else{
@@ -121,7 +123,7 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
         refreshRecyclerView.setPullToRefreshListener(this);
 //        refreshRecyclerView.setLoadMoreResource(R.drawable.account);
         //主动触发下拉刷新操作
-//        refreshRecyclerView.onRefresh();
+        refreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -131,12 +133,32 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
 
     @Override
     public void onRefresh() {
-
+        refreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshRecyclerView.setRefreshComplete();
+                currentPage = 1;
+                initData();
+                refreshRecyclerView.setLoadingMoreEnabled(true);
+            }
+        }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-
+        refreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshRecyclerView.setLoadMoreComplete();
+                if (notPassListBeans.size() < PageSize) {
+                    Toast.makeText(getContext(), "没有更多数据", Toast.LENGTH_SHORT).show();
+                    refreshRecyclerView.setLoadingMoreEnabled(false);
+                    return;
+                }
+                currentPage++;
+                initData();
+            }
+        }, 2000);
     }
 
     public void showLoadingBar(boolean transparent) {
