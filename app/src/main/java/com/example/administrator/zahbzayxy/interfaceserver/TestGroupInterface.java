@@ -44,6 +44,7 @@ public interface TestGroupInterface {
     static final String testContentPath="quesLib/examPaper_v1";
     static final String testContentNewPath="quesLibAdd/examPaper_v1";
     static final String saveExamScorePath="userExam/saveExamScore";
+    static final String saveExamScoreNewPath="userExamAdd/saveExamScore";
     static final String testPracticePath="ques/syncQues";
     static final String testPracticeNewPath="quesAdd/syncQues";
     static final String testSubmitOrderPath="shopOrder/submitQuesLibOrder";
@@ -81,6 +82,12 @@ public interface TestGroupInterface {
     @FormUrlEncoded
     @POST(value=saveExamScorePath)
     Call<TestCommitBean>getExamScoreData1(@FieldMap Map<String,String> saveScore);
+
+    //保存用户成绩
+    @FormUrlEncoded
+    @POST(value=saveExamScoreNewPath)
+    Call<TestCommitBean> getExamScoreData1New(@FieldMap Map<String,String> saveScore);
+
 //查看错题
     @GET(value=testPracticePath)
     Call<TestPracticeBean> getTestPracticeData(@Query("quesLibId")Integer quesLibId, @Query("token")String token);

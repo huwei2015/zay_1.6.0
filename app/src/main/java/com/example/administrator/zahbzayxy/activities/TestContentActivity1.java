@@ -460,29 +460,79 @@ public class TestContentActivity1 extends BaseActivity {
 
     private void initToPostJsonData() throws JSONException {
         //从adapter中获得做题所获得的总分数
-        totalScore = madapter.getJudgeScore() + madapter.getSingleScore() + madapter.getMultipleScore();
+        totalScore = madapter.getJudgeScore() + madapter.getSingleScore() + madapter.getMultipleScore() +
+                madapter.getPostFactScore() + madapter.getPostNotFactScore() + madapter.getPostShortScore();
         Log.e("totalScoreScore", String.valueOf(totalScore));
         jsonArray = new JSONArray();
         final List<TestResultBean.ExamDetailsBean> listToPost = madapter.getListToPost();
+        List<NewTestContentBean.DataBean.QuesDataBean> dataList = madapter.getDataList();
         int size1 = listToPost.size();
-        int newTotalScore = 0, rightJungleNum = 0, rightMultiNum = 0, rightSingleNum = 0;
+        // rightFactNum 主管案例  rightNotFactNUm 客观案例  rightShortNum 简答题
+        int newTotalScore = 0, rightJungleNum = 0, rightMultiNum = 0, rightSingleNum = 0,
+                rightFactNum = 0, rightNotFactNUm = 0, rightShortNum = 0;
         for (int i = 0; i < size1; i++) {
+            int j = i;
+            TestResultBean.ExamDetailsBean examDetailsBean = listToPost.get(i);
             int isRight = listToPost.get(i).getIsRight();
+            int questionType = listToPost.get(j).getQuestionType();
             if (isRight == 1) {
                 // newTotalScore++;
-                int j = i;
-                int questionType = listToPost.get(j).getQuestionType();
                 if (questionType == 1) {
                     rightSingleNum++;
                 } else if (questionType == 2) {
                     rightMultiNum++;
-                } else {
+                } else if (questionType == 3) {
                     rightJungleNum++;
+                }  else if (questionType == 6) {
+                    rightShortNum++;
+                }
+            }
+            if (questionType == 4) {
+                // 主观案例题
+                String userAnswer = examDetailsBean.getUserAnswerIds();
+                if (!TextUtils.isEmpty(userAnswer) && j < dataList.size()) {
+                    JSONObject json = new JSONObject(userAnswer);
+                    NewTestContentBean.DataBean.QuesDataBean quesDataBean = dataList.get(j);
+                    boolean factIsRight = true;
+                    for (int m = 0; m < quesDataBean.getChildren().size(); m++){
+                        String ans = json.optString(String.valueOf(m));
+                        if (TextUtils.isEmpty(ans)) {
+                            factIsRight = false;
+                            break;
+                        }
+                    }
+                    if (factIsRight) {
+                        rightFactNum++;
+                    }
+                }
+            } else if (questionType == 5) {
+                // 客观案例
+                String userAnswer = examDetailsBean.getUserAnswerIds();
+                if (!TextUtils.isEmpty(userAnswer) && j < dataList.size()) {
+                    JSONObject json = new JSONObject(userAnswer);
+                    NewTestContentBean.DataBean.QuesDataBean quesDataBean = dataList.get(j);
+                    boolean factIsRight = true;
+                    for (int m = 0; m < quesDataBean.getChildren().size(); m++){
+                        JSONObject itemJson = json.optJSONObject(String.valueOf(m));
+                        if (itemJson == null) {
+                            factIsRight = false;
+                            break;
+                        }
+                        int notFactRight = itemJson.optInt("is_right");
+                        if (notFactRight != 1) {
+                            factIsRight = false;
+                            break;
+                        }
+                    }
+                    if (factIsRight) {
+                        rightNotFactNUm++;
+                    }
                 }
             }
         }
-        newTotalScore = rightSingleNum * singleScore + rightMultiNum * multipleScore + rightJungleNum * judgeScore;
-        int totalRightNum = rightSingleNum + rightMultiNum + rightJungleNum;
+        newTotalScore = rightSingleNum * singleScore + rightMultiNum * multipleScore + rightJungleNum * judgeScore
+            + rightFactNum * factScore + rightNotFactNUm * notFactScore + rightShortNum * shortScore;
+        int totalRightNum = rightSingleNum + rightMultiNum + rightJungleNum + rightFactNum + rightNotFactNUm + rightShortNum;
         if (size1 > 0) {
             correctRate = (int) (totalRightNum * 100 / size1);
         }
@@ -501,10 +551,107 @@ public class TestContentActivity1 extends BaseActivity {
                 int isRight = examDetailsBean.getIsRight();
                 object.put("questionId", questionId);
                 object.put("questionType", questionType);
-                object.put("userAnswerIds", userAnswerIds);
+                if ((questionType == 4 || questionType == 5) && i < dataList.size()) {
+                    NewTestContentBean.DataBean.QuesDataBean quesDataBean = dataList.get(i);
+                    List<NewTestContentBean.DataBean.QuesDataBean> childrenList = quesDataBean.getChildren();
+                    JSONArray childArr = new JSONArray();
+                    for (int j = 0; j < childrenList.size(); j++) {
+                        JSONObject childJson = new JSONObject();
+                        NewTestContentBean.DataBean.QuesDataBean child = childrenList.get(j);
+                        childJson.put("questionType", child.getQuesType());
+                        childJson.put("questionId", child.getId());
+                        childJson.put("score", child.getScore());
+                        if (questionType == 4) {
+                            JSONObject answerJson = null;
+                            if (TextUtils.isEmpty(userAnswerIds)) {
+                                answerJson = new JSONObject();
+                            } else {
+                                answerJson = new JSONObject(userAnswerIds);
+                            }
+                            int right = 0;
+                            String answer = answerJson.optString(String.valueOf(j));
+                            if (!TextUtils.isEmpty(answer)) right = 1;
+                            childJson.put("userAnswerIds", answer);
+                            childJson.put("isRight", right);
+                        } else if (questionType == 5) {
+                            JSONObject answerJson = null;
+                            if (TextUtils.isEmpty(userAnswerIds)) {
+                                answerJson = new JSONObject();
+                            } else {
+                                answerJson = new JSONObject(userAnswerIds);
+                            }
+                            JSONObject itemAnswer = answerJson.optJSONObject(String.valueOf(j));
+                            List<NewTestContentBean.DataBean.QuesDataBean.OptsBean> optsList = child.getOpts();
+                            String childAnswerId = "";
+                            for (int k = 0; k < optsList.size(); k++) {
+                                NewTestContentBean.DataBean.QuesDataBean.OptsBean optsBean = optsList.get(k);
+                                if (optsBean.getTag() == 1) {
+                                    childAnswerId += optsBean.getId() + ",";
+                                }
+                            }
+                            if (!TextUtils.isEmpty(childAnswerId)) childAnswerId = childAnswerId.substring(0, childAnswerId.length() - 1);
+                            childJson.put("userAnswerIds", childAnswerId);
+                            int right = 0;
+                            if (itemAnswer != null) right= itemAnswer.optInt("is_right");
+                            childJson.put("isRight", right);
+                        }
+                        childArr.put(childJson);
+                    }
+                    object.put("children", childArr);
+                    object.put("userAnswerIds", "");
+
+                    if (questionType == 4) {
+                        String userAnswer = examDetailsBean.getUserAnswerIds();
+                        if (!TextUtils.isEmpty(userAnswer) && i < dataList.size()) {
+                            JSONObject json = new JSONObject(userAnswer);
+                            NewTestContentBean.DataBean.QuesDataBean quesDataBean1 = dataList.get(i);
+                            boolean factIsRight = true;
+                            for (int m = 0; m < quesDataBean1.getChildren().size(); m++) {
+                                String ans = json.optString(String.valueOf(m));
+                                if (TextUtils.isEmpty(ans)) {
+                                    factIsRight = false;
+                                    break;
+                                }
+                            }
+                            if (factIsRight) {
+                                isRight = 1;
+                            } else {
+                                isRight = 0;
+                            }
+                        }
+                    } else if (questionType == 5) {
+                        String userAnswer = examDetailsBean.getUserAnswerIds();
+                        if (!TextUtils.isEmpty(userAnswer) && i < dataList.size()) {
+                            JSONObject json = new JSONObject(userAnswer);
+                            NewTestContentBean.DataBean.QuesDataBean quesDataBean1 = dataList.get(i);
+                            boolean factIsRight = true;
+                            for (int m = 0; m < quesDataBean1.getChildren().size(); m++){
+                                JSONObject itemJson = json.optJSONObject(String.valueOf(m));
+                                if (itemJson == null) {
+                                    factIsRight = false;
+                                    break;
+                                }
+                                int notFactRight = itemJson.optInt("is_right");
+                                if (notFactRight != 1) {
+                                    factIsRight = false;
+                                    break;
+                                }
+                            }
+                            if (factIsRight) {
+                                isRight = 1;
+                            } else {
+                                isRight = 0;
+                            }
+                        }
+                    }
+                } else {
+                    object.put("userAnswerIds", userAnswerIds);
+                }
+
                 object.put("isRight", isRight);
                 jsonArray.put(object);
             }
+            //children 中的每一项有 questionType,questionId,isRight,userAnswerIds  这四个字段就行了
 
             stopTime = DateUtil.getNow(DateUtil.DEFAULTPATTERN);
             Log.e("currentTime", stopTime);
@@ -527,11 +674,12 @@ public class TestContentActivity1 extends BaseActivity {
             saveScore.put("examType",String.valueOf(examType));
             Log.i("dfdf","test======"+examType);
             TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-            aClass.getExamScoreData1(saveScore).enqueue(new Callback<TestCommitBean>() {
+            aClass.getExamScoreData1New(saveScore).enqueue(new Callback<TestCommitBean>() {
                 @Override
                 public void onResponse(Call<TestCommitBean> call, Response<TestCommitBean> response) {
                     TestCommitBean body = response.body();
                     String s1 = new Gson().toJson(body);
+                    // {"code":"00000","data":{"defeatNum":1.0,"examScoreId":18971.0,"ranking":1.0}}
                     Log.e("jsonPostBodyaaaaaaaaa", s1);
                     if (response != null && body != null) {
                         String code = body.getCode();

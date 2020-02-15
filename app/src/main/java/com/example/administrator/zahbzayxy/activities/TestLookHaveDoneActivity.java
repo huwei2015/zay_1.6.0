@@ -213,6 +213,24 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                     if (position > 0) {
                         //左
                         position = position - 1;
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition == 1){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                madapter.setChildPosition(childPosition - 2);
+                                position += 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition == 1){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                madapter.setKeChildPosition(kePosition - 2);
+                                position += 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         madapter.notifyDataSetChanged();
                         dijige.setText((position + 1) + "/" + size);
@@ -223,6 +241,22 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                     //此处的100是题的个数  根据实际题的个数做更改
                     if (position < size - 1) {
                         position = position + 1;
+                        int childPosition = madapter.getChildPosition();
+                        if (childPosition >= 0) {
+                            if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
+                        int kePosition = madapter.getKeChildPosition();
+                        if (kePosition >= 0) {
+                            if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                                madapter.setKeChildPosition(-1);
+                            } else {
+                                position -= 1;
+                            }
+                        }
                         recyclerview.scrollToPosition(position);
                         dijige.setText((position + 1) + "/" + size);
                         madapter.notifyDataSetChanged();
@@ -241,6 +275,24 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         if (position > 0) {
             //左
             position = position - 1;
+            int childPosition = madapter.getChildPosition();
+            if (childPosition >= 0) {
+                if (childPosition == 1){
+                    madapter.setChildPosition(-1);
+                } else {
+                    madapter.setChildPosition(childPosition - 2);
+                    position += 1;
+                }
+            }
+            int kePosition = madapter.getKeChildPosition();
+            if (kePosition >= 0) {
+                if (kePosition == 1){
+                    madapter.setKeChildPosition(-1);
+                } else {
+                    madapter.setKeChildPosition(kePosition - 2);
+                    position += 1;
+                }
+            }
             recyclerview.scrollToPosition(position);
             madapter.notifyDataSetChanged();
             dijige.setText((position + 1) + "/" + size);
@@ -256,6 +308,22 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         //此处的100是题的个数  根据实际题的个数做更改
         if (position < size - 1) {
             position = position + 1;
+            int childPosition = madapter.getChildPosition();
+            if (childPosition >= 0) {
+                if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                    madapter.setChildPosition(-1);
+                } else {
+                    position -= 1;
+                }
+            }
+            int kePosition = madapter.getKeChildPosition();
+            if (kePosition >= 0) {
+                if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                    madapter.setKeChildPosition(-1);
+                } else {
+                    position -= 1;
+                }
+            }
             recyclerview.scrollToPosition(position);
             madapter.notifyDataSetChanged();
             dijige.setText((position + 1) + "/" + size);
@@ -300,6 +368,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> oneList = new ArrayList<>();
         List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> twoList = new ArrayList<>();
         List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> threeList = new ArrayList<>();
+        List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> fourList = new ArrayList<>();
+        List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> fiveList = new ArrayList<>();
+        List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> sixList = new ArrayList<>();
         int size = list.size();//所有题库
         for (int i = 0; i < size; i++) {
             int quesType = list.get(i).getQuesType();
@@ -332,6 +403,33 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
                 }
                 threeList.add(examDetailsBean1);
+            } else if (quesType == 4) {//主管案例
+                int j = i + 1;
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity examDetailsBean1 = new AllHaveDoTestBean.DataEntity.QuesDetailsEntity();
+                examDetailsBean1.setLocation(j);
+                examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
+                if (isRight == 1) {
+                    examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                fourList.add(examDetailsBean1);
+            } else if (quesType == 5) {//客观案例
+                int j = i + 1;
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity examDetailsBean1 = new AllHaveDoTestBean.DataEntity.QuesDetailsEntity();
+                examDetailsBean1.setLocation(j);
+                examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
+                if (isRight == 1) {
+                    examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                fiveList.add(examDetailsBean1);
+            } else if (quesType == 6) {//简答题
+                int j = i + 1;
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity examDetailsBean1 = new AllHaveDoTestBean.DataEntity.QuesDetailsEntity();
+                examDetailsBean1.setLocation(j);
+                examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
+                if (isRight == 1) {
+                    examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                sixList.add(examDetailsBean1);
             }
         }
 
@@ -340,9 +438,15 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         GridItem item1 = null;
         GridItem item2 = null;
         GridItem item3 = null;
+        GridItem item4 = null;
+        GridItem item5 = null;
+        GridItem item6 = null;
         int size1 = oneList.size();
         int size2 = twoList.size();
         int size3 = threeList.size();
+        int size4 = fourList.size();
+        int size5 = fiveList.size();
+        int size6 = sixList.size();
         Log.e("errorListSize", size1 + "," + size2 + "," + size3);
         if (size1 > 0) {
             for (int i = 0; i < size1; i++) {
@@ -369,6 +473,33 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item3 = new GridItem(location + "," + isRight, i + "", 2, "判断", isRight);
                 mGirdList.add(item3);
+            }
+        }
+        if (size4 > 0) {
+            for (int i = 0; i < size4; i++) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity quesDetailsEntity = fourList.get(i);
+                int location = quesDetailsEntity.getLocation();
+                int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
+                item4 = new GridItem(location + "," + isRight, i + "", 3, "主观案例", isRight);
+                mGirdList.add(item4);
+            }
+        }
+        if (size5 > 0) {
+            for (int i = 0; i < size5; i++) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity quesDetailsEntity = fiveList.get(i);
+                int location = quesDetailsEntity.getLocation();
+                int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
+                item5 = new GridItem(location + "," + isRight, i + "", 4, "客观案例", isRight);
+                mGirdList.add(item5);
+            }
+        }
+        if (size6 > 0) {
+            for (int i = 0; i < size6; i++) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity quesDetailsEntity = sixList.get(i);
+                int location = quesDetailsEntity.getLocation();
+                int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
+                item6 = new GridItem(location + "," + isRight, i + "", 5, "简答题", isRight);
+                mGirdList.add(item6);
             }
         }
         //展示

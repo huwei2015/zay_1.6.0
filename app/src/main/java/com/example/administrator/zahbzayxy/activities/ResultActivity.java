@@ -120,11 +120,11 @@ public class ResultActivity extends BaseActivity {
                                 quesLibId = data.getQuesLibId();
                                 userLibId = data.getUserLibId();
                                 ranking = data.getRanking();
-                                totalScore = data.getTotalScore();
+                                totalScore = (int) data.getTotalScore();
                                 int correctRate = data.getCorrectRate();
                                 examDetails = data.getExamDetails();
                                 spareTime = data.getSpareTime();
-                                overdueTime = data.getRemainingTime();
+                                overdueTime = (int) data.getRemainingTime();
                                 Log.e("spareTime", spareTime + ",1111" + totalScore);
                                 isShowPaper = data.getIsShowPaper();
                                 String examBeginTime = data.getExamBeginTime();
@@ -193,6 +193,9 @@ public class ResultActivity extends BaseActivity {
                                     List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> oneList = new ArrayList<>();
                                     List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> twoList = new ArrayList<>();
                                     List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> threeList = new ArrayList<>();
+                                    List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> fourList = new ArrayList<>();
+                                    List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> fiveList = new ArrayList<>();
+                                    List<TestGradAnalyseBean.DataEntity.ExamDetailsEntity> sixList = new ArrayList<>();
                                     int size1 = examDetails.size();
                                     for (int i = 0; i < size1; i++) {
                                         int questionType = examDetails.get(i).getQuestionType();
@@ -213,7 +216,7 @@ public class ResultActivity extends BaseActivity {
                                                 examDetailsEntity.setIsRight(1);
                                             }
                                             twoList.add(examDetailsEntity);
-                                        } else {//判断
+                                        } else if (questionType == 3){//判断
                                             int j = i + 1;
                                             TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = new TestGradAnalyseBean.DataEntity.ExamDetailsEntity();
                                             examDetailsEntity.setLocation(j);
@@ -221,15 +224,45 @@ public class ResultActivity extends BaseActivity {
                                                 examDetailsEntity.setIsRight(1);
                                             }
                                             threeList.add(examDetailsEntity);
+                                        } else if (questionType == 4) {//主管案例
+                                            int j = i + 1;
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = new TestGradAnalyseBean.DataEntity.ExamDetailsEntity();
+                                            examDetailsEntity.setLocation(j);
+                                            if (isRight == 1) {
+                                                examDetailsEntity.setIsRight(1);
+                                            }
+                                            fourList.add(examDetailsEntity);
+                                        } else if (questionType == 5) {//客观案例
+                                            int j = i + 1;
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = new TestGradAnalyseBean.DataEntity.ExamDetailsEntity();
+                                            examDetailsEntity.setLocation(j);
+                                            if (isRight == 1) {
+                                                examDetailsEntity.setIsRight(1);
+                                            }
+                                            fiveList.add(examDetailsEntity);
+                                        } else if (questionType == 6) {//简答题
+                                            int j = i + 1;
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = new TestGradAnalyseBean.DataEntity.ExamDetailsEntity();
+                                            examDetailsEntity.setLocation(j);
+                                            if (isRight == 1) {
+                                                examDetailsEntity.setIsRight(1);
+                                            }
+                                            sixList.add(examDetailsEntity);
                                         }
                                     }
                                     List<GridItem> mGirdList = new ArrayList<GridItem>();
                                     GridItem item1 = null;
                                     GridItem item2 = null;
                                     GridItem item3 = null;
+                                    GridItem item4 = null;
+                                    GridItem item5 = null;
+                                    GridItem item6 = null;
                                     int size4 = oneList.size();
                                     int size2 = twoList.size();
                                     int size3 = threeList.size();
+                                    int size5 = fourList.size();
+                                    int size6 = fiveList.size();
+                                    int size7 = sixList.size();
                                     if (size1 > 0) {
                                         for (int i = 0; i < size4; i++) {
                                             TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = oneList.get(i);
@@ -260,6 +293,36 @@ public class ResultActivity extends BaseActivity {
                                             mGirdList.add(item3);
                                         }
                                     }
+                                    if (size5 > 0) {
+                                        for (int i = 0; i < size5; i++) {
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = fourList.get(i);
+                                            int location = examDetailsEntity.getLocation();
+                                            int isRight = examDetailsEntity.getIsRight();
+                                            item4 = new GridItem(location + "," + isRight, i + "", 3, "主观案例题", isRight);
+                                            Log.e("isRight", isRight + "主管案例,11111");
+                                            mGirdList.add(item4);
+                                        }
+                                    }
+                                    if (size6 > 0) {
+                                        for (int i = 0; i < size6; i++) {
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = fiveList.get(i);
+                                            int location = examDetailsEntity.getLocation();
+                                            int isRight = examDetailsEntity.getIsRight();
+                                            item5 = new GridItem(location + "," + isRight, i + "", 4, "客观案例题", isRight);
+                                            Log.e("isRight", isRight + "客观案例,11111");
+                                            mGirdList.add(item5);
+                                        }
+                                    }
+                                    if (size7 > 0) {
+                                        for (int i = 0; i < size7; i++) {
+                                            TestGradAnalyseBean.DataEntity.ExamDetailsEntity examDetailsEntity = sixList.get(i);
+                                            int location = examDetailsEntity.getLocation();
+                                            int isRight = examDetailsEntity.getIsRight();
+                                            item6 = new GridItem(location + "," + isRight, i + "", 5, "简答题", isRight);
+                                            Log.e("isRight", isRight + "简答题,11111");
+                                            mGirdList.add(item6);
+                                        }
+                                    }
                                     adapter = new TestResultAdapter(mGirdList, ResultActivity.this);
                                     resultGridView.setAdapter(adapter);
                                     //list.addAll(examDetails);
@@ -277,7 +340,7 @@ public class ResultActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<TestGradAnalyseBean> call, Throwable t) {
-
+                Log.i("====获取成绩异常=====", t.getMessage());
             }
         });
     }

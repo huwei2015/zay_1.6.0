@@ -490,12 +490,12 @@ public class OnLineManager implements PullToRefreshListener {
     }
 
     private void showLoadingBar(boolean transparent) {
-        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : mContext.getResources().getColor(R.color.main_bg));
-        mLoadingBar.show();
+//        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : mContext.getResources().getColor(R.color.main_bg));
+//        mLoadingBar.show();
     }
 
     private void hideLoadingBar() {
-        mLoadingBar.hide();
+//        mLoadingBar.hide();
     }
 
     @Override

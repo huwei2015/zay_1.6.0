@@ -56,7 +56,7 @@ public class TestGradAnalyseBean {
          * examDetails : [{"questionId":51033,"isRight":0,"userAnswerIds":"112981","questionType":1},{"questionId":51057,"isRight":1,"userAnswerIds":"113054","questionType":1}]
          * ranking : 15
          */
-        private int totalScore;
+        private double totalScore;
         private String examBeginTime;
         private int userLibId;
 
@@ -76,13 +76,13 @@ public class TestGradAnalyseBean {
         private String assignTime;
         private String shareUrl;
         private int isShowPaper;
-        private int RemainingTime;
+        private double RemainingTime;
 
-        public int getRemainingTime() {
+        public double getRemainingTime() {
             return RemainingTime;
         }
 
-        public void setRemainingTime(int remainingTime) {
+        public void setRemainingTime(double remainingTime) {
             RemainingTime = remainingTime;
         }
 
@@ -120,7 +120,7 @@ public class TestGradAnalyseBean {
             this.spareTime = spareTime;
         }
 
-        public void setTotalScore(int totalScore) {
+        public void setTotalScore(double totalScore) {
             this.totalScore = totalScore;
         }
 
@@ -168,7 +168,7 @@ public class TestGradAnalyseBean {
             this.ranking = ranking;
         }
 
-        public int getTotalScore() {
+        public double getTotalScore() {
             return totalScore;
         }
 
@@ -227,6 +227,24 @@ public class TestGradAnalyseBean {
             private int isRight;
             private String userAnswerIds;
             private int questionType;
+            private double score;
+            private List<ExamDetailsEntity> children;
+
+            public double getScore() {
+                return score;
+            }
+
+            public void setScore(double score) {
+                this.score = score;
+            }
+
+            public List<ExamDetailsEntity> getChildren() {
+                return children;
+            }
+
+            public void setChildren(List<ExamDetailsEntity> children) {
+                this.children = children;
+            }
 
             public int getLocation() {
                 return location;
