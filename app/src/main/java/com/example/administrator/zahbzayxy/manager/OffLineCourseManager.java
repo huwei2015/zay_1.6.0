@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class OffLineCourseManager implements DownloadController.Observer, PullTo
     private int downloadingCount = 0;
     private ArrayList<DownloaderWrapper> mOffLineList = new ArrayList<>();
     private OffLineCourseLearnAdapter mAdapter;
-    private View mEmptyView;
+    private RelativeLayout mEmptyView;
     private TextView tv_msg;
     private OnLineCourseFragment mFragment;
 
@@ -67,9 +68,12 @@ public class OffLineCourseManager implements DownloadController.Observer, PullTo
         this.mContext = context;
         this.mRefreshRecyclerView = refreshRecyclerView;
         mAdapter = new OffLineCourseLearnAdapter(mContext, mOffLineList);
-        initView();
         mRefreshRecyclerView.setAdapter(mAdapter);
         initEvent();
+    }
+
+    public void setEmptyView(RelativeLayout emptyView){
+        mEmptyView = emptyView;
     }
 
     public void setFragment(OnLineCourseFragment fragment) {
@@ -77,6 +81,7 @@ public class OffLineCourseManager implements DownloadController.Observer, PullTo
     }
 
     public void initData() {
+        initView();
         downloadedList = DownloadController.downloadedList;
         downloadingList = DownloadController.downloadingList;
         mOffLineList.clear();
@@ -291,12 +296,7 @@ public class OffLineCourseManager implements DownloadController.Observer, PullTo
         mRefreshRecyclerView.setPullToRefreshListener(this);
         //主动触发下拉刷新操作
 //        mRefreshRecyclerView.onRefresh();
-        //设置EmptyView
-        mEmptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
-        mEmptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
         tv_msg = mEmptyView.findViewById(R.id.tv_msg);
-        mRefreshRecyclerView.setEmptyView(mEmptyView);
         mRefreshRecyclerView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     }
 

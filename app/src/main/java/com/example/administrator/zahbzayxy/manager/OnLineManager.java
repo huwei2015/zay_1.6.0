@@ -89,10 +89,8 @@ public class OnLineManager implements PullToRefreshListener {
     private int mPosition = 0;
     private int mIsAchieve = 0;
     private int mCourseType = 0;
-    private View emptyView;
     private TextView tv_msg;
-    LinearLayout ll_list;
-    private RelativeLayout rl_empty;
+    private RelativeLayout rl_empty, mFilterLayout;
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
         this.mContext = context;
@@ -105,6 +103,11 @@ public class OnLineManager implements PullToRefreshListener {
         setItemClick(mTitleAdapter);
         mFilterCb.setChecked(false);
         initEvent();
+    }
+
+    public void setEmptyView(RelativeLayout emptyView, RelativeLayout filterLayout){
+        rl_empty = emptyView;
+        this.mFilterLayout = filterLayout;
     }
 
     private boolean mLoad = false;
@@ -129,14 +132,7 @@ public class OnLineManager implements PullToRefreshListener {
         mRefreshRecyclerView.setPullToRefreshListener(this);
         //主动触发下拉刷新操作
 //        mRefreshRecyclerView.onRefresh();
-        //设置EmptyView
-        emptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
-        emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        tv_msg = emptyView.findViewById(R.id.tv_msg);
-        ll_list = emptyView.findViewById(R.id.ll_list);
-        rl_empty= emptyView.findViewById(R.id.rl_empty_layout);
-        mRefreshRecyclerView.setEmptyView(emptyView);
+        tv_msg = rl_empty.findViewById(R.id.tv_msg);
 
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
             showLoadingBar(true);
@@ -151,10 +147,12 @@ public class OnLineManager implements PullToRefreshListener {
         if (flag) {
             mRefreshRecyclerView.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
+            mFilterLayout.setVisibility(View.VISIBLE);
         } else {
             rl_empty.setVisibility(View.VISIBLE);
             mRefreshRecyclerView.setVisibility(View.GONE);
             tv_msg.setText("暂无课程信息");
+            mFilterLayout.setVisibility(View.GONE);
         }
     }
 

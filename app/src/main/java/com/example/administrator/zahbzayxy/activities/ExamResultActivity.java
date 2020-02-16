@@ -14,6 +14,8 @@ import com.example.administrator.zahbzayxy.beans.ExamResultBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
 import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
@@ -49,8 +51,13 @@ public class ExamResultActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onResponse(Call<ExamResultBean> call, Response<ExamResultBean> response) {
                     if(response != null && response.body() !=null){
+                        if (!"00000".equals(response.body().getCode())){
+                            ToastUtils.showLongInfo("数据获取失败，请稍后重试");
+                            finish();
+                            return;
+                        }
                         resultBean=response.body().getData();
-                        exam_title.setText(resultBean.getExamName());
+                        exam_title.setText(resultBean.getExamName() + "");
                         if(resultBean.isPassed()){//考试合格
                             tv_score.setText(String.valueOf(resultBean.getExamScore()));
                             exam_time.setText(resultBean.getExamDate());
