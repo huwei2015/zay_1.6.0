@@ -98,7 +98,7 @@ public class NBMyAllOrderAdapter extends BaseAdapter {
 
         }
          final int orderType = rowsEntity.getOrderType();
-
+        final String orderTypeName = rowsEntity.getOrderTypeName();
         if (!String.valueOf(orderType).isEmpty()) {
             if (orderType == 5) {
                 viewHold.orderType_tv.setText("课程订单");
@@ -125,6 +125,9 @@ public class NBMyAllOrderAdapter extends BaseAdapter {
             else if (orderType == 9) {
                 viewHold.orderType_tv.setText("充值订单");
                 viewHold.lessonOrder_iv.setVisibility(View.GONE);
+            }
+            if(!orderTypeName.isEmpty()){
+                viewHold.orderType_tv.setText(orderTypeName);
             }
         }
 

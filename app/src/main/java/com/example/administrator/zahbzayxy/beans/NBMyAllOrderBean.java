@@ -122,6 +122,16 @@ public class NBMyAllOrderBean {
             private int updaterId;
 
             private String  courseLogo;
+            private String orderTypeName;
+
+
+            public String getOrderTypeName() {
+                return orderTypeName;
+            }
+
+            public void setOrderTypeName(String orderTypeName) {
+                this.orderTypeName = orderTypeName;
+            }
 
             public String getCourseLogo() {
                 return courseLogo;
