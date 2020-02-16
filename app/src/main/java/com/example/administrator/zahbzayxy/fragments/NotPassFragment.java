@@ -87,6 +87,11 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
             @Override
             public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
                     if(response !=null && response.body() !=null){
+                        if (currentPage == 1 && response.body().getData().getqLibs().getData().size() == 0) {
+                            emptyLayout(false);
+                        } else {
+                            emptyLayout(true);
+                        }
                         String code = response.body().getCode();
                         if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
                             emptyLayout(true);

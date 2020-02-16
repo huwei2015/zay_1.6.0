@@ -131,6 +131,33 @@ public class NotPassBean {
          private String endTime;
          private int quesLibExamNum;
          private int quesLibId;
+         private String isExam;
+         private int trainType;
+         private int classCerStatus;
+
+        public String getIsExam() {
+            return isExam;
+        }
+
+        public void setIsExam(String isExam) {
+            this.isExam = isExam;
+        }
+
+        public int getTrainType() {
+            return trainType;
+        }
+
+        public void setTrainType(int trainType) {
+            this.trainType = trainType;
+        }
+
+        public int getClassCerStatus() {
+            return classCerStatus;
+        }
+
+        public void setClassCerStatus(int classCerStatus) {
+            this.classCerStatus = classCerStatus;
+        }
 
         public int getIsLimitCount() {
             return isLimitCount;
