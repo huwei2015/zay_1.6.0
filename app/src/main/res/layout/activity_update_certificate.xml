@@ -28,14 +28,20 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/ProgressBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center"/>
     <ImageView
         android:id="@+id/img_one_cun"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:layout_width="200dp"
         android:layout_height="140dp"
-        android:visibility="visible" />
-
+        android:scaleType="fitXY"
+        android:src="@mipmap/timg"/>
     <Button
         android:id="@+id/btn_photo"
         android:layout_width="wrap_content"

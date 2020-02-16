@@ -143,7 +143,6 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         recyclerView.setPullRefreshEnabled(false);
         //设置刷新回调
         recyclerView.setPullToRefreshListener(MyExamActivity.this);
-        recyclerView.setLoadMoreResource(R.drawable.account);
         //主动触发下拉刷新操作
         recyclerView.onRefresh();
         //设置EmptyView

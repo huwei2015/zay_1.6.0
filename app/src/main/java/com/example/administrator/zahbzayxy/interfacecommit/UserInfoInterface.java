@@ -175,7 +175,7 @@ public interface UserInfoInterface {
     static final String certificate = "/userCenter/uploadEduCer";
     @Multipart
     @POST(value = certificate)
-    Call<UpBean> getCertificateData(@Part MultipartBody.Part oneInchPhoto,
+    Call<UpBean> getCertificateData(@Part MultipartBody.Part eduCer,
                                     @Query("token") String token);
     //上传身份正反面
     static final String up_idcard ="/userCenter/uploadIdCard";
