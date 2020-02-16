@@ -446,6 +446,14 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            initUserCenter();
+        }
+    }
+
     private void initUserInfo() {
         boolean wechatLogin = sharedPreferences.getBoolean("wechatLogin", false);
         if (wechatLogin == true) {
