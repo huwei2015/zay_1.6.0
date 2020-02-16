@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
@@ -50,6 +51,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
     int userQuesLibId;
     boolean data;
     private RelativeLayout rl_empty;
+    private TextView tv_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,12 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         aClass.getExamList(token, currentPage, pageSize).enqueue(new Callback<ExamBean>() {
             @Override
             public void onResponse(Call<ExamBean> call, Response<ExamBean> response) {
-                if (response != null && response.body() != null && response.body().getData().getQuesLibs().size() > 0) {
+                if (response != null && response.body() != null) {
+                    if (currentPage == 1 && response.body().getData().getQuesLibs().size() == 0) {
+                        emptyLayout(false);
+                    } else {
+                        emptyLayout(true);
+                    }
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         emptyLayout(true);
@@ -127,6 +134,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         mLoadingBar = (ProgressBarLayout) findViewById(R.id.nb_allOrder_load_bar_layout);
         img_back.setOnClickListener(this);
         recyclerView = (PullToRefreshRecyclerView) findViewById(R.id.recycle);
+        tv_msg= (TextView) findViewById(R.id.tv_msg);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
@@ -241,6 +249,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
+            tv_msg.setText("暂无考试数据");
         }
     }
 }

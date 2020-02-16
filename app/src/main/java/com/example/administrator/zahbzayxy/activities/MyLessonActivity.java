@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
@@ -44,6 +45,7 @@ public class MyLessonActivity extends BaseActivity{
     private int pageSize = 10;
     private int pager = 1;
     private String dividePrice;
+    private TextView tv_msg;
     private RelativeLayout rl_empty;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +164,7 @@ public class MyLessonActivity extends BaseActivity{
         back_pMyLesson_iv = (ImageView) findViewById(R.id.pLesson_back_iv);
         pMyLesson_plv = (PullToRefreshListView) findViewById(R.id.pMyLesson_plv);
         rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        tv_msg= (TextView) findViewById(R.id.tv_msg);
         back_pMyLesson_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,6 +321,7 @@ public class MyLessonActivity extends BaseActivity{
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             pMyLesson_plv.setVisibility(View.GONE);
+            tv_msg.setText("暂无课程信息");
         }
     }
 }

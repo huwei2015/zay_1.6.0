@@ -37,7 +37,7 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
 
     @Override
     public NotPassViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NotPassAdapter.NotPassViewHodler(LayoutInflater.from(mContext).inflate(R.layout.item_not_pass,parent,false));
+        return new NotPassViewHodler(LayoutInflater.from(mContext).inflate(R.layout.item_not_pass,parent,false));
     }
     public void setList(List<NotPassBean.NotListData> notPassListBeans) {
         this.notPassListBeans = notPassListBeans;
