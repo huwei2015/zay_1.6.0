@@ -202,6 +202,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.exam_archives_back:
+                EventBus.getDefault().post(FLUSH_MSG_INFO_EVENT_FLAG);
                 finish();
                 break;
         }

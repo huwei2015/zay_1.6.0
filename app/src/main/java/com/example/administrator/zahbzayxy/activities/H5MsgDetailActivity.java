@@ -54,6 +54,7 @@ public class H5MsgDetailActivity extends BaseActivity {
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                back();
                 finish();
             }
         });
@@ -131,15 +132,19 @@ public class H5MsgDetailActivity extends BaseActivity {
         mLoadingBar.hide();
     }
 
+    private void back(){
+        Intent intent = new Intent(H5MsgDetailActivity.this, MsgListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra("page", "MsgListActivity");
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if("MsgListActivity".equals(mPageFlag)) {
-                Intent intent = new Intent(H5MsgDetailActivity.this, MsgListActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                intent.putExtra("page", "MsgListActivity");
-                startActivity(intent);
-                finish();
+
                 return true;
             }
         }
