@@ -2,6 +2,7 @@ package com.example.administrator.zahbzayxy.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import com.example.administrator.zahbzayxy.activities.MsgListActivity;
 import com.example.administrator.zahbzayxy.adapters.NotThrougAdapter;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
@@ -43,6 +45,7 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
     private NotThrougAdapter througAdapter;
     private View view;
     private Context mContext;
+    private ProgressBarLayout mLoadingBar;
     private String token;
     private int  currenPage =1;
     private int pageSize =10;
@@ -53,13 +56,24 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
     private int id;
     private Button confirmSelData;
     private int userLibId;
+    private boolean isVisible;
+    private boolean mLoadView = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_choose_through,container,false);
         initView();
         initData();
+        mLoadView = true;
         return view;
+    }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        isVisible = isVisibleToUser;
+        if (isVisibleToUser && mLoadView) {
+            initData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
@@ -69,6 +83,8 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
     }
 
     private void initData(){
+        if (!isVisible) return;
+        showLoadingBar(false);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getQuestionData(currenPage,pageSize,id,"1",token).enqueue(new Callback<NotThroughBean>() {
             @Override
@@ -77,11 +93,13 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
                     String code = response.body().getCode();
                     if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
                         emptyLayout(true);
+                        hideLoadingBar();
                         List<NotThroughBean.THrougListData> data = response.body().getData().getqLibs().getData();
                         notPassListBeans.addAll(data);
                         througAdapter.setList(notPassListBeans);
                     }else{
                         emptyLayout(false);
+                        hideLoadingBar();
                     }
                 }
             }
@@ -97,6 +115,7 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
         SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         pullToRefreshRecyclerView=view.findViewById(R.id.pull_recycleview);
+        mLoadingBar=view.findViewById(R.id.nb_allOrder_load_bar_layout);
         rl_empty=view.findViewById(R.id.rl_empty_layout);
         ll_list = view.findViewById(R.id.ll_list);
         tv_msg = view.findViewById(R.id.tv_msg);
@@ -193,6 +212,16 @@ public class ChooseThroughFragment extends Fragment implements PullToRefreshList
             tv_msg.setText("暂无已过期数据");
         }
     }
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+
     public void setParamse(int  id){
         this.id =id;
     }

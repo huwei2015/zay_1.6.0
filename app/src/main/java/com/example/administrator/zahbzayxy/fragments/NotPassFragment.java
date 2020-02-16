@@ -51,6 +51,9 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     TextView tv_msg;
     LinearLayout ll_list;
     private ProgressBarLayout mLoadingBar;
+    private boolean isVisible;
+    private boolean mLoadView = false;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -62,10 +65,22 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_not_pass,container,false);
         initView();
+        mLoadView = true;
         initData();
         return view;
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        isVisible = isVisibleToUser;
+        if (isVisibleToUser && mLoadView) {
+            initData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
     private void initData(){
+        if (!isVisible) return;
         showLoadingBar(false);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getExamData(currentPage,PageSize,0,token).enqueue(new Callback<NotPassBean>() {

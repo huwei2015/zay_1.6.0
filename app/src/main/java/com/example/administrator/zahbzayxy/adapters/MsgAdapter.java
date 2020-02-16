@@ -54,7 +54,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         ViewHolder itemHolder = (ViewHolder) holder;
         String str=data.get(position).getPeriod();//日期
         if(position>0){
@@ -91,7 +91,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
         holder.rl_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickItemListener.onClick(v,position);
+                onClickItemListener.onClick(v, position);
             }
         });
     }

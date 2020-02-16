@@ -1,6 +1,8 @@
 package com.example.administrator.zahbzayxy.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.activities.ExamRecordActivity;
+import com.example.administrator.zahbzayxy.activities.MyExamActivity;
 import com.example.administrator.zahbzayxy.beans.NotPassBean;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.squareup.picasso.Picasso;
@@ -33,7 +37,7 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
 
     @Override
     public NotPassViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NotPassAdapter.NotPassViewHodler(LayoutInflater.from(mContext).inflate(R.layout.item_not_pass,parent,false));
+        return new NotPassViewHodler(LayoutInflater.from(mContext).inflate(R.layout.item_not_pass,parent,false));
     }
     public void setList(List<NotPassBean.NotListData> notPassListBeans) {
         this.notPassListBeans = notPassListBeans;
@@ -53,18 +57,32 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             holder.lib_account.setVisibility(View.GONE);
             holder.tv_xie.setVisibility(View.GONE);
             holder.exam_account.setVisibility(View.GONE);
+            holder.examEnterImg.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.GONE);
 
         }else if(notPassListBeans.get(position).getQuesLibExamNum() >= notPassListBeans.get(position).getUserExamNum()){//可以去考试
-
+            holder.examEnterImg.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.GONE);
         }else if(notPassListBeans.get(position).getQuesLibExamNum() < notPassListBeans.get(position).getUserExamNum()){//不可以去考试
-
+            holder.examEnterImg.setVisibility(View.GONE);
+            holder.state.setVisibility(View.VISIBLE);
         }
         holder.exam_record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"点击了考试记录"+position,Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mContext, ExamRecordActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("examType", 0);
+                bundle.putInt("libId", notPassListBeans.get(position).getQuesLibId());
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
             }
         });
+
+        holder.examEnterImg.setOnClickListener(view -> {
+            mContext.startActivity(new Intent(mContext, MyExamActivity.class));
+        });
+
         Picasso.with(mContext).load(notPassListBeans.get(position).getImagePath()).placeholder(R.mipmap.loading_png).into(holder.img_pic);
 
     }
@@ -75,7 +93,7 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
     }
 
     static class NotPassViewHodler extends RecyclerView.ViewHolder{
-        ImageView img_pic;
+        ImageView img_pic, examEnterImg;
         TextView title,state,time,exam_record,exam_account,lib_account,tv_xie,tv_account;
         public NotPassViewHodler(View itemView) {
             super(itemView);
@@ -88,6 +106,7 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             state=itemView.findViewById(R.id.tv_state);
             tv_xie=itemView.findViewById(R.id.tv_xie);
             tv_account=itemView.findViewById(R.id.tv_account);
+            examEnterImg = itemView.findViewById(R.id.exam_item_enter_img);
         }
     }
 }

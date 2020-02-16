@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,12 +23,15 @@ import com.example.administrator.zahbzayxy.adapters.MsgAdapter;
 import com.example.administrator.zahbzayxy.adapters.MySignAdapter;
 import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.beans.TimeData;
+import com.example.administrator.zahbzayxy.beans.UserCenter;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.TimeComparator;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -45,6 +49,9 @@ import retrofit2.Response;
  * 消息列表
  */
 public class MsgListActivity extends BaseActivity implements View.OnClickListener, PullToRefreshListener,MsgAdapter.onClickItemListener{
+
+    public static final String FLUSH_MSG_INFO_EVENT_FLAG = "flushMsgInfoEventFlag";
+
     private PullToRefreshRecyclerView recyclerView;
     private ImageView exam_archives_back;
     private TextView tab_unread_message;
@@ -57,6 +64,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
     TextView tv_msg;
     RelativeLayout rl_empty;
     LinearLayout ll_list;
+    private boolean mHasData = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,12 +132,23 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
                         String code = response.body().getCode();
                         if(code.equals("00000")){
                             mLoadingBar.setVisibility(View.GONE);
-                            msgLists = response.body().getData().getAllTopAnnounceList();
                             if(currenPage ==1 ){
-                                adapter.setList(msgLists);
-                            }else{
-                                adapter.addList(msgLists);
+                                mHasData = true;
+                                msgLists.clear();
                             }
+                            List<TimeData.MsgList> dataList = response.body().getData().getAllTopAnnounceList();
+
+                            if (dataList != null && dataList.size() > 0) {
+                                msgLists.addAll(dataList);
+                                adapter.setList(msgLists);
+                            } else {
+                                if (currenPage > 1 && mHasData) {
+                                    mHasData = false;
+                                    Toast.makeText(MsgListActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
+                                    recyclerView.setLoadingMoreEnabled(false);
+                                }
+                            }
+
                         }else{
                             emptyLayout(false);
                         }
@@ -144,10 +163,46 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    private void initUserCenter() {
+        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
+        Call<UserCenter> userCenter = userInfoInterface.getUserCenter(token);
+        userCenter.enqueue(new Callback<UserCenter>() {
+            @Override
+            public void onResponse(Call<UserCenter> call, Response<UserCenter> response) {
+                if(response !=null && response.body() != null){
+                    String code=response.body().getCode();
+                    if(code.equals("00000")){
+                        UserCenter.userCenterData data = response.body().getData();
+                        int messageNum = data.getMessageNum();//消息
+                        tab_unread_message.setText(String.valueOf(messageNum));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserCenter> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            String pageFlag = intent.getStringExtra("page");
+            if ("MsgListActivity".equals(pageFlag)) {
+                initData();
+                initUserCenter();
+            }
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.exam_archives_back:
+                EventBus.getDefault().post(FLUSH_MSG_INFO_EVENT_FLAG);
                 finish();
                 break;
         }
@@ -198,6 +253,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
         Intent intent = new Intent(MsgListActivity.this,H5MsgDetailActivity.class);
         intent.putExtra("id",String.valueOf(msgLists.get(position).getId()));
         intent.putExtra("type","msg");
+        intent.putExtra("page","MsgListActivity");
         startActivity(intent);
     }
 
@@ -205,5 +261,13 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         initData();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            EventBus.getDefault().post(FLUSH_MSG_INFO_EVENT_FLAG);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -1,8 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -33,6 +31,7 @@ import com.example.administrator.zahbzayxy.beans.UpBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.squareup.picasso.Picasso;
@@ -48,6 +47,7 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +58,7 @@ import retrofit2.Response;
  * Time 13:33.
  * 上传学历证书
  */
-public class UpdateCertificateActivity extends BaseActivity implements View.OnClickListener{
+public class UpdateCertificateActivity extends BaseActivity implements View.OnClickListener {
     private final int WRITE_PERMISSION_REQ_CODE = 100;
     private String token;
     private ImageView back_editMessage, img_one_cun;
@@ -68,6 +68,7 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
     private RelativeLayout cancle;
     private Bitmap bitmap;
     private byte[] bitmapByte;
+    private ProgressBarLayout mloading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
         back_editMessage = (ImageView) findViewById(R.id.back_editMessage);
         back_editMessage.setOnClickListener(this);
         img_one_cun = (ImageView) findViewById(R.id.img_one_cun);//一寸照片
+        mloading = (ProgressBarLayout) findViewById(R.id.ProgressBarLayout);
         btn_photo = (Button) findViewById(R.id.btn_photo);
         btn_photo.setOnClickListener(this);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
@@ -93,13 +95,14 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
                 if(response !=null && response.body() !=null){
                     UserInfoBean body = response.body();
                     UserInfoBean.DataBean data = body.getData();
-                    String oneInchPhoto = data.getEduCerPath();
-                    if(!TextUtils.isEmpty(oneInchPhoto)){
-                        Picasso.with(UpdateCertificateActivity.this).load(oneInchPhoto).into(img_one_cun);
-                        btn_photo.setText("重新上传学历证书照");
+                    String eduCerPath = data.getEduCerPath();
+                    Log.i("huwei","huwei=============="+eduCerPath);
+                    if(!TextUtils.isEmpty(eduCerPath)){
+                        Picasso.with(UpdateCertificateActivity.this).load(eduCerPath).into(img_one_cun);
+                        btn_photo.setText("重新上传学历证书");
                     }else{
                         img_one_cun.setVisibility(View.GONE);
-                        btn_photo.setText("上传学历证书照片");
+                        btn_photo.setText("上传学历证书");
                     }
                 }
 
@@ -107,10 +110,11 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<UserInfoBean> call, Throwable t) {
-                ToastUtils.showInfo(t.getMessage(),5000);
+                ToastUtils.showInfo(t.getMessage(), 5000);
             }
         });
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -123,6 +127,7 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
 
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     private void initHeadPhoto() {
         //加载popupwindow的布局文件
@@ -168,7 +173,7 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
                         uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     }
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    startActivityForResult(intent, 110);
+                    startActivityForResult(intent, 120);
                     mPopupWindow.dismiss();
                 } else if (checkPublishPermission() == false) {
                     Toast.makeText(UpdateCertificateActivity.this, "请先打开允许相机拍照权限", Toast.LENGTH_SHORT).show();
@@ -179,13 +184,13 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
         selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 112);
+                startActivityForResult(intent, 122);
                 mPopupWindow.dismiss();
             }
         });
     }
+
     private boolean checkPublishPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             List<String> permissions = new ArrayList<>();
@@ -207,17 +212,23 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case 110:
+                case 120:
                     bitmap = bmpTopath(path);
                     byte[] bitmapByte = getBitmapByte(bitmap);
                     //上传拍照照片
                     updatePhoto(bitmapByte);
                     break;
-                case 112:
+                case 122:
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage,
@@ -228,92 +239,79 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
                     Log.e("用户选择相册上传", "url: " + picturePath);
                     cursor.close();
                     bitmap = bmpTopath(picturePath);
-//                    int height = bitmap.getHeight();
-//                    int width = bitmap.getWidth();
-//                    Log.e("hw=======", "height" + height + "=======widht=====" + width);
-//                    if (width != 295 && height != 413) {
-//                        final AlertDialog.Builder builder = new AlertDialog.Builder(UpdateCertificateActivity.this);
-//                        builder.setTitle("提示");
-//                        builder.setMessage("请上传宽295高413照片");
-//                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                        builder.show();
-//                        return;
-//                    }
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片
                     updatePhoto(this.bitmapByte);
+                    Log.i("huwei", "huwei===========" + this.bitmapByte);
                     img_one_cun.setVisibility(View.VISIBLE);
-                    Toast.makeText(UpdateCertificateActivity.this, "学历证书上传成功", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     }
-        public Bitmap bmpTopath(String path) {
-            //先得到图片的参数类的对象Options
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            //第一次，目的得到图片边缘区域的外宽和外高
-            options.inJustDecodeBounds = true;
-            //第一次解码得到图片的边界不加载图片的内容到内存
-            BitmapFactory.decodeFile(path, options);
-            //原图的宽和高
-            int w = options.outWidth;
-            int h = options.outHeight;
-            //把原图的宽和高跟自己指定的宽和高进行对比得到缩放比例
-            //假设缩小1/2
-            options.inSampleSize = 1;
-            //设置图片的每个颜色基数在内存所占的字节数（ARGB_8888：32）
-            //ARGB_4444:16位
-            //RGB_565:16位，推荐
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            //第二次,得到缩小之后的图片进行加载
-            options.inJustDecodeBounds = false;
-            //第二次解码加载整个缩小图片的内容到内存
-            return BitmapFactory.decodeFile(path, options);
-        }
 
-        public byte[] getBitmapByte(Bitmap bitmap) {   //将bitmap转化为byte[]类型也就是转化为二进制
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return out.toByteArray();
+    public Bitmap bmpTopath(String path) {
+        //先得到图片的参数类的对象Options
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //第一次，目的得到图片边缘区域的外宽和外高
+        options.inJustDecodeBounds = true;
+        //第一次解码得到图片的边界不加载图片的内容到内存
+        BitmapFactory.decodeFile(path, options);
+        //原图的宽和高
+        int w = options.outWidth;
+        int h = options.outHeight;
+        //把原图的宽和高跟自己指定的宽和高进行对比得到缩放比例
+        //假设缩小1/2
+        options.inSampleSize = 1;
+        //设置图片的每个颜色基数在内存所占的字节数（ARGB_8888：32）
+        //ARGB_4444:16位
+        //RGB_565:16位，推荐
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        //第二次,得到缩小之后的图片进行加载
+        options.inJustDecodeBounds = false;
+        //第二次解码加载整个缩小图片的内容到内存
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    public byte[] getBitmapByte(Bitmap bitmap) {   //将bitmap转化为byte[]类型也就是转化为二进制
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return out.toByteArray();
+    }
 
 
     private void updatePhoto(byte[] url) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), url);
         MultipartBody.Part body = MultipartBody.Part.createFormData("eduCer", "eduCer.jpg", requestBody);
         UserInfoInterface aClass = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        aClass.getCertificateData(body,token).enqueue(new Callback<UpBean>() {
+        aClass.getCertificateData(body, token).enqueue(new Callback<UpBean>() {
             @Override
             public void onResponse(Call<UpBean> call, Response<UpBean> response) {
                 UpBean body = response.body();
                 if (body != null && body.getErrMsg() == null) {
-                    String photoUrl = body.getData().getPhonePath();
-                    Log.i("hw","hw============"+photoUrl);
-                    if (!TextUtils.isEmpty(photoUrl)) {
-                        EventBus.getDefault().post(photoUrl);
-                        Picasso.with(UpdateCertificateActivity.this).load(photoUrl).into(img_one_cun);
-                        btn_photo.setText("重新上传照片");
+                    if (body.getCode().equals("00000")) {
+                        Toast.makeText(UpdateCertificateActivity.this, "学历证书上传成功", Toast.LENGTH_SHORT).show();
+                        String photoUrl = body.getData().getPhonePath();
+                        Log.i("huwei","huwei========="+photoUrl);
+                        if (!TextUtils.isEmpty(photoUrl)) {
+                            EventBus.getDefault().post(photoUrl);
+                            Picasso.with(UpdateCertificateActivity.this).load(photoUrl).into(img_one_cun);
+                            btn_photo.setText("重新上传照片");
+                        }
                     }else{
-                        img_one_cun.setVisibility(View.GONE);
-                        btn_photo.setText("上传学历照");
+                        Toast.makeText(UpdateCertificateActivity.this, body.getErrMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<UpBean> call, Throwable t) {
-                Toast.makeText(UpdateCertificateActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateCertificateActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("photoFailure", t.getMessage());
             }
         });

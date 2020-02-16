@@ -167,6 +167,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                         }
 
                         messageNum = data.getMessageNum();//消息
+                        Log.i("==========", "用户信息数量 = " + messageNum);
                         if(messageNum > 0){
                             tab_unread_message.setVisibility(View.VISIBLE);
                             tab_unread_message.setText(String.valueOf(messageNum));
@@ -446,6 +447,14 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            initUserCenter();
+        }
+    }
+
     private void initUserInfo() {
         boolean wechatLogin = sharedPreferences.getBoolean("wechatLogin", false);
         if (wechatLogin == true) {
@@ -548,7 +557,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Log.e("eventbusWechatImg", image);
             //  Picasso.with(getContext()).load(image).placeholder(R.mipmap.icon_touxiang).into(userHead_iv);
             initUserInfo();
-            initUserCenter();
+            if (MsgListActivity.FLUSH_MSG_INFO_EVENT_FLAG.equals(image)) {
+                initUserCenter();
+            }
         }
     }
 
@@ -579,6 +590,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Log.d("UserFragment", "onHiddenChanged");
         } catch (Exception e) {
             Log.e("onHiddenChanged", StringUtil.getExceptionMessage(e));
+        }
+        if (!hidden) {
+            initUserInfo();
+            initUserCenter();
         }
     }
 

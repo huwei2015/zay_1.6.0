@@ -77,7 +77,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
     private String phone;
     private RelativeLayout headPhoto_layout, nickName_layout, nameSet_layout, sexSet_layout, personId_layout,
             phone_layout, gangWei_layout, danWei_layout, changPw_layout, culture_layout, one_inch_layout,work_layout;
-    private RelativeLayout faceRecognitionLayout,professional_layout,type_layout,skills_layout,idCard,culture_layout_copy;
+    private RelativeLayout faceRecognitionLayout,professional_layout,type_layout,skills_layout,personId_layout_copy,culture_layout_copy;
     Dialog dialog;
     //获取到的token
     private String token;
@@ -150,7 +150,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
         skills_layout= (RelativeLayout) findViewById(R.id.skills_layout);//职业技能等级
         tv_skills= (TextView) findViewById(R.id.tv_skills);//输入职业技能等级
         eduCer_inch_view= (ImageView) findViewById(R.id.eduCer_inch_view);
-//        idCard= (RelativeLayout) findViewById(R.id.idCard);
+        personId_layout_copy= (RelativeLayout) findViewById(R.id.personId_layout_copy);
         culture_layout_copy= (RelativeLayout) findViewById(R.id.culture_layout_copy);//上传证书
         /**********************FHS Start******************/
         //人脸对比照片
@@ -184,7 +184,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
         professional_layout.setOnClickListener(this);
         type_layout.setOnClickListener(this);
         skills_layout.setOnClickListener(this);
-//        idCard.setOnClickListener(this);
+        personId_layout_copy.setOnClickListener(this);
         culture_layout_copy.setOnClickListener(this);
         finish_iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -450,10 +450,10 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
                 intent = new Intent(EditMessageActivity.this,SkillsActivity.class);
                 startActivityForResult(intent, 13);
                 break;
-//            case R.id.idCard://上传身份证正反面
-//                intent = new Intent(EditMessageActivity.this,UpIdCardActivity.class);
-//                startActivityForResult(intent,14);
-//                break;
+            case R.id.personId_layout_copy://上传身份证正反面
+                intent = new Intent(EditMessageActivity.this,UpIdCardActivity.class);
+                startActivityForResult(intent,14);
+                break;
             case R.id.culture_layout_copy://上传学历证书
                 intent = new Intent(EditMessageActivity.this,UpdateCertificateActivity.class);
                 startActivityForResult(intent,15);
@@ -522,7 +522,6 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
             selector.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 101);
                     mPopupWindow.dismiss();
@@ -818,8 +817,6 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
                     String occupaSkillLevel=data.getStringExtra("occupaSkillLevel");
                     tv_skills.setText(occupaSkillLevel);
                     break;
-                case 15://学历证书
-                    data.getStringExtra("");
                 default:
                     break;
             }

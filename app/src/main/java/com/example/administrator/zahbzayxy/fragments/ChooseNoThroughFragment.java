@@ -58,13 +58,25 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     private List<NotThroughBean.THrougListData> notPassListBeans = new ArrayList<>();
     private Button confirmSelData;
     private int userLibId;
+    private boolean isVisible;
+    private boolean mLoadView = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_no_through,container,false);
         initView();
         initData();
+        mLoadView = true;
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        isVisible = isVisibleToUser;
+        if (isVisibleToUser && mLoadView) {
+            initData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
@@ -74,6 +86,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     }
 
     private void initData(){
+        if (!isVisible) return;
         showLoadingBar(false);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getQuestionData(currenPage,pageSize,id,"0",token).enqueue(new Callback<NotThroughBean>() {
@@ -126,9 +139,8 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
         pullToRefreshRecyclerView.setPullRefreshEnabled(false);
         //设置刷新回调
         pullToRefreshRecyclerView.setPullToRefreshListener(this);
-//        refreshRecyclerView.setLoadMoreResource(R.drawable.account);
         //主动触发下拉刷新操作
-//        pullToRefreshRecyclerView.onRefresh();
+        pullToRefreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

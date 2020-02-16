@@ -34,6 +34,7 @@ import com.example.administrator.zahbzayxy.beans.UserInfoBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.sina.weibo.sdk.api.TextObject;
 import com.squareup.picasso.Picasso;
@@ -105,7 +106,7 @@ public class CertificateOneCunActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<UserInfoBean> call, Throwable t) {
-
+                ToastUtils.showInfo(t.getMessage(),500);
             }
         });
     }
@@ -178,7 +179,6 @@ public class CertificateOneCunActivity extends BaseActivity implements View.OnCl
         selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 112);
                 mPopupWindow.dismiss();
@@ -186,6 +186,10 @@ public class CertificateOneCunActivity extends BaseActivity implements View.OnCl
         });
     }
 
+    /**
+     * 检查权限
+     * @return
+     */
     private boolean checkPublishPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             List<String> permissions = new ArrayList<>();

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
@@ -33,6 +34,7 @@ public class MyRenZhengActivity extends BaseActivity {
     PMyRenZhengMuLuAdapter adapter;
     private RelativeLayout rl_empty;
     private String token;
+    private TextView tv_msg;
     int pager=1;
     int pageSize =10;
     @Override
@@ -130,6 +132,7 @@ public class MyRenZhengActivity extends BaseActivity {
         back_iv= (ImageView) findViewById(R.id.pMyRenZhengBack_iv);
         pMyRenZheng_plv= (PullToRefreshListView) findViewById(R.id.pMyRenZhengMuLu_plv);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        tv_msg= (TextView) findViewById(R.id.tv_msg);
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = tokenDb.getString("token","");
         back_iv.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +149,7 @@ public class MyRenZhengActivity extends BaseActivity {
         }else{
             rl_empty.setVisibility(View.VISIBLE);
             pMyRenZheng_plv.setVisibility(View.GONE);
+            tv_msg.setText("暂无证书信息");
         }
     }
 }

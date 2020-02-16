@@ -85,9 +85,11 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
         tv_msg=view.findViewById(R.id.tv_msg);//空布局显示文字
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
-            mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
-            mOffLineManager = new OffLineCourseManager(context, recyclerview);
+        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
+        mOffLineManager = new OffLineCourseManager(context, recyclerview);
+        mOnLineManager.setEmptyView(rl_empty, mSelectLayout);
         mOnLineManager.setLoadingView(mLoadingBar);
+        mOffLineManager.setEmptyView(rl_empty);
         mOffLineManager.setFragment(OnLineCourseFragment.this);
         loadData();
         mLoadView = true;
@@ -123,7 +125,6 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
             fixedIndicatorView.setVisibility(View.GONE);
             mOneView.setVisibility(View.GONE);//分割线
             mSelectLayout.setVisibility(View.GONE);
-            rl_empty.setVisibility(View.VISIBLE);
             tv_msg.setText("暂无离线课程");
             recyclerview.setLoadingMoreEnabled(false);
             recyclerview.setPullRefreshEnabled(false);

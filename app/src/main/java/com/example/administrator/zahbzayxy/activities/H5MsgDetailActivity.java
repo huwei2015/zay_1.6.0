@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
@@ -35,6 +37,7 @@ public class H5MsgDetailActivity extends BaseActivity {
     String url;
     String activityId;
     String type;
+    String mPageFlag;
     private ProgressBarLayout mLoadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +49,12 @@ public class H5MsgDetailActivity extends BaseActivity {
         activityId  = getIntent().getStringExtra("activityId");
         id = getIntent().getStringExtra("id");
         type=getIntent().getStringExtra("type");
+        mPageFlag=getIntent().getStringExtra("page");
         img_back = (ImageView) findViewById(R.id.back_editMessage);
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                back();
                 finish();
             }
         });
@@ -125,5 +130,24 @@ public class H5MsgDetailActivity extends BaseActivity {
 
     public void hideLoadingBar() {
         mLoadingBar.hide();
+    }
+
+    private void back(){
+        Intent intent = new Intent(H5MsgDetailActivity.this, MsgListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra("page", "MsgListActivity");
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if("MsgListActivity".equals(mPageFlag)) {
+
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
