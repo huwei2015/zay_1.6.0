@@ -57,9 +57,9 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
     public OffLineCourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (viewType == 0) {
-            view = mInflater.inflate(R.layout.downloaded_single_layout, parent, false);
+            view = mInflater.inflate(R.layout.downloaded_off_line_layout, parent, false);
         } else {
-            view = mInflater.inflate(R.layout.download_single_layout, parent, false);
+            view = mInflater.inflate(R.layout.download_off_line_layout, parent, false);
         }
         return new OffLineCourseViewHolder(view, viewType);
     }
@@ -88,11 +88,11 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
             holder.statusView.setText(getStatusStr(wrapper.getStatus()) + "");
             holder.typeTv.setText("下载中");
             if (wrapper.getStatus() == Downloader.DOWNLOAD) {
-                holder.speedView.setText(wrapper.getSpeed(context));
+//                holder.speedView.setText(wrapper.getSpeed(context));
                 holder.progressView.setText(wrapper.getDownloadProgressText(context));
                 holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
             } else {
-                holder.speedView.setText("");
+//                holder.speedView.setText("");
                 holder.progressView.setText(wrapper.getDownloadProgressText(context));
                 holder.downloadProgressBar.setProgress((int) wrapper.getDownloadProgressBarValue());
             }
