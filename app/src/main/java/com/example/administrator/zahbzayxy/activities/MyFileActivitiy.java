@@ -182,6 +182,23 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                         ToastUtils.showLongInfo("文件类型错误，请重新选择");
                         return;
                     }
+                    int pointIndex = endFile.lastIndexOf(".");
+                    String fileSuffix = "";
+                    if (pointIndex > 0) {
+                        fileSuffix = endFile.substring(pointIndex + 1);
+                    }
+                    if (TextUtils.isEmpty(fileSuffix)) {
+                        ToastUtils.showLongInfo("不支持的文件类型");
+                        return;
+                    }
+                    fileSuffix = fileSuffix.toLowerCase();
+                    if (!("jpg".equals(fileSuffix) || "jpeg".equals(fileSuffix) || "png".equals(fileSuffix) || "gif".equals(fileSuffix)
+                            || "xls".equals(fileSuffix) || "xlsx".equals(fileSuffix) || "xlsm".equals(fileSuffix)
+                            || "doc".equals(fileSuffix) || "docx".equals(fileSuffix)
+                            || "pdf".equals(fileSuffix))) {
+                        ToastUtils.showLongInfo("不能上传该类型的文件");
+                        return;
+                    }
                     mLoading.setShowContent("上传中...");
                     mLoading.setVisibility(View.VISIBLE);
                     //TODO 这里只是暂时这么处理，需要考虑OOM的问题

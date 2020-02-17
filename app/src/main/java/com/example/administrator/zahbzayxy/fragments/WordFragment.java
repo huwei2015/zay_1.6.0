@@ -201,8 +201,10 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
     }
 
     public void showLoadingBar(boolean transparent) {
-        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-        mLoadingBar.show();
+        if (isAdded()) {
+            mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+            mLoadingBar.show();
+        }
     }
 
     public void hideLoadingBar() {
