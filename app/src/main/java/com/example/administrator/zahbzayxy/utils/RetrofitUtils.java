@@ -41,7 +41,7 @@ public class RetrofitUtils{
    // private  static String BASE_URL = "http://120.26.212.51:28080/" ;
 
     //线上测试地址
-    private  static String BASE_URL = "http://app.test.zayxy.com";
+     private  static String BASE_URL = "http://app.test.zayxy.com";
     //     private  static String BASE_URL = "http://app1.zayxy.com";
     //    private  static String BASE_URL = "http://192.168.120.239";
 //      private  static String BASE_URL = "http://192.168.10.196";
