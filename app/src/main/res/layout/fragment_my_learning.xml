@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_exam"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
         android:id="@+id/rl_below_info"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="0dp">
+
         <RelativeLayout
-            android:id="@+id/indexNav"
+            android:id="@+id/top_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/android_bac"
-            android:paddingBottom="8dp">
-            <!--app:tabTextColor="@color/white"-->
+            android:gravity="bottom"
+            android:background="@color/bg"
+            android:layout_height="wrap_content">
+
             <android.support.design.widget.TabLayout
-                android:id="@+id/home_tab"
+                android:id="@+id/learn_tab"
                 app:tabIndicatorColor="@color/white"
                 app:tabSelectedTextColor="@color/white"
-                style="@style/MyCustomTabLayout"
                 app:tabTextColor="@color/white"
+                android:background="@color/bg"
+                style="@style/MyCustomTabLayout"
                 app:tabGravity="center"
                 app:tabTextAppearance="@style/MyCustomTextAppearance"
                 app:tabIndicatorHeight="0dp"
-                app:tabBackground="@drawable/tab_selector"
+                app:tabBackground="@drawable/tab_selector_course"
                 android:layout_width="match_parent"
-                android:layout_marginRight="50dp"
                 android:layout_height="40dp">
             </android.support.design.widget.TabLayout>
-            <ImageView
-                android:id="@+id/scanCode"
-                android:layout_width="34dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:paddingRight="18dp"
-                android:paddingTop="6dp"
-                android:src="@mipmap/saoma"/>
+
+            <TextView
+                android:id="@+id/goBackPage"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:drawableLeft="@mipmap/s_back"
+                android:text=" "
+                android:textSize="18sp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                />
         </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/bg"/>
+
+        <!--        <include layout="@layout/line_gray_layout"></include>-->
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/home_vp"
+            android:id="@+id/learn_vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v4.view.ViewPager>
