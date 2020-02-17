@@ -74,6 +74,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
     public void setUserVisibleHint(boolean isVisibleToUser) {
         isVisible = isVisibleToUser;
         if (isVisibleToUser && mLoadView) {
+            currenPage = 1;
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -98,6 +99,9 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
                                 hideLoadingBar();
                                 emptyLayout(true);
                                 List<NotThroughBean.THrougListData> data = response.body().getData().getqLibs().getData();
+                                if (currenPage == 1) {
+                                    notPassListBeans.clear();
+                                }
                                 notPassListBeans.addAll(data);
                                througAdapter.setList(notPassListBeans);
 

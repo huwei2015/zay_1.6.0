@@ -498,18 +498,30 @@ public class OnLineManager implements PullToRefreshListener {
 
     @Override
     public void onRefresh() {
-        mLoadType = 1;
-        mPage = 1;
-        clearList();
-        mRefreshRecyclerView.setLoadingMoreEnabled(true);
-        setCourseList(mPosition, mIsAchieve);
+        mRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadType = 1;
+                mPage = 1;
+                clearList();
+                mRefreshRecyclerView.setLoadingMoreEnabled(true);
+                setCourseList(mPosition, mIsAchieve);
+            }
+        }, 2000);
+
     }
 
     @Override
     public void onLoadMore() {
-        mLoadType = 2;
-        mPage++;
-        setCourseList(mPosition, mIsAchieve);
+        mRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadType = 2;
+                mPage++;
+                setCourseList(mPosition, mIsAchieve);
+            }
+        }, 2000);
+
     }
 
 

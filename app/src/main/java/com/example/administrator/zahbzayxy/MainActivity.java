@@ -354,8 +354,14 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void hideAndShow(int position) {
+    private int mPagePosition = -1;
 
+    private void hideAndShow(int position) {
+        if (mPagePosition == position) {
+            // 已经在当前页了
+            return;
+        }
+        mPagePosition = position;
         FragmentTransaction transaction = manager.beginTransaction();
         Log.i("=======================","进来了....."+fragmentList.get(position).isAdded());
         if (fragmentList.get(position).isAdded()) {

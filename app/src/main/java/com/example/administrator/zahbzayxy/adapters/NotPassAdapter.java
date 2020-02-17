@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ExamRecordActivity;
 import com.example.administrator.zahbzayxy.activities.MyExamActivity;
 import com.example.administrator.zahbzayxy.beans.NotPassBean;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
+import com.example.administrator.zahbzayxy.beans.TimeData;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,15 +45,18 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
         this.notPassListBeans = notPassListBeans;
         notifyDataSetChanged();
     }
-
+    public void addList(List<NotPassBean.NotListData> notPassListBeans) {
+        this.notPassListBeans.addAll(notPassListBeans);
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(NotPassViewHodler holder, int position) {
         holder.title.setText(notPassListBeans.get(position).getQuesLibName());
         holder.time.setText(notPassListBeans.get(position).getEndTime());
-        holder.lib_account.setText(String.valueOf(notPassListBeans.get(position).getQuesLibExamNum()));
-        holder.exam_account.setText(String.valueOf(notPassListBeans.get(position).getUserExamNum()));
-        if(notPassListBeans.get(position).getIsLimitCount() == 0){//无限次
+        holder.exam_account.setText(String.valueOf(notPassListBeans.get(position).getQuesLibExamNum()));
+        holder.lib_account.setText(String.valueOf(notPassListBeans.get(position).getUserExamNum()));
+        if(notPassListBeans.get(position).getQuesLibExamNum() == 0){//无限次
             holder.tv_account.setText("无限次");
             holder.tv_account.setVisibility(View.VISIBLE);
             holder.lib_account.setVisibility(View.GONE);
@@ -59,13 +64,41 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             holder.exam_account.setVisibility(View.GONE);
             holder.examEnterImg.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.GONE);
-
-        }else if(notPassListBeans.get(position).getQuesLibExamNum() >= notPassListBeans.get(position).getUserExamNum()){//可以去考试
+        }
+        if(notPassListBeans.get(position).getIsExam().equals("0")){//考试入口开启
             holder.examEnterImg.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.GONE);
-        }else if(notPassListBeans.get(position).getQuesLibExamNum() < notPassListBeans.get(position).getUserExamNum()){//不可以去考试
+            holder.lib_account.setVisibility(View.VISIBLE);
+            holder.tv_xie.setVisibility(View.VISIBLE);
+            holder.exam_account.setVisibility(View.VISIBLE);
+            holder.time.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.GONE);
+            holder.tv_account.setVisibility(View.GONE);
+        }else if(notPassListBeans.get(position).getIsExam().equals("1")){//不可以去考试
             holder.examEnterImg.setVisibility(View.GONE);
             holder.state.setVisibility(View.VISIBLE);
+            holder.lib_account.setVisibility(View.VISIBLE);
+            holder.tv_xie.setVisibility(View.VISIBLE);
+            holder.exam_account.setVisibility(View.VISIBLE);
+            holder.time.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.VISIBLE);
+            holder.tv_account.setVisibility(View.GONE);
+        }else if(notPassListBeans.get(position).getIsExam().equals("2")){//不能考试，可以查看记录
+            holder.examEnterImg.setVisibility(View.GONE);
+            holder.lib_account.setVisibility(View.VISIBLE);
+            holder.tv_xie.setVisibility(View.VISIBLE);
+            holder.exam_account.setVisibility(View.VISIBLE);
+            holder.time.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.VISIBLE);
+            holder.tv_account.setVisibility(View.GONE);
+        }else if(notPassListBeans.get(position).getIsExam().equals("3")){//不可以考试但是可看记录(过期，次数用尽)
+            holder.examEnterImg.setVisibility(View.GONE);
+            holder.lib_account.setVisibility(View.VISIBLE);
+            holder.tv_xie.setVisibility(View.VISIBLE);
+            holder.exam_account.setVisibility(View.VISIBLE);
+            holder.time.setVisibility(View.VISIBLE);
+            holder.state.setVisibility(View.VISIBLE);
+            holder.tv_account.setVisibility(View.GONE);
         }
         holder.exam_record.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +133,8 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             img_pic=itemView.findViewById(R.id.img_icon);
             title= itemView.findViewById(R.id.tv_title);
             time=itemView.findViewById(R.id.tv_time);
-            exam_account=itemView.findViewById(R.id.tv_exam_account);//已考次数
-            lib_account = itemView.findViewById(R.id.lib_exam_account);//考试总次数
+            exam_account=itemView.findViewById(R.id.tv_exam_account);//考试总次数
+            lib_account = itemView.findViewById(R.id.lib_exam_account);//已考次数
             exam_record=itemView.findViewById(R.id.tv_exam_recode);
             state=itemView.findViewById(R.id.tv_state);
             tv_xie=itemView.findViewById(R.id.tv_xie);
