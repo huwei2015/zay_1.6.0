@@ -49,6 +49,7 @@ import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -91,12 +92,15 @@ public class OnLineManager implements PullToRefreshListener {
     private int mCourseType = 0;
     private TextView tv_msg;
     private RelativeLayout rl_empty, mFilterLayout;
+    private LoadingDialog mLoading;
+    private boolean mLoadingData = false;
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView, CheckBox filterCb) {
         this.mContext = context;
         this.mFixedIndicatorView = fixedIndicatorView;
         this.mRefreshRecyclerView = refreshRecyclerView;
         this.mFilterCb = filterCb;
+        mLoading = new LoadingDialog(context);
         mTitleAdapter = new OnLineTitleAdapter(mContext, mLearnList, mFixedIndicatorView);
         mCourseAdapter = new LearnOnlineCourseAdapter(mContext, mCoursesList);
         mOffLineAdapter = new LearnOfflineCourseAdapter(mContext, mOfflineList);
@@ -135,6 +139,12 @@ public class OnLineManager implements PullToRefreshListener {
         tv_msg = rl_empty.findViewById(R.id.tv_msg);
 
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+            if (mLoadingData) {
+                ToastUtils.showLongInfo("正在加载数据，请稍后");
+                return;
+            }
+            mLoadingData = true;
+            mLoading.show();
             showLoadingBar(true);
             mPage = 1;
             clearList();
@@ -179,6 +189,11 @@ public class OnLineManager implements PullToRefreshListener {
     }
 
     private void clearList(){
+        if (mCourseType == 0) {
+            mCourseAdapter.notifyDataSetChanged();
+        } else {
+            mOffLineAdapter.notifyDataSetChanged();
+        }
         mCoursesList.clear();
         mBeforeList.clear();
         mOneWeekList.clear();
@@ -213,14 +228,8 @@ public class OnLineManager implements PullToRefreshListener {
 
     private void initNavigationData() {
         if (mCourseType == 0) {
-            mCoursesList.clear();
-            mBeforeList.clear();
-            mOneWeekList.clear();
             loadOnLineTitleData();
         } else {
-            mOfflineList.clear();
-            mOfflineNewList.clear();
-            mOfflineMoreList.clear();
             loadOffLineTitleData();
         }
     }
@@ -395,10 +404,14 @@ public class OnLineManager implements PullToRefreshListener {
                             mRefreshRecyclerView.setLoadingMoreEnabled(false);
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         }
                         if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
                             isVisible(false);
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         } else {
                             isVisible(true);
@@ -410,6 +423,8 @@ public class OnLineManager implements PullToRefreshListener {
                         if (mPage == 1) {
                             mRefreshRecyclerView.scrollToPosition(0);
                         }
+                        mLoadingData = false;
+                        mLoading.dismiss();
                         return;
                     }
                 }
@@ -420,6 +435,8 @@ public class OnLineManager implements PullToRefreshListener {
 
             @Override
             public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
+                mLoadingData = false;
+                mLoading.dismiss();
                 hindLoading();
                 if (mPage > 1) {
                     mPage--;

@@ -46,6 +46,11 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
         notifyDataSetChanged();
     }
 
+//    @Override
+//    public long getItemId(int position) {
+//        return super.getItemId(position);
+//    }
+
     @Override
     public LearnOnlineCourseAdapter.OnLineCourseViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
         return new LearnOnlineCourseAdapter.OnLineCourseViewHodler(LayoutInflater.from(mContext).inflate(R.layout.activity_week,parent,false));
