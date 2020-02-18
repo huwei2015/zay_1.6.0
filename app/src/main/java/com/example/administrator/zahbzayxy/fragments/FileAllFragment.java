@@ -140,6 +140,9 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                        if(currentPage == 1) {
                            allFileListBeanList.clear();
                            allFileAdapter.setList(list);
+                           if (list.size() < pageSize) {
+                               pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                           }
                        }else{
                            if (list == null || list.size() == 0) {
                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
