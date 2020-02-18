@@ -304,8 +304,8 @@ public class NavQueslibFragment extends Fragment{
                 if(tjFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     tjFlag=false;
                     totalList.clear();
                     isRecommend=1;
@@ -326,8 +326,8 @@ public class NavQueslibFragment extends Fragment{
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     tjFlag=true;
                     totalList.clear();
                     isRecommend=null;
@@ -343,8 +343,8 @@ public class NavQueslibFragment extends Fragment{
                 if(skFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.play_icon);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    shikanTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    shikanTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     skFlag=false;
                     totalList.clear();
                     isTrailers=1;
@@ -383,9 +383,9 @@ public class NavQueslibFragment extends Fragment{
                 if(zxFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
@@ -406,9 +406,9 @@ public class NavQueslibFragment extends Fragment{
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     zxFlag=true;
                     totalList.clear();
                     isNew=null;

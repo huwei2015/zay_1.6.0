@@ -271,7 +271,6 @@ public class NavOfflineCourseFragment extends Fragment{
 
     private boolean zxFlag=true;
     private boolean tjFlag=true;
-    private boolean skFlag=true;
     private void initView() {
         mLoadingBar= view.findViewById(R.id.load_bar_layout_offline_course);
         gundongRV =view. findViewById(R.id.gundongRV);
@@ -303,8 +302,8 @@ public class NavOfflineCourseFragment extends Fragment{
                 if(tjFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     tjFlag=false;
                     totalList.clear();
                     isRecommend=1;
@@ -318,8 +317,8 @@ public class NavOfflineCourseFragment extends Fragment{
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.tuijian);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    isrecmmendTV.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+                    isrecmmendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     tjFlag=true;
                     totalList.clear();
                     isRecommend=null;
@@ -334,8 +333,8 @@ public class NavOfflineCourseFragment extends Fragment{
                 if(zxFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
@@ -349,8 +348,8 @@ public class NavOfflineCourseFragment extends Fragment{
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     zxFlag=true;
                     totalList.clear();
                     isNew=null;

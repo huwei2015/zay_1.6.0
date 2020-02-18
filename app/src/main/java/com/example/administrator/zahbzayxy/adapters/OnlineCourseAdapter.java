@@ -139,7 +139,7 @@ public class OnlineCourseAdapter extends BaseAdapter {
             myViewHold.rec_courseName1.setText(courseListBean.getCourseName());
         }
 
-        myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getSalePrice()));
+        myViewHold.rec_price1.setText( String.valueOf(courseListBean.getTotalHours())+"学时");
         if (!TextUtils.isEmpty(courseListBean.getImagePath())) {
             Picasso.with(context).load(courseListBean.getImagePath()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
@@ -177,7 +177,7 @@ public class OnlineCourseAdapter extends BaseAdapter {
             }else{
                 myViewHold.rec_courseName2.setText(courseListBean.getCourseName1());
             }
-            myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getSalePrice1()));
+            myViewHold.rec_price2.setText(String.valueOf(courseListBean.getTotalHours1())+"学时");
             if (!TextUtils.isEmpty(courseListBean.getImagePath1())) {
                 Picasso.with(context).load(courseListBean.getImagePath1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
