@@ -28,6 +28,12 @@
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,7 +53,7 @@
                 android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="50dp"
-                android:src="@mipmap/icon"
+                android:src="@drawable/icon"
                 android:visibility="visible" />
 
             <Button
@@ -75,7 +81,7 @@
                 android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="50dp"
-                android:src="@mipmap/icon"
+                android:src="@drawable/icon"
                 android:visibility="visible" />
 
             <Button

@@ -126,7 +126,7 @@ public class NewMyChengJiActivity extends BaseActivity implements View.OnClickLi
 
     private void initData() {
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getNewMyChengJiData(token).enqueue(new Callback<NewMyChengJiBean>() {
+        aClass.getNewMyChengJiData(token,examType).enqueue(new Callback<NewMyChengJiBean>() {
             @Override
             public void onResponse(Call<NewMyChengJiBean> call, Response<NewMyChengJiBean> response) {
                 int code = response.code();

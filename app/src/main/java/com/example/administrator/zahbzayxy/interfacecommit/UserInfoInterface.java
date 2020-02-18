@@ -71,6 +71,18 @@ public interface UserInfoInterface {
     @POST(value = updateOneCun)
     Call<OneCunBean> updatePhoto(@Query("token") String token,
                                  @Part MultipartBody.Part oneInchPhoto);
+    //学历证书上传
+    static final String certificate = "/userCenter/uploadEduCer";
+    @Multipart
+    @POST(value = certificate)
+    Call<UpBean> getCertificateData(@Part MultipartBody.Part eduCer,
+                                    @Query("token") String token);
+    //上传身份正反面
+    static final String up_idcard ="/userCenter/uploadIdCard";
+    @Multipart
+    @POST(value = up_idcard)
+    Call<UpBean> getIdCardData(@Part MultipartBody.Part oneInchPhoto,
+                               @Query("token") String token);
 
     //附件上传图片
     static final String updateFile = "user/attachment/upload";
@@ -171,16 +183,5 @@ public interface UserInfoInterface {
                                   @Query("pageSize") int pageSize,
                                   @Query("isScorePass") int isScorePass,
                                   @Query("token") String token);
-    //学历证书上传
-    static final String certificate = "/userCenter/uploadEduCer";
-    @Multipart
-    @POST(value = certificate)
-    Call<UpBean> getCertificateData(@Part MultipartBody.Part eduCer,
-                                    @Query("token") String token);
-    //上传身份正反面
-    static final String up_idcard ="/userCenter/uploadIdCard";
-    @Multipart
-    @POST(value = up_idcard)
-    Call<UpBean> getIdCardData(@Part MultipartBody.Part oneInchPhoto,
-                          @Query("token") String token);
+
 }
