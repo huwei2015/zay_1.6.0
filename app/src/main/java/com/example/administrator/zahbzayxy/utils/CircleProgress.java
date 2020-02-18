@@ -36,7 +36,7 @@ public class CircleProgress extends View {
 
     private Paint mArcPaint;
     private RectF mArcRectF;
-    private float sweepValue = 20;
+    private float sweepValue = 0;
     private float sweepAngle;
     private int circleStrokeWidth;
 

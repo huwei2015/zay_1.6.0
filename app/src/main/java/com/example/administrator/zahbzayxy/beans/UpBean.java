@@ -38,14 +38,14 @@ public class UpBean {
     }
 
     public static class OneCunBean implements Serializable{
-        private String phonePath;
+        private String photoUrl;
 
-        public String getPhonePath() {
-            return phonePath;
+        public String getPhotoUrl() {
+            return photoUrl;
         }
 
-        public void setPhonePath(String phonePath) {
-            this.phonePath = phonePath;
+        public void setPhotoUrl(String photoUrl) {
+            this.photoUrl = photoUrl;
         }
     }
 }

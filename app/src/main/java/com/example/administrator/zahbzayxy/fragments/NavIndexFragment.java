@@ -143,7 +143,7 @@ public class NavIndexFragment extends Fragment {
         } else {
             //当前fragment对用户可见,在新线程中访问获取用户信息的接口
 //            UserInfoRunnable.startUsrInfoRunnable(this, mContext, dialog);
-            UserInfoRunnable.startUsrInfoRunnable(mContext, handler);
+//            UserInfoRunnable.startUsrInfoRunnable(mContext, handler);
         }
         Log.d("HomeFragment", "onResume");
         /*****************FHS Start****************/
@@ -629,7 +629,7 @@ public class NavIndexFragment extends Fragment {
             else {
                 //当前fragment对用户可见,在新线程中访问获取用户信息的接口
 //                UserInfoRunnable.startUsrInfoRunnable(this, mContext, dialog);
-                UserInfoRunnable.startUsrInfoRunnable(mContext, handler);
+//                UserInfoRunnable.startUsrInfoRunnable(mContext, handler);
                 initWebView();
             }
             Log.d("HomeFragment", "onHiddenChanged");

@@ -41,6 +41,7 @@ import com.example.administrator.zahbzayxy.utils.AutoScrollTextView;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -459,6 +460,10 @@ public class TestContentActivity1 extends BaseActivity {
     }
 
     private void initToPostJsonData() throws JSONException {
+        if (madapter == null) {
+            ToastUtils.showLongInfo("数据提交失败，请稍后重试");
+            return;
+        }
         //从adapter中获得做题所获得的总分数
         totalScore = madapter.getJudgeScore() + madapter.getSingleScore() + madapter.getMultipleScore() +
                 madapter.getPostFactScore() + madapter.getPostNotFactScore() + madapter.getPostShortScore();
@@ -691,20 +696,26 @@ public class TestContentActivity1 extends BaseActivity {
                             examScoreId = data.getExamScoreId();
                             Log.e("examScoreId", examScoreId + "");
                             initToStartResultActivity();
-
+                            isCommit = false;
+                            tijiao.setEnabled(true);
+                            testCommit_bt.setEnabled(true);
+                            return;
                         } else if (code.equals("99999")) {
                             Toast.makeText(TestContentActivity1.this, "系统异常", Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
+                    isCommit = false;
+                    tijiao.setEnabled(true);
+                    testCommit_bt.setEnabled(true);
                 }
 
                 @Override
                 public void onFailure(Call<TestCommitBean> call, Throwable t) {
                     String message = t.getMessage();
                     Log.e("comitError", message);
-
+                    isCommit = false;
+                    tijiao.setEnabled(true);
+                    testCommit_bt.setEnabled(true);
                 }
             });
             //  finish();

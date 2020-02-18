@@ -104,7 +104,8 @@ public interface PersonGroupInterfac {
     //我的课程购买列表
     static final String newMyChengJiPath="userExam/score/Ranking";
     @GET(value =newMyChengJiPath)
-    Call<NewMyChengJiBean> getNewMyChengJiData(@Query("token") String token);
+    Call<NewMyChengJiBean> getNewMyChengJiData(@Query("token") String token,
+                                               @Query("examType") int examType);
 
 
     //新的我的考试成绩列表
