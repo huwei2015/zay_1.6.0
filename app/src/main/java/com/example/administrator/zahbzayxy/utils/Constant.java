@@ -30,7 +30,7 @@ public class Constant {
     public static final boolean DEFAULT_DESP_TEXT_IS_DISPLAYABLE = true;
 
     //String
-    public static final String DEFAULT_VALUE_TEXT = "170";
+    public static final String DEFAULT_VALUE_TEXT = "0";
     public static final String DEFAULT_DESP_TEXT = "";
 
     /*************************FHS Start********************************/
