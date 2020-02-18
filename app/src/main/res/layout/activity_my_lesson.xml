@@ -6,10 +6,19 @@
     android:orientation="vertical"
     android:background="@color/light_Gray"
     tools:context="com.example.administrator.zahbzayxy.activities.MyLessonActivity">
+
+    <RelativeLayout
+        android:id="@+id/content_mycourse"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:background="@color/bg"
+        android:visibility="gone"
         android:layout_height="50dp">
         <ImageView
             android:id="@+id/pLesson_back_iv"
@@ -45,6 +54,7 @@
         android:layout_width="match_parent"
         android:background="@color/white"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:scrollbars="none"
        />
     <include

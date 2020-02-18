@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +22,9 @@ import com.example.administrator.zahbzayxy.adapters.PMyLessonAdapter;
 import com.example.administrator.zahbzayxy.beans.PMyLessonBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadListActivity;
 import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
+import com.example.administrator.zahbzayxy.fragments.ChooseNoThroughFragment;
+import com.example.administrator.zahbzayxy.fragments.ChooseThroughFragment;
+import com.example.administrator.zahbzayxy.fragments.MyCouseFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.FaceRecognitionUtils;
@@ -35,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyLessonActivity extends BaseActivity{
+public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.OnParamsClickListener{
 
     private ImageView back_pMyLesson_iv;
     private PullToRefreshListView pMyLesson_plv;
@@ -47,6 +51,11 @@ public class MyLessonActivity extends BaseActivity{
     private String dividePrice;
     private TextView tv_msg;
     private RelativeLayout rl_empty;
+
+    private RelativeLayout content_mycourse;
+    MyCouseFragment myCouseFragment;
+    private FragmentManager manager;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_lesson);
@@ -54,9 +63,9 @@ public class MyLessonActivity extends BaseActivity{
         getSP();
         //添加item监听
 //        adapter=new PMyLessonAdapter(totalList,MyLessonActivity.this,token);
-        adapter = new PMyLessonAdapter(totalList, MyLessonActivity.this, token, handler);
-        pMyLesson_plv.setAdapter(adapter);
-        initPullToRefreshLv();
+//        adapter = new PMyLessonAdapter(totalList, MyLessonActivity.this, token, handler);
+//        pMyLesson_plv.setAdapter(adapter);
+//        initPullToRefreshLv();
     }
 
     private void initPullToRefreshLv() {
@@ -172,6 +181,10 @@ public class MyLessonActivity extends BaseActivity{
             }
         });
 
+        manager = getSupportFragmentManager();
+        myCouseFragment = new MyCouseFragment();
+        manager.beginTransaction().add(R.id.content_mycourse, myCouseFragment).show(myCouseFragment).commit();
+        myCouseFragment.setOnParamsClickListener(this);
     }
 
     public void downLoadOnClick(View view) {
@@ -323,5 +336,10 @@ public class MyLessonActivity extends BaseActivity{
             pMyLesson_plv.setVisibility(View.GONE);
             tv_msg.setText("暂无课程信息");
         }
+    }
+
+    @Override
+    public void onClick() {
+        finish();
     }
 }

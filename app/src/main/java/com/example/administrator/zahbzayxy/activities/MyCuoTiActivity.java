@@ -99,8 +99,7 @@ public class MyCuoTiActivity extends BaseActivity {
                             List<PCuoTiJiLuBean.DataBean.ErrorRecordQuesLibsBean> errorRecordQuesLibs = body.getData().getErrorRecordQuesLibs();
                             isVisible(true);
                             // totalList.clear();
-                            totalList.addAll(errorRecordQuesLibs);
-                            adapter.notifyDataSetChanged();
+                            totalList.addAll(errorRecordQuesLibs);                            adapter.notifyDataSetChanged();
                         } else if (body.getCode().equals("99999")) {
                             isVisible(false);
                             Toast.makeText(MyCuoTiActivity.this, errMsg, Toast.LENGTH_SHORT).show();
