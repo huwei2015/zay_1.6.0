@@ -64,6 +64,7 @@ public class H5PageActivity extends BaseActivity{
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
 
     private boolean backIndexFlag=false;
+    DownloadCompleteReceiver receiver;
 
     private DataHelper mDataHelper=new DataHelper();
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +94,10 @@ public class H5PageActivity extends BaseActivity{
         mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_index);
 
         // 使用
-        DownloadCompleteReceiver receiver = new DownloadCompleteReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        registerReceiver(receiver, intentFilter);
+//        receiver = new DownloadCompleteReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+//        registerReceiver(receiver, intentFilter);
     }
 
 
@@ -401,5 +402,11 @@ public class H5PageActivity extends BaseActivity{
                 }
             }
         }
+    }
+
+    @Override
+
+    protected void onStop(){
+       super.onStop();
     }
 }

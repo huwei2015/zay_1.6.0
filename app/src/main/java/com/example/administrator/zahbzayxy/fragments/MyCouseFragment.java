@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
+import com.example.administrator.zahbzayxy.utils.TabLayoutUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class MyCouseFragment extends Fragment {
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(0)));
         learnTabLayout.addTab(learnTabLayout.newTab().setText(learnTabList.get(1)));
         learnTabLayout.setupWithViewPager(learnViewPager);
+        TabLayoutUtil.reflexWith(learnTabLayout);
     }
 
 

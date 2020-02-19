@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.bokecc.sdk.mobile.drm.DRMServer;
 import com.example.administrator.zahbzayxy.ccvideo.DataSet;
 import com.example.administrator.zahbzayxy.ccvideo.MyObjectBox;
+import com.example.administrator.zahbzayxy.utils.CrashHandler;
 import com.example.administrator.zahbzayxy.utils.SPUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -32,6 +33,9 @@ public class DemoApplication extends MultiDexApplication {
     public void onCreate() {
         startDRMServer();
         super.onCreate();
+        //HYY崩溃日志监控 并保存到后台
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
         initUmengShare();
         if (instance == null) {
             instance = this;

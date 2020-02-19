@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.adapters.HomeFragmentAdapter;
-import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
+import com.example.administrator.zahbzayxy.utils.TabLayoutUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +94,7 @@ public class NewHomeFragment extends Fragment {
         homeTabLayout.addTab(homeTabLayout.newTab().setText(homeTabList.get(5)));
         homeTabLayout.setupWithViewPager(homeViewPager);
         homeTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        TabLayoutUtil.reflexWith(homeTabLayout);
     }
 }
 

@@ -11,6 +11,7 @@ import com.example.administrator.zahbzayxy.beans.QueslibBean;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
@@ -117,5 +118,12 @@ public interface IndexInterface {
     @GET(value = signInPath)
     Call<JSONObject> saveSignIn(@Query("courseId") Integer courseId,
                                 @Query("token") String token
+    );
+
+
+    //收集异常信息
+    static final String saveErrorInfo="index/saveErrorInfo";
+    @POST(value = saveErrorInfo)
+        Call<String> saveErrorInfo(@Query("errorInfo") String errorInfo
     );
 }
