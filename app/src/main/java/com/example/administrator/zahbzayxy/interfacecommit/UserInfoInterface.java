@@ -77,11 +77,18 @@ public interface UserInfoInterface {
     @POST(value = certificate)
     Call<UpBean> getCertificateData(@Part MultipartBody.Part eduCer,
                                     @Query("token") String token);
-    //上传身份正反面
-    static final String up_idcard ="/userCenter/uploadIdCard";
+    //上传身份正面
+    static final String uploadIdCardFront ="/userCenter/uploadIdCardFront";
     @Multipart
-    @POST(value = up_idcard)
-    Call<UpBean> getIdCardData(@Part MultipartBody.Part oneInchPhoto,
+    @POST(value = uploadIdCardFront)
+    Call<UpBean> getIdCardFrontData(@Part MultipartBody.Part idCardFront,
+                               @Query("token") String token);
+
+    //上传身份反面
+    static final String uploadIdCardBack ="/userCenter/uploadIdCardBack";
+    @Multipart
+    @POST(value = uploadIdCardBack)
+    Call<UpBean> getIdCardBackData(@Part MultipartBody.Part idCardBack,
                                @Query("token") String token);
 
     //附件上传图片

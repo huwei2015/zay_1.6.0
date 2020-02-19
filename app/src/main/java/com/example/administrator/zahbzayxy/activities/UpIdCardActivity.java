@@ -75,7 +75,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
     private byte[] bitmapByte_revers;
     private final int WRITE_PERMISSION_REQ_CODE = 100;
     boolean bPermission = false;
-    private ProgressBarLayout mLoadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +89,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
         img_reverse= (ImageView) findViewById(R.id.img_reverse);//反面图片
         back_editMessage= (ImageView) findViewById(R.id.back_editMessage);
         back_editMessage.setOnClickListener(this);
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.progressBar);
         checkPublishPermission();
         initView();
         initUserInfo();
@@ -109,7 +107,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                         Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_reverse);
                         btn_reverse.setText("重新上传一寸照");
                     }else{
-                        img_reverse.setVisibility(View.GONE);
                         btn_reverse.setText("上传一寸照片");
                     }
                 }
@@ -118,7 +115,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onFailure(Call<UserInfoBean> call, Throwable t) {
-                hideLoadingBar();
                 ToastUtils.showInfo(t.getMessage(),500);
             }
         });
@@ -137,7 +133,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                         Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_photo);
                         btn_photo.setText("重新上传一寸照");
                     }else{
-                        img_photo.setVisibility(View.GONE);
                         btn_photo.setText("上传一寸照片");
                     }
                 }
@@ -146,7 +141,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onFailure(Call<UserInfoBean> call, Throwable t) {
-                hideLoadingBar();
                 ToastUtils.showInfo(t.getMessage(),500);
             }
         });
@@ -335,13 +329,12 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
-
+    //上传正面
     private void updatePhoto(byte[] url) {
-        showLoadingBar(false);
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), url);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("idCard", "idCard.jpg", requestBody);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("idCardFront", "idCardFront.jpg", requestBody);
         UserInfoInterface aClass = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        aClass.getIdCardData(body,token).enqueue(new Callback<UpBean>() {
+        aClass.getIdCardFrontData(body,token).enqueue(new Callback<UpBean>() {
             @Override
             public void onResponse(Call<UpBean> call, Response<UpBean> response) {
                   UpBean body = response.body();
@@ -350,12 +343,10 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                     Log.i("huwei","huwei=========="+phonePath);
 //                    Log.e("photoUrlphotoUrl", photoUrl);
                     if (!TextUtils.isEmpty(phonePath)) {
-                        hideLoadingBar();
                         EventBus.getDefault().post(phonePath);
                         Picasso.with(UpIdCardActivity.this).load(phonePath).into(img_photo);
                         btn_photo.setText("重新上传正面照片");
                     }else{
-                        img_photo.setVisibility(View.GONE);
                         btn_photo.setText("上传身份正面照");
                     }
                 }
@@ -363,7 +354,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onFailure(Call<UpBean> call, Throwable t) {
-                hideLoadingBar();
                 Toast.makeText(UpIdCardActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
                 Log.e("photoFailure", t.getMessage());
             }
@@ -372,20 +362,17 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
 
     //反面
     private void updateReveres(byte[] url) {
-        showLoadingBar(false);
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), url);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("idCard", "idCard.jpg", requestBody);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("idCardBack", "idCardBack.jpg", requestBody);
         UserInfoInterface aClass = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        aClass.getIdCardData(body,token).enqueue(new Callback<UpBean>() {
+        aClass.getIdCardBackData(body,token).enqueue(new Callback<UpBean>() {
             @Override
             public void onResponse(Call<UpBean> call, Response<UpBean> response) {
                 UpBean body = response.body();
                 if (body != null && body.getErrMsg() == null) {
                     String phonePath = body.getData().getPhotoUrl();
-                    Log.i("huwei","huwei=========="+phonePath);
 //                    Log.e("photoUrlphotoUrl", photoUrl);
                     if (!TextUtils.isEmpty(phonePath)) {
-                        hideLoadingBar();
                         EventBus.getDefault().post(phonePath);
                         Picasso.with(UpIdCardActivity.this).load(phonePath).into(img_reverse);
                         btn_reverse.setText("重新上传反面照片");
@@ -398,7 +385,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onFailure(Call<UpBean> call, Throwable t) {
-                hideLoadingBar();
                 Toast.makeText(UpIdCardActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
                 Log.e("photoFailure", t.getMessage());
             }
@@ -462,6 +448,7 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                     final String picturePath = cursor.getString(columnIndex);
                     Log.e("用户选择相册上传", "url: " + picturePath);
                     cursor.close();
+                    Log.i("hw","hw=====picturePath======="+picturePath);
                     bitmap = bmpTopath(picturePath);
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片
@@ -493,14 +480,5 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                     Toast.makeText(UpIdCardActivity.this,"图片上传成功",Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    public void showLoadingBar(boolean transparent) {
-        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-        mLoadingBar.show();
-    }
-
-    public void hideLoadingBar() {
-        mLoadingBar.hide();
     }
 }
