@@ -148,9 +148,9 @@ public class FileAllFragment extends Fragment implements PullToRefreshListener, 
                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
                                ToastUtils.showShortInfo("没有更多数据了");
                            }
-                           allFileAdapter.addList(list);
+                           allFileListBeanList.addAll(list);
+                           allFileAdapter.addList(allFileListBeanList);
                        }
-                       allFileListBeanList.addAll(list);
                    }
                } else {
                    if (currentPage == 1){
