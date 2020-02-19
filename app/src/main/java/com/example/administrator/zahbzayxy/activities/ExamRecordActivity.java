@@ -17,6 +17,7 @@ import com.example.administrator.zahbzayxy.beans.NewMyChengJiListBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,20 +91,42 @@ public class ExamRecordActivity extends BaseActivity implements View.OnClickList
         aClass.getMyTiKuGradeData(currentPage, pageSize, token, libId, examType).enqueue(new Callback<NewMyChengJiListBean>() {
             @Override
             public void onResponse(Call<NewMyChengJiListBean> call, Response<NewMyChengJiListBean> response) {
-                if (response != null && response.body() != null && response.body().getData().getExamScores().size() > 0) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
-                        isVisible(true);
-                        NewMyChengJiListBean.DataEntity data = response.body().getData();
-                        if (data != null) {
-                            List<NewMyChengJiListBean.DataEntity.ExamScoresEntity> examScores = data.getExamScores();
-                            examScoresEntities.clear();
-                            examScoresEntities.addAll(examScores);
-                            examRecordAdapter.notifyDataSetChanged();
+                        if (currentPage == 1 && response.body().getData().getExamScores().size() == 0) {
+                            isVisible(false);
+                        } else {
+                            isVisible(true);
                         }
+                        List<NewMyChengJiListBean.DataEntity.ExamScoresEntity> dataList = response.body().getData().getExamScores();
+                        if(currentPage == 1) {
+                            examScoresEntities = dataList;
+                            examRecordAdapter.setList(examScoresEntities);
+                            if (examScoresEntities.size() < pageSize) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                            }
+                        } else {
+                            if (dataList == null || dataList.size() == 0) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                                ToastUtils.showShortInfo("没有更多数据了");
+                            } else {
+                                if (dataList.size() < pageSize) {
+                                    recyclerView.setLoadingMoreEnabled(false);
+                                    ToastUtils.showShortInfo("数据加载完毕");
+                                } else {
+                                    examScoresEntities.addAll(dataList);
+                                    examRecordAdapter.setList(examScoresEntities);
+                                }
+                            }
+                        }
+                    } else {
+                        ToastUtils.showShortInfo(response.body().getErrMsg());
                     }
-                }else{
-                    isVisible(false);
+                } else {
+                    if (currentPage == 1){
+                        isVisible(false);
+                    }
                 }
 
             }

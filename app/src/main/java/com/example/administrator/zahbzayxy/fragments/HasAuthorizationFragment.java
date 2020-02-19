@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,23 +78,43 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
         userInfoInterface.getAuthData(token,4,currentPage,pageSize,null).enqueue(new Callback<HasAuthorBean>() {
             @Override
             public void onResponse(Call<HasAuthorBean> call, Response<HasAuthorBean> response) {
-                if(response !=null & response.body() !=null && response.body().getData().getOrderList().size() > 0){
+                if(response !=null && response.body() !=null && response.body().getData() != null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        isVisible(true);
-                        hasAuthorListList = response.body().getData().getOrderList();
-                        for (int i = 0; i< hasAuthorListList.size(); i++){
-                            orderNumber = hasAuthorListList.get(i).getOrderNumber();
+                        if (currentPage == 1 && response.body().getData().getOrderList().size() == 0) {
+                            isVisible(false);
+                        } else {
+                            isVisible(true);
                         }
-                        if(currentPage == 1){
+                        List<HasAuthorBean.HasAuthBeanList> hasAuthBeanLists = response.body().getData().getOrderList();
+                        if(currentPage == 1) {
+                            hasAuthorListList.clear();
+                            hasAuthorListList.addAll(hasAuthBeanLists);
                             hasAuthorAdapter.setList(hasAuthorListList);
-                        }else{
-                            hasAuthorAdapter.addList(hasAuthorListList);
+                            if (hasAuthorListList.size() < pageSize) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                            }
+                        } else {
+                            if (hasAuthBeanLists == null || hasAuthBeanLists.size() == 0) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                                ToastUtils.showShortInfo("没有更多数据了");
+                            } else {
+                                if (hasAuthBeanLists.size() < pageSize) {
+                                    recyclerView.setLoadingMoreEnabled(false);
+                                    ToastUtils.showShortInfo("数据加载完毕");
+                                } else {
+                                    hasAuthorListList.addAll(hasAuthBeanLists);
+                                    hasAuthorAdapter.setList(hasAuthorListList);
+                                }
+                            }
                         }
-
+                    } else {
+                        ToastUtils.showShortInfo(response.body().getErrMsg());
                     }
-                }else {
-                    isVisible(false);
+                } else {
+                    if (currentPage == 1){
+                        isVisible(false);
+                    }
                 }
             }
 
@@ -155,8 +177,8 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
     @Override
     public void onResume() {
         super.onResume();
-        initView();
-        initData();
+//        initView();
+//        initData();
     }
 
     @Override
@@ -200,38 +222,51 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
     }
 
 
-    private void getStateData(){
+    private void getStateData(int position){
+        if (position >= hasAuthorListList.size()) {
+            return;
+        }
+        HasAuthorBean.HasAuthBeanList bean = hasAuthorListList.get(position);
+        if (bean == null) {
+            Toast.makeText(mContext,"数据异常",Toast.LENGTH_LONG).show();
+            return;
+        }
+        orderNumber = bean.getOrderNumber();
         showLoadingBar(false);
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getStateData(token,orderNumber).enqueue(new Callback<AuthStateBean>() {
             @Override
             public void onResponse(Call<AuthStateBean> call, Response<AuthStateBean> response) {
+                hideLoadingBar();
                 if(response !=null && response.body() !=null){
                     String code=response.body().getCode();
                     if(code.equals("00000")){
                         boolean data = response.body().isData();
                         if(data){
-                            hideLoadingBar();
                             initData();
                             Toast.makeText(mContext,"授权成功",Toast.LENGTH_LONG).show();
                             hasAuthorAdapter.notifyDataSetChanged();
                         }
                     }else if(code.equals("00097")){
                         Toast.makeText(mContext,response.body().getErrMsg(),Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(mContext,response.body().getErrMsg(),Toast.LENGTH_LONG).show();
                     }
+                } else {
+                    Toast.makeText(mContext,"网络异常",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AuthStateBean> call, Throwable t) {
-
+                hideLoadingBar();
+                Toast.makeText(mContext,"网络异常",Toast.LENGTH_LONG).show();
             }
         });
     }
     //item 点击了
     @Override
     public void onItemClick(View view, int position) {
-        getStateData();
-        Toast.makeText(mContext,"点击了",Toast.LENGTH_LONG).show();
+        getStateData(position);
     }
 }

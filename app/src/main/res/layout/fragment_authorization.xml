@@ -20,7 +20,10 @@
         <com.androidkun.PullToRefreshRecyclerView
             android:id="@+id/pull_recycleview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:divider="@color/light_Gray"
+            android:dividerHeight="10dp"
+            />
     </LinearLayout>
     <include layout="@layout/layout_empty_view" />
 </LinearLayout>

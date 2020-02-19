@@ -146,16 +146,20 @@ public class PLookCuoTiActivity extends BaseActivity {
                                 Log.e("errorListSize", size + ",1111");
 
                             }
-                        } else if (code1.equals("99999")) {
-                            Toast.makeText(PLookCuoTiActivity.this, "系统异常", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PLookCuoTiActivity.this, body.getErrMsg(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(PLookCuoTiActivity.this, "数据异常", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(PLookCuoTiActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PrictaceErrorBean> call, Throwable t) {
-
+                Toast.makeText(PLookCuoTiActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
             }
         });
 

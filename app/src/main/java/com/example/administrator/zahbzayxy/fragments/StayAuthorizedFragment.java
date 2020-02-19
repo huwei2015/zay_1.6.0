@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import com.example.administrator.zahbzayxy.adapters.StayAuthorAdapter;
 import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -66,19 +69,42 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
         userInfoInterface.getUnAuthData(token, 1, currentPage, pageSize, null).enqueue(new Callback<StayAuthorBean>() {
             @Override
             public void onResponse(Call<StayAuthorBean> call, Response<StayAuthorBean> response) {
-                if(response !=null & response.body() !=null && response.body().getData().getOrderList().size()> 0){
+                if(response !=null && response.body() !=null && response.body().getData() != null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        isVisible(true);
-                        stayAuthorLists = response.body().getData().getOrderList();
-                        if(currentPage == 1){
-                            stayAuthorAdapter.setList(stayAuthorLists);
-                        }else{
-                            stayAuthorAdapter.addList(stayAuthorLists);
+                        if (currentPage == 1 && response.body().getData().getOrderList().size() == 0) {
+                            isVisible(false);
+                        } else {
+                            isVisible(true);
                         }
+                        List<StayAuthorBean.StayAuthBeanList> orderList = response.body().getData().getOrderList();
+                        if(currentPage == 1) {
+                            stayAuthorLists = orderList;
+                            stayAuthorAdapter.setList(stayAuthorLists);
+                            if (stayAuthorLists.size() < pageSize) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                            }
+                        } else {
+                            if (orderList == null || orderList.size() == 0) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                                ToastUtils.showShortInfo("没有更多数据了");
+                            } else {
+                                if (orderList.size() < pageSize) {
+                                    recyclerView.setLoadingMoreEnabled(false);
+                                    ToastUtils.showShortInfo("数据加载完毕");
+                                } else {
+                                    stayAuthorLists.addAll(orderList);
+                                    stayAuthorAdapter.setList(stayAuthorLists);
+                                }
+                            }
+                        }
+                    } else {
+                        ToastUtils.showShortInfo(response.body().getErrMsg());
                     }
                 }else{
-                    isVisible(false);
+                    if (currentPage == 1){
+                        isVisible(false);
+                    }
                 }
             }
 
@@ -90,7 +116,6 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
     }
 
     private void initView() {
-        recyclerView=view.findViewById(R.id.pull_recycleview);
         tv_msg = view.findViewById(R.id.tv_msg);
         ll_list = view.findViewById(R.id.ll_list);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
@@ -101,19 +126,19 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //初始化adapter
         stayAuthorAdapter = new StayAuthorAdapter(getActivity(), stayAuthorLists);
-        //添加数据源
-        recyclerView.setAdapter(stayAuthorAdapter);
         recyclerView.setLayoutManager(layoutManager);
         //设置是否显示上次刷新时间
         recyclerView.displayLastRefreshTime(true);
         //是否开启上拉加载
         recyclerView.setLoadingMoreEnabled(true);
         //是否开启上拉刷新
-        recyclerView.setPullRefreshEnabled(false);
+        recyclerView.setPullRefreshEnabled(true);
         //设置刷新回调
         recyclerView.setPullToRefreshListener(this);
+        //添加数据源
+        recyclerView.setAdapter(stayAuthorAdapter);
         //主动触发下拉刷新操作
-        recyclerView.onRefresh();
+//        recyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -158,8 +183,8 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
     @Override
     public void onResume() {
         super.onResume();
-        initView();
-        initData();
+//        initView();
+//        initData();
     }
 
     private void isVisible(boolean flag) {
