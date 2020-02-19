@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -55,6 +56,15 @@ public class Utils {
             hex.append(Integer.toHexString(b & 0xFF));
         }
         return hex.toString();
+    }
+
+    /**
+     * 为refreshView设置转圈颜色
+     *
+     * @param refreshLayout view
+     */
+    public static void setRefreshViewColor(SwipeRefreshLayout refreshLayout) {
+        refreshLayout.setColorSchemeColors( Color.GREEN);
     }
 
 }

@@ -17,10 +17,18 @@
             android:gravity="center"
             android:visibility="gone" />
 
-        <com.androidkun.PullToRefreshRecyclerView
-            android:id="@+id/pull_recycleview"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/author_data_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/author_data_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
     </LinearLayout>
 
     <include layout="@layout/layout_empty_view" />

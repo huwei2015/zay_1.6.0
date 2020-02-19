@@ -37,9 +37,13 @@
     <ImageView
         android:id="@+id/img_one_cun"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:layout_width="200dp"
-        android:layout_height="140dp" />
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="fitXY"
+        android:background="@mipmap/educare"
+        android:layout_width="match_parent"
+        android:layout_height="160dp" />
     <Button
         android:id="@+id/btn_photo"
         android:layout_width="wrap_content"

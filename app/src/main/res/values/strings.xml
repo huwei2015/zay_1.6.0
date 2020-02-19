@@ -33,7 +33,7 @@
 
     <!--*******************FHS Start***************-->
     <string name="upload_portrait_prompt">您还未上传人脸对比照片，为不影响您的学习请前往个人中心--个人信息中上传人脸对比照片。</string>
-    <string name="get_user_info_err">用户信息获取失败，请重新登录。</string>
+    <string name="get_user_info_err">当前用户账号在另外一台设备登录，请重新登录。</string>
     <string name="btn_go_to_upload">立即前往</string>
     <string name="btn_confirm">确定</string>
     <string name="title_face_recognition">人脸对比照片</string>

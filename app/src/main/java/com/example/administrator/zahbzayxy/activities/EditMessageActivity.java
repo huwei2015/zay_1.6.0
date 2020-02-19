@@ -47,6 +47,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.FaceRecognitionUtils;
+import com.example.administrator.zahbzayxy.utils.ImageUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.google.gson.Gson;
@@ -825,15 +826,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
     }
 
     public byte[] getBitmapByte(Bitmap bitmap) {   //将bitmap转化为byte[]类型也就是转化为二进制
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return out.toByteArray();
+        return ImageUtils.compressImage(bitmap, 300);
     }
 
     private void downLoadPhotoUrl(byte[] url) {

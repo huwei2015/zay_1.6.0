@@ -38,6 +38,7 @@ import com.example.administrator.zahbzayxy.fragments.WordFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.manager.DownloadManager;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ImageUtils;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
@@ -192,7 +193,7 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                         return;
                     }
                     fileSuffix = fileSuffix.toLowerCase();
-                    if (!("jpg".equals(fileSuffix) || "jpeg".equals(fileSuffix) || "png".equals(fileSuffix) || "gif".equals(fileSuffix)
+                    if (!("jpg".equals(fileSuffix) || "jpeg".equals(fileSuffix) || "png".equals(fileSuffix)
                             || "xls".equals(fileSuffix) || "xlsx".equals(fileSuffix) || "xlsm".equals(fileSuffix)
                             || "doc".equals(fileSuffix) || "docx".equals(fileSuffix)
                             || "pdf".equals(fileSuffix))) {
@@ -217,6 +218,27 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                     final String picturePath = cursor.getString(columnIndex);
                     Log.e("用户选择相册上传", "url: " + picturePath);
                     cursor.close();
+
+                    String endFile1 = picturePath.substring(picturePath.lastIndexOf("/") + 1);
+                    if (TextUtils.isEmpty(endFile1)) {
+                        ToastUtils.showLongInfo("文件类型错误，请重新选择");
+                        return;
+                    }
+                    int pointIndex1 = endFile1.lastIndexOf(".");
+                    String fileSuffix1 = "";
+                    if (pointIndex1 > 0) {
+                        fileSuffix1 = endFile1.substring(pointIndex1 + 1);
+                    }
+                    if (TextUtils.isEmpty(fileSuffix1)) {
+                        ToastUtils.showLongInfo("不支持的文件类型");
+                        return;
+                    }
+                    fileSuffix1 = fileSuffix1.toLowerCase();
+                    if (!("jpg".equals(fileSuffix1) || "jpeg".equals(fileSuffix1) || "png".equals(fileSuffix1))) {
+                        ToastUtils.showLongInfo("不支持的类型，只支持JPG、png图片格式");
+                        return;
+                    }
+
                     bitmap = bmpTopath(picturePath);
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片
@@ -417,14 +439,6 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     }
 
     public byte[] getBitmapByte(Bitmap bitmap) {   //将bitmap转化为byte[]类型也就是转化为二进制
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return out.toByteArray();
+        return ImageUtils.compressImage(bitmap, 300);
     }
 }

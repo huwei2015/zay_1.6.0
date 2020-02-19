@@ -289,6 +289,10 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_erropic://我的错题
+                if (quesLibId <= 0 || userLibId <= 0 || packageId <= 0) {
+                    ToastUtils.showLongInfo("暂无题库");
+                    return;
+                }
                 intent = new Intent(getActivity(), PLookCuoTiActivity.class);
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("quesLibId", quesLibId);
@@ -299,6 +303,10 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_exam://模拟考试
+                if (quesLibId <= 0 || userLibId <= 0) {
+                    ToastUtils.showLongInfo("暂无题库");
+                    return;
+                }
                 intent = new Intent(getActivity(), TestContentActivity1.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("quesLibId", quesLibId);

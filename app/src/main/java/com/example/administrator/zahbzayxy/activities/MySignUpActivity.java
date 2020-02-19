@@ -19,6 +19,7 @@ import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.MySignAdapter;
+import com.example.administrator.zahbzayxy.beans.AllFileBean;
 import com.example.administrator.zahbzayxy.beans.SignBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
@@ -66,19 +67,36 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         userInfoInterface.getSignData(currPage, PageSize, token).enqueue(new Callback<SignBean>() {
             @Override
             public void onResponse(Call<SignBean> call, Response<SignBean> response) {
-                if (response != null && response.body() != null && response.body().getApplyList().size() > 0) {
+                if (response != null && response.body() != null) {
+                    if (currPage == 1 && response.body().getApplyList().size() == 0) {
+                        isVisible(false);
+                    } else {
+                        isVisible(true);
+                    }
+
                     String code = response.body().getCode();
-                    if (code.equals("00000")) {
+                    if(code.equals("00000")){
                         hideLoadingBar();
-                        signListBeanList = response.body().getApplyList();
-                        if (currPage == 1) {
-                           mySignAdapter.setList(signListBeanList);
+                        List<SignBean.SignListBean> list = response.body().getApplyList();
+                        if(currPage == 1) {
+                            signListBeanList = list;
+                            mySignAdapter.setList(signListBeanList);
+                            if (list.size() < PageSize) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                            }
                         }else{
+                            if (list == null || list.size() == 0) {
+                                recyclerView.setLoadingMoreEnabled(false);
+                                ToastUtils.showShortInfo("没有更多数据了");
+                            }
+                            signListBeanList.addAll(list);
                             mySignAdapter.addList(signListBeanList);
                         }
                     }
                 } else {
+                    if (currPage == 1){
                         isVisible(false);
+                    }
                 }
             }
 

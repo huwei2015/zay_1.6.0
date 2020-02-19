@@ -136,10 +136,10 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
                             if (data == null || data.size() == 0) {
                                 pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
                                 ToastUtils.showShortInfo("没有更多数据了");
-                            } else {
-                                allFileListBeanList.addAll(data);
-                                allFileAdapter.setList(allFileListBeanList);
                             }
+                            allFileListBeanList.addAll(data);
+                            allFileAdapter.setList(allFileListBeanList);
+
                         }
                     } else {
                         ToastUtils.showShortInfo(response.body().getErrMsg());

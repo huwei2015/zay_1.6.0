@@ -89,7 +89,24 @@ public class UserInfoBean {
         private String workTypeName;//工种名称
         private String occupaSkillLevel;//职业技能等级
         private String eduCerPath;//学历证书
-        private String idCardPath;//身份证
+        private String idCardFrontPath;//身份证正面
+        private String idCardBackPath;// 身份证反面
+
+        public String getIdCardFrontPath() {
+            return idCardFrontPath;
+        }
+
+        public void setIdCardFrontPath(String idCardFrontPath) {
+            this.idCardFrontPath = idCardFrontPath;
+        }
+
+        public String getIdCardBackPath() {
+            return idCardBackPath;
+        }
+
+        public void setIdCardBackPath(String idCardBackPath) {
+            this.idCardBackPath = idCardBackPath;
+        }
 
         public String getEduCerPath() {
             return eduCerPath;
@@ -97,14 +114,6 @@ public class UserInfoBean {
 
         public void setEduCerPath(String eduCerPath) {
             this.eduCerPath = eduCerPath;
-        }
-
-        public String getIdCardPath() {
-            return idCardPath;
-        }
-
-        public void setIdCardPath(String idCardPath) {
-            this.idCardPath = idCardPath;
         }
 
         public String getOccupaName() {

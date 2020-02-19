@@ -141,10 +141,10 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
                             if (list == null || list.size() == 0) {
                                 pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
                                 ToastUtils.showShortInfo("没有更多数据了");
-                            } else {
-                                allFileListBeanList.addAll(list);
-                                allFileAdapter.setList(allFileListBeanList);
                             }
+                            allFileListBeanList.addAll(list);
+                            allFileAdapter.setList(allFileListBeanList);
+
                         }
                     }
                 }else{

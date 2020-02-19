@@ -163,4 +163,35 @@ public class ImageUtils {
         return bitmap;
     }
 
+    public static byte[] compressImage(Bitmap image, int imageSize) {
+        ByteArrayOutputStream baos = null;
+        ByteArrayInputStream isBm = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+            int options = 100;
+            int i = 0;
+            while ((baos.toByteArray().length / 1024) > imageSize) {    //循环判断如果压缩后图片是否大于imageSize,大于继续压缩
+                i++;
+                baos.reset();//重置baos即清空baos
+                options -= 10;//每次都减少10
+                if (options <= 0) options = 2;
+                image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+                if (options == 2) break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (isBm != null) {
+                try {
+                    isBm.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return baos.toByteArray();
+    }
+
+
 }
