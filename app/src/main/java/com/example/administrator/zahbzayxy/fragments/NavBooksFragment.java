@@ -280,18 +280,18 @@ public class NavBooksFragment extends Fragment{
                 if(zxFlag) {
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down_sel);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    zuixinTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
                     zxFlag=false;
                     totalList.clear();
                     isNew=1;
                 }else{
                     Drawable drawableLeft = getResources().getDrawable(
                             R.mipmap.jt_down);
-                    ((TextView) v).setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    zuixinTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     //((TextView) v).setCompoundDrawablePadding(4);
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.zx_text_color));
+                    zuixinTV.setTextColor(getResources().getColor(R.color.zx_text_color));
                     zxFlag=true;
                     totalList.clear();
                     isNew=null;

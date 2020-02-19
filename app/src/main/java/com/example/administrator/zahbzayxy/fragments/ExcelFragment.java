@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidkun.PullToRefreshRecyclerView;
 import com.androidkun.callback.PullToRefreshListener;
@@ -55,6 +56,8 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
     List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
     String del_id;
     private ShowFileManager mShowFile;
+    private int currentPage = 1;
+    private int pageSize = 10;
 
     @Override
     public void onAttach(Context context) {
@@ -94,7 +97,7 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
         //是否开启上拉加载
         pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
         //是否开启上拉刷新
-        pullToRefreshRecyclerView.setPullRefreshEnabled(false);
+        pullToRefreshRecyclerView.setPullRefreshEnabled(true);
         //设置刷新回调
         pullToRefreshRecyclerView.setPullToRefreshListener(this);
         //主动触发下拉刷新操作
@@ -108,28 +111,49 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
     private void initPullToRefreshListView() {
         showLoadingBar(false);
         AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
-        allFileInterface.getAllFileData(1,10,3,token).enqueue(new Callback<AllFileBean>() {
+        allFileInterface.getAllFileData(currentPage,pageSize,3,token).enqueue(new Callback<AllFileBean>() {
             @Override
             public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        isVisible(true);
+                        if (currentPage == 1 && response.body().getData().getData().size() == 0) {
+                            isVisible(false);
+                        } else {
+                            isVisible(true);
+                        }
                         hideLoadingBar();
                         List<AllFileBean.AllFileListBean> data = response.body().getData().getData();
-                        if(data.size() > 0) {
-                            allFileListBeanList = data;
-                            allFileAdapter.setList(data);
-                        }else{
-                            isVisible(false);
+                        if(currentPage == 1) {
+                            allFileListBeanList.clear();
+                            allFileListBeanList.addAll(data);
+                            allFileAdapter.setList(allFileListBeanList);
+                            if (allFileListBeanList.size() < pageSize) {
+                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                            }
+                        } else {
+                            if (data == null || data.size() == 0) {
+                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                                ToastUtils.showShortInfo("没有更多数据了");
+                            } else {
+                                allFileListBeanList.addAll(data);
+                                allFileAdapter.setList(allFileListBeanList);
+                            }
                         }
+                    } else {
+                        ToastUtils.showShortInfo(response.body().getErrMsg());
+                    }
+                } else {
+                    if (currentPage == 1){
+                        isVisible(false);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<AllFileBean> call, Throwable t) {
-
+                currentPage--;
+                ToastUtils.showShortInfo("网络异常");
             }
         });
     }
@@ -191,12 +215,32 @@ public class ExcelFragment extends Fragment implements PullToRefreshListener {
 
     @Override
     public void onRefresh() {
-
+        pullToRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshRecyclerView.setRefreshComplete();
+                currentPage = 1;
+                initPullToRefreshListView();
+                pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
+            }
+        }, 2000);
     }
 
     @Override
     public void onLoadMore() {
-
+        pullToRefreshRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshRecyclerView.setLoadMoreComplete();
+                if (allFileListBeanList.size() < pageSize) {
+                    Toast.makeText(mContext, "没有更多数据", Toast.LENGTH_SHORT).show();
+                    pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                    return;
+                }
+                currentPage++;
+                initPullToRefreshListView();
+            }
+        }, 2000);
     }
 
     public void showLoadingBar(boolean transparent) {

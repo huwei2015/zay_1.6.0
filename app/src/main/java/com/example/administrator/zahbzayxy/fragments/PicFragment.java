@@ -132,15 +132,20 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
                         List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
                         if(currentPage == 1) {
                             allFileListBeanList.clear();
-                            allFileAdapter.setList(list);
+                            allFileListBeanList.addAll(list);
+                            allFileAdapter.setList(allFileListBeanList);
+                            if (allFileListBeanList.size() < pageSize) {
+                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                            }
                         }else{
                             if (list == null || list.size() == 0) {
                                 pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
                                 ToastUtils.showShortInfo("没有更多数据了");
+                            } else {
+                                allFileListBeanList.addAll(list);
+                                allFileAdapter.setList(allFileListBeanList);
                             }
-                            allFileAdapter.addList(list);
                         }
-                        allFileListBeanList.addAll(list);
                     }
                 }else{
                     if (currentPage == 1){
@@ -159,10 +164,6 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     @Override
     public void onResume() {
         super.onResume();
-        if(allFileListBeanList.size() > 0){
-            allFileListBeanList.clear();
-            initPullToRefreshListView();
-        }
     }
 
     @Override
