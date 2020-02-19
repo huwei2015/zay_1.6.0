@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import com.example.administrator.zahbzayxy.beans.StayAuthorBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +40,23 @@ import retrofit2.Response;
  * Time 16:25.
  * 未授权
  */
-public class StayAuthorizedFragment extends Fragment implements PullToRefreshListener, View.OnClickListener {
-    private PullToRefreshRecyclerView recyclerView;
+public class StayAuthorizedFragment extends Fragment implements View.OnClickListener {
     View view;
     String token;
     private Context mContext;
     private StayAuthorAdapter stayAuthorAdapter;
     private List<StayAuthorBean.StayAuthBeanList> stayAuthorLists =new ArrayList<>();
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
     LinearLayout ll_list;
     RelativeLayout rl_empty;
     TextView tv_msg;
     private int currentPage = 1;
     private int pageSize = 10;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
 
     @Override
     public void onAttach(Context context) {
@@ -59,6 +68,8 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_un_authorization, container, false);
+        mLoading = new LoadingDialog(mContext);
+        mLoading.setShowText("加载中...");
         initView();
         initData();
         return view;
@@ -69,6 +80,9 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
         userInfoInterface.getUnAuthData(token, 1, currentPage, pageSize, null).enqueue(new Callback<StayAuthorBean>() {
             @Override
             public void onResponse(Call<StayAuthorBean> call, Response<StayAuthorBean> response) {
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 if(response !=null && response.body() !=null && response.body().getData() != null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
@@ -82,20 +96,19 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
                             stayAuthorLists = orderList;
                             stayAuthorAdapter.setList(stayAuthorLists);
                             if (stayAuthorLists.size() < pageSize) {
-                                recyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                             }
                         } else {
                             if (orderList == null || orderList.size() == 0) {
-                                recyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                                 ToastUtils.showShortInfo("没有更多数据了");
                             } else {
                                 if (orderList.size() < pageSize) {
-                                    recyclerView.setLoadingMoreEnabled(false);
+                                    mIsHasData = false;
                                     ToastUtils.showShortInfo("数据加载完毕");
-                                } else {
-                                    stayAuthorLists.addAll(orderList);
-                                    stayAuthorAdapter.setList(stayAuthorLists);
                                 }
+                                stayAuthorLists.addAll(orderList);
+                                stayAuthorAdapter.setList(stayAuthorLists);
                             }
                         }
                     } else {
@@ -111,39 +124,68 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
             @Override
             public void onFailure(Call<StayAuthorBean> call, Throwable t) {
                 isVisible(false);
+                closeSwipeRefresh();
+                mIsLoading = false;
+                mLoading.dismiss();
             }
         });
     }
 
     private void initView() {
+        mRefreshLayout = view.findViewById(R.id.author_data_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.author_data_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         tv_msg = view.findViewById(R.id.tv_msg);
         ll_list = view.findViewById(R.id.ll_list);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
-        recyclerView = view.findViewById(R.id.pull_recycleview);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token", "");
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //初始化adapter
         stayAuthorAdapter = new StayAuthorAdapter(getActivity(), stayAuthorLists);
-        recyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        recyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        recyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        recyclerView.setPullRefreshEnabled(true);
-        //设置刷新回调
-        recyclerView.setPullToRefreshListener(this);
-        //添加数据源
-        recyclerView.setAdapter(stayAuthorAdapter);
-        //主动触发下拉刷新操作
-//        recyclerView.onRefresh();
+        mRecyclerView.setAdapter(stayAuthorAdapter);
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        recyclerView.setEmptyView(emptyView);
+        initEvent();
+    }
+
+    private void initEvent(){
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            initData();
+        });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == stayAuthorAdapter.getItemCount() && !mIsLoading) {
+                    Log.i("======load=====","加载下一页");
+                    mLoading.show();
+                    currentPage++;
+                    initData();
+                    mIsLoading = true;
+                }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -151,35 +193,6 @@ public class StayAuthorizedFragment extends Fragment implements PullToRefreshLis
 
     }
 
-    @Override
-    public void onRefresh() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setRefreshComplete();
-                currentPage = 1;
-                initData();
-                recyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onLoadMore() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setLoadMoreComplete();
-                if (stayAuthorLists.size() < pageSize) {
-                    Toast.makeText(mContext, "没有更多数据", Toast.LENGTH_SHORT).show();
-                    recyclerView.setLoadingMoreEnabled(false);
-                    return;
-                }
-                currentPage++;
-                initData();
-            }
-        }, 2000);
-    }
     @Override
     public void onResume() {
         super.onResume();

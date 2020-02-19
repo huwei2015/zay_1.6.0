@@ -114,10 +114,10 @@ public class ExamRecordActivity extends BaseActivity implements View.OnClickList
                                 if (dataList.size() < pageSize) {
                                     recyclerView.setLoadingMoreEnabled(false);
                                     ToastUtils.showShortInfo("数据加载完毕");
-                                } else {
-                                    examScoresEntities.addAll(dataList);
-                                    examRecordAdapter.setList(examScoresEntities);
                                 }
+                                examScoresEntities.addAll(dataList);
+                                examRecordAdapter.setList(examScoresEntities);
+
                             }
                         }
                     } else {

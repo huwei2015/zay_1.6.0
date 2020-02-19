@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +48,14 @@ import retrofit2.Response;
  * Time 16:25.
  * 已授权
  */
-public class HasAuthorizationFragment extends Fragment implements PullToRefreshListener,View.OnClickListener,HasAuthorAdapter.OnItemClickListener{
-    private PullToRefreshRecyclerView recyclerView;
+public class HasAuthorizationFragment extends Fragment implements View.OnClickListener,HasAuthorAdapter.OnItemClickListener{
     private View view;
     private String token;
     Context mContext;
     private HasAuthorAdapter hasAuthorAdapter;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
     ProgressBarLayout mLoadingBar;
     LinearLayout ll_list;
     RelativeLayout rl_empty;
@@ -58,6 +64,10 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
     private List<HasAuthorBean.HasAuthBeanList> hasAuthorListList = new ArrayList<>();
     private int currentPage = 1;
     private int pageSize = 10;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -68,8 +78,9 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_authorization, container, false);
+        mLoading = new LoadingDialog(mContext);
+        mLoading.setShowText("加载中...");
         initView();
-        initData();
         return view;
     }
 
@@ -78,6 +89,9 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
         userInfoInterface.getAuthData(token,4,currentPage,pageSize,null).enqueue(new Callback<HasAuthorBean>() {
             @Override
             public void onResponse(Call<HasAuthorBean> call, Response<HasAuthorBean> response) {
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 if(response !=null && response.body() !=null && response.body().getData() != null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
@@ -92,20 +106,19 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
                             hasAuthorListList.addAll(hasAuthBeanLists);
                             hasAuthorAdapter.setList(hasAuthorListList);
                             if (hasAuthorListList.size() < pageSize) {
-                                recyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                             }
                         } else {
                             if (hasAuthBeanLists == null || hasAuthBeanLists.size() == 0) {
-                                recyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                                 ToastUtils.showShortInfo("没有更多数据了");
                             } else {
                                 if (hasAuthBeanLists.size() < pageSize) {
-                                    recyclerView.setLoadingMoreEnabled(false);
+                                    mIsHasData = false;
                                     ToastUtils.showShortInfo("数据加载完毕");
-                                } else {
-                                    hasAuthorListList.addAll(hasAuthBeanLists);
-                                    hasAuthorAdapter.setList(hasAuthorListList);
                                 }
+                                hasAuthorListList.addAll(hasAuthBeanLists);
+                                hasAuthorAdapter.setList(hasAuthorListList);
                             }
                         }
                     } else {
@@ -123,80 +136,76 @@ public class HasAuthorizationFragment extends Fragment implements PullToRefreshL
                 String msg = t.getMessage();
                 Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
                 isVisible(false);
+                closeSwipeRefresh();
+                mIsLoading = false;
+                mLoading.dismiss();
             }
         });
     }
 
     private void initView() {
-        recyclerView = view.findViewById(R.id.pull_recycleview);
+        mRefreshLayout = view.findViewById(R.id.author_data_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.author_data_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         tv_msg = view.findViewById(R.id.tv_msg);
         mLoadingBar=view.findViewById(R.id.nb_allOrder_load_bar_layout);
         ll_list = view.findViewById(R.id.ll_list);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token", "");
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //初始化adapter
         hasAuthorAdapter = new HasAuthorAdapter(getActivity(), hasAuthorListList);
         hasAuthorAdapter.setOnItemClickListener(this);
-        //添加数据源
-        recyclerView.setAdapter(hasAuthorAdapter);
-        recyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        recyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        recyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        recyclerView.setPullRefreshEnabled(true);
-        //设置刷新回调
-        recyclerView.setPullToRefreshListener(this);
-        recyclerView.setLoadMoreResource(R.drawable.account);
-        //主动触发下拉刷新操作
-        recyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        recyclerView.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(hasAuthorAdapter);
+        initEvent();
+        mRefreshLayout.setRefreshing(true);
+        initData();
     }
 
-    @Override
-    public void onRefresh() {
-        recyclerView.postDelayed(new Runnable() {
+
+    private void initEvent(){
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            initData();
+        });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void run() {
-                recyclerView.setRefreshComplete();
-                currentPage = 1;
-                initData();
-                recyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        initView();
-//        initData();
-    }
-
-    @Override
-    public void onLoadMore() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setLoadMoreComplete();
-                if (hasAuthorListList.size() < pageSize) {
-                    Toast.makeText(mContext, "没有更多数据", Toast.LENGTH_SHORT).show();
-                    recyclerView.setLoadingMoreEnabled(false);
-                    return;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == hasAuthorAdapter.getItemCount() && !mIsLoading) {
+                    Log.i("======load=====","加载下一页");
+                    mLoading.show();
+                    currentPage++;
+                    initData();
+                    mIsLoading = true;
                 }
-                currentPage++;
-                initData();
+
             }
-        }, 2000);
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
+
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
