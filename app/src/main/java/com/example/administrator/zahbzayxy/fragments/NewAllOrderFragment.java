@@ -77,7 +77,7 @@ public class NewAllOrderFragment extends Fragment{
         totalList.clear();
         adapter = new NBMyAllOrderAdapter(totalList, context, token);
         nbMyAllOrder_lv.setAdapter(adapter);
-//        nbMyAllOrder_lv.setMode(PullToRefreshBase.Mode.BOTH);
+        nbMyAllOrder_lv.setMode(PullToRefreshBase.Mode.BOTH);
         initDownloadData(pager);
         nbMyAllOrder_lv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -123,19 +123,16 @@ public class NewAllOrderFragment extends Fragment{
                         Toast.makeText(context, "用户未登录", Toast.LENGTH_SHORT).show();
                     } else if (code.equals("00000")) {
                         NBMyAllOrderBean.DataEntity data = body.getData();
-                        if (data != null && data.getRows().size() > 0) {
-                            isVisible(true);
+                        if (data != null) {
                             List<NBMyAllOrderBean.DataEntity.RowsEntity> rows = data.getRows();
                             // totalList.clear();
                             totalList.addAll(rows);
                             adapter.notifyDataSetChanged();
 
                         } else {
-                            isVisible(false);
                             adapter.notifyDataSetChanged();
                         }
                     } else {
-                        isVisible(false);
                         String errMsg = body.getErrMsg();
                         Toast.makeText(context, "" + errMsg, Toast.LENGTH_SHORT).show();
                     }
@@ -188,14 +185,4 @@ public class NewAllOrderFragment extends Fragment{
         mLoadingBar.hide();
     }
 
-    private void isVisible(boolean flag) {
-        if (flag) {
-            ll_list.setVisibility(View.VISIBLE);
-            rl_empty.setVisibility(View.GONE);
-        } else {
-            rl_empty.setVisibility(View.VISIBLE);
-            ll_list.setVisibility(View.GONE);
-            tv_msg.setText("暂无订单信息");
-        }
-    }
 }

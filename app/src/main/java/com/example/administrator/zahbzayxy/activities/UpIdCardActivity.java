@@ -104,7 +104,7 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                 if(response !=null && response.body() !=null){
                     UserInfoBean body = response.body();
                     UserInfoBean.DataBean data = body.getData();
-                    String oneInchPhoto = data.getIdCardPath();
+                    String oneInchPhoto = data.getIdCardFrontPath();
                     if(!TextUtils.isEmpty(oneInchPhoto)){
                         Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_reverse);
                         btn_reverse.setText("重新上传一寸照");
@@ -132,7 +132,7 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                 if(response !=null && response.body() !=null){
                     UserInfoBean body = response.body();
                     UserInfoBean.DataBean data = body.getData();
-                    String oneInchPhoto = data.getIdCardPath();
+                    String oneInchPhoto = data.getIdCardBackPath();
                     if(!TextUtils.isEmpty(oneInchPhoto)){
                         Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_photo);
                         btn_photo.setText("重新上传一寸照");
