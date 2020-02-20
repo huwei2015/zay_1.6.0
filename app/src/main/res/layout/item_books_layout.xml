@@ -50,7 +50,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName1"
+                android:id="@+id/rec_bookName1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -125,7 +125,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/rec_courseName2"
+                android:id="@+id/rec_bookName2"
                 android:text="防爆电气执业资格培训"
                 android:textColor="@color/cname_color"
                 android:textSize="14sp"
