@@ -18,6 +18,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 线下课adapter
+ */
 public class LearnOfflineCourseAdapter extends RecyclerView.Adapter<LearnOfflineCourseAdapter.OnLineCourseViewHodler>{
     private Context mContext;
     private List<OfflineCourseLearnBean.UserCoursesBean> onLineListBeans;

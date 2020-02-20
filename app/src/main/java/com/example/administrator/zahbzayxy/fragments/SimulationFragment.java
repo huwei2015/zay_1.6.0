@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,10 +69,12 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private BarChart mChart;
     private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search,ll_text,ll_img;
     private String token;
-    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,tv_more,tv_des;
+    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,
+            tv_more,tv_des,tv_msg;
     private ImageView img_add, mScoreSimpleImg;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
+    private RelativeLayout rl_add,rl_empty_layout;
     private int quesLibId;
     private int userLibId;
     private int packageId;
@@ -83,7 +87,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private int mCanUseNum;
     // 是否在有效期内  yes 是  no 否
     private String mIsOnTime;
-
+    private ScrollView scroll;
     private  final static int CHOOSE_TOPIC=1001;
     @Override
     public void onAttach(Context context) {
@@ -103,9 +107,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mScoreSimpleImg = view.findViewById(R.id.simulation_score_simple_im);
         tv_questionName=view.findViewById(R.id.tv_questionName);//题库类型
         mOperateLayout = view.findViewById(R.id.frg_simulation_operate_layout);
+        scroll=view.findViewById(R.id.scroll);
+        rl_add=view.findViewById(R.id.rl_add);
         ll_img=view.findViewById(R.id.ll_img);//对错图标
         ll_text=view.findViewById(R.id.ll_text);
         tv_des=view.findViewById(R.id.tv_des);
+        rl_empty_layout=view.findViewById(R.id.rl_empty_layout);
+        tv_msg=view.findViewById(R.id.tv_msg);
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             c_userLibId=null;
@@ -165,10 +173,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private void loadData(int position){
         mLoadDataPosition = position;
         if (navigationList == null || navigationList.size() == 0 || position >= navigationList.size()) {
-            tv_questionName.setVisibility(View.GONE);
-            ll_img.setVisibility(View.GONE);
-            tv_des.setVisibility(View.GONE);
-            ll_text.setVisibility(View.GONE);
+//            mOperateLayout.setVisibility(View.GONE);
+//            rl_add.setVisibility(View.GONE);
+            isVisbale(false);
             return;
         }
         createId = navigationList.get(position).getId();
@@ -180,9 +187,11 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
             public void onResponse(Call<SimulationInfoBean> call, Response<SimulationInfoBean> response) {
                 hideLoadingBar();
                 mOperateLayout.setVisibility(View.VISIBLE);
+                rl_add.setVisibility(View.VISIBLE);
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if("00000".equals(code)){
+                        isVisbale(true);
                         SimulationInfoBean.SimulationDataBean dataBean = response.body().getData();
                         if (dataBean != null) {
                             SimulationInfoBean.QuesLib  quesLib = dataBean.getQuesLib();
@@ -412,6 +421,16 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 }
                 break;
             default:break;
+        }
+    }
+    private void isVisbale(boolean flag){
+        if(flag){
+            scroll.setVisibility(View.VISIBLE);
+            rl_empty_layout.setVisibility(View.GONE);
+        }else{
+            rl_empty_layout.setVisibility(View.VISIBLE);
+            scroll.setVisibility(View.GONE);
+            tv_msg.setText("暂无数据");
         }
     }
 }

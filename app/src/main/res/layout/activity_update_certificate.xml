@@ -40,7 +40,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:background="@mipmap/educare"
         android:layout_width="match_parent"
         android:layout_height="160dp" />

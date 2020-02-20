@@ -410,6 +410,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        initUserInfo();
+        initUserCenter();
         initIsLogin();
         /*****************FHS Start****************/
         if (isHidden()) {
@@ -422,6 +424,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 //            UserInfoRunnable.startUsrInfoRunnable(this, context, dialog);
             UserInfoRunnable.startUsrInfoRunnable(context, handler);
         }
+
         Log.d("UserFragment", "onResume");
         /*****************FHS End****************/
     }
@@ -433,7 +436,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         if (isLogin == true) {
             noLoginLayout.setVisibility(View.GONE);
             haveLoginLayout.setVisibility(View.VISIBLE);
-        } else if (isLogin == false) {
+        } else if (isLogin == false) {//没有登录
             noLoginLayout.setVisibility(View.VISIBLE);
             haveLoginLayout.setVisibility(View.GONE);
             ll_role.setVisibility(View.VISIBLE);
