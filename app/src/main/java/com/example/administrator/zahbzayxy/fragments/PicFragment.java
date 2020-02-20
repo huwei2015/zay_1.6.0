@@ -5,21 +5,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.AllFileAdapter;
 import com.example.administrator.zahbzayxy.beans.AllFileBean;
@@ -29,6 +27,8 @@ import com.example.administrator.zahbzayxy.manager.ShowFileManager;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,14 +47,13 @@ import retrofit2.Response;
  * Time 13:57.
  * 附件图片
  */
-public class PicFragment extends Fragment implements PullToRefreshListener, AllFileAdapter.onItemClickListener, AllFileAdapter.onDelClickListener{
+public class PicFragment extends Fragment implements AllFileAdapter.onItemClickListener, AllFileAdapter.onDelClickListener{
     private View view;
     private String token;
     Context mContext;
     ProgressBarLayout mLoadingBar;
     RelativeLayout rl_empty;
     TextView tv_msg;
-    PullToRefreshRecyclerView pullToRefreshRecyclerView;
     AllFileAdapter allFileAdapter;
     LinearLayout ll_list;
     private int currentPage = 1;
@@ -63,6 +62,13 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     String del_id;
     String file_path;
     private ShowFileManager mShowFile;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -73,16 +79,25 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_pic,container,false);
+        mLoading = new LoadingDialog(mContext);
+        mLoading.setShowText("加载中...");
         EventBus.getDefault().register(this);
         mShowFile = new ShowFileManager((Activity) mContext);
         initView();
+        mRefreshLayout.setRefreshing(true);
+        initEvent();
         initPullToRefreshListView();
         return view;
     }
 
     private void initView() {
+        mRefreshLayout = view.findViewById(R.id.pic_file_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.pic_file_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
-        pullToRefreshRecyclerView = view.findViewById(R.id.pic_recyclerView);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
         tv_msg = view.findViewById(R.id.tv_msg);
@@ -95,31 +110,20 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
         allFileAdapter = new AllFileAdapter(mContext, allFileListBeanList);
         allFileAdapter.setOnItemCilkLiener(this);
         allFileAdapter.setOnDelClickListener(this);
-//        //添加数据源
-        pullToRefreshRecyclerView.setAdapter(allFileAdapter);
-        pullToRefreshRecyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        pullToRefreshRecyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        pullToRefreshRecyclerView.setPullRefreshEnabled(true);
-        //设置刷新回调
-        pullToRefreshRecyclerView.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-        pullToRefreshRecyclerView.onRefresh();
+        mRecyclerView.setAdapter(allFileAdapter);
         //设置EmptyView
         View emptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        pullToRefreshRecyclerView.setEmptyView(emptyView);
     }
     private void initPullToRefreshListView() {
-        showLoadingBar(false);
         AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
         allFileInterface.getAllFileData(currentPage,pageSize,1,token).enqueue(new Callback<AllFileBean>() {
             @Override
             public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 if(response !=null && response.body() !=null && response.body().getData().getData() != null){
                     if (currentPage == 1 && response.body().getData().getData().size() == 0) {
                         isVisible(false);
@@ -128,19 +132,17 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
                     }
                     String code = response.body().getCode();
                     if(code.equals("00000")){
-                        hideLoadingBar();
                         List<AllFileBean.AllFileListBean> list = response.body().getData().getData();
                         if(currentPage == 1) {
                             allFileListBeanList.clear();
                             allFileListBeanList.addAll(list);
                             allFileAdapter.setList(allFileListBeanList);
                             if (allFileListBeanList.size() < pageSize) {
-                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                             }
                         }else{
                             if (list == null || list.size() == 0) {
-                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
-                                ToastUtils.showShortInfo("没有更多数据了");
+                                mIsHasData = false;
                             }
                             allFileListBeanList.addAll(list);
                             allFileAdapter.setList(allFileListBeanList);
@@ -156,57 +158,46 @@ public class PicFragment extends Fragment implements PullToRefreshListener, AllF
 
             @Override
             public void onFailure(Call<AllFileBean> call, Throwable t) {
-
+                mLoading.dismiss();
             }
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+    private void initEvent(){
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            initPullToRefreshListView();
+        });
 
-    @Override
-    public void onRefresh() {
-        pullToRefreshRecyclerView.postDelayed(new Runnable() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void run() {
-                pullToRefreshRecyclerView.setRefreshComplete();
-                allFileListBeanList.clear();
-                currentPage = 1;
-                initPullToRefreshListView();
-                pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onLoadMore() {
-        pullToRefreshRecyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshRecyclerView.setLoadMoreComplete();
-                if (allFileListBeanList.size() < pageSize) {
-                    Toast.makeText(mContext, "没有更多数据", Toast.LENGTH_SHORT).show();
-                    pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
-                    return;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == allFileAdapter.getItemCount() && !mIsLoading) {
+                    mLoading.show();
+                    currentPage++;
+                    initPullToRefreshListView();
+                    mIsLoading = true;
                 }
-                currentPage++;
-                initPullToRefreshListView();
+
             }
-        }, 2000);
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
-    public void showLoadingBar(boolean transparent) {
-        if (isAdded()) {
-            mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-            mLoadingBar.show();
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
         }
     }
 
-    public void hideLoadingBar() {
-        mLoadingBar.hide();
-    }
 
     private void isVisible(boolean flag) {
         if (flag) {

@@ -207,8 +207,6 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                     updatePhoto(file, endFile);
                     break;
                 case 112:
-                    mLoading.setShowContent("上传中...");
-                    mLoading.setVisibility(View.VISIBLE);
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage,
@@ -238,7 +236,8 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
                         ToastUtils.showLongInfo("不支持的类型，只支持JPG、png图片格式");
                         return;
                     }
-
+                    mLoading.setShowContent("上传中...");
+                    mLoading.setVisibility(View.VISIBLE);
                     bitmap = bmpTopath(picturePath);
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片

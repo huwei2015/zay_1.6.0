@@ -9,7 +9,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ import com.example.administrator.zahbzayxy.manager.ShowFileManager;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +48,13 @@ import retrofit2.Response;
  * Time 14:10.
  * wordFragemnt
  */
-public class WordFragment extends Fragment implements PullToRefreshListener {
+public class WordFragment extends Fragment {
     private View view;
     private String token;
     Context mContext;
     ProgressBarLayout mLoadingBar;
     RelativeLayout rl_empty;
     TextView tv_msg;
-    PullToRefreshRecyclerView pullToRefreshRecyclerView;
     AllFileAdapter allFileAdapter;
     LinearLayout ll_list;
     List<AllFileBean.AllFileListBean> allFileListBeanList = new ArrayList<>();
@@ -59,6 +62,12 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
     private ShowFileManager mShowFile;
     private int currentPage = 1;
     private int pageSize = 10;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
 
     @Override
     public void onAttach(Context context) {
@@ -70,51 +79,46 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_word,container,false);
+        mLoading = new LoadingDialog(mContext);
+        mLoading.setShowText("加载中...");
         mShowFile = new ShowFileManager((Activity) mContext);
         initView();
+        mRefreshLayout.setRefreshing(true);
+        initEvent();
         initPullToRefreshListView();
         return view;
     }
     private void initView() {
+        mRefreshLayout = view.findViewById(R.id.word_file_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.word_file_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
         mShowFile.setLoadingView(mLoadingBar);
-        pullToRefreshRecyclerView = view.findViewById(R.id.word_recyclerView);
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
         tv_msg = view.findViewById(R.id.tv_msg);
         ll_list = view.findViewById(R.id.ll_list);
         token = tokenDb.getString("token", "");
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
         allFileAdapter = new AllFileAdapter(mContext, allFileListBeanList);
-        initEvent();
-//        //添加数据源
-        pullToRefreshRecyclerView.setAdapter(allFileAdapter);
-        pullToRefreshRecyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        pullToRefreshRecyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        pullToRefreshRecyclerView.setPullRefreshEnabled(true);
-        //设置刷新回调
-        pullToRefreshRecyclerView.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-        pullToRefreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(mContext, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        pullToRefreshRecyclerView.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(allFileAdapter);
     }
     private void initPullToRefreshListView() {
-        showLoadingBar(false);
         AllFileInterface allFileInterface = RetrofitUtils.getInstance().createClass(AllFileInterface.class);
         allFileInterface.getAllFileData(currentPage,pageSize,2,token).enqueue(new Callback<AllFileBean>() {
             @Override
             public void onResponse(Call<AllFileBean> call, Response<AllFileBean> response) {
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
@@ -123,19 +127,17 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
                         } else {
                             isVisible(true);
                         }
-                        hideLoadingBar();
                         List<AllFileBean.AllFileListBean> data = response.body().getData().getData();
                         if(currentPage == 1) {
                             allFileListBeanList.clear();
                             allFileListBeanList.addAll(data);
                             allFileAdapter.setList(allFileListBeanList);
                             if (allFileListBeanList.size() < pageSize) {
-                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                             }
                         } else {
                             if (data == null || data.size() == 0) {
-                                pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
-                                ToastUtils.showShortInfo("没有更多数据了");
+                                mIsHasData = false;
                             }
                             allFileListBeanList.addAll(data);
                             allFileAdapter.setList(allFileListBeanList);
@@ -155,6 +157,7 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
             public void onFailure(Call<AllFileBean> call, Throwable t) {
                 currentPage--;
                 ToastUtils.showShortInfo("网络异常");
+                mLoading.dismiss();
             }
         });
     }
@@ -172,6 +175,39 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
             String filePath = allFileListBeanList.get(position).getAttaPath();
             mShowFile.openFile(allFileListBeanList.get(position).getAttaName(), filePath);
         });
+
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            initPullToRefreshListView();
+        });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == allFileAdapter.getItemCount() && !mIsLoading) {
+                    mLoading.show();
+                    currentPage++;
+                    initPullToRefreshListView();
+                    mIsLoading = true;
+                }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+    }
+
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
     }
 
     public void getDelData(){
@@ -214,46 +250,6 @@ public class WordFragment extends Fragment implements PullToRefreshListener {
         });
     }
 
-    @Override
-    public void onRefresh() {
-        pullToRefreshRecyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshRecyclerView.setRefreshComplete();
-                currentPage = 1;
-                initPullToRefreshListView();
-                pullToRefreshRecyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
-    }
-
-    @Override
-    public void onLoadMore() {
-        pullToRefreshRecyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshRecyclerView.setLoadMoreComplete();
-                if (allFileListBeanList.size() < pageSize) {
-                    Toast.makeText(mContext, "没有更多数据", Toast.LENGTH_SHORT).show();
-                    pullToRefreshRecyclerView.setLoadingMoreEnabled(false);
-                    return;
-                }
-                currentPage++;
-                initPullToRefreshListView();
-            }
-        }, 2000);
-    }
-
-    public void showLoadingBar(boolean transparent) {
-        if (isAdded()) {
-            mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-            mLoadingBar.show();
-        }
-    }
-
-    public void hideLoadingBar() {
-        mLoadingBar.hide();
-    }
 
     private void isVisible(boolean flag) {
         if (flag) {

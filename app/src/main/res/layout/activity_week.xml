@@ -87,7 +87,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:ellipsize="middle"
+                    android:ellipsize="end"
                     android:textColor="@color/text_color"
                     android:text="完成" />
 
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:singleLine="true"
-                    android:ellipsize="middle"
+                    android:ellipsize="end"
                     android:text="完成"
                     android:visibility="gone"
                     />
