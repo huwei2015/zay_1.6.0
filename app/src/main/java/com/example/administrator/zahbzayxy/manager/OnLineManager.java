@@ -349,10 +349,14 @@ public class OnLineManager implements PullToRefreshListener {
                             mRefreshRecyclerView.setLoadingMoreEnabled(false);
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         }
                         if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
                             isVisible(false);
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         } else {
                             isVisible(true);
@@ -364,6 +368,8 @@ public class OnLineManager implements PullToRefreshListener {
                         if (mPage == 1) {
                             mRefreshRecyclerView.scrollToPosition(0);
                         }
+                        mLoadingData = false;
+                        mLoading.dismiss();
                         return;
                     }
                 }
@@ -374,6 +380,8 @@ public class OnLineManager implements PullToRefreshListener {
 
             @Override
             public void onFailure(Call<OfflineCourseLearnBean> call, Throwable t) {
+                mLoadingData = false;
+                mLoading.dismiss();
                 hindLoading();
                 hideLoadingBar();
                 if (mPage > 1) {
