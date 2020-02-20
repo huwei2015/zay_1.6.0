@@ -117,6 +117,12 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         initNavigationData();
         return view;
     }
+
+    public void loadData(){
+        showBarChartMore(null, 0);
+        initNavigationData();
+    }
+
     private void set() {
         adapter.setData(navigationList);
         fixedIndicatorView.setAdapter(adapter);
@@ -183,6 +189,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             // 是否拥有查看图表的权限 1、有 0、没有
                             int scoreLine = quesLib.getViewScoreLine();
                             String quesLibName = quesLib.getQuesLibName();
+                            mCanUseNum = quesLib.getCanUseNum();
+                            mIsOnTime = quesLib.getIsOnTime();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
                             mExamTitle.setText(TextAndPictureUtil.getTextCssStyle(mContext," "+quesLib.getPackageName()+" ",quesLibName));

@@ -32,6 +32,7 @@ public class ExamFragment extends Fragment {
     private LessonFragmentPageAdapter pagerAdapter;
     FragmentManager fragmentManager;
     Context context;
+    SimulationFragment allOrderFragment;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,12 +45,21 @@ public class ExamFragment extends Fragment {
         examTabLayout=view.findViewById(R.id.exam_tab);
         examViewPager=view.findViewById(R.id.exam_vp);
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden && allOrderFragment != null) {
+            allOrderFragment.loadData();
+        }
+    }
+
     private void initViewPagerAndTable() {
         examTabList=new ArrayList<>();
         examVPList=new ArrayList<>();
         examTabList.add("模拟考试");
         examTabList.add("正在考试");
-        SimulationFragment allOrderFragment=new SimulationFragment();
+        allOrderFragment=new SimulationFragment();
         FormalExamFragment allOrderFragment1=new FormalExamFragment();
         examVPList.add(allOrderFragment);
         examVPList.add(allOrderFragment1);
