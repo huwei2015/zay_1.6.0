@@ -69,7 +69,7 @@ public class H5PageActivity extends BaseActivity{
     private DataHelper mDataHelper=new DataHelper();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setFullScreen(H5PageActivity.this,getWindow());
+        //Utils.setFullScreen(H5PageActivity.this,getWindow());
         h5Type = getIntent().getStringExtra("h5Type");
         setContentView(R.layout.activity_h5_page);
         mwebView=(WebView)findViewById(R.id.htmlpage_wv);
