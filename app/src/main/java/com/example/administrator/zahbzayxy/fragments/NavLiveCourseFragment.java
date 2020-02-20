@@ -91,13 +91,14 @@ public class NavLiveCourseFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_live_course,container,false);
         initView();
         getSP();
+        adapter = new LiveCourseAdapter(totalList, mContext, token);
+        recLv.setAdapter(adapter);
         isInit=true;//设置已经
         return view;
     }
 
     public void getData(){
-        adapter = new LiveCourseAdapter(totalList, mContext, token);
-        recLv.setAdapter(adapter);
+        if (!isVisible) return;
         initPullToRefreshLv();
     }
 
@@ -435,15 +436,15 @@ public class NavLiveCourseFragment extends Fragment{
     }
 
     private static boolean isInit=false;
+    private boolean isVisible;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
         if (isVisibleToUser  && isInit){
             totalList.clear();
             getData();
-        }else{
-            isInit = false;
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
 }

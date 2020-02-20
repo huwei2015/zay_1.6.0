@@ -92,21 +92,14 @@ public class NavBooksFragment extends Fragment{
         view=inflater.inflate(R.layout.activity_books,container,false);
         initView();
         getSP();
-        isInit=true;
-        return view;
-    }
-
-    public void getData(){
         adapter = new BooksAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
-        initPullToRefreshLv();
         LinearLayoutManager ms= new LinearLayoutManager(mContext);
         ms.setOrientation(LinearLayoutManager.HORIZONTAL);
         gundongRV.setLayoutManager(ms); //给RecyClerView 添加设置好的布局样式
 
         cateAdapter=new Lv1CateAdapter(catesList, mContext,gundongRV,1,cateId);//初始化适配器
         gundongRV.setAdapter(cateAdapter); // 对 recyclerview 添加数据内容
-        downLoadCatesData();
         cateAdapter.setOnClickListener(new Lv1CateAdapter.OnClickListener() {
             @Override
             public void setSelectedNum(int num) {
@@ -116,6 +109,15 @@ public class NavBooksFragment extends Fragment{
                 downLoadData(1);
             }
         });
+        isInit=true;
+        return view;
+    }
+
+    public void getData(){
+        if (!isVisible) return;
+        initPullToRefreshLv();
+        downLoadCatesData();
+
     }
 
     private void initPullToRefreshLv() {
@@ -432,15 +434,15 @@ public class NavBooksFragment extends Fragment{
     }
 
     private static boolean isInit=false;
+    private boolean isVisible;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
         if (isVisibleToUser  && isInit){
             totalList.clear();
             catesList.clear();
             getData();
-        }else{
-            isInit = false;
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 }

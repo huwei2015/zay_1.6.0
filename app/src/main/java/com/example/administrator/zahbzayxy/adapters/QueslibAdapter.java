@@ -114,18 +114,18 @@ public class QueslibAdapter extends BaseAdapter {
         if (convertView == null) {
             myViewHold = new myViewHold();
             convertView = inflater.inflate(R.layout.item_queslib_layout, parent, false);
-            myViewHold.recPic1 = convertView.findViewById(R.id.recPic1);
-            myViewHold.recPic2 = convertView.findViewById(R.id.recPic2);
+            myViewHold.recPic1 = convertView.findViewById(R.id.quesLibRecPic1);
+            myViewHold.recPic2 = convertView.findViewById(R.id.quesLibRecPic2);
             myViewHold.queslibName1 = convertView.findViewById(R.id.queslibName1);
             myViewHold.queslibName2 = convertView.findViewById(R.id.queslibName2);
-            myViewHold.rec_price1 = convertView.findViewById(R.id.rec_price1);
-            myViewHold.rec_price2 = convertView.findViewById(R.id.rec_price2);
+            myViewHold.rec_price1 = convertView.findViewById(R.id.queslib_rec_price1);
+            myViewHold.rec_price2 = convertView.findViewById(R.id.queslib_rec_price2);
             myViewHold.rec_sign_shiyone1 = convertView.findViewById(R.id.rec_sign_shiyone1);
             myViewHold.rec_sign_shiyone2 = convertView.findViewById(R.id.rec_sign_shiyone2);
-            myViewHold.left_layout=convertView.findViewById(R.id.left_layout);
-            myViewHold.right_layout=convertView.findViewById(R.id.right_layout);
-            myViewHold.sign_zxIV1= convertView.findViewById(R.id.sign_zxIV1);
-            myViewHold.sign_zxIV2=convertView.findViewById(R.id.sign_zxIV2);
+            myViewHold.left_layout=convertView.findViewById(R.id.queslib_left_layout);
+            myViewHold.right_layout=convertView.findViewById(R.id.queslib_right_layout);
+            myViewHold.sign_zxIV1= convertView.findViewById(R.id.queslib_sign_zxIV1);
+            myViewHold.sign_zxIV2=convertView.findViewById(R.id.queslib_sign_zxIV2);
             convertView.setTag(myViewHold);
         } else {
             myViewHold = (QueslibAdapter.myViewHold) convertView.getTag();
