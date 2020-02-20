@@ -121,8 +121,8 @@ public class BooksAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_books_layout, parent, false);
             myViewHold.recPic1 = convertView.findViewById(R.id.recPic1);
             myViewHold.recPic2 = convertView.findViewById(R.id.recPic2);
-            myViewHold.rec_courseName1 = convertView.findViewById(R.id.rec_courseName1);
-            myViewHold.rec_courseName2 = convertView.findViewById(R.id.rec_courseName2);
+            myViewHold.rec_bookName1 = convertView.findViewById(R.id.rec_bookName1);
+            myViewHold.rec_bookName2 = convertView.findViewById(R.id.rec_bookName1);
             myViewHold.rec_price1 = convertView.findViewById(R.id.rec_price1);
             myViewHold.rec_price2 = convertView.findViewById(R.id.rec_price2);
             myViewHold.left_layout=convertView.findViewById(R.id.left_layout);
@@ -135,7 +135,7 @@ public class BooksAdapter extends BaseAdapter {
         }
 
         BookBean.DataBean.BookListBean courseListBean = list.get(position);
-        myViewHold.rec_courseName1.setText(courseListBean.getBookName());
+        myViewHold.rec_bookName1.setText(courseListBean.getBookName());
         myViewHold.rec_price1.setText("￥" + String.valueOf(courseListBean.getsPrice()));
         if (!TextUtils.isEmpty(courseListBean.getImageUrl())) {
             Picasso.with(context).load(courseListBean.getImageUrl()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
@@ -164,7 +164,7 @@ public class BooksAdapter extends BaseAdapter {
 
         //=============================================================================第二个值
         if (!TextUtils.isEmpty(courseListBean.getBookName1())) {
-            myViewHold.rec_courseName2.setText(courseListBean.getBookName1());
+            myViewHold.rec_bookName2.setText(courseListBean.getBookName1());
             myViewHold.rec_price2.setText("￥" + String.valueOf(courseListBean.getsPrice1()));
             if (!TextUtils.isEmpty(courseListBean.getImageUrl1())) {
                 Picasso.with(context).load(courseListBean.getImageUrl1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
@@ -203,7 +203,7 @@ public class BooksAdapter extends BaseAdapter {
 
     static class myViewHold {
         ImageRadiusView recPic1,recPic2;
-        TextView rec_courseName1, rec_courseName2, rec_price1, rec_price2;
+        TextView rec_bookName1, rec_bookName2, rec_price1, rec_price2;
         ImageView sign_zxIV1,sign_zxIV2;
         LinearLayout left_layout,right_layout;
     }

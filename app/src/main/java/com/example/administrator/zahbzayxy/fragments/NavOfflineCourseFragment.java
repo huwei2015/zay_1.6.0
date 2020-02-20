@@ -178,7 +178,11 @@ public class NavOfflineCourseFragment extends Fragment{
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
                             List<OfflineCourseBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
-                            totalList.addAll(courseList);
+                            if(courseList!=null){
+                                totalList.addAll(courseList);
+                            }else{
+                                totalList.addAll(new ArrayList<OfflineCourseBean.DataBean.CourseListBean>());
+                            }
                             adapter.notifyDataSetChanged();
                         } else {
                             initViewVisible(false);
