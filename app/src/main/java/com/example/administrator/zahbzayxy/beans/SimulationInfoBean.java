@@ -90,6 +90,8 @@ public class SimulationInfoBean implements Serializable {
         private int viewScoreLine;
         private int quesLibId;
         private int quesLibPackageId;
+        private int canUseNum;
+        private String isOnTime;
 
         public void setPackageName(String packageName) {
             this.packageName = packageName;
@@ -133,15 +135,34 @@ public class SimulationInfoBean implements Serializable {
             return quesLibPackageId;
         }
 
+        public int getCanUseNum() {
+            return canUseNum;
+        }
+
+        public void setCanUseNum(int canUseNum) {
+            this.canUseNum = canUseNum;
+        }
+
+        public String getIsOnTime() {
+            return isOnTime;
+        }
+
+        public void setIsOnTime(String isOnTime) {
+            this.isOnTime = isOnTime;
+        }
+
         @Override
         public String toString() {
             return "QuesLib{" +
                     "packageName='" + packageName + '\'' +
                     ", quesLibName='" + quesLibName + '\'' +
+                    ", id=" + id +
                     ", passScore=" + passScore +
                     ", viewScoreLine=" + viewScoreLine +
                     ", quesLibId=" + quesLibId +
                     ", quesLibPackageId=" + quesLibPackageId +
+                    ", canUseNum=" + canUseNum +
+                    ", isOnTime='" + isOnTime + '\'' +
                     '}';
         }
     }

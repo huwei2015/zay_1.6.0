@@ -104,12 +104,12 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                 if(response !=null && response.body() !=null){
                     UserInfoBean body = response.body();
                     UserInfoBean.DataBean data = body.getData();
-                    String oneInchPhoto = data.getIdCardFrontPath();
+                    String oneInchPhoto = data.getIdCardBackPath();
                     if(!TextUtils.isEmpty(oneInchPhoto)){
                         Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_reverse);
-                        btn_reverse.setText("重新上传一寸照");
+                        btn_reverse.setText("重新上传身份反面照");
                     }else{
-                        btn_reverse.setText("上传一寸照片");
+                        btn_reverse.setText("上传身份反面照片");
                     }
                 }
 
@@ -127,15 +127,22 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
         userInfoData.enqueue(new Callback<UserInfoBean>() {
             @Override
             public void onResponse(Call<UserInfoBean> call, Response<UserInfoBean> response) {
-                if(response !=null && response.body() !=null){
+                if(response !=null && response.body() !=null) {
                     UserInfoBean body = response.body();
-                    UserInfoBean.DataBean data = body.getData();
-                    String oneInchPhoto = data.getIdCardBackPath();
-                    if(!TextUtils.isEmpty(oneInchPhoto)){
-                        Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_photo);
-                        btn_photo.setText("重新上传一寸照");
-                    }else{
-                        btn_photo.setText("上传一寸照片");
+                    String code = body.getCode();
+                    if (code.equals("00000")) {
+                        UserInfoBean.DataBean data = body.getData();
+                        String oneInchPhoto = data.getIdCardFrontPath();
+                        if (!TextUtils.isEmpty(oneInchPhoto)) {
+                            Picasso.with(UpIdCardActivity.this).load(oneInchPhoto).into(img_photo);
+                            btn_photo.setText("重新上传身份正面照片");
+                        } else {
+                            btn_photo.setText("上传身份正面照片");
+                        }
+                    }else if(code.equals("00003")){
+                        Object errMsg = body.getErrMsg();
+                        ToastUtils.showInfo(String.valueOf(errMsg),500);
+                        startActivity(new Intent(UpIdCardActivity.this,LoginActivity.class));
                     }
                 }
 
@@ -342,7 +349,6 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
                   UpBean body = response.body();
                 if (body != null && body.getErrMsg() == null) {
                     String phonePath = body.getData().getPhotoUrl();
-                    Log.i("huwei","huwei=========="+phonePath);
 //                    Log.e("photoUrlphotoUrl", photoUrl);
                     if (!TextUtils.isEmpty(phonePath)) {
                         EventBus.getDefault().post(phonePath);

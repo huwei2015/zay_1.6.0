@@ -64,7 +64,7 @@ public class Utils {
      * @param refreshLayout view
      */
     public static void setRefreshViewColor(SwipeRefreshLayout refreshLayout) {
-        refreshLayout.setColorSchemeColors( Color.GREEN);
+        refreshLayout.setColorSchemeColors( Color.BLUE);
     }
 
 }

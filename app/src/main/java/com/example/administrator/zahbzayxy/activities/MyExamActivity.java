@@ -84,7 +84,6 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                             //我的考试需要用上
                             userQuesLibId=examBeanList.get(i).getUserQuesLibId();
                             isPerfectPersonInfo();
-                            Log.i("dfhj", "hu====id=====" + userQuesLibId);
                         }
                         if (currentPage == 1) {
                             examAdapter.setList(examBeanList);

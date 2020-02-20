@@ -237,9 +237,9 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
                     Log.i("huwei","huwei======"+oneInchPhoto);
                     if(!TextUtils.isEmpty(oneInchPhoto)){
                         Picasso.with(UpdateCertificateActivity.this).load(oneInchPhoto).into(img_one_cun);
-                        btn_photo.setText("重新上传一寸照");
+                        btn_photo.setText("重新上传学历证书照");
                     }else{
-                        btn_photo.setText("上传一寸照片");
+                        btn_photo.setText("上传学历证书照片");
                     }
                 }
 

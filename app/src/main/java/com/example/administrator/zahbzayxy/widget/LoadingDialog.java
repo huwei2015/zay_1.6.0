@@ -11,27 +11,18 @@ import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 
 
-public class LoadingDialog {
+public class LoadingDialog extends BaseDialog {
 
     private Dialog mDialog;
-    private Context mContext;
     private ProgressBarLayout mBarLayout;
 
     public LoadingDialog(Context context) {
-        this.mContext = context;
+        super(context);
         mDialog = initBuilder();
+        initView();
     }
 
-    private Dialog initBuilder() {
-        mDialog = new Dialog(mContext);
-        mDialog = new Dialog(mContext, R.style.Dialog_Fullscreen);
-        Window window = mDialog.getWindow();
-        window.getDecorView().setPadding(0, 0, 0, 0);
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.x = 0;
-        params.y = 0;
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-        window.setAttributes(params);
+    private Dialog initView() {
         mDialog.setContentView(R.layout.mine_dialog_loading_dialog);
         mBarLayout = mDialog.findViewById(R.id.loading_dialog_loading_view);
         return mDialog;
@@ -57,12 +48,14 @@ public class LoadingDialog {
         return false;
     }
 
+    @Override
     public void dismiss() {
         if(mDialog != null){
             mDialog.dismiss();
         }
     }
 
+    @Override
     public void cancel() {
         if(mDialog != null){
             mDialog.cancel();

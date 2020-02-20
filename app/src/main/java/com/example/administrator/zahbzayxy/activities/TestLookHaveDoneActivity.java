@@ -67,8 +67,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
     List<GridItem> gridItemList = new ArrayList<>();
     private int testType;
     private int size;
-    private int correct_account;
-    private int error_account;
+    private int correct_account;//对题
+    private int error_account;//错题
+    private int no_answer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +127,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                             quesDetailsErrorList.add(quesDetailsEntity);
                                         }
                                         correct_account = quesSize - error_account;
+                                        no_answer = quesSize - correct_account- error_account;//未答
                                     }
                                     totalList.clear();
                                     totalList.addAll(quesDetailsErrorList);
@@ -150,6 +152,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                             quesDetailsErrorList.add(quesDetailsEntity);
                                         }
                                         correct_account = quesSize - error_account;
+                                        no_answer = quesSize - error_account - correct_account; //未答
                                     }
                                     totalList.clear();
                                     totalList.addAll(quesDetails);
@@ -341,6 +344,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         TextView noDone_tv = popView.findViewById(R.id.noDone_pop_tv); //未答
         wrongNumPop_tv.setText("答错:"+error_account);
         rightNumPop_tv.setText("答对:"+correct_account);
+        noDone_tv.setText("未答:"+no_answer);
 //        noDone_tv.setVisibility(View.INVISIBLE);
         WindowManager m = getWindowManager();
         Display d = m.getDefaultDisplay(); // 为获取屏幕宽、高

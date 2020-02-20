@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,10 +69,12 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private BarChart mChart;
     private LinearLayout ll_practice,ll_erropic,ll_exam,ll_search,ll_text,ll_img;
     private String token;
-    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,tv_more,tv_des;
+    private TextView tv_choose, mExamTitle, mPassScoreTv, mPassCountTv,tv_questionName,
+            tv_more,tv_des,tv_msg;
     private ImageView img_add, mScoreSimpleImg;
     private SimulationAdapter adapter;
     private List<SimulationBean.SimulationList>navigationList=new ArrayList<>();
+    private RelativeLayout rl_add,rl_empty_layout;
     private int quesLibId;
     private int userLibId;
     private int packageId;
@@ -78,7 +82,12 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private int mLoadDataPosition;
     int createId;//导航id
     private Integer c_userLibId;//传值的话就用些值查询，不传的话取最新的一条
-
+    private LinearLayout mOperateLayout;
+    // 剩余考试次数
+    private int mCanUseNum;
+    // 是否在有效期内  yes 是  no 否
+    private String mIsOnTime;
+    private ScrollView scroll;
     private  final static int CHOOSE_TOPIC=1001;
     @Override
     public void onAttach(Context context) {
@@ -97,18 +106,31 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         mPassCountTv = view.findViewById(R.id.text_account);
         mScoreSimpleImg = view.findViewById(R.id.simulation_score_simple_im);
         tv_questionName=view.findViewById(R.id.tv_questionName);//题库类型
+        mOperateLayout = view.findViewById(R.id.frg_simulation_operate_layout);
+        scroll=view.findViewById(R.id.scroll);
+        rl_add=view.findViewById(R.id.rl_add);
         ll_img=view.findViewById(R.id.ll_img);//对错图标
         ll_text=view.findViewById(R.id.ll_text);
         tv_des=view.findViewById(R.id.tv_des);
+        rl_empty_layout=view.findViewById(R.id.rl_empty_layout);
+        tv_msg=view.findViewById(R.id.tv_msg);
         adapter = new SimulationAdapter(mContext,navigationList,fixedIndicatorView);
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             c_userLibId=null;
             loadData(position);
         });
         initView();
+        showBarChartMore(null, 0);
+        mOperateLayout.setVisibility(View.GONE);
         initNavigationData();
         return view;
     }
+
+    public void loadData(){
+        showBarChartMore(null, 0);
+        initNavigationData();
+    }
+
     private void set() {
         adapter.setData(navigationList);
         fixedIndicatorView.setAdapter(adapter);
@@ -151,10 +173,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private void loadData(int position){
         mLoadDataPosition = position;
         if (navigationList == null || navigationList.size() == 0 || position >= navigationList.size()) {
-            tv_questionName.setVisibility(View.GONE);
-            ll_img.setVisibility(View.GONE);
-            tv_des.setVisibility(View.GONE);
-            ll_text.setVisibility(View.GONE);
+//            mOperateLayout.setVisibility(View.GONE);
+//            rl_add.setVisibility(View.GONE);
+            isVisbale(false);
             return;
         }
         createId = navigationList.get(position).getId();
@@ -165,15 +186,20 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
             @Override
             public void onResponse(Call<SimulationInfoBean> call, Response<SimulationInfoBean> response) {
                 hideLoadingBar();
+                mOperateLayout.setVisibility(View.VISIBLE);
+                rl_add.setVisibility(View.VISIBLE);
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if("00000".equals(code)){
+                        isVisbale(true);
                         SimulationInfoBean.SimulationDataBean dataBean = response.body().getData();
                         if (dataBean != null) {
                             SimulationInfoBean.QuesLib  quesLib = dataBean.getQuesLib();
                             // 是否拥有查看图表的权限 1、有 0、没有
                             int scoreLine = quesLib.getViewScoreLine();
                             String quesLibName = quesLib.getQuesLibName();
+                            mCanUseNum = quesLib.getCanUseNum();
+                            mIsOnTime = quesLib.getIsOnTime();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
                             mExamTitle.setText(TextAndPictureUtil.getTextCssStyle(mContext," "+quesLib.getPackageName()+" ",quesLibName));
@@ -244,6 +270,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
      * @param passScore  题库设置的及格分数
      */
     private void showBarChartMore(List<SimulationInfoBean.StatScore> scoreList, int passScore) {
+        if (scoreList == null) scoreList = new ArrayList<>();
         BarChartManager barChartManager = new BarChartManager(mChart);
         List<Float> xAxisValues = new ArrayList<>();
         List<String> labels = new ArrayList<>();
@@ -278,6 +305,14 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         Intent intent;
         switch (v.getId()){
             case R.id.ll_practice://顺序练习
+                if (mCanUseNum < 1) {
+                    ToastUtils.showLongInfo("考试次数已用完");
+                    return;
+                }
+                if (!"yes".equals(mIsOnTime)) {
+                    ToastUtils.showLongInfo("当前题库已过期");
+                    return;
+                }
                 intent = new Intent(getActivity(), TestPracticeAcivity.class);
                 Bundle bundlePractice = new Bundle();
                 bundlePractice.putInt("quesLibId", quesLibId);
@@ -289,6 +324,14 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_erropic://我的错题
+                if (mCanUseNum < 1) {
+                    ToastUtils.showLongInfo("考试次数已用完");
+                    return;
+                }
+                if (!"yes".equals(mIsOnTime)) {
+                    ToastUtils.showLongInfo("当前题库已过期");
+                    return;
+                }
                 if (quesLibId <= 0 || userLibId <= 0 || packageId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
                     return;
@@ -303,6 +346,14 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_exam://模拟考试
+                if (mCanUseNum < 1) {
+                    ToastUtils.showLongInfo("考试次数已用完");
+                    return;
+                }
+                if (!"yes".equals(mIsOnTime)) {
+                    ToastUtils.showLongInfo("当前题库已过期");
+                    return;
+                }
                 if (quesLibId <= 0 || userLibId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
                     return;
@@ -316,6 +367,14 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 startActivity(intent);
                 break;
             case R.id.ll_search://快速搜题
+                if (mCanUseNum < 1) {
+                    ToastUtils.showLongInfo("考试次数已用完");
+                    return;
+                }
+                if (!"yes".equals(mIsOnTime)) {
+                    ToastUtils.showLongInfo("当前题库已过期");
+                    return;
+                }
                 intent = new Intent(getActivity(), SearchTestActivity.class);
                 Bundle searchBundle = new Bundle();
                 searchBundle.putInt("quesLibId", quesLibId);
@@ -362,6 +421,16 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 }
                 break;
             default:break;
+        }
+    }
+    private void isVisbale(boolean flag){
+        if(flag){
+            scroll.setVisibility(View.VISIBLE);
+            rl_empty_layout.setVisibility(View.GONE);
+        }else{
+            rl_empty_layout.setVisibility(View.VISIBLE);
+            scroll.setVisibility(View.GONE);
+            tv_msg.setText("暂无数据");
         }
     }
 }

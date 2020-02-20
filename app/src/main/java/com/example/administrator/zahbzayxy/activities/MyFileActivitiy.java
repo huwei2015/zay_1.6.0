@@ -17,6 +17,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -69,6 +70,12 @@ import static com.example.administrator.zahbzayxy.R.id.switch_msg;
  * 我的附件
  */
 public class MyFileActivitiy extends BaseActivity implements View.OnClickListener {
+    private static String[] PERMISSIONS_STORAGE = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE" };
+    private static final int REQUEST_EXTERNAL_STORAGE_FILE = 100;
+    private static final int REQUEST_EXTERNAL_STORAGE_PAGE = 101;
+
     private ViewPager myYouHuiJuan_vp;
     private TabLayout myYouHuiJuan_tab;
     private List<String> myYouHuiJuanTabList;
@@ -76,7 +83,6 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     private LessonFragmentPageAdapter pagerAdapter;
     FragmentManager fragmentManager;
     TextView tv_updateFile, tv_updateImg;
-    private final int WRITE_PERMISSION_REQ_CODE = 100;
     private String token;
     boolean bPermission = false;
     private Bitmap bitmap;
@@ -165,6 +171,22 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
             Toast.makeText(MyFileActivitiy.this, "请安装一个文件管理器", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private boolean checkPermission(int code) {
+        try {
+            //检测是否有写的权限
+            int permission = ActivityCompat.checkSelfPermission(MyFileActivitiy.this, "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，会弹出对话框
+                ActivityCompat.requestPermissions(MyFileActivitiy.this, PERMISSIONS_STORAGE, code);
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -388,13 +410,23 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case WRITE_PERMISSION_REQ_CODE:
+            case REQUEST_EXTERNAL_STORAGE_FILE:
                 for (int ret : grantResults) {
                     if (ret != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
                 }
                 bPermission = true;
+                selectFile();
+                break;
+            case REQUEST_EXTERNAL_STORAGE_PAGE:
+                for (int ret : grantResults) {
+                    if (ret != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 112);
                 break;
             default:
                 break;
@@ -405,11 +437,15 @@ public class MyFileActivitiy extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_updateFile:
-                selectFile();
+                if (checkPermission(REQUEST_EXTERNAL_STORAGE_FILE)) {
+                    selectFile();
+                }
                 break;
             case R.id.tv_pic://上传图片
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 112);
+                if (checkPermission(REQUEST_EXTERNAL_STORAGE_PAGE)) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 112);
+                }
                 break;
         }
     }
