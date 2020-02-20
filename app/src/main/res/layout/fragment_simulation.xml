@@ -242,6 +242,7 @@
                 android:background="#f7f7f7" />
 
             <LinearLayout
+                android:id="@+id/frg_simulation_operate_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
