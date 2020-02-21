@@ -133,11 +133,10 @@ public interface PersonGroupInterfac {
 
     //我的考试列表
     String myExamlist ="userCenter/myExamList";
-    @FormUrlEncoded
     @POST(value =myExamlist)
-    Call<ExamBean> getExamList(@Field("token") String token,
-                               @Field("currentPage") int currentPage,
-                               @Field("pageSize") int pageSize);
+    Call<ExamBean> getExamList(@Query("token") String token,
+                               @Query("currentPage") int currentPage,
+                               @Query("pageSize") int pageSize);
 
     //是否完善个人信息接口看视频
     String isPersonInfo = "/CourseController/isNeedPerfectUserInfo";

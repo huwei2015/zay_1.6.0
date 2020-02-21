@@ -80,11 +80,12 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                     if (code.equals("00000")) {
                         emptyLayout(true);
                         examBeanList = response.body().getData().getQuesLibs();
-                        for (int i = 0; i < examBeanList.size(); i++) {
-                            //我的考试需要用上
-                            userQuesLibId=examBeanList.get(i).getUserQuesLibId();
-                            isPerfectPersonInfo();
-                        }
+//
+//                        for (int i = 0; i < examBeanList.size(); i++) {
+//                            //我的考试需要用上
+//                            userQuesLibId=examBeanList.get(i).getUserQuesLibId();
+//                            isPerfectPersonInfo();
+//                        }
                         if (currentPage == 1) {
                             examAdapter.setList(examBeanList);
                         } else {
@@ -151,7 +152,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         //设置刷新回调
         recyclerView.setPullToRefreshListener(MyExamActivity.this);
         //主动触发下拉刷新操作
-        recyclerView.onRefresh();
+//        recyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(this, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -212,10 +213,12 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         if(!data) {
             Intent intent = new Intent(MyExamActivity.this, TestContentActivity1.class);
             Bundle bundle = new Bundle();
+
             bundle.putInt("quesLibId", examBeanList.get(position).getQuesLibId());
             bundle.putInt("userLibId", examBeanList.get(position).getUserQuesLibId());
             bundle.putInt("examType", 0);
             intent.putExtras(bundle);
+            isPerfectPersonInfo();
             MyExamActivity.this.startActivity(intent);
         }else{
             showUploadDialog();

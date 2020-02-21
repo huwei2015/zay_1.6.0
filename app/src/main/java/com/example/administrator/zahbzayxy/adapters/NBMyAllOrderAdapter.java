@@ -1,6 +1,8 @@
 package com.example.administrator.zahbzayxy.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -195,8 +197,16 @@ public class NBMyAllOrderAdapter extends BaseAdapter {
         viewHold.delete_order_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleOrder();
-
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("提示");
+                dialog.setMessage("确定要删除这条记录吗？");
+                dialog.setCancelable(true);
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleOrder();
+                    }
+                }).show();
             }
             private void deleOrder() {
                 PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);

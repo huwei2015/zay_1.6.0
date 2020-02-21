@@ -211,4 +211,5 @@
     <color name="possible_result_points">#c0ffff00</color>
     <color name="login_text_color">#2B74F3</color>
     <color name="book_bg">#f8f8f8</color>
+    <color name="text_yellow">#ffe65c</color>
 </resources>

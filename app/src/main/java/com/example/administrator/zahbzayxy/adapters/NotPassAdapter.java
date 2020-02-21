@@ -62,8 +62,8 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             holder.lib_account.setVisibility(View.GONE);
             holder.tv_xie.setVisibility(View.GONE);
             holder.exam_account.setVisibility(View.GONE);
-            holder.examEnterImg.setVisibility(View.VISIBLE);
-            holder.state.setVisibility(View.GONE);
+            holder.examEnterImg.setVisibility(View.VISIBLE);//按钮显示
+            holder.state.setVisibility(View.GONE); //入口关闭
         }
         if(notPassListBeans.get(position).getIsExam().equals("0")){//考试入口开启
             holder.examEnterImg.setVisibility(View.VISIBLE);
@@ -90,6 +90,8 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
             holder.exam_account.setVisibility(View.VISIBLE);
             holder.time.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.VISIBLE);
+            holder.state.setText("已通过考试");
+            holder.state.setTextColor(mContext.getResources().getColor(R.color.text_yellow));
             holder.tv_account.setVisibility(View.GONE);
         }else if(notPassListBeans.get(position).getIsExam().equals("3")){//不可以考试但是可看记录(过期，次数用尽)
             holder.examEnterImg.setVisibility(View.GONE);
