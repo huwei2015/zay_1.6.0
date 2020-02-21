@@ -149,9 +149,16 @@ public class MyOnLineManager implements PullToRefreshListener {
         mCourseAdapter.setOnLearnOnlineItemClickListener(position -> {
             // 在线课点击事件处理
             OnlineCourseBean.UserCoursesBean coursesBean = mCoursesList.get(position);
-            int userCourseId = coursesBean.getUserCourseId();
-            int courseId = coursesBean.getMainCourseId();
-            isPerfectPersonInfo(userCourseId, courseId);
+            if (coursesBean != null) {
+                boolean isPlay = coursesBean.isPlay();
+                if (!isPlay) {
+                    ToastUtils.showLongInfo(coursesBean.getMsg_cont() + "");
+                    return;
+                }
+                int userCourseId = coursesBean.getUserCourseId();
+                int courseId = coursesBean.getMainCourseId();
+                isPerfectPersonInfo(userCourseId, courseId);
+            }
         });
 
         mOffLineAdapter.setOnLearnOfflineItemClickListener(position -> {
@@ -351,6 +358,7 @@ public class MyOnLineManager implements PullToRefreshListener {
                         return;
                     }
                 }
+                isVisible(false);
                 if (mPage > 1) {
                     mPage--;
                 }
@@ -360,6 +368,7 @@ public class MyOnLineManager implements PullToRefreshListener {
             public void onFailure(Call<OfflineCourseLearnBean> call, Throwable t) {
                 hindLoading();
                 hideLoadingBar();
+                isVisible(false);
                 if (mPage > 1) {
                     mPage--;
                 }
@@ -406,6 +415,7 @@ public class MyOnLineManager implements PullToRefreshListener {
                         return;
                     }
                 }
+                isVisible(false);
                 if (mPage > 1) {
                     mPage--;
                 }
@@ -414,6 +424,7 @@ public class MyOnLineManager implements PullToRefreshListener {
             @Override
             public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
                 hindLoading();
+                isVisible(false);
                 if (mPage > 1) {
                     mPage--;
                 }

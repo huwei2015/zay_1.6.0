@@ -87,6 +87,29 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         initDownLoadAllData();
     }
 
+    // 是否作答  true 已作答  false 未作答
+    private boolean noAnswer(AllHaveDoTestBean.DataEntity.QuesDetailsEntity entity){
+        if (entity == null) return false;
+        int quesType = entity.getQuesType();
+        if (quesType == 4 || quesType == 5) {
+            List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> childrenList = entity.getChildren();
+            if (childrenList == null || childrenList.size() == 0) return false;
+            for (AllHaveDoTestBean.DataEntity.QuesDetailsEntity child : childrenList) {
+                AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = child.getAnswerResult();
+                if (answerResult == null) return false;
+                String userAnswerIds = answerResult.getUserAnswerIds();
+                if (!TextUtils.isEmpty(userAnswerIds)) return true;
+            }
+            return false;
+        } else {
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = entity.getAnswerResult();
+            if (answerResult == null) return false;
+            String userAnswerIds = answerResult.getUserAnswerIds();
+            if (TextUtils.isEmpty(userAnswerIds)) return false;
+        }
+        return true;
+    }
+
     private void initDownLoadAllData() {
         int examScoreId = getIntent().getIntExtra("examScoreId", 0);
         testType = getIntent().getIntExtra("testType", 0);
@@ -109,6 +132,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                             List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> quesDetails = data.getQuesDetails();
                             quesSize = quesDetails.size();
                             Integer integer = Integer.valueOf(testType);
+                            no_answer = 0;
+                            error_account = 0;
+                            correct_account = 0;
                             if (integer != null) {
                                 if (testType == 1) {//查看全部错题
                                     quesDetailsErrorList.clear();
@@ -119,6 +145,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                         saveErrorList.get(i).setIsRight(-1);
                                         AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = quesDetails.get(i).getAnswerResult();
                                         int isRight = answerResult.getIsRight();//错题
+                                        if (!noAnswer(quesDetails.get(i))) {
+                                            no_answer++;
+                                        }
                                         if (isRight == 0) {
                                             int j = i;
                                             error_account++;
@@ -126,9 +155,10 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                             //做错的list
                                             quesDetailsErrorList.add(quesDetailsEntity);
                                         }
-                                        correct_account = quesSize - error_account;
-                                        no_answer = quesSize - correct_account- error_account;//未答
                                     }
+                                    error_account = error_account - no_answer;
+                                    correct_account = quesSize - error_account - no_answer;
+                                    //no_answer = quesSize - correct_account- error_account;//未答
                                     totalList.clear();
                                     totalList.addAll(quesDetailsErrorList);
                                     madapter.notifyDataSetChanged();
@@ -144,6 +174,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                         saveErrorList.get(i).setIsRight(-1);
                                         AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity answerResult = quesDetails.get(i).getAnswerResult();
                                         int isRight = answerResult.getIsRight();//错题
+                                        if (!noAnswer(quesDetails.get(i))) {
+                                            no_answer++;
+                                        }
                                         if (isRight == 0) {
                                             int j = i;
                                             error_account++;
@@ -151,9 +184,10 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                                             //做错的list
                                             quesDetailsErrorList.add(quesDetailsEntity);
                                         }
-                                        correct_account = quesSize - error_account;
-                                        no_answer = quesSize - error_account - correct_account; //未答
+                                        //no_answer = quesSize - error_account - correct_account; //未答
                                     }
+                                    error_account = error_account - no_answer;
+                                    correct_account = quesSize - error_account - no_answer;
                                     totalList.clear();
                                     totalList.addAll(quesDetails);
                                     madapter.notifyDataSetChanged();
@@ -377,7 +411,9 @@ public class TestLookHaveDoneActivity extends BaseActivity {
         List<AllHaveDoTestBean.DataEntity.QuesDetailsEntity> sixList = new ArrayList<>();
         int size = list.size();//所有题库
         for (int i = 0; i < size; i++) {
-            int quesType = list.get(i).getQuesType();
+            AllHaveDoTestBean.DataEntity.QuesDetailsEntity entity = list.get(i);
+            boolean isAnswer = noAnswer(entity);
+            int quesType = entity.getQuesType();
             isRight = list.get(i).getAnswerResult().getIsRight();
             if (quesType == 1) {//单选
                 int j = i + 1;
@@ -387,6 +423,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
                 }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
+                }
                 oneList.add(examDetailsBean1);
             } else if (quesType == 2) {//多选
                 int j = i + 1;
@@ -395,6 +436,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
                 }
                 twoList.add(examDetailsBean1);
 
@@ -406,6 +452,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
                 }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
+                }
                 threeList.add(examDetailsBean1);
             } else if (quesType == 4) {//主管案例
                 int j = i + 1;
@@ -414,6 +465,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
                 }
                 fourList.add(examDetailsBean1);
             } else if (quesType == 5) {//客观案例
@@ -424,6 +480,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
                 }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
+                }
                 fiveList.add(examDetailsBean1);
             } else if (quesType == 6) {//简答题
                 int j = i + 1;
@@ -432,6 +493,11 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 examDetailsBean1.setAnswerResult(new AllHaveDoTestBean.DataEntity.QuesDetailsEntity.AnswerResultEntity());
                 if (isRight == 1) {
                     examDetailsBean1.getAnswerResult().setIsRight(1);
+                }
+                if (isAnswer) {
+                    examDetailsBean1.setTag(0);
+                } else {
+                    examDetailsBean1.setTag(1);
                 }
                 sixList.add(examDetailsBean1);
             }
@@ -458,6 +524,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = examDetailsBean.getLocation();
                 int isRight = examDetailsBean.getAnswerResult().getIsRight();
                 item1 = new GridItem(location + "," + isRight, i + "", 0, "单选题", isRight);
+                item1.setTag(examDetailsBean.getTag());
                 mGirdList.add(item1);
             }
         }
@@ -467,6 +534,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = quesDetailsEntity.getLocation();
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item2 = new GridItem(location + "," + isRight, i + "", 1, "多选", isRight);
+                item2.setTag(quesDetailsEntity.getTag());
                 mGirdList.add(item2);
             }
         }
@@ -476,6 +544,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = quesDetailsEntity.getLocation();
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item3 = new GridItem(location + "," + isRight, i + "", 2, "判断", isRight);
+                item3.setTag(quesDetailsEntity.getTag());
                 mGirdList.add(item3);
             }
         }
@@ -485,6 +554,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = quesDetailsEntity.getLocation();
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item4 = new GridItem(location + "," + isRight, i + "", 3, "主观案例", isRight);
+                item4.setTag(quesDetailsEntity.getTag());
                 mGirdList.add(item4);
             }
         }
@@ -494,6 +564,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = quesDetailsEntity.getLocation();
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item5 = new GridItem(location + "," + isRight, i + "", 4, "客观案例", isRight);
+                item5.setTag(quesDetailsEntity.getTag());
                 mGirdList.add(item5);
             }
         }
@@ -503,6 +574,7 @@ public class TestLookHaveDoneActivity extends BaseActivity {
                 int location = quesDetailsEntity.getLocation();
                 int isRight = quesDetailsEntity.getAnswerResult().getIsRight();
                 item6 = new GridItem(location + "," + isRight, i + "", 5, "简答题", isRight);
+                item6.setTag(quesDetailsEntity.getTag());
                 mGirdList.add(item6);
             }
         }

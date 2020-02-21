@@ -1,5 +1,7 @@
 package com.example.administrator.zahbzayxy.utils;
 
+import android.util.Log;
+
 import com.example.administrator.zahbzayxy.beans.SimpleBean;
 import com.google.gson.Gson;
 
@@ -34,6 +36,7 @@ public class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody,T>
             }
             Buffer buffer = source.buffer();
             String responseBodyString = buffer.clone().readString(Charset.forName("UTF-8"));
+            Log.i("response_body","responseBodyString = " + responseBodyString);
             return gson.fromJson(responseBodyString, type);
         } finally {
             value.close();

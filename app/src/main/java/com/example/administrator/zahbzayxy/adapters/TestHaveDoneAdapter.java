@@ -128,6 +128,10 @@ public class TestHaveDoneAdapter extends BaseAdapter implements
             mViewHolder.tv_griditem.setBackgroundResource(R.drawable.shape_wrong);
             mViewHolder.tv_griditem.setTextColor(mContext.getResources().getColor(R.color.yellowWrongTv));
         }
+        if (gridItem.getTag() == 1) {
+            mViewHolder.tv_griditem.setBackgroundResource(R.drawable.shape_no_answer);
+            mViewHolder.tv_griditem.setTextColor(mContext.getResources().getColor(R.color.gray_tv));
+        }
         mViewHolder.tv_griditem.setText(s);//gridItem
         mViewHolder.tv_griditem.setOnClickListener(new View.OnClickListener() {
             @Override
