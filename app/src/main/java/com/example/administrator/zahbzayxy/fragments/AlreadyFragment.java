@@ -84,20 +84,29 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
         userInfoInterface.getExamData(currentPage,PageSize,1,token).enqueue(new Callback<NotPassBean>() {
             @Override
             public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
-                if(response !=null && response.body() !=null){
+                hideLoadingBar();
+                if(response !=null && response.body() !=null && response.body().getData() != null && response.body().getData().getqLibs() != null){
                     String code = response.body().getCode();
-                    if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
+                    if(code.equals("00000")){
                         emptyLayout(true);
-                        hideLoadingBar();
                         List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
-                        notPassListBeans.clear();
-                        notPassListBeans.addAll(data);
+                        if (currentPage == 1) {
+                            if (data == null || data.size() == 0) {
+                                emptyLayout(false);
+                                return;
+                            }
+                            notPassListBeans = data;
+                        } else {
+                            if (data == null || data.size() < PageSize) {
+                                refreshRecyclerView.setLoadingMoreEnabled(false);
+                            }
+                            notPassListBeans.addAll(data);
+                        }
                         alreadyAdapter.setList(notPassListBeans);
-                    }else{
-                        hideLoadingBar();
-                        emptyLayout(false);
+                        return;
                     }
                 }
+                emptyLayout(false);
             }
 
             @Override
@@ -153,8 +162,8 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
             public void run() {
                 refreshRecyclerView.setRefreshComplete();
                 currentPage = 1;
-                initData();
                 refreshRecyclerView.setLoadingMoreEnabled(true);
+                initData();
             }
         }, 2000);
     }
