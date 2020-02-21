@@ -94,6 +94,7 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
                 mOnItemClickListener.onClick(position);
             }
         });
+        holder.mFinishTv.setVisibility(View.GONE);
     }
 
 
@@ -104,7 +105,7 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
 
     static class OnLineCourseViewHodler extends RecyclerView.ViewHolder{
         private ImageView pMyLesson_img, mStateImg;
-        private TextView tv_title,tv_time,tv_state, mStatusTv;
+        private TextView tv_title,tv_time,tv_state, mStatusTv, mFinishTv;
         private LinearLayout mStatusLayout;
         private RelativeLayout mItemLayout;
         public OnLineCourseViewHodler(View itemView) {
@@ -117,6 +118,7 @@ public class LearnOnlineCourseAdapter extends RecyclerView.Adapter<LearnOnlineCo
             mItemLayout = itemView.findViewById(R.id.medium_layout);
             mStatusTv = itemView.findViewById(R.id.on_line_item_type_tv);
             mStateImg = itemView.findViewById(R.id.on_line_item_type_img);
+            mFinishTv = itemView.findViewById(R.id.tv_confirm);
         }
     }
 
