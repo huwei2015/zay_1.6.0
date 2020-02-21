@@ -118,6 +118,7 @@ public class OnlineCourseBean {
         private int currPlaySelectionId;
         private String imagePath;
         private int mainCourseId;
+        private String msg_cont;
 
         public boolean isPlay() {
             return play;
@@ -207,6 +208,14 @@ public class OnlineCourseBean {
             this.mainCourseId = mainCourseId;
         }
 
+        public String getMsg_cont() {
+            return msg_cont;
+        }
+
+        public void setMsg_cont(String msg_cont) {
+            this.msg_cont = msg_cont;
+        }
+
         @Override
         public String toString() {
             return "UserCoursesBean{" +
@@ -221,6 +230,7 @@ public class OnlineCourseBean {
                     ", currPlaySelectionId=" + currPlaySelectionId +
                     ", imagePath='" + imagePath + '\'' +
                     ", mainCourseId=" + mainCourseId +
+                    ", msg_cont='" + msg_cont + '\'' +
                     '}';
         }
     }

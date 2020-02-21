@@ -51,7 +51,6 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
     private ProgressBarLayout mLoadingBar;
     private List<LearnNavigationBean.LearnListBean>navigationList=new ArrayList<>();
     private LearnOnlineCourseAdapter learnOnlineCourseAdapter;
-    private PullToRefreshRecyclerView recyclerview;
     private TextView tv_addTopic,on_line_filter_course_check,tv_msg;
     private List<OnlineCourseBean.OnLineListBean> onLineListBeanList= new ArrayList<>();
     private int mLearnType = 0;
@@ -73,7 +72,6 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
         view=inflater.inflate(R.layout.fragment_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
-        recyclerview =view.findViewById(R.id.recyclerview);
         tv_addTopic=view.findViewById(R.id.tv_chooseTopic);//选择题库
         on_line_filter_course_check=view.findViewById(R.id.on_line_filter_course_check);//过滤
         on_line_view_one=view.findViewById(R.id.on_line_view_one);//分割线
@@ -85,8 +83,8 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
         tv_msg=view.findViewById(R.id.tv_msg);//空布局显示文字
         img_add=view.findViewById(R.id.img_add);//添加题库
         img_add.setOnClickListener(this);
-        mOnLineManager = new OnLineManager(context, fixedIndicatorView, recyclerview, mFilterCb);
-        mOffLineManager = new OffLineCourseManager(context, recyclerview);
+        mOnLineManager = new OnLineManager(context, fixedIndicatorView, view, mFilterCb);
+        mOffLineManager = new OffLineCourseManager(context, view);
         mOnLineManager.setEmptyView(rl_empty, mSelectLayout);
         mOnLineManager.setLoadingView(mLoadingBar);
         mOffLineManager.setEmptyView(rl_empty);
@@ -126,8 +124,6 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
             mOneView.setVisibility(View.GONE);//分割线
             mSelectLayout.setVisibility(View.GONE);
             tv_msg.setText("暂无离线课程");
-            recyclerview.setLoadingMoreEnabled(false);
-            recyclerview.setPullRefreshEnabled(false);
             mOffLineManager.initData();
         }
     }

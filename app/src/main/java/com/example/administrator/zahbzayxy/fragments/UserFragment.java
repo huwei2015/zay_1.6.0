@@ -410,14 +410,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        initUserInfo();
-        initUserCenter();
         initIsLogin();
         /*****************FHS Start****************/
         if (isHidden()) {
             //当前fragment对用户不可见
             if (null != dialog && dialog.isShowing()) {
                 dialog.dismiss();
+//                initUserCenter();
             }
         } else {
             //当前fragment对用户可见,在新线程中访问获取用户信息的接口

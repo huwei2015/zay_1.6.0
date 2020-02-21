@@ -5,6 +5,7 @@ public class GridItem {
 	private String time;
 	private int section;
 	private String name;
+	private int tag;
 
 	private int isRight;
 
@@ -52,5 +53,13 @@ public class GridItem {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getTag() {
+		return tag;
+	}
+
+	public void setTag(int tag) {
+		this.tag = tag;
 	}
 }

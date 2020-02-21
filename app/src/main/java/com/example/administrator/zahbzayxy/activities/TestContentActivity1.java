@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -957,7 +958,7 @@ public class TestContentActivity1 extends BaseActivity {
         back_tset_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                showDialog();
             }
         });
     }
@@ -985,7 +986,6 @@ public class TestContentActivity1 extends BaseActivity {
 
             }
         }
-
         //界面退出时把做题个数清零。
         doNUm = 0;
         shengyu = 0;
@@ -1227,5 +1227,30 @@ public class TestContentActivity1 extends BaseActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            showDialog();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    private void showDialog(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(TestContentActivity1.this);
+        dialog.setTitle("提示");
+        dialog.setMessage("确定退出考试吗？");
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 }

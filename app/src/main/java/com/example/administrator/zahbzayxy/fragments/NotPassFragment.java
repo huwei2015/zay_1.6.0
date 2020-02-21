@@ -86,6 +86,7 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
         userInfoInterface.getExamData(currentPage,PageSize,0,token).enqueue(new Callback<NotPassBean>() {
             @Override
             public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
+                hideLoadingBar();
                     if(response !=null && response.body() !=null){
                         NotPassBean.NotPassListBean data1 = response.body().getData();
                         List<NotPassBean.NotListData> listData = null;
@@ -104,13 +105,23 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
                             return;
                         }
                         String code = response.body().getCode();
-                        if(code.equals("00000") && response.body().getData().getqLibs().getData().size() > 0){
+                        List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
+                        if(code.equals("00000")){
                             emptyLayout(true);
-                            hideLoadingBar();
-                            List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
-                            notPassListBeans.clear();
-                            notPassListBeans.addAll(data);
+                            if (currentPage == 1) {
+                                if (data == null || data.size() == 0) {
+                                    emptyLayout(false);
+                                    return;
+                                }
+                                notPassListBeans = data;
+                            } else {
+                                if (data == null || data.size() < PageSize) {
+                                    refreshRecyclerView.setLoadingMoreEnabled(false);
+                                }
+                                notPassListBeans.addAll(data);
+                            }
                             notPassAdapter.setList(notPassListBeans);
+                            return;
                         }else{
                             hideLoadingBar();
                             emptyLayout(false);
