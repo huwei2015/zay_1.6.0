@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:background="@mipmap/header_bg"
         android:gravity="bottom"
-        android:paddingBottom="9dp"
+        android:paddingBottom="12dp"
         android:layout_height="45dp"><!-- 70-->
         <TextView
             android:id="@+id/backPage"
