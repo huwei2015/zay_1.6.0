@@ -5,19 +5,25 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.example.administrator.zahbzayxy.utils.FixedIndicatorView
-        android:id="@+id/singleTab_fixedIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:background="@color/white" />
-
-    <View
-        android:id="@+id/on_line_view_one"
+    <LinearLayout
+        android:id="@+id/on_line_course_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#f7f7f7" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <com.example.administrator.zahbzayxy.utils.FixedIndicatorView
+            android:id="@+id/singleTab_fixedIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/on_line_view_one"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#f7f7f7" />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/on_line_select_layout"
         android:layout_width="match_parent"
@@ -76,12 +82,17 @@
             android:gravity="center"
             android:visibility="gone" />
 
-        <com.androidkun.PullToRefreshRecyclerView
-            android:id="@+id/recyclerview"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/on_line_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@color/light_Gray"
-            android:dividerHeight="10dp" />
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/on_line_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
     <include layout="@layout/layout_empty_view" />
 </LinearLayout>
