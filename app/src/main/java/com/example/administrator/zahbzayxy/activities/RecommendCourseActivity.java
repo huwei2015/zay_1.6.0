@@ -116,7 +116,7 @@ public class RecommendCourseActivity extends BaseActivity{
                 AllOnlineCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                if (body != null &&  body.getData()!=null && body.getData().getCourseList()!=null && body.getData().getCourseList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {

@@ -124,6 +124,10 @@ public interface IndexInterface {
     //收集异常信息
     static final String saveErrorInfo="index/saveErrorInfo";
     @POST(value = saveErrorInfo)
-        Call<String> saveErrorInfo(@Query("errorInfo") String errorInfo
+        Call<String> saveErrorInfo(@Query("errorInfo") String errorInfo,
+                                   @Query("appVersion") String appVersion,
+                                   @Query("osVersion") String osVersion,
+                                   @Query("vendor") String vendor,
+                                   @Query("model") String model
     );
 }

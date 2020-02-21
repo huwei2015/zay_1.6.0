@@ -122,7 +122,7 @@ public class RecommendQueslibActivity extends BaseActivity{
                 QueslibBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("data", s);
-                if (body != null && body.getData().getQueslibList().size() > 0) {
+                if (body != null && body.getData()!=null && body.getData().getQueslibList()!=null &&body.getData().getQueslibList().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {

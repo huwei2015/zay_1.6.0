@@ -93,7 +93,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler{
             dumpExceptionToSDCard(ex);
             //这里可以通过网络上传异常信息到服务器，便于开发人员分析日志从而解决bug
             uploadExceptionToServer(ex);
-        } catch (IOException e) {
+        } catch (IOException | PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -187,10 +187,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler{
     /**
      * 上传异常信息到服务器
      */
-    private void uploadExceptionToServer(Throwable ex) {
+    private void uploadExceptionToServer(Throwable ex) throws PackageManager.NameNotFoundException {
+        PackageManager pm = mContext.getPackageManager();
+        PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
         String errorInfo=ex.getMessage();
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.saveErrorInfo(errorInfo).enqueue(new Callback<String>() {
+        aClass.saveErrorInfo(errorInfo,pi.versionName,Build.VERSION.RELEASE,Build.MANUFACTURER,Build.MODEL).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 int code1 = response.code();
