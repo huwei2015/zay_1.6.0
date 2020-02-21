@@ -175,9 +175,13 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
         selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 112);
-                mPopupWindow.dismiss();
+                if (checkPublishPermission() == true) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 112);
+                    mPopupWindow.dismiss();
+                }else if(checkPublishPermission() == false){
+                    Toast.makeText(UpdateCertificateActivity.this, "请先打开允许相机拍照权限", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -322,22 +326,6 @@ public class UpdateCertificateActivity extends BaseActivity implements View.OnCl
                     Log.e("用户选择相册上传", "url: " + picturePath);
                     cursor.close();
                     bitmap = bmpTopath(picturePath);
-//                    int height=bitmap.getHeight();
-//                    int width=bitmap.getWidth();
-//                    Log.e("hw=======","height"+height+"=======widht====="+width);
-//                    if(width !=295 && height != 413){
-//                        final AlertDialog.Builder builder = new AlertDialog.Builder(UpdateCertificateActivity.this);
-//                        builder.setTitle("提示");
-//                        builder.setMessage("请上传宽295高413照片");
-//                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                        builder.show();
-//                        return;
-//                    }
                     this.bitmapByte = getBitmapByte(bitmap);
                     //上传从相册取出来的图片
                     updatePhoto(this.bitmapByte);

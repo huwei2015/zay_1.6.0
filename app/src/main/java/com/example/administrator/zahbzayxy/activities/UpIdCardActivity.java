@@ -225,9 +225,13 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
         selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 122);
-                mPopupWindow.dismiss();
+                if (checkPublishPermission() == true) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 122);
+                    mPopupWindow.dismiss();
+                }else if(checkPublishPermission() == false){
+                    Toast.makeText(UpIdCardActivity.this, "请先打开允许相机拍照权限", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -291,9 +295,13 @@ public class UpIdCardActivity extends BaseActivity implements View.OnClickListen
         selector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 112);
-                mPopupWindow.dismiss();
+                if (checkPublishPermission() == true) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 112);
+                    mPopupWindow.dismiss();
+                }else if(checkPublishPermission() == false){
+                    Toast.makeText(UpIdCardActivity.this, "请先打开允许相机拍照权限", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
