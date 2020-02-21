@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
     RelativeLayout rl_empty;
     LinearLayout ll_list;
     private boolean mHasData = true;
+    private final int MSG_LIST=1999;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -254,7 +256,7 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
         intent.putExtra("id",String.valueOf(msgLists.get(position).getId()));
         intent.putExtra("type","msg");
         intent.putExtra("page","MsgListActivity");
-        startActivity(intent);
+        startActivityForResult(intent,MSG_LIST);
     }
 
     @Override
@@ -269,5 +271,35 @@ public class MsgListActivity extends BaseActivity implements View.OnClickListene
             EventBus.getDefault().post(FLUSH_MSG_INFO_EVENT_FLAG);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case MSG_LIST :
+
+                if (resultCode == Activity.RESULT_OK) {
+                    String id = data.getStringExtra("id");
+                    if(id==null){
+                        id="0";
+                    }
+                    List<TimeData.MsgList> mlists = new ArrayList<>();
+                    if(msgLists!=null){
+                        for(TimeData.MsgList msg:msgLists){
+                            if(msg.getId()==Integer.valueOf(id)){
+                                msg.setyRead(true);
+                            }
+                            mlists.add(msg);
+                        }
+                    }
+                    msgLists=mlists;
+                    adapter.addList(msgLists);
+                    adapter.notifyDataSetChanged();
+                    initUserCenter();
+                }
+                break;
+            default:break;
+        }
     }
 }

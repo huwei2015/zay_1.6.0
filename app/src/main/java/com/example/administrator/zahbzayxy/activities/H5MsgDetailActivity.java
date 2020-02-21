@@ -55,7 +55,6 @@ public class H5MsgDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 back();
-                finish();
             }
         });
         initView();
@@ -133,10 +132,9 @@ public class H5MsgDetailActivity extends BaseActivity {
     }
 
     private void back(){
-        Intent intent = new Intent(H5MsgDetailActivity.this, MsgListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra("page", "MsgListActivity");
-        startActivity(intent);
+        Intent intent = new Intent();
+        intent.putExtra("id",id);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
