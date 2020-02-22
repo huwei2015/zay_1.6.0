@@ -34,7 +34,7 @@ public interface LessonGroupInterface {
 
     static final String groupCourseDetailPath="CourseController/courseDesc?";
     @GET(value=groupCourseDetailPath)
-    Call<LessonThiredBean> getLessonDetailData(@Query("courseId")Integer courseId);
+    Call<LessonThiredBean> getLessonDetailData(@Query("courseId")Integer courseId,@Query("isDatacenter")String isDatacenter);
 
     @GET(value=lessonAttachTestPath)
     Call<LessonAttachTestBean> getLessonAttachTestData(@Query("courseId")Integer courseId);

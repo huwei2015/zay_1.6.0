@@ -28,10 +28,17 @@ public class DetailFragment extends Fragment {
    Context context;
     private View view;
     private TextView detail_introduce_wv;
+    private String isDatacenter;
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context=context;
+    }
+
+    public void setIsDatacenter(String isDatacenter) {
+        this.isDatacenter = isDatacenter;
     }
 
     @Override
@@ -48,7 +55,7 @@ public class DetailFragment extends Fragment {
         Log.e("getCoureId11111",String.valueOf(courseId1));
         detail_introduce_wv= (TextView)view.findViewById(R.id.detail_introduce_wv);
         LessonGroupInterface aClass = RetrofitUtils.getInstance().createClass(LessonGroupInterface.class);
-        aClass.getLessonDetailData(courseId1).enqueue(new Callback<LessonThiredBean>() {
+        aClass.getLessonDetailData(courseId1,isDatacenter).enqueue(new Callback<LessonThiredBean>() {
             @Override
             public void onResponse(Call<LessonThiredBean> call, Response<LessonThiredBean> response) {
                 LessonThiredBean body = response.body();
