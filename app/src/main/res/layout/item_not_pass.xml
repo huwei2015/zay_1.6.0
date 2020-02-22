@@ -79,7 +79,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/redBuy"
-                        android:text=""/>
+                        android:visibility="gone"
+                        android:text="1"/>
                     <TextView
                         android:id="@+id/lib_exam_account"
                         android:layout_width="wrap_content"

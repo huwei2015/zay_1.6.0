@@ -134,7 +134,7 @@ public class MySignUpActivity extends BaseActivity implements View.OnClickListen
         //设置刷新回调
         recyclerView.setPullToRefreshListener(MySignUpActivity.this);
         //主动触发下拉刷新操作
-        recyclerView.onRefresh();
+//        recyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(this, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
