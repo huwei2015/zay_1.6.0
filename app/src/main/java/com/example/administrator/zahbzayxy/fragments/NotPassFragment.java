@@ -77,6 +77,9 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
         if (isVisibleToUser && mLoadView) {
             initView();
             mLoadView = true;
+            currentPage = 1;
+            notPassListBeans.clear();
+            notPassAdapter.setList(notPassListBeans);
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);

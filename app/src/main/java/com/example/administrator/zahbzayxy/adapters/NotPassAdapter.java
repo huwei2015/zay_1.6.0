@@ -57,6 +57,7 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
         holder.time.setText(notPassListBeans.get(position).getEndTime());
         holder.exam_account.setText(String.valueOf(notPassListBeans.get(position).getQuesLibExamNum()));
         holder.lib_account.setText(String.valueOf(notPassListBeans.get(position).getUserExamNum()));
+        int quesLibExamNum = notPassListBeans.get(position).getQuesLibExamNum();
         if(notPassListBeans.get(position).getQuesLibExamNum() == 0){//无限次
             holder.tv_account.setText("无限次");
             holder.tv_account.setVisibility(View.VISIBLE);
@@ -69,39 +70,47 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
         if(notPassListBeans.get(position).getIsExam().equals("0")){//考试入口开启
             holder.examEnterImg.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.GONE);
-            holder.lib_account.setVisibility(View.VISIBLE);
-            holder.tv_xie.setVisibility(View.VISIBLE);
-            holder.exam_account.setVisibility(View.VISIBLE);
+            if (quesLibExamNum > 0) {
+                holder.lib_account.setVisibility(View.VISIBLE);
+                holder.tv_xie.setVisibility(View.VISIBLE);
+                holder.exam_account.setVisibility(View.VISIBLE);
+            }
             holder.time.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.GONE);
-            holder.tv_account.setVisibility(View.GONE);
-        }else if(notPassListBeans.get(position).getIsExam().equals("1")){//不可以去考试
+            if (quesLibExamNum > 0) holder.tv_account.setVisibility(View.GONE);
+        }else if(notPassListBeans.get(position).getIsExam().equals("1")) {//不可以去考试
             holder.examEnterImg.setVisibility(View.GONE);
             holder.state.setVisibility(View.VISIBLE);
-            holder.lib_account.setVisibility(View.VISIBLE);
-            holder.tv_xie.setVisibility(View.VISIBLE);
-            holder.exam_account.setVisibility(View.VISIBLE);
+            if (quesLibExamNum > 0) {
+                holder.lib_account.setVisibility(View.VISIBLE);
+                holder.tv_xie.setVisibility(View.VISIBLE);
+                holder.exam_account.setVisibility(View.VISIBLE);
+            }
             holder.time.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.VISIBLE);
-            holder.tv_account.setVisibility(View.GONE);
+            if (quesLibExamNum > 0) holder.tv_account.setVisibility(View.GONE);
         }else if(notPassListBeans.get(position).getIsExam().equals("2")){//不能考试，可以查看记录
             holder.examEnterImg.setVisibility(View.GONE);
-            holder.lib_account.setVisibility(View.VISIBLE);
-            holder.tv_xie.setVisibility(View.VISIBLE);
-            holder.exam_account.setVisibility(View.VISIBLE);
+            if (quesLibExamNum > 0) {
+                holder.lib_account.setVisibility(View.VISIBLE);
+                holder.tv_xie.setVisibility(View.VISIBLE);
+                holder.exam_account.setVisibility(View.VISIBLE);
+            }
             holder.time.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.VISIBLE);
             holder.state.setText("已通过考试");
             holder.state.setTextColor(mContext.getResources().getColor(R.color.text_yellow));
-            holder.tv_account.setVisibility(View.GONE);
+            if (quesLibExamNum > 0) holder.tv_account.setVisibility(View.GONE);
         }else if(notPassListBeans.get(position).getIsExam().equals("3")){//不可以考试但是可看记录(过期，次数用尽)
             holder.examEnterImg.setVisibility(View.GONE);
-            holder.lib_account.setVisibility(View.VISIBLE);
-            holder.tv_xie.setVisibility(View.VISIBLE);
-            holder.exam_account.setVisibility(View.VISIBLE);
+            if (quesLibExamNum > 0) {
+                holder.lib_account.setVisibility(View.VISIBLE);
+                holder.tv_xie.setVisibility(View.VISIBLE);
+                holder.exam_account.setVisibility(View.VISIBLE);
+            }
             holder.time.setVisibility(View.VISIBLE);
             holder.state.setVisibility(View.VISIBLE);
-            holder.tv_account.setVisibility(View.GONE);
+            if (quesLibExamNum > 0) holder.tv_account.setVisibility(View.GONE);
         }
         holder.exam_record.setOnClickListener(new View.OnClickListener() {
             @Override
