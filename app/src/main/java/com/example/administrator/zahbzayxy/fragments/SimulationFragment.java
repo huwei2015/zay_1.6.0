@@ -327,12 +327,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if (!"yes".equals(mIsOnTime)) {
+                if ("yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
-                if(!"other".equals(mIsOnTime)){
+                if("other".equals(mIsOnTime)){
                     ToastUtils.showLongInfo(msg_cont);
+                    return;
                 }
                 intent = new Intent(getActivity(), TestPracticeAcivity.class);
                 Bundle bundlePractice = new Bundle();
@@ -349,12 +350,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if (!"yes".equals(mIsOnTime)) {
+                if ("yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
-                if(!"other".equals(mIsOnTime)){
+                if("other".equals(mIsOnTime)){
                     ToastUtils.showLongInfo(msg_cont);
+                    return;
                 }
                 if (quesLibId <= 0 || userLibId <= 0 || packageId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
@@ -374,12 +376,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if (!"yes".equals(mIsOnTime)) {
+                if ("yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
                 if("other".equals(mIsOnTime)){
                     ToastUtils.showLongInfo(msg_cont);
+                    return;
                 }
                 if (quesLibId <= 0 || userLibId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
@@ -398,12 +401,13 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if (!"yes".equals(mIsOnTime)) {
+                if ("yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
-                if(!"other".equals(mIsOnTime)){
+                if("other".equals(mIsOnTime)){
                     ToastUtils.showLongInfo(msg_cont);
+                    return;
                 }
                 intent = new Intent(getActivity(), SearchTestActivity.class);
                 Bundle searchBundle = new Bundle();
