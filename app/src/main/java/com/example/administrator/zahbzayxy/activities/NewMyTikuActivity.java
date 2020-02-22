@@ -105,8 +105,6 @@ public class NewMyTikuActivity extends BaseActivity {
                         intentPractice.putExtras(bundlePractice);
                         startActivity(intentPractice);
                     }
-                }else if(tiku_state == 0){
-                    ToastUtils.showLongInfo(msg_cont);
                 }else {//弹框提示购买题库
                     initPopUpWindow1();
                 }
