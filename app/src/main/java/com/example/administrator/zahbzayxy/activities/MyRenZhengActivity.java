@@ -74,7 +74,7 @@ public class MyRenZhengActivity extends BaseActivity {
             public void onResponse(Call<PMyRenZhengMuLuBean> call, Response<PMyRenZhengMuLuBean> response) {
                 if (response != null) {
                     PMyRenZhengMuLuBean body = response.body();
-                    if (body != null && body.getData().getCerList().size() > 0) {
+                    if (body != null && body.getData() != null) {
                         String code = body.getCode();
                         if (code.equals("00003")) {
                             initVisible(false);
@@ -87,19 +87,27 @@ public class MyRenZhengActivity extends BaseActivity {
                         } else if (dbIsLogin() == false) {
                             initVisible(false);
                             Toast.makeText(MyRenZhengActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                        } else if (response.body().getErrMsg() == null) {
+                        } else if (code.equals("00000")) {
                             initVisible(true);
                             List<PMyRenZhengMuLuBean.DataBean.CerListBean> cerList = response.body().getData().getCerList();
-                            totalList.addAll(cerList);
-                            adapter.notifyDataSetChanged();
+                            if (pager == 1) {
+                                if (cerList == null || cerList.size() == 0) {
+                                    initVisible(false);
+                                    return;
+                                }
+                            }
+                            if (cerList != null) {
+                                totalList.addAll(cerList);
+                                adapter.notifyDataSetChanged();
+                            }
+                            return;
                         } else if (code.equals("99999")) {
                             initVisible(false);
                             Toast.makeText(MyRenZhengActivity.this, "系统繁忙", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
-                        initVisible(false);
                     }
                 }
+                initVisible(false);
             }
 
             @Override

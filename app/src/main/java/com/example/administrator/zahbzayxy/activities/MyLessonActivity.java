@@ -104,7 +104,7 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
                 PMyLessonBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData().getCourseList().size() > 0) {
+                if (body != null && body.getData() != null) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
@@ -124,10 +124,18 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
                         } else if (code.equals("00000")) {
                             initViewVisible(true);
                             dividePrice = body.getData().getDividePrice();
-                            adapter.setPrice(dividePrice);
+                            adapter.setPrice(dividePrice + "");
                             List<PMyLessonBean.DataBean.CourseListBean> courseList = body.getData().getCourseList();
-                            totalList.addAll(courseList);
-                            adapter.notifyDataSetChanged();
+                            if (pager == 1) {
+                                if (courseList == null || courseList.size() == 0) {
+                                    initViewVisible(false);
+                                    return;
+                                }
+                            }
+                            if (courseList != null) {
+                                totalList.addAll(courseList);
+                                adapter.notifyDataSetChanged();
+                            }
                         } else {
                             initViewVisible(false);
                             Object errMsg = body.getErrMsg();
@@ -136,9 +144,8 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
                             }
                         }
                     }
-                }else{
-                    initViewVisible(false);
                 }
+                initViewVisible(false);
             }
 
             @Override

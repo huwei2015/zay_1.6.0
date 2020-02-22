@@ -85,37 +85,38 @@ public class MyCuoTiActivity extends BaseActivity {
         aClass.lookErrorData(pager,10,token).enqueue(new Callback<PCuoTiJiLuBean>() {
             @Override
             public void onResponse(Call<PCuoTiJiLuBean> call, Response<PCuoTiJiLuBean> response) {
-                if (response!=null && response.body() !=null) {
+                if (response!=null && response.body() !=null && response.body().getData() != null) {
                     PCuoTiJiLuBean body = response.body();
                     String errMsg = (String) response.body().getErrMsg();
-                    if (body != null) {
-                        if (body.getCode().equals("00003")) {
+                    if (body.getCode().equals("00003")) {
+                        isVisible(false);
+                        Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                        SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
+                        SharedPreferences.Editor edit = sp.edit();
+                        edit.putBoolean("isLogin", false);
+                        edit.commit();
+                    } else if (dbIsLogin() == false) {
+                        Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
+                    } else if (body.getCode().equals("00000")) {// {"code":"00000","errMsg":null,"data":{"errorRecordQuesLibs":[{"errorRecordCount":9,"quesLibName":"烟花爆竹生产单位主要负责人","packageId":1,"packageName":"考试题库","userLibId":3506,"quesLibId":30},{"errorRecordCount":28,"quesLibName":"特种作业人员-复训-煤矿井下电气作业","packageId":1,"packageName":"考试题库","userLibId":3512,"quesLibId":266},{"errorRecordCount":9,"quesLibName":"《安全生产技术》模拟试题三","packageId":13,"packageName":"测试关系sql","userLibId":5269,"quesLibId":320},{"errorRecordCount":4,"quesLibName":"企业主要负责人-初训-烟花爆竹经营单位（无解析版）","packageId":1,"packageName":"考试题库","userLibId":5278,"quesLibId":412},{"errorRecordCount":10,"quesLibName":"企业主要负责人-初训-烟花爆竹经营单位（无解析版）","packageId":2,"packageName":"模考题库","userLibId":5268,"quesLibId":412},{"errorRecordCount":25,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":1,"packageName":"考试题库","userLibId":5280,"quesLibId":413},{"errorRecordCount":12,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":2,"packageName":"模考题库","userLibId":5271,"quesLibId":413},{"errorRecordCount":21,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":3,"packageName":"独家解析题库","userLibId":5426,"quesLibId":413},{"errorRecordCount":7,"quesLibName":"主要负责人-复训-煤炭生产经营单位","packageId":2,"packageName":"模考题库","userLibId":3509,"quesLibId":426},{"errorRecordCount":8,"quesLibName":"测试新增题库","packageId":1,"packageName":"考试题库","userLibId":5279,"quesLibId":660}],"totalPage":1,"isLastPage":true,"pageSize":10,"currentPage":1,"totalRecord":10,"isFirstPage":true}}
+                        List<PCuoTiJiLuBean.DataBean.ErrorRecordQuesLibsBean> errorRecordQuesLibs = body.getData().getErrorRecordQuesLibs();
+                        if (pager == 1 && (errorRecordQuesLibs == null || errorRecordQuesLibs.size() == 0)) {
                             isVisible(false);
-                            Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                            SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
-                            SharedPreferences.Editor edit = sp.edit();
-                            edit.putBoolean("isLogin", false);
-                            edit.commit();
-                        } else if (dbIsLogin() == false) {
-                            Toast.makeText(MyCuoTiActivity.this, "用户未登录", Toast.LENGTH_SHORT).show();
-                        } else if (body.getCode().equals("00000")) {// {"code":"00000","errMsg":null,"data":{"errorRecordQuesLibs":[{"errorRecordCount":9,"quesLibName":"烟花爆竹生产单位主要负责人","packageId":1,"packageName":"考试题库","userLibId":3506,"quesLibId":30},{"errorRecordCount":28,"quesLibName":"特种作业人员-复训-煤矿井下电气作业","packageId":1,"packageName":"考试题库","userLibId":3512,"quesLibId":266},{"errorRecordCount":9,"quesLibName":"《安全生产技术》模拟试题三","packageId":13,"packageName":"测试关系sql","userLibId":5269,"quesLibId":320},{"errorRecordCount":4,"quesLibName":"企业主要负责人-初训-烟花爆竹经营单位（无解析版）","packageId":1,"packageName":"考试题库","userLibId":5278,"quesLibId":412},{"errorRecordCount":10,"quesLibName":"企业主要负责人-初训-烟花爆竹经营单位（无解析版）","packageId":2,"packageName":"模考题库","userLibId":5268,"quesLibId":412},{"errorRecordCount":25,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":1,"packageName":"考试题库","userLibId":5280,"quesLibId":413},{"errorRecordCount":12,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":2,"packageName":"模考题库","userLibId":5271,"quesLibId":413},{"errorRecordCount":21,"quesLibName":"企业主要负责人-初训-烟花爆竹生产单位","packageId":3,"packageName":"独家解析题库","userLibId":5426,"quesLibId":413},{"errorRecordCount":7,"quesLibName":"主要负责人-复训-煤炭生产经营单位","packageId":2,"packageName":"模考题库","userLibId":3509,"quesLibId":426},{"errorRecordCount":8,"quesLibName":"测试新增题库","packageId":1,"packageName":"考试题库","userLibId":5279,"quesLibId":660}],"totalPage":1,"isLastPage":true,"pageSize":10,"currentPage":1,"totalRecord":10,"isFirstPage":true}}
-                            List<PCuoTiJiLuBean.DataBean.ErrorRecordQuesLibsBean> errorRecordQuesLibs = body.getData().getErrorRecordQuesLibs();
-                            isVisible(true);
-                            // totalList.clear();
-                            totalList.addAll(errorRecordQuesLibs);
-                            adapter.notifyDataSetChanged();
-                        } else if (body.getCode().equals("99999")) {
-                            isVisible(false);
-                            Toast.makeText(MyCuoTiActivity.this, errMsg, Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-
-                    }else{
-                        Log.i("zahb=========","接口请求成功，没有返回数据");
+                        isVisible(true);
+                        // totalList.clear();
+                        if (errorRecordQuesLibs != null) {
+                            totalList.addAll(errorRecordQuesLibs);
+                            adapter.notifyDataSetChanged();
+                        }
+                        return;
+                    } else if (body.getCode().equals("99999")) {
                         isVisible(false);
+                        Toast.makeText(MyCuoTiActivity.this, errMsg, Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 }
+                isVisible(false);
             }
 
             @Override

@@ -79,22 +79,34 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         emptyLayout(true);
-                        examBeanList = response.body().getData().getQuesLibs();
+                        List<ExamBean.QuesLibsBean> beanList = response.body().getData().getQuesLibs();
 
-                        for (int i = 0; i < examBeanList.size(); i++) {
+                        for (int i = 0; i < beanList.size(); i++) {
                             //我的考试需要用上
-                            userQuesLibId=examBeanList.get(i).getUserQuesLibId();
+                            userQuesLibId=beanList.get(i).getUserQuesLibId();
                             isPerfectPersonInfo();
                         }
                         if (currentPage == 1) {
+                            if (beanList == null || beanList.size() == 0) {
+                                emptyLayout(false);
+                            }
+                            examBeanList.clear();
+                            examBeanList.addAll(beanList);
                             examAdapter.setList(examBeanList);
                         } else {
-                            examAdapter.addList(examBeanList);
+                            if (beanList == null || beanList.size() == 0) {
+                                Toast.makeText(MyExamActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
+                                recyclerView.setLoadingMoreEnabled(false);
+                                return;
+                            }
+                            examBeanList.addAll(beanList);
+                            examAdapter.setList(examBeanList);
                         }
+                        return;
                     }
-                }else{
-                    emptyLayout(false);
                 }
+                emptyLayout(false);
+
             }
 
             @Override
