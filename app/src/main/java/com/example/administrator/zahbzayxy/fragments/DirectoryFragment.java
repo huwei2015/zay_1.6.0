@@ -38,11 +38,19 @@ public class DirectoryFragment extends Fragment {
     private static String token;
     private int courseId;
 
+    private String isDatacenter;
+
 
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context=context;
     }
+
+    public void setIsDatacenter(String isDatacenter) {
+        this.isDatacenter = isDatacenter;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +67,7 @@ public class DirectoryFragment extends Fragment {
         courseId= getActivity().getIntent().getIntExtra("courseId", 0);
         Log.e("thiredLessonId",String.valueOf(courseId));
         LessonGroupInterface aClass = RetrofitUtils.getInstance().createClass(LessonGroupInterface.class);
-        Call<LessonThiredBean> lessonDetailData = aClass.getLessonDetailData(courseId);
+        Call<LessonThiredBean> lessonDetailData = aClass.getLessonDetailData(courseId,isDatacenter);
         lessonDetailData.enqueue(new Callback<LessonThiredBean>() {
             @Override
             public void onResponse(Call<LessonThiredBean> call, Response<LessonThiredBean> response) {

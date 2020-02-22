@@ -92,6 +92,7 @@ public class LessonThiredActivity extends BaseActivity {
     private int courseId;
     private int userCourseId;
     private SharedPreferences tokenDb;
+    private String isDatacenter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,7 @@ public class LessonThiredActivity extends BaseActivity {
     private void initData() {
         courseId= getIntent().getIntExtra("courseId", 0);
         userCourseId = getIntent().getIntExtra("userCourseId", 0);
-
+        isDatacenter = getIntent().getStringExtra("isDatacenter");
         initHeadView();
         initFragment();
         tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
@@ -129,10 +130,11 @@ public class LessonThiredActivity extends BaseActivity {
 
     private void initHeadView() {
         showLoadingBar(false);
-       int courseId = getIntent().getIntExtra("courseId",0);
+        int courseId = getIntent().getIntExtra("courseId",0);
+        String isDatacenter =getIntent().getStringExtra("isDatacenter");
         Log.e("courseId",String.valueOf(courseId));
         LessonGroupInterface aClass = RetrofitUtils.getInstance().createClass(LessonGroupInterface.class);
-        aClass.getLessonDetailData(courseId).enqueue(new Callback<LessonThiredBean>() {
+        aClass.getLessonDetailData(courseId,isDatacenter).enqueue(new Callback<LessonThiredBean>() {
             @Override
             public void onResponse(Call<LessonThiredBean> call, Response<LessonThiredBean> response) {
                 LessonThiredBean body = response.body();
@@ -204,7 +206,9 @@ public class LessonThiredActivity extends BaseActivity {
         DetailFragment titleFragment=new DetailFragment();
         LesssonTestLiberyFragment lesssonTestLiberyFragment =new LesssonTestLiberyFragment();
         fragmentList.add(directoryFragment);
+        directoryFragment.setIsDatacenter(isDatacenter);
         fragmentList.add(titleFragment);
+        titleFragment.setIsDatacenter(isDatacenter);
         fragmentList.add(lesssonTestLiberyFragment);
         fragmentManager=getSupportFragmentManager();
         pageAdapter=new LessonFragmentPageAdapter(fragmentManager,fragmentList,titlesList);
