@@ -104,6 +104,9 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
     }
     private boolean isVisible;
 
+    /**
+     * 加载数据
+     */
     public void loadData() {
         if (!isVisible) return;
         if (mLearnType == 0 && mOnLineManager != null) {

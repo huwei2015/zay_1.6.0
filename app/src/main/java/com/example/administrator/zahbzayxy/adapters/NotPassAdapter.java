@@ -15,6 +15,7 @@ import android.widget.ViewSwitcher;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ExamRecordActivity;
 import com.example.administrator.zahbzayxy.activities.MyExamActivity;
+import com.example.administrator.zahbzayxy.activities.TestContentActivity1;
 import com.example.administrator.zahbzayxy.beans.NotPassBean;
 import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.beans.TimeData;
@@ -59,9 +60,9 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
         if(notPassListBeans.get(position).getQuesLibExamNum() == 0){//无限次
             holder.tv_account.setText("无限次");
             holder.tv_account.setVisibility(View.VISIBLE);
-            holder.lib_account.setVisibility(View.GONE);
-            holder.tv_xie.setVisibility(View.GONE);
-            holder.exam_account.setVisibility(View.GONE);
+            holder.lib_account.setVisibility(View.GONE);//已考数据
+            holder.tv_xie.setVisibility(View.GONE);//斜线
+            holder.exam_account.setVisibility(View.GONE);//总考试次数
             holder.examEnterImg.setVisibility(View.VISIBLE);//按钮显示
             holder.state.setVisibility(View.GONE); //入口关闭
         }
@@ -115,7 +116,16 @@ public class NotPassAdapter extends RecyclerView.Adapter<NotPassAdapter.NotPassV
         });
 
         holder.examEnterImg.setOnClickListener(view -> {
-            mContext.startActivity(new Intent(mContext, MyExamActivity.class));
+            Intent intent = new Intent(mContext, TestContentActivity1.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("quesLibId", notPassListBeans.get(position).getQuesLibId());
+            bundle.putInt("userLibId", notPassListBeans.get(position).getId());//正式考试题库id
+            bundle.putInt("examType", 0);
+            intent.putExtras(bundle);
+            mContext.startActivity(intent);
+
+
+
         });
 
         Picasso.with(mContext).load(notPassListBeans.get(position).getImagePath()).placeholder(R.mipmap.loading_png).into(holder.img_pic);
