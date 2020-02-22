@@ -85,6 +85,8 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     private void initData(){
         if (!isVisible) return;
         showLoadingBar(false);
+        SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getExamData(currentPage,PageSize,0,token).enqueue(new Callback<NotPassBean>() {
             @Override
