@@ -102,6 +102,8 @@ public class OnLineManager {
     private boolean mLoadingData = false;
     private boolean mIsHasData = true;
     private boolean mIsLoading;
+    private Call<OfflineCourseLearnBean> mOffLineCall;
+    private Call<OnlineCourseBean> mOnLineCall;
 
     public OnLineManager(Context context, FixedIndicatorView fixedIndicatorView, View view, CheckBox filterCb) {
         this.mContext = context;
@@ -329,7 +331,7 @@ public class OnLineManager {
         aClass.getLearnNavigationData(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
@@ -391,11 +393,12 @@ public class OnLineManager {
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
 
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token).enqueue(new Callback<OfflineCourseLearnBean>() {
+        mOffLineCall = aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token);
+        mOffLineCall.enqueue(new Callback<OfflineCourseLearnBean>() {
             @Override
             public void onResponse(Call<OfflineCourseLearnBean> call, Response<OfflineCourseLearnBean> response) {
                 hindLoading();
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         List<OfflineCourseLearnBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
@@ -453,7 +456,8 @@ public class OnLineManager {
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
 
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOnLineCourseList(mPage, 10, cateId, isAchieve, token).enqueue(new Callback<OnlineCourseBean>() {
+        mOnLineCall = aClass.getOnLineCourseList(mPage, 10, cateId, isAchieve, token);
+        mOnLineCall.enqueue(new Callback<OnlineCourseBean>() {
             @Override
             public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 hindLoading();
@@ -561,6 +565,11 @@ public class OnLineManager {
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             if (mPosition == position) return;
             mPage = 1;
+            if (mCourseType == 0) {
+                if (mOnLineCall != null) mOnLineCall.cancel();
+            } else {
+                if (mOffLineCall != null) mOffLineCall.cancel();
+            }
             clearList();
             mLoadingData = true;
             mLoading.show();

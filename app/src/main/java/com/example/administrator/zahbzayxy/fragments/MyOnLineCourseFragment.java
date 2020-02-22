@@ -57,7 +57,6 @@ public class MyOnLineCourseFragment extends Fragment{
     private Context context;
     private String token;
     private ProgressBarLayout mLoadingBar;
-    private PullToRefreshRecyclerView recyclerview;
     private TextView tv_msg;
     private int mLearnType = 0;
     private MyOnLineManager mOnLineManager;
@@ -77,15 +76,13 @@ public class MyOnLineCourseFragment extends Fragment{
         view=inflater.inflate(R.layout.fragment_my_online_course,container,false);
         fixedIndicatorView =view.findViewById(R.id.singleTab_fixedIndicatorView);
         mLoadingBar= view.findViewById(R.id.load_bar_layout_evaluating);
-        recyclerview =view.findViewById(R.id.recyclerview);
         on_line_view_one=view.findViewById(R.id.on_line_view_one);//分割线
         mOneView = view.findViewById(R.id.on_line_view_one);
         rl_empty=view.findViewById(R.id.rl_empty_layout);//空布局
         tv_msg=view.findViewById(R.id.tv_msg);//空布局显示文字
-        mOnLineManager = new MyOnLineManager(context, fixedIndicatorView, recyclerview);
-        mOffLineManager = new MyOffLineCourseManager(context, recyclerview);
+        mOnLineManager = new MyOnLineManager(context, fixedIndicatorView, view);
+        mOffLineManager = new MyOffLineCourseManager(context, view);
         mOnLineManager.setEmptyView(rl_empty);
-        mOnLineManager.setLoadingView(mLoadingBar);
         mOffLineManager.setEmptyView(rl_empty);
         mOffLineManager.setFragment(MyOnLineCourseFragment.this);
         loadData();

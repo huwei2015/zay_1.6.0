@@ -10,7 +10,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
@@ -34,6 +36,7 @@ import com.example.administrator.zahbzayxy.utils.FaceRecognitionUtils;
 import com.example.administrator.zahbzayxy.utils.NetworkUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
 import com.google.gson.Gson;
 
@@ -47,10 +50,9 @@ import okhttp3.RequestBody;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class MyOffLineCourseManager implements DownloadController.Observer, PullToRefreshListener {
+public class MyOffLineCourseManager implements DownloadController.Observer {
 
     private Context mContext;
-    private PullToRefreshRecyclerView mRefreshRecyclerView;
     //下载中列表
     private ArrayList<DownloaderWrapper> downloadingList = new ArrayList<>();
     //下载完成列表
@@ -61,13 +63,21 @@ public class MyOffLineCourseManager implements DownloadController.Observer, Pull
     private RelativeLayout mEmptyView;
     private TextView tv_msg;
     private MyOnLineCourseFragment mFragment;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
 
-    public MyOffLineCourseManager(Context context, PullToRefreshRecyclerView refreshRecyclerView) {
+    public MyOffLineCourseManager(Context context, View view) {
+        mRefreshLayout = view.findViewById(R.id.my_on_line_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.my_on_line_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         this.mContext = context;
-        this.mRefreshRecyclerView = refreshRecyclerView;
         mAdapter = new MyOffLineCourseLearnAdapter(mContext, mOffLineList);
-        mRefreshRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
         initEvent();
     }
 
@@ -272,31 +282,18 @@ public class MyOffLineCourseManager implements DownloadController.Observer, Pull
 
     private void isVisible(boolean flag) {
         if (flag) {
-            mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         } else {
             mEmptyView.setVisibility(View.VISIBLE);
-            mRefreshRecyclerView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
             tv_msg.setText("暂无课程信息");
         }
     }
 
     private void initView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRefreshRecyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        mRefreshRecyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        mRefreshRecyclerView.setLoadingMoreEnabled(false);
-        //是否开启上拉刷新
-        mRefreshRecyclerView.setPullRefreshEnabled(false);
-        //设置刷新回调
-        mRefreshRecyclerView.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-//        mRefreshRecyclerView.onRefresh();
         tv_msg = mEmptyView.findViewById(R.id.tv_msg);
-        mRefreshRecyclerView.setOnCreateContextMenuListener(onCreateContextMenuListener);
+        mRecyclerView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     }
 
     ContextMenu contextMenu;
@@ -369,16 +366,6 @@ public class MyOffLineCourseManager implements DownloadController.Observer, Pull
         DownloadController.detach(this);
     }
 
-
-    @Override
-    public void onRefresh() {
-
-    }
-
-    @Override
-    public void onLoadMore() {
-
-    }
 
     static class GetUserInfoRunnable implements Runnable {
         Context mContext;

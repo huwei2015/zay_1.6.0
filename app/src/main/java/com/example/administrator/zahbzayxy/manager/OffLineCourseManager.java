@@ -67,9 +67,6 @@ public class OffLineCourseManager implements DownloadController.Observer {
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private boolean mLoadingData = false;
-    private boolean mIsHasData = true;
-    private boolean mIsLoading;
 
 
     public OffLineCourseManager(Context context, View view) {
@@ -297,10 +294,6 @@ public class OffLineCourseManager implements DownloadController.Observer {
     }
 
     private void initView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        //主动触发下拉刷新操作
-//        mRefreshRecyclerView.onRefresh();
         tv_msg = mEmptyView.findViewById(R.id.tv_msg);
         mRecyclerView.setOnCreateContextMenuListener(onCreateContextMenuListener);
     }

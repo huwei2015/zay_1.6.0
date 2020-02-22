@@ -8,8 +8,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -49,7 +51,9 @@ import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -66,13 +70,11 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class MyOnLineManager implements PullToRefreshListener {
+public class MyOnLineManager {
 
     private Context mContext;
     private FixedIndicatorView mFixedIndicatorView;
-    private PullToRefreshRecyclerView mRefreshRecyclerView;
     private List<LearnNavigationBean.LearnListBean> mLearnList = new ArrayList<>();
-    private ProgressBarLayout mLoadingBar;
     private MyOnLineTitleAdapter mTitleAdapter;
     private MyOfflineTitleAdapter mTitleOfflineAdapter;
     private MyLearnOnlineCourseAdapter mCourseAdapter;
@@ -90,11 +92,25 @@ public class MyOnLineManager implements PullToRefreshListener {
     private int mCourseType = 0;
     private TextView tv_msg;
     private RelativeLayout rl_empty;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private LoadingDialog mLoading;
+    private boolean mLoadingData = false;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private Call<OfflineCourseLearnBean> mOffLineCall;
+    private Call<OnlineCourseBean> mOnLineCall;
 
-    public MyOnLineManager(Context context, FixedIndicatorView fixedIndicatorView, PullToRefreshRecyclerView refreshRecyclerView) {
+    public MyOnLineManager(Context context, FixedIndicatorView fixedIndicatorView, View view) {
         this.mContext = context;
         this.mFixedIndicatorView = fixedIndicatorView;
-        this.mRefreshRecyclerView = refreshRecyclerView;
+        this.mRefreshLayout = view.findViewById(R.id.my_on_line_refresh_layout);
+        this.mRecyclerView = view.findViewById(R.id.my_on_line_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mLoading = new LoadingDialog(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mTitleAdapter = new MyOnLineTitleAdapter(mContext, mLearnList, mFixedIndicatorView);
         mTitleOfflineAdapter = new MyOfflineTitleAdapter(mContext, mLearnList, mFixedIndicatorView);
         mCourseAdapter = new MyLearnOnlineCourseAdapter(mContext, mCoursesList);
@@ -112,35 +128,21 @@ public class MyOnLineManager implements PullToRefreshListener {
     private void setView() {
         if (mLoad) return;
         mLoad = true;
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        if (mCourseType == 0) {
-            mRefreshRecyclerView.setAdapter(mCourseAdapter);
-        } else {
-            mRefreshRecyclerView.setAdapter(mOffLineAdapter);
-        }
-        mRefreshRecyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        mRefreshRecyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        mRefreshRecyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        mRefreshRecyclerView.setPullRefreshEnabled(true);
-        //设置刷新回调
-        mRefreshRecyclerView.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-//        mRefreshRecyclerView.onRefresh();
         tv_msg = rl_empty.findViewById(R.id.tv_msg);
-
+        if (mCourseType == 0) {
+            mRecyclerView.setAdapter(mCourseAdapter);
+        } else {
+            mRecyclerView.setAdapter(mOffLineAdapter);
+        }
     }
 
     private void isVisible(boolean flag) {
         if (flag) {
-            mRefreshRecyclerView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
         } else {
             rl_empty.setVisibility(View.VISIBLE);
-            mRefreshRecyclerView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
             tv_msg.setText("暂无课程信息");
         }
     }
@@ -170,9 +172,45 @@ public class MyOnLineManager implements PullToRefreshListener {
         });
     }
 
-    public void setLoadingView(ProgressBarLayout loadingView) {
-        this.mLoadingBar = loadingView;
+    private void initLoadingEvent(){
+        mRefreshLayout.setOnRefreshListener(() -> {
+            mLoadingData = true;
+            mLoadType = 1;
+            mPage = 1;
+            clearList();
+            mIsHasData = true;
+            setCourseList(mPosition, mIsAchieve);
+        });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                int itemCount = 0;
+                if (mCourseType == 0) {
+                    itemCount = mCourseAdapter.getItemCount();
+                } else {
+                    itemCount = mOffLineAdapter.getItemCount();
+                }
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == itemCount && !mIsLoading) {
+                    mLoading.show();
+                    mIsLoading = true;
+                    mLoadType = 2;
+                    mPage++;
+                    setCourseList(mPosition, mIsAchieve);
+                }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
+
 
     private void clearList(){
         mCoursesList.clear();
@@ -182,6 +220,11 @@ public class MyOnLineManager implements PullToRefreshListener {
         mOfflineList.clear();
         mOfflineNewList.clear();
         mOfflineMoreList.clear();
+        if (mCourseType == 0) {
+            mCourseAdapter.notifyDataSetChanged();
+        } else {
+            mOffLineAdapter.notifyDataSetChanged();
+        }
     }
 
     private int mLoadType = 0;
@@ -192,30 +235,23 @@ public class MyOnLineManager implements PullToRefreshListener {
      */
     public void loadDAta(int type) {
         mCourseType = type;
+        setView();
+        initLoadingEvent();
         mPosition = 0;
 
         mLoadType = 0;
         mPage = 1;
         clearList();
-        mRefreshRecyclerView.setLoadingMoreEnabled(true);
-        setView();
+        mLoading.show();
+        mLoadingData = true;
         initNavigationData();
-        if (mCourseType == 0) {
-            showLoadingBar(true);
-        }
 
     }
 
     private void initNavigationData() {
         if (mCourseType == 0) {
-            mCoursesList.clear();
-            mBeforeList.clear();
-            mOneWeekList.clear();
             loadOnLineTitleData();
         } else {
-            mOfflineList.clear();
-            mOfflineNewList.clear();
-            mOfflineMoreList.clear();
             loadOffLineTitleData();
         }
     }
@@ -228,26 +264,31 @@ public class MyOnLineManager implements PullToRefreshListener {
         aClass.getOffLinTitle(0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
                         if (mLearnList == null || mLearnList.size() == 0) {
                             isVisible(false);
+                            hindLoading();
                             return;
                         } else {
                             isVisible(true);
                         }
                         setTitle();
                         setCourseList(mPosition, 0);
+                        return;
                     }
                 }
+                isVisible(false);
+                hindLoading();
             }
 
             @Override
             public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
-                hideLoadingBar();
+                isVisible(false);
+                hindLoading();
             }
         });
     }
@@ -259,13 +300,13 @@ public class MyOnLineManager implements PullToRefreshListener {
         aClass.getLearnNavigationData(0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         mLearnList = response.body().getData().getData();
                         if (mLearnList == null || mLearnList.size() == 0) {
                             isVisible(false);
-                            hideLoadingBar();
+                            hindLoading();
                             return;
                         } else {
                             isVisible(true);
@@ -273,17 +314,17 @@ public class MyOnLineManager implements PullToRefreshListener {
                         setTitle();
                         setCourseList(mPosition, 0);
                         return;
-                    }else{
-                        isVisible(false);
                     }
                 }
-                hideLoadingBar();
+                isVisible(false);
+                hindLoading();
             }
 
             @Override
             public void onFailure(Call<LearnNavigationBean> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
-                hideLoadingBar();
+                isVisible(false);
+                hindLoading();
             }
         });
     }
@@ -309,7 +350,6 @@ public class MyOnLineManager implements PullToRefreshListener {
     private void setCourseList(int position, int isAchieve) {
         if (mLearnList == null || mLearnList.size() == 0){
             hindLoading();
-            hideLoadingBar();
             return;
         }
         mIsAchieve = isAchieve;
@@ -327,23 +367,26 @@ public class MyOnLineManager implements PullToRefreshListener {
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
 
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token).enqueue(new Callback<OfflineCourseLearnBean>() {
+        mOffLineCall = aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token);
+        mOffLineCall.enqueue(new Callback<OfflineCourseLearnBean>() {
             @Override
             public void onResponse(Call<OfflineCourseLearnBean> call, Response<OfflineCourseLearnBean> response) {
                 hindLoading();
-                hideLoadingBar();
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null  && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         List<OfflineCourseLearnBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
                         if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
-                            mRefreshRecyclerView.setLoadingMoreEnabled(false);
+                            mIsHasData = false;
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
+                            mLoadingData = false;
                             return;
                         }
                         if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
                             isVisible(false);
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         } else {
                             isVisible(true);
@@ -353,7 +396,7 @@ public class MyOnLineManager implements PullToRefreshListener {
                         mOfflineList.addAll(beanList);
                         mOffLineAdapter.setData(mOfflineList);
                         if (mPage == 1) {
-                            mRefreshRecyclerView.scrollToPosition(0);
+                            mRecyclerView.scrollToPosition(0);
                         }
                         return;
                     }
@@ -367,7 +410,6 @@ public class MyOnLineManager implements PullToRefreshListener {
             @Override
             public void onFailure(Call<OfflineCourseLearnBean> call, Throwable t) {
                 hindLoading();
-                hideLoadingBar();
                 isVisible(false);
                 if (mPage > 1) {
                     mPage--;
@@ -383,18 +425,18 @@ public class MyOnLineManager implements PullToRefreshListener {
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
 
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOnLineCourseList(mPage, 10, cateId, isAchieve, token).enqueue(new Callback<OnlineCourseBean>() {
+        mOnLineCall = aClass.getOnLineCourseList(mPage, 10, cateId, isAchieve, token);
+        mOnLineCall.enqueue(new Callback<OnlineCourseBean>() {
             @Override
             public void onResponse(Call<OnlineCourseBean> call, Response<OnlineCourseBean> response) {
                 hindLoading();
-                hideLoadingBar();
-                if (response != null && response.body() != null) {
+                if (response != null && response.body() != null && response.body().getData() != null) {
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         List<OnlineCourseBean.UserCoursesBean> beanList = response.body().getData().getUserCourses();
                         Log.i("beanList", beanList.toString());
                         if (mPage > 1 && (beanList == null || beanList.size() == 0)) {
-                            mRefreshRecyclerView.setLoadingMoreEnabled(false);
+                            mIsHasData = false;
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
                             return;
@@ -410,7 +452,7 @@ public class MyOnLineManager implements PullToRefreshListener {
                         mCoursesList.addAll(beanList);
                         mCourseAdapter.setData(mCoursesList);
                         if (mPage == 1) {
-                            mRefreshRecyclerView.scrollToPosition(0);
+                            mRecyclerView.scrollToPosition(0);
                         }
                         return;
                     }
@@ -474,19 +516,22 @@ public class MyOnLineManager implements PullToRefreshListener {
     }
 
     private void hindLoading() {
-        if (mLoadType == 1) {
-            mRefreshRecyclerView.setRefreshComplete();
-        } else if (mLoadType == 2) {
-            mRefreshRecyclerView.setLoadMoreComplete();
-        }
+        mLoadingData = false;
+        mRefreshLayout.setRefreshing(false);
+        mLoading.dismiss();
     }
 
     private void setItemClick(MyOnLineTitleAdapter adapter) {
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             if (mPosition == position) return;
             mPage = 1;
+            if (mOnLineCall != null) {
+                mOnLineCall.cancel();
+            }
             clearList();
-            mRefreshRecyclerView.setLoadingMoreEnabled(true);
+            mLoadingData = true;
+            mLoading.show();
+            mIsHasData = true;
             setCourseList(position, mIsAchieve);
         });
     }
@@ -495,35 +540,15 @@ public class MyOnLineManager implements PullToRefreshListener {
         adapter.setOnItemClickListener((View clickItemView, int position) -> {
             if (mPosition == position) return;
             mPage = 1;
+            if (mOffLineCall != null) {
+                mOffLineCall.cancel();
+            }
             clearList();
-            mRefreshRecyclerView.setLoadingMoreEnabled(true);
+            mLoadingData = true;
+            mLoading.show();
+            mIsHasData = true;
             setCourseList(position, mIsAchieve);
         });
-    }
-
-    private void showLoadingBar(boolean transparent) {
-//        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : mContext.getResources().getColor(R.color.main_bg));
-//        mLoadingBar.show();
-    }
-
-    private void hideLoadingBar() {
-//        mLoadingBar.hide();
-    }
-
-    @Override
-    public void onRefresh() {
-        mLoadType = 1;
-        mPage = 1;
-        clearList();
-        mRefreshRecyclerView.setLoadingMoreEnabled(true);
-        setCourseList(mPosition, mIsAchieve);
-    }
-
-    @Override
-    public void onLoadMore() {
-        mLoadType = 2;
-        mPage++;
-        setCourseList(mPosition, mIsAchieve);
     }
 
 
