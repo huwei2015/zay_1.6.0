@@ -89,6 +89,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     private String mIsOnTime;
     private ScrollView scroll;
     private  final static int CHOOSE_TOPIC=1001;
+    private boolean isVisible;
+    private boolean mLoadView = false;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -120,13 +123,26 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
             loadData(position);
         });
         initView();
+        mLoadView = true;
         showBarChartMore(null, 0);
         mOperateLayout.setVisibility(View.GONE);
         initNavigationData();
         return view;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.i("======refresh=====", "simulation fragment isVisibleToUser = " + isVisibleToUser);
+        isVisible = isVisibleToUser;
+        if (isVisibleToUser && mLoadView) {
+            loadData();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+
     public void loadData(){
+        if (!isVisible) return;
         showBarChartMore(null, 0);
         initNavigationData();
     }

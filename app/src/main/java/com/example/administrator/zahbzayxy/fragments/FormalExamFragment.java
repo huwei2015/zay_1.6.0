@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,27 @@ public class FormalExamFragment extends Fragment {
     private LessonFragmentPageAdapter pagerAdapter;
     FragmentManager fragmentManager;
     private View view;
+    private boolean isVisible;
+    private boolean mLoadView = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_formalexam,container,false);
         initView();
+        mLoadView = true;
         initViewPagerAndTable();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.i("======refresh=====", "formal exam fragment isVisibleToUser = " + isVisibleToUser);
+        isVisible = isVisibleToUser;
+        if (isVisibleToUser && mLoadView) {
+            initViewPagerAndTable();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void initView() {
@@ -45,7 +60,12 @@ public class FormalExamFragment extends Fragment {
         exam_tab.setSelectedTabIndicatorHeight(0);//隐藏下划线
     }
 
+    public void loadData(){
+        initViewPagerAndTable();
+    }
+
     private void initViewPagerAndTable() {
+        if (!isVisible) return;
         examTabList=new ArrayList<>();
         examVPList=new ArrayList<>();
         examTabList.add("未通过");

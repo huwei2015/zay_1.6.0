@@ -39,6 +39,8 @@ public class H5MsgDetailActivity extends BaseActivity {
     String type;
     String mPageFlag;
     private ProgressBarLayout mLoadingBar;
+    private int position = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class H5MsgDetailActivity extends BaseActivity {
         id = getIntent().getStringExtra("id");
         type=getIntent().getStringExtra("type");
         mPageFlag=getIntent().getStringExtra("page");
+        position = getIntent().getIntExtra("position", -1);
         img_back = (ImageView) findViewById(R.id.back_editMessage);
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,9 +135,22 @@ public class H5MsgDetailActivity extends BaseActivity {
     }
 
     private void back(){
-        Intent intent = new Intent();
-        intent.putExtra("id",id);
-        setResult(RESULT_OK, intent);
+        if("MsgListActivity".equals(mPageFlag)) {
+            toMsgList();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("id", id);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    }
+
+    private void toMsgList() {
+        Intent intent = new Intent(H5MsgDetailActivity.this, MsgListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.putExtra("page", "MsgListActivity");
+        intent.putExtra("position", position);
+        startActivity(intent);
         finish();
     }
 
@@ -142,7 +158,7 @@ public class H5MsgDetailActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if("MsgListActivity".equals(mPageFlag)) {
-
+                toMsgList();
                 return true;
             }
         }

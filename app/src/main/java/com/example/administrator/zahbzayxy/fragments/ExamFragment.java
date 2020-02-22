@@ -33,6 +33,7 @@ public class ExamFragment extends Fragment {
     FragmentManager fragmentManager;
     Context context;
     SimulationFragment allOrderFragment;
+    FormalExamFragment allOrderFragment1;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,8 +50,9 @@ public class ExamFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden && allOrderFragment != null) {
-            allOrderFragment.loadData();
+        if (!hidden) {
+            if (allOrderFragment != null) allOrderFragment.loadData();
+            if (allOrderFragment1 != null) allOrderFragment1.loadData();
         }
     }
 
@@ -60,7 +62,7 @@ public class ExamFragment extends Fragment {
         examTabList.add("模拟考试");
         examTabList.add("正在考试");
         allOrderFragment=new SimulationFragment();
-        FormalExamFragment allOrderFragment1=new FormalExamFragment();
+        allOrderFragment1=new FormalExamFragment();
         examVPList.add(allOrderFragment);
         examVPList.add(allOrderFragment1);
         fragmentManager=getChildFragmentManager();

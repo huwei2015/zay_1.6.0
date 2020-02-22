@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,8 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         isVisible = isVisibleToUser;
         if (isVisibleToUser && mLoadView) {
+            initView();
+            mLoadView = true;
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -158,8 +161,8 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
         refreshRecyclerView.setPullRefreshEnabled(false);
         //设置刷新回调
         refreshRecyclerView.setPullToRefreshListener(this);
-        //主动触发下拉刷新操作
-        refreshRecyclerView.onRefresh();
+//        //主动触发下拉刷新操作
+//        refreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
