@@ -92,15 +92,19 @@ public class NewMyTikuActivity extends BaseActivity {
             //顺序练习
             case R.id.newMyTest_prictice_ll:
                 if (examNum > 0 && remainingTime > 0) {
-                    Intent intentPractice = new Intent(this, TestPracticeAcivity.class);
-                    Bundle bundlePractice = new Bundle();
-                    bundlePractice.putInt("quesLibId", quesLibId);
-                    bundlePractice.putString("paperName", quesLibName);
-                    bundlePractice.putInt("packageId", packageId);
-                    bundlePractice.putInt("userLibId", userLibId);
-                    Log.e("aaaaaaaaaquslibslid", quesLibId + "");
-                    intentPractice.putExtras(bundlePractice);
-                    startActivity(intentPractice);
+                    if(tiku_state == 0){
+                        ToastUtils.showLongInfo(msg_cont);
+                    }else {
+                        Intent intentPractice = new Intent(this, TestPracticeAcivity.class);
+                        Bundle bundlePractice = new Bundle();
+                        bundlePractice.putInt("quesLibId", quesLibId);
+                        bundlePractice.putString("paperName", quesLibName);
+                        bundlePractice.putInt("packageId", packageId);
+                        bundlePractice.putInt("userLibId", userLibId);
+                        Log.e("aaaaaaaaaquslibslid", quesLibId + "");
+                        intentPractice.putExtras(bundlePractice);
+                        startActivity(intentPractice);
+                    }
                 }else if(tiku_state == 0){
                     ToastUtils.showLongInfo(msg_cont);
                 }else {//弹框提示购买题库
@@ -110,13 +114,17 @@ public class NewMyTikuActivity extends BaseActivity {
             //模拟考试
             case R.id.newMyTest_test_ll:
                 if (examNum > 0 && remainingTime > 0) {
-                    Intent intent = new Intent(NewMyTikuActivity.this, TestContentActivity1.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("quesLibId", quesLibId);
-                    bundle.putInt("userLibId", userLibId);
-                    bundle.putInt("examType", 1);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(tiku_state == 0){
+                        ToastUtils.showLongInfo(msg_cont);
+                    }else {
+                        Intent intent = new Intent(NewMyTikuActivity.this, TestContentActivity1.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("quesLibId", quesLibId);
+                        bundle.putInt("userLibId", userLibId);
+                        bundle.putInt("examType", 1);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                 } else if(tiku_state == 0) {
                     ToastUtils.showLongInfo(msg_cont);
                 } else {//弹框提示购买题库
@@ -126,14 +134,18 @@ public class NewMyTikuActivity extends BaseActivity {
             //我的错题
             case R.id.newMyError_ll:
                 if (examNum > 0 && remainingTime > 0) {
-                    Intent intent1 = new Intent(NewMyTikuActivity.this, PLookCuoTiActivity.class);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putInt("quesLibId", quesLibId);
-                    bundle1.putInt("userLibId", userLibId);
-                    bundle1.putInt("packageId", packageId);
-                    Log.e("qusLibsId", String.valueOf(quesLibId) + ",1111," + userLibId + "," + packageId);
-                    intent1.putExtras(bundle1);
-                    startActivity(intent1);
+                    if(tiku_state == 0){
+                        ToastUtils.showLongInfo(msg_cont);
+                    }else {
+                        Intent intent1 = new Intent(NewMyTikuActivity.this, PLookCuoTiActivity.class);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putInt("quesLibId", quesLibId);
+                        bundle1.putInt("userLibId", userLibId);
+                        bundle1.putInt("packageId", packageId);
+                        Log.e("qusLibsId", String.valueOf(quesLibId) + ",1111," + userLibId + "," + packageId);
+                        intent1.putExtras(bundle1);
+                        startActivity(intent1);
+                    }
                 } else {
                     //弹框提示购买题库
                     initPopUpWindow1();
@@ -143,14 +155,16 @@ public class NewMyTikuActivity extends BaseActivity {
             //搜题
             case R.id.newMyTestSearch_ll:
                 if (examNum > 0 && remainingTime > 0) {
-                    Intent searchIntent = new Intent(NewMyTikuActivity.this, SearchTestActivity.class);
-                    Bundle searchBundle = new Bundle();
-                    searchBundle.putInt("quesLibId", quesLibId);
-                    searchIntent.putExtras(searchBundle);
-                    startActivity(searchIntent);
-                }else if(tiku_state == 0){
-                    ToastUtils.showLongInfo(msg_cont);
-                } else {
+                    if(tiku_state == 0){
+                        ToastUtils.showLongInfo(msg_cont);
+                    }else {
+                        Intent searchIntent = new Intent(NewMyTikuActivity.this, SearchTestActivity.class);
+                        Bundle searchBundle = new Bundle();
+                        searchBundle.putInt("quesLibId", quesLibId);
+                        searchIntent.putExtras(searchBundle);
+                        startActivity(searchIntent);
+                    }
+                }else {
                     //弹框提示购买题库
                     initPopUpWindow1();
                 }
