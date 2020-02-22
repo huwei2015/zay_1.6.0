@@ -409,12 +409,15 @@ public class MyOnLineManager {
 
             @Override
             public void onFailure(Call<OfflineCourseLearnBean> call, Throwable t) {
+                String message = t.getMessage();
                 hindLoading();
-                isVisible(false);
-                if (mPage > 1) {
-                    mPage--;
+                if (!("Canceled".equals(message) || "Socket closed".equals(message))) {
+                    isVisible(false);
+                    if (mPage > 1) {
+                        mPage--;
+                    }
+                    ToastUtils.showLongInfo( "网络异常");
                 }
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -466,11 +469,14 @@ public class MyOnLineManager {
             @Override
             public void onFailure(Call<OnlineCourseBean> call, Throwable t) {
                 hindLoading();
-                isVisible(false);
-                if (mPage > 1) {
-                    mPage--;
+                String message = t.getMessage();
+                if (!("Canceled".equals(message) || "Socket closed".equals(message))) {
+                    isVisible(false);
+                    if (mPage > 1) {
+                        mPage--;
+                    }
+                    ToastUtils.showLongInfo("网络异常");
                 }
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
