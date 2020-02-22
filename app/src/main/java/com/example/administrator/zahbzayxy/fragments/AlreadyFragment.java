@@ -147,7 +147,7 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
         refreshRecyclerView.setPullToRefreshListener(this);
 //        refreshRecyclerView.setLoadMoreResource(R.drawable.account);
         //主动触发下拉刷新操作
-        refreshRecyclerView.onRefresh();
+//        refreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

@@ -45,9 +45,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="15dp"
-            android:text="未答0"
-            android:textColor="@color/gray_tv"
-            android:textFontWeight="1" />
+            android:text="未答"
+            android:textColor="@color/text_bg" />
     </LinearLayout>
 
     <ScrollView

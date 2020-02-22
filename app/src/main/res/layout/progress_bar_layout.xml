@@ -24,7 +24,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="加载中..."
-        android:textColor="#a3a3a3"
+        android:textColor="@color/white"
         android:textSize="15sp" />
 
 </LinearLayout>
