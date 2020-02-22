@@ -13,7 +13,6 @@ public class SimulationInfoBean implements Serializable {
         private QuesLib quesLib;
         private List<StatScore> statScore;
         private int passNum;
-
         public void setQuesLib(QuesLib quesLib) {
             this.quesLib = quesLib;
         }
@@ -92,7 +91,15 @@ public class SimulationInfoBean implements Serializable {
         private int quesLibPackageId;
         private int canUseNum;
         private String isOnTime;
+        private String msg_cont;
 
+        public String getMsg_cont() {
+            return msg_cont;
+        }
+
+        public void setMsg_cont(String msg_cont) {
+            this.msg_cont = msg_cont;
+        }
         public void setPackageName(String packageName) {
             this.packageName = packageName;
         }

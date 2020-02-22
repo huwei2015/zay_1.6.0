@@ -19,14 +19,18 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.administrator.zahbzayxy.MainActivity;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.PersonTiKuListBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,7 +64,8 @@ public class NewMyTikuActivity extends BaseActivity {
     private String quesLibName;
     int examNum;//考试次数
     int remainingTime;//剩余时间
-
+    int tiku_state;
+    String msg_cont;//未完成提示
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,11 +97,13 @@ public class NewMyTikuActivity extends BaseActivity {
                     bundlePractice.putInt("quesLibId", quesLibId);
                     bundlePractice.putString("paperName", quesLibName);
                     bundlePractice.putInt("packageId", packageId);
-                    bundlePractice.putInt("userLibId",userLibId);
+                    bundlePractice.putInt("userLibId", userLibId);
                     Log.e("aaaaaaaaaquslibslid", quesLibId + "");
                     intentPractice.putExtras(bundlePractice);
                     startActivity(intentPractice);
-                } else {//弹框提示购买题库
+                }else if(tiku_state == 0){
+                    ToastUtils.showLongInfo(msg_cont);
+                }else {//弹框提示购买题库
                     initPopUpWindow1();
                 }
                 break;
@@ -110,6 +117,8 @@ public class NewMyTikuActivity extends BaseActivity {
                     bundle.putInt("examType", 1);
                     intent.putExtras(bundle);
                     startActivity(intent);
+                } else if(tiku_state == 0) {
+                    ToastUtils.showLongInfo(msg_cont);
                 } else {//弹框提示购买题库
                     initPopUpWindow1();
                 }
@@ -139,6 +148,8 @@ public class NewMyTikuActivity extends BaseActivity {
                     searchBundle.putInt("quesLibId", quesLibId);
                     searchIntent.putExtras(searchBundle);
                     startActivity(searchIntent);
+                }else if(tiku_state == 0){
+                    ToastUtils.showLongInfo(msg_cont);
                 } else {
                     //弹框提示购买题库
                     initPopUpWindow1();
@@ -209,8 +220,8 @@ public class NewMyTikuActivity extends BaseActivity {
         userLibId = quesLibsEntity.getUserLibId();
         packageId = quesLibsEntity.getPackageId();
         quesLibName = quesLibsEntity.getQuesLibName();
-
-
+        tiku_state = quesLibsEntity.getState();
+        msg_cont=quesLibsEntity.getMsg_cont();
     }
 
 
