@@ -139,6 +139,24 @@ public class PersonTiKuListBean {
             private String quesLibImageUrl;
             private int examUsedNum;
             private int packageId;
+            private int state;
+            private String msg_cont;
+
+            public String getMsg_cont() {
+                return msg_cont;
+            }
+
+            public void setMsg_cont(String msg_cont) {
+                this.msg_cont = msg_cont;
+            }
+
+            public int getState() {
+                return state;
+            }
+
+            public void setState(int state) {
+                this.state = state;
+            }
 
             public void setPackageId(int packageId) {
                 this.packageId = packageId;

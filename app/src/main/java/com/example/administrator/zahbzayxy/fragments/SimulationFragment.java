@@ -88,6 +88,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     // 是否在有效期内  yes 是  no 否
     private String mIsOnTime;
     private ScrollView scroll;
+    private String msg_cont;
     private  final static int CHOOSE_TOPIC=1001;
     private boolean isVisible;
     private boolean mLoadView = false;
@@ -216,6 +217,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                             String quesLibName = quesLib.getQuesLibName();
                             mCanUseNum = quesLib.getCanUseNum();
                             mIsOnTime = quesLib.getIsOnTime();
+                            msg_cont=quesLib.getMsg_cont();
                             // 名称
                             mExamTitle.setText(quesLibName + "");
                             mExamTitle.setText(TextAndPictureUtil.getTextCssStyle(mContext," "+quesLib.getPackageName()+" ",quesLibName));
@@ -329,6 +331,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
+                if(!"other".equals(mIsOnTime)){
+                    ToastUtils.showLongInfo(msg_cont);
+                }
                 intent = new Intent(getActivity(), TestPracticeAcivity.class);
                 Bundle bundlePractice = new Bundle();
                 bundlePractice.putInt("quesLibId", quesLibId);
@@ -347,6 +352,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 if (!"yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
+                }
+                if(!"other".equals(mIsOnTime)){
+                    ToastUtils.showLongInfo(msg_cont);
                 }
                 if (quesLibId <= 0 || userLibId <= 0 || packageId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
@@ -370,6 +378,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
+                if("other".equals(mIsOnTime)){
+                    ToastUtils.showLongInfo(msg_cont);
+                }
                 if (quesLibId <= 0 || userLibId <= 0) {
                     ToastUtils.showLongInfo("暂无题库");
                     return;
@@ -390,6 +401,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                 if (!"yes".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
+                }
+                if(!"other".equals(mIsOnTime)){
+                    ToastUtils.showLongInfo(msg_cont);
                 }
                 intent = new Intent(getActivity(), SearchTestActivity.class);
                 Bundle searchBundle = new Bundle();
