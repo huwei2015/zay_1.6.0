@@ -6,8 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.NotPassAdapter;
 import com.example.administrator.zahbzayxy.beans.NotPassBean;
-import com.example.administrator.zahbzayxy.beans.NotThroughBean;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,9 @@ import retrofit2.Response;
  * Time 13:33.
  * 考试正式未通过
  */
-public class NotPassFragment extends Fragment implements PullToRefreshListener {
+public class NotPassFragment extends Fragment {
     private View view;
     private NotPassAdapter notPassAdapter;
-    private PullToRefreshRecyclerView refreshRecyclerView;
     private List<NotPassBean.NotListData> notPassListBeans = new ArrayList<>();
     private int currentPage =1;
     private int PageSize = 10;
@@ -51,9 +50,14 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     private RelativeLayout rl_empty;
     TextView tv_msg;
     LinearLayout ll_list;
-    private ProgressBarLayout mLoadingBar;
     private boolean isVisible;
     private boolean mLoadView = false;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
 
     @Override
     public void onAttach(Context context) {
@@ -65,8 +69,13 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_not_pass,container,false);
+        mLoading = new LoadingDialog(mContext);
+        mLoading.setShowText("加载中...");
         initView();
         mLoadView = true;
+        mIsHasData = true;
+        mRefreshLayout.setRefreshing(true);
+        initEvent();
         initData();
         return view;
     }
@@ -78,8 +87,10 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
             initView();
             mLoadView = true;
             currentPage = 1;
+            mIsHasData = true;
             notPassListBeans.clear();
             notPassAdapter.setList(notPassListBeans);
+            mRefreshLayout.setRefreshing(true);
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -87,15 +98,16 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
 
     private void initData(){
         if (!isVisible) return;
-        showLoadingBar(false);
         SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getExamData(currentPage,PageSize,0,token).enqueue(new Callback<NotPassBean>() {
             @Override
             public void onResponse(Call<NotPassBean> call, Response<NotPassBean> response) {
-                hideLoadingBar();
-                    if(response !=null && response.body() !=null){
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
+                    if(response !=null && response.body() !=null && response.body().getData() != null){
                         NotPassBean.NotPassListBean data1 = response.body().getData();
                         List<NotPassBean.NotListData> listData = null;
                         if (data1 != null) {
@@ -124,102 +136,90 @@ public class NotPassFragment extends Fragment implements PullToRefreshListener {
                                 notPassListBeans = data;
                             } else {
                                 if (data == null || data.size() < PageSize) {
-                                    refreshRecyclerView.setLoadingMoreEnabled(false);
+                                    mIsHasData = false;
                                 }
                                 notPassListBeans.addAll(data);
                             }
                             notPassAdapter.setList(notPassListBeans);
                             return;
-                        }else{
-                            hideLoadingBar();
-                            emptyLayout(false);
                         }
                     }
+                emptyLayout(false);
             }
 
             @Override
             public void onFailure(Call<NotPassBean> call, Throwable t) {
-                hideLoadingBar();
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
+                emptyLayout(false);
             }
         });
     }
     private void initView() {
+        mRefreshLayout = view.findViewById(R.id.no_pass_refresh_layout);
+        mRecyclerView = view.findViewById(R.id.no_pass_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
-        refreshRecyclerView=view.findViewById(R.id.recyclerview);
         rl_empty= view.findViewById(R.id.rl_empty_layout);//空页面
         ll_list = view.findViewById(R.id.ll_list);
         tv_msg = view.findViewById(R.id.tv_msg);
-        mLoadingBar = view.findViewById(R.id.nb_allOrder_load_bar_layout);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
         notPassAdapter = new NotPassAdapter(getActivity(), notPassListBeans);
-//        //添加数据源
-        refreshRecyclerView.setAdapter(notPassAdapter);
-        refreshRecyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        refreshRecyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        refreshRecyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        refreshRecyclerView.setPullRefreshEnabled(false);
-        //设置刷新回调
-        refreshRecyclerView.setPullToRefreshListener(this);
-//        //主动触发下拉刷新操作
-//        refreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        refreshRecyclerView.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(notPassAdapter);
     }
 
-    @Override
-    public void onRefresh() {
-        refreshRecyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshRecyclerView.setRefreshComplete();
-                currentPage = 1;
-                initData();
-                refreshRecyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
     }
 
-    @Override
-    public void onLoadMore() {
-        refreshRecyclerView.postDelayed(new Runnable() {
+    private void initEvent() {
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            mIsLoading = true;
+            initData();
+        });
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void run() {
-                refreshRecyclerView.setLoadMoreComplete();
-                if (notPassListBeans.size() < PageSize) {
-                    Toast.makeText(getContext(), "没有更多数据", Toast.LENGTH_SHORT).show();
-                    refreshRecyclerView.setLoadingMoreEnabled(false);
-                    return;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == notPassAdapter.getItemCount() && !mIsLoading) {
+                    mLoading.show();
+                    currentPage++;
+                    mIsLoading = true;
+                    initData();
                 }
-                currentPage++;
-                initData();
-            }
-        }, 2000);
-    }
-    public void showLoadingBar(boolean transparent) {
-        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-        mLoadingBar.show();
-    }
 
-    public void hideLoadingBar() {
-        mLoadingBar.hide();
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void emptyLayout(boolean isVisible){
         if(isVisible){
-            refreshRecyclerView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
         }else{
             rl_empty.setVisibility(View.VISIBLE);
-            refreshRecyclerView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
             tv_msg.setText("暂无未通过数据");
         }
     }

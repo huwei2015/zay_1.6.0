@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,8 @@ import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.Utils;
+import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +44,10 @@ import retrofit2.Response;
  * Time 14:30.
  * Description.我的考试
  */
-public class MyExamActivity extends BaseActivity implements View.OnClickListener, PullToRefreshListener, ExamAdapter.OnItemClickListener {
+public class MyExamActivity extends BaseActivity implements View.OnClickListener, ExamAdapter.OnItemClickListener {
     private ImageView img_back;
-    private PullToRefreshRecyclerView recyclerView;
     private ExamAdapter examAdapter;
     private List<ExamBean.QuesLibsBean> examBeanList = new ArrayList<>();
-    private ProgressBarLayout mLoadingBar;
     private String token;
     private int currentPage = 1;
     private int pageSize = 10;
@@ -53,29 +55,35 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
     boolean data;
     private RelativeLayout rl_empty;
     private TextView tv_msg;
+    private SwipeRefreshLayout mRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsHasData = true;
+    private boolean mIsLoading;
+    private LoadingDialog mLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_exam);
+        mLoading = new LoadingDialog(MyExamActivity.this);
+        mLoading.setShowText("加载中...");
         initView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         getExamList();
     }
 
+
     private void getExamList() {
-        showLoadingBar(false);
         SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         aClass.getExamList(token, currentPage, pageSize).enqueue(new Callback<ExamBean>() {
             @Override
             public void onResponse(Call<ExamBean> call, Response<ExamBean> response) {
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 if (response != null && response.body() != null && response.body().getData() != null && response.body().getData().getQuesLibs() != null) {
-                    hideLoadingBar();
                     if (currentPage == 1 && response.body().getData().getQuesLibs().size() == 0) {
                         emptyLayout(false);
                     } else {
@@ -101,7 +109,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                         } else {
                             if (beanList == null || beanList.size() == 0) {
                                 Toast.makeText(MyExamActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
-                                recyclerView.setLoadingMoreEnabled(false);
+                                mIsHasData = false;
                                 return;
                             }
                             examBeanList.addAll(beanList);
@@ -116,7 +124,9 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onFailure(Call<ExamBean> call, Throwable t) {
-                hideLoadingBar();
+                closeSwipeRefresh();
+                mLoading.dismiss();
+                mIsLoading = false;
                 emptyLayout(false);
             }
         });
@@ -145,37 +155,38 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
 
 
     private void initView() {
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.my_exam_refresh_layout);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_exam_recycler_view);
+        Utils.setRefreshViewColor(mRefreshLayout);
+        mLayoutManager = new LinearLayoutManager(MyExamActivity.this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = tokenDb.getString("token", "");
         img_back = (ImageView) findViewById(R.id.nb_order_return);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);//空页面
-        mLoadingBar = (ProgressBarLayout) findViewById(R.id.progressBar);
         img_back.setOnClickListener(this);
-        recyclerView = (PullToRefreshRecyclerView) findViewById(R.id.recycle);
         tv_msg= (TextView) findViewById(R.id.tv_msg);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        //初始化adapter
         examAdapter = new ExamAdapter(MyExamActivity.this, examBeanList);
         examAdapter.setOnItemClickListener(this);
-//        //添加数据源
-        recyclerView.setAdapter(examAdapter);
-        recyclerView.setLayoutManager(layoutManager);
-        //设置是否显示上次刷新时间
-        recyclerView.displayLastRefreshTime(true);
-        //是否开启上拉加载
-        recyclerView.setLoadingMoreEnabled(true);
-        //是否开启上拉刷新
-        recyclerView.setPullRefreshEnabled(false);
-        //设置刷新回调
-        recyclerView.setPullToRefreshListener(MyExamActivity.this);
-        //主动触发下拉刷新操作
-//        recyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(this, R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        recyclerView.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(examAdapter);
+
+        mIsHasData = true;
+        mRefreshLayout.setRefreshing(true);
+        initEvent();
+    }
+
+    private void closeSwipeRefresh() {
+        if (mRefreshLayout != null && mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -187,44 +198,36 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    @Override
-    public void onRefresh() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setRefreshComplete();
-                currentPage = 1;
-                getExamList();
-                recyclerView.setLoadingMoreEnabled(true);
-            }
-        }, 2000);
-    }
+    private void initEvent() {
+        mRefreshLayout.setOnRefreshListener(() -> {
+            currentPage = 1;
+            mIsHasData = true;
+            mIsLoading = true;
+            getExamList();
+        });
 
-    @Override
-    public void onLoadMore() {
-        recyclerView.postDelayed(new Runnable() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void run() {
-                recyclerView.setLoadMoreComplete();
-                if (examBeanList.size() < pageSize) {
-                    Toast.makeText(MyExamActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
-                    recyclerView.setLoadingMoreEnabled(false);
-                    return;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // 没有更多的数据了
+                if (!mIsHasData) return;
+                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == examAdapter.getItemCount() && !mIsLoading) {
+                    mLoading.show();
+                    currentPage++;
+                    mIsLoading = true;
+                    getExamList();
                 }
-                currentPage++;
-                getExamList();
+
             }
-        }, 2000);
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
-    public void showLoadingBar(boolean transparent) {
-        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
-        mLoadingBar.show();
-    }
-
-    public void hideLoadingBar() {
-        mLoadingBar.hide();
-    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -262,11 +265,11 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
     }
     private void emptyLayout(boolean isVisible){
         if(isVisible){
-            recyclerView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
         }else{
             rl_empty.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.GONE);
             tv_msg.setText("暂无考试数据");
         }
     }
