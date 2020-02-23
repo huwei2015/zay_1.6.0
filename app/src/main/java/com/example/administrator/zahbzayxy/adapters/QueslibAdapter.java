@@ -50,6 +50,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by ${ZWJ} on 2017/4/5 0005.
+ * 免费考试模式
  */
 public class QueslibAdapter extends BaseAdapter {
     private Context context;

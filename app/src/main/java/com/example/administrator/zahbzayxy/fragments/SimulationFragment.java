@@ -334,7 +334,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if ("yes".equals(mIsOnTime)) {
+                if ("no".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
@@ -357,7 +357,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if ("yes".equals(mIsOnTime)) {
+                if ("no".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
@@ -383,7 +383,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if ("yes".equals(mIsOnTime)) {
+                if ("no".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }
@@ -408,7 +408,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
                     ToastUtils.showLongInfo("考试次数已用完");
                     return;
                 }
-                if ("yes".equals(mIsOnTime)) {
+                if ("no".equals(mIsOnTime)) {
                     ToastUtils.showLongInfo("当前题库已过期");
                     return;
                 }

@@ -39,6 +39,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 免费考试
+ */
 public class TestDetailActivity extends BaseActivity {
     private int quesLibId;
     private ImageView testDetail_iv,back_testDetail_iv;
