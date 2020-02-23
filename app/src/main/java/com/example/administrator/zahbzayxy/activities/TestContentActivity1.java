@@ -932,8 +932,6 @@ public class TestContentActivity1 extends BaseActivity {
                 }
                 recyclerview.scrollToPosition(position);
                 dijige.setText((position + 1) + "/" + size);
-            }
-            if (totalList.size() > 0) {
                 madapter.notifyDataSetChanged();
             }
         }

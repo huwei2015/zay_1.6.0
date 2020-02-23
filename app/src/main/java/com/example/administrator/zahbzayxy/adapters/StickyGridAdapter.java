@@ -107,6 +107,7 @@ public class StickyGridAdapter extends BaseAdapter implements
             @Override
 
             public void onClick(View v) {
+                if (adapter == null) return;
                 Integer integer = Integer.valueOf(s);
                 adapter.setChildPosition(-1);
                 adapter.setKeChildPosition(-1);

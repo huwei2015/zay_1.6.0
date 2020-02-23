@@ -331,6 +331,9 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             holder.questionTypeTv.setText("[" + "主观案例题" + "]");
             // 获取小题集合
             List<NewTestContentBean.DataBean.QuesDataBean> childrenList = list.get(position).getChildren();
+            if (mChildPosition >= childrenList.size()) {
+                mChildPosition = childrenList.size() - 1;
+            }
             // 防止数组角标越界
             if (mChildPosition < 0 || mChildPosition >= childrenList.size()) return;
             // 小题的题干
@@ -345,6 +348,9 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             holder.selectorType_tv.setText("[" + "客观案例题" + "]");
             // 获取小题集合
             List<NewTestContentBean.DataBean.QuesDataBean> childrenList = list.get(position).getChildren();
+            if (mKePosition >= childrenList.size()) {
+                mKePosition = childrenList.size() - 1;
+            }
             // 防止数组角标越界
             if (mKePosition < 0 || mKePosition >= childrenList.size()) return;
             // 获取小题的bean
@@ -828,8 +834,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 }
 
             } else if (mQuesType == 5) {
+                if (weiZhi >= listToPost.size() || weiZhi >= list.size()) return;
                 NewTestContentBean.DataBean.QuesDataBean quesDataBean = list.get(weiZhi);
                 List<NewTestContentBean.DataBean.QuesDataBean> childrenList = quesDataBean.getChildren();
+                if (childrenList == null || (mKePosition - 1) >= childrenList.size()) return;
                 NewTestContentBean.DataBean.QuesDataBean childBean = childrenList.get(mKePosition - 1);
                 int quesType = childBean.getQuesType();
                 int selectPosition = 0;
@@ -859,6 +867,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
 
                 if (selectPosition == 6) {
                     mViewHold.tijiao.setText("提交");
+                    if (weiZhi >= listToPost.size() || weiZhi >= list.size()) return;
                     quesDataBean.setBiaoJi(1);
 
                     StringBuffer userQusIdBuffer = new StringBuffer();
@@ -977,6 +986,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
 
     // 处理客观案例题的多选
     private void setKeMoreSelect(int selectPosition, NewTestContentBean.DataBean.QuesDataBean childBean, NewTestContentBean.DataBean.QuesDataBean quesDataBean, List<NewTestContentBean.DataBean.QuesDataBean> childrenList) {
+        if (weiZhi >= listToPost.size() || weiZhi >= list.size()) return;
         TestResultBean.ExamDetailsBean resultToPost = listToPost.get(weiZhi);
         List<NewTestContentBean.DataBean.QuesDataBean.OptsBean> optsList = childBean.getOpts();
         for (int i = 0; i < mSelectArr.length; i++) {
@@ -1002,6 +1012,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
 
     // 处理客观案例题的单选与判断
     private void setKeSelect(int selectPosition, NewTestContentBean.DataBean.QuesDataBean childBean, NewTestContentBean.DataBean.QuesDataBean quesDataBean, List<NewTestContentBean.DataBean.QuesDataBean> childrenList) {
+        if (weiZhi >= listToPost.size() || weiZhi >= list.size()) return;
         List<NewTestContentBean.DataBean.QuesDataBean.OptsBean> optsList = childBean.getOpts();
         TestResultBean.ExamDetailsBean resultToPost = listToPost.get(weiZhi);
         int isRight = 0;
@@ -1048,8 +1059,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
         resultToPost.setQuestionId(quesDataBean.getId());
 
         childBean.setOpts(optsList);
+        if ((mKePosition - 1) >= childrenList.size()) return;
         childrenList.set(mKePosition - 1, childBean);
         quesDataBean.setChildren(childrenList);
+        if (weiZhi >= list.size() || weiZhi >= listToPost.size()) return;
         list.set(weiZhi, quesDataBean);
         listToPost.set(weiZhi, resultToPost);
 
@@ -1060,6 +1073,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
     private void nextKe() {
         int size = list.size();
         int myPosition = weiZhi + 1;
+        if (weiZhi >= list.size()) return;
         if (mKePosition >= 0) {
             if (mKePosition >= list.get(weiZhi).getChildren().size()) {
                 setKeChildPosition(-1);
@@ -1224,7 +1238,9 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 mViewHold.rbB.setTextColor(context.getResources().getColor(R.color.testBlack));
             }
         } else if (quesType == 4) {
+            if (weiZhi >= listToPost.size()) return;
             TestResultBean.ExamDetailsBean resultToPost = listToPost.get(weiZhi);
+            if (resultToPost == null) return;
             String answerStr = resultToPost.getUserAnswerIds();
             if (!TextUtils.isEmpty(answerStr)) {
                 int showPosition = mChildPosition;
@@ -1238,12 +1254,18 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 }
             }
         } else if (quesType == 5) {
+            if (weiZhi >= list.size()) return;
             NewTestContentBean.DataBean.QuesDataBean quesDataBean = list.get(weiZhi);
+            if (quesDataBean == null) return;
             List<NewTestContentBean.DataBean.QuesDataBean> childrenList = quesDataBean.getChildren();
+            if (childrenList == null) return;
             int showPosition =  mKePosition;
             if (showPosition < 0) showPosition = 0;
+            if (showPosition >= childrenList.size()) return;
             NewTestContentBean.DataBean.QuesDataBean childBean = childrenList.get(showPosition);
+            if (childBean == null) return;
             List<NewTestContentBean.DataBean.QuesDataBean.OptsBean> optsList = childBean.getOpts();
+            if (optsList == null) return;
             for (int i = 0; i < mSelectArr.length; i++){
                 if (i < optsList.size()) {
                     NewTestContentBean.DataBean.QuesDataBean.OptsBean optsBean = optsList.get(i);
@@ -1256,8 +1278,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             }
         } else if (quesType == 6) {
             // 简答题的答案回显
+            if (weiZhi >= listToPost.size()) return;
             TestResultBean.ExamDetailsBean resultToPost = listToPost.get(weiZhi);
-            mViewHold.answerEt.setText(resultToPost.getUserAnswerIds());
+            if (resultToPost == null) return;
+            mViewHold.answerEt.setText(resultToPost.getUserAnswerIds() + "");
         }
     }
 
