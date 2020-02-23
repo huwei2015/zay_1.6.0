@@ -136,6 +136,11 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         Log.i("======refresh=====", "simulation fragment isVisibleToUser = " + isVisibleToUser);
         isVisible = isVisibleToUser;
         if (isVisibleToUser && mLoadView) {
+            initView();
+            mLoadView = true;
+            showBarChartMore(null, 0);
+            mOperateLayout.setVisibility(View.GONE);
+            initNavigationData();
             loadData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -168,7 +173,6 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
         aClass.getSimulationDate(token).enqueue(new Callback<SimulationBean>() {
             @Override
             public void onResponse(Call<SimulationBean> call, Response<SimulationBean> response) {
-                hideLoadingBar();
                 if(response !=null && response.body() !=null){
                     String code = response.body().getCode();
                     if(code.equals("00000")){
@@ -195,6 +199,8 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
             isVisbale(false);
             return;
         }
+        if (!isVisible) return;
+        showLoadingBar(false);
         createId = navigationList.get(position).getId();
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = tokenDb.getString("token","");
@@ -253,6 +259,7 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void onFailure(Call<SimulationInfoBean> call, Throwable t) {
+                hideLoadingBar();
                 ToastUtils.showInfo(t.getMessage(),5000);
                 Log.i("huwei","huwei======"+t.getMessage());
             }
@@ -441,6 +448,9 @@ public class SimulationFragment extends Fragment implements View.OnClickListener
     @Override
     public void onResume() {
         super.onResume();
+
+        showBarChartMore(null, 0);
+        mOperateLayout.setVisibility(View.GONE);
         initNavigationData();
     }
 

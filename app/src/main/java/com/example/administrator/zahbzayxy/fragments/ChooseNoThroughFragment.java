@@ -144,7 +144,7 @@ public class ChooseNoThroughFragment extends Fragment implements PullToRefreshLi
         //设置刷新回调
         pullToRefreshRecyclerView.setPullToRefreshListener(this);
         //主动触发下拉刷新操作
-        pullToRefreshRecyclerView.onRefresh();
+//        pullToRefreshRecyclerView.onRefresh();
         //设置EmptyView
         View emptyView = View.inflate(getActivity(), R.layout.layout_empty_view, null);
         emptyView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

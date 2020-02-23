@@ -72,6 +72,11 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         isVisible = isVisibleToUser;
         if (isVisibleToUser && mLoadView) {
+            initView();
+            mLoadView = true;
+            currentPage = 1;
+            notPassListBeans.clear();
+            alreadyAdapter.setList(notPassListBeans);
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -80,6 +85,8 @@ public class AlreadyFragment extends Fragment implements PullToRefreshListener {
     private void initData(){
         if (!isVisible) return;
         showLoadingBar(false);
+        SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
         userInfoInterface.getExamData(currentPage,PageSize,1,token).enqueue(new Callback<NotPassBean>() {
             @Override

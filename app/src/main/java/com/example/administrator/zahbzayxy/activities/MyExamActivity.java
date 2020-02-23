@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,11 +67,15 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void getExamList() {
+        showLoadingBar(false);
+        SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", Context.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         aClass.getExamList(token, currentPage, pageSize).enqueue(new Callback<ExamBean>() {
             @Override
             public void onResponse(Call<ExamBean> call, Response<ExamBean> response) {
                 if (response != null && response.body() != null && response.body().getData() != null && response.body().getData().getQuesLibs() != null) {
+                    hideLoadingBar();
                     if (currentPage == 1 && response.body().getData().getQuesLibs().size() == 0) {
                         emptyLayout(false);
                     } else {
@@ -111,6 +116,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onFailure(Call<ExamBean> call, Throwable t) {
+                hideLoadingBar();
                 emptyLayout(false);
             }
         });
@@ -143,7 +149,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         token = tokenDb.getString("token", "");
         img_back = (ImageView) findViewById(R.id.nb_order_return);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);//空页面
-        mLoadingBar = (ProgressBarLayout) findViewById(R.id.nb_allOrder_load_bar_layout);
+        mLoadingBar = (ProgressBarLayout) findViewById(R.id.progressBar);
         img_back.setOnClickListener(this);
         recyclerView = (PullToRefreshRecyclerView) findViewById(R.id.recycle);
         tv_msg= (TextView) findViewById(R.id.tv_msg);

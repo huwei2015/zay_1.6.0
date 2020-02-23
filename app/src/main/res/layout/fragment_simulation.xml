@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_evaluating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -13,13 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
-                android:id="@+id/load_bar_layout_evaluating"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:visibility="gone" />
 
             <com.example.administrator.zahbzayxy.utils.FixedIndicatorView
                 android:id="@+id/singleTab_fixedIndicatorView"

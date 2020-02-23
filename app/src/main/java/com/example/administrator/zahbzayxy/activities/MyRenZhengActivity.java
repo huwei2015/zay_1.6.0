@@ -1,6 +1,8 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.example.administrator.zahbzayxy.adapters.PMyRenZhengMuLuAdapter;
 import com.example.administrator.zahbzayxy.beans.PMyRenZhengMuLuBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -26,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-//我的认证
+//我的证书
 public class MyRenZhengActivity extends BaseActivity {
     ImageView back_iv;
     PullToRefreshListView pMyRenZheng_plv;
@@ -35,6 +38,7 @@ public class MyRenZhengActivity extends BaseActivity {
     private RelativeLayout rl_empty;
     private String token;
     private TextView tv_msg;
+    private ProgressBarLayout mLoadingBar;
     int pager=1;
     int pageSize =10;
     @Override
@@ -66,13 +70,17 @@ public class MyRenZhengActivity extends BaseActivity {
     }
 
     private void downLoadData(int pager) {
+        showLoadingBar(false);
         adapter=new PMyRenZhengMuLuAdapter(totalList,this);
         pMyRenZheng_plv.setAdapter(adapter);
+        SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", Context.MODE_PRIVATE);
+        token = sharedPreferences.getString("token", "");
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         aClass.getMyRenZhengColumData(pager,pageSize,token).enqueue(new Callback<PMyRenZhengMuLuBean>() {
             @Override
             public void onResponse(Call<PMyRenZhengMuLuBean> call, Response<PMyRenZhengMuLuBean> response) {
                 if (response != null) {
+                    hideLoadingBar();
                     PMyRenZhengMuLuBean body = response.body();
                     if (body != null && body.getData() != null) {
                         String code = body.getCode();
@@ -112,8 +120,9 @@ public class MyRenZhengActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<PMyRenZhengMuLuBean> call, Throwable t) {
+                hideLoadingBar();
                 initVisible(false);
-                Toast.makeText(MyRenZhengActivity.this,"网络异常",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyRenZhengActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
         if (pMyRenZheng_plv.isRefreshing()){
@@ -141,6 +150,7 @@ public class MyRenZhengActivity extends BaseActivity {
         pMyRenZheng_plv= (PullToRefreshListView) findViewById(R.id.pMyRenZhengMuLu_plv);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);
         tv_msg= (TextView) findViewById(R.id.tv_msg);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.progressBar);
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = tokenDb.getString("token","");
         back_iv.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +160,17 @@ public class MyRenZhengActivity extends BaseActivity {
             }
         });
     }
+
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+
     private void initVisible(boolean isVisible){
         if(isVisible){
             pMyRenZheng_plv.setVisibility(View.VISIBLE);
