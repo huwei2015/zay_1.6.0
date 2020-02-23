@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.MainActivity;
 import com.example.administrator.zahbzayxy.R;
+import com.example.administrator.zahbzayxy.fragments.UserFragment;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class PaySuccessActivity extends BaseActivity {
     TextView payMoney_tv;
@@ -37,6 +40,7 @@ public class PaySuccessActivity extends BaseActivity {
         startActivity(intent);
     }
     public void homeOnClick(View view) {
+        EventBus.getDefault().post(UserFragment.FLUSH_USER_INFO_MINE_PAGE);
         Intent intent1=new Intent(PaySuccessActivity.this, MainActivity.class);
         startActivity(intent1);
     }

@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.example.administrator.zahbzayxy.R;
@@ -13,7 +14,10 @@ import com.example.administrator.zahbzayxy.fragments.NewAllOrderFragment;
 import com.example.administrator.zahbzayxy.fragments.NewHaveCancleOrderFragment;
 import com.example.administrator.zahbzayxy.fragments.NewHavePayOrderFragment;
 import com.example.administrator.zahbzayxy.fragments.NewWaitPayOrderFragment;
+import com.example.administrator.zahbzayxy.fragments.UserFragment;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,13 @@ public class NewMyOrderActivity extends BaseActivity {
 
     //点击返回
     public void myOrderBackOnClick(View view) {
+        EventBus.getDefault().post(UserFragment.FLUSH_USER_INFO_MINE_PAGE);
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        EventBus.getDefault().post(UserFragment.FLUSH_USER_INFO_MINE_PAGE);
+        return super.onKeyDown(keyCode, event);
     }
 }

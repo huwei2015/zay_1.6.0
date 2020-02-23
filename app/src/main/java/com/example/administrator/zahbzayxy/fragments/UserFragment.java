@@ -72,6 +72,8 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class UserFragment extends Fragment implements View.OnClickListener {
 
+    public static final String FLUSH_USER_INFO_MINE_PAGE = "flushUserInfoMinePage";
+
     Context context;
     View view;
     //用户头像
@@ -562,6 +564,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             if (MsgListActivity.FLUSH_MSG_INFO_EVENT_FLAG.equals(image)) {
                 initUserCenter();
             }
+        }
+        if (FLUSH_USER_INFO_MINE_PAGE.equals(image)) {
+            initUserCenter();
+            initUserInfo();
         }
     }
 

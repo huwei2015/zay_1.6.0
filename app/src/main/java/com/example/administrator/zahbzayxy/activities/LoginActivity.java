@@ -23,6 +23,7 @@ import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
 import com.example.administrator.zahbzayxy.beans.LoginBean;
 import com.example.administrator.zahbzayxy.beans.UserInfoBean;
+import com.example.administrator.zahbzayxy.fragments.UserFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.LoginService;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
@@ -195,6 +196,7 @@ public class LoginActivity extends BaseActivity{
                             edit.commit();
                             EventBus.getDefault().post("login");
                             String loginMethod = getIntent().getStringExtra("loginMethod");
+                            EventBus.getDefault().post(UserFragment.FLUSH_USER_INFO_MINE_PAGE);
                             if (!TextUtils.isEmpty(loginMethod)){
                             if (loginMethod.equals("home")) {
                                 initToHome(token);
