@@ -23,6 +23,7 @@ import com.example.administrator.zahbzayxy.beans.TestResultBean;
 import com.example.administrator.zahbzayxy.myviews.EditTextWithScrollView;
 import com.example.administrator.zahbzayxy.myviews.MyRecyclerView;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
+import com.example.administrator.zahbzayxy.widget.MImageGetter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -225,53 +226,53 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             //每个题目的集合
             holder.selectorType_tv.setText("[" + "选择题" + "]");
             String content = list.get(position).getContent();
-            holder.tv.setText(Html.fromHtml(content + "").toString());
+            holder.tv.setText(Html.fromHtml(content + "", new MImageGetter(holder.tv, context), null));
             holder.tijiao.setVisibility(View.INVISIBLE);
             holder.rbE.setVisibility(View.INVISIBLE);
             holder.rbF.setVisibility(View.INVISIBLE);
             if (optSize == 3) {
                 holder.rbC.setVisibility(View.VISIBLE);
                 holder.rbD.setVisibility(View.INVISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
             } else if (optSize == 2) {
                 holder.rbC.setVisibility(View.INVISIBLE);
                 holder.rbD.setVisibility(View.INVISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
             } else if (optSize == 4) {
                 holder.rbC.setVisibility(View.VISIBLE);
                 holder.rbD.setVisibility(View.VISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
             } else if (optSize == 5) {
                 holder.rbC.setVisibility(View.VISIBLE);
                 holder.rbD.setVisibility(View.VISIBLE);
                 holder.rbE.setVisibility(View.VISIBLE);
                 holder.rbF.setVisibility(View.INVISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
-                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
+                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent(), new MImageGetter(holder.rbE, context), null));
             } else if (optSize == 6) {
                 holder.rbC.setVisibility(View.VISIBLE);
                 holder.rbD.setVisibility(View.VISIBLE);
                 holder.rbE.setVisibility(View.VISIBLE);
                 holder.rbF.setVisibility(View.VISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
-                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent()));
-                holder.rbF.setText(Html.fromHtml(opts.get(5).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
+                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent(), new MImageGetter(holder.rbE, context), null));
+                holder.rbF.setText(Html.fromHtml(opts.get(5).getContent(), new MImageGetter(holder.rbF, context), null));
             }
         } else if (quesType == 2) {//多选
             holder.selectorType_tv.setText("[" + "多选题" + "]");
-            holder.tv.setText(Html.fromHtml(list.get(position).getContent()));
+            holder.tv.setText(Html.fromHtml(list.get(position).getContent(), new MImageGetter(holder.tv, context), null));
             mViewHold.tijiao.setVisibility(View.VISIBLE);
             holder.rbC.setVisibility(View.VISIBLE);
             holder.rbD.setVisibility(View.VISIBLE);
@@ -280,10 +281,10 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 holder.rbF.setVisibility(View.INVISIBLE);
                 holder.rbE.setText("");
                 holder.rbF.setText("");
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
             } else if (optSize == 3) {
                 holder.rbD.setVisibility(View.INVISIBLE);
                 holder.rbE.setVisibility(View.INVISIBLE);
@@ -291,36 +292,36 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
                 holder.rbE.setText("");
                 holder.rbF.setText("");
                 holder.rbD.setText("");
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
             } else if (optSize == 5) {
                 holder.rbF.setVisibility(View.INVISIBLE);
                 holder.rbF.setText("");
                 holder.rbE.setVisibility(View.VISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
-                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
+                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent(), new MImageGetter(holder.rbE, context), null));
 
             } else if (optSize == 6) {
                 holder.rbE.setVisibility(View.VISIBLE);
                 holder.rbF.setVisibility(View.VISIBLE);
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
-                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent()));
-                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent()));
-                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent()));
-                holder.rbF.setText(Html.fromHtml(opts.get(5).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
+                holder.rbC.setText(Html.fromHtml(opts.get(2).getContent(), new MImageGetter(holder.rbC, context), null));
+                holder.rbD.setText(Html.fromHtml(opts.get(3).getContent(), new MImageGetter(holder.rbD, context), null));
+                holder.rbE.setText(Html.fromHtml(opts.get(4).getContent(), new MImageGetter(holder.rbE, context), null));
+                holder.rbF.setText(Html.fromHtml(opts.get(5).getContent(), new MImageGetter(holder.rbF, context), null));
             }
         } else if (quesType == 3) {//判断
             holder.selectorType_tv.setText("[" + "判断题" + "]");
-            holder.tv.setText(Html.fromHtml(list.get(position).getContent()));
+            holder.tv.setText(Html.fromHtml(list.get(position).getContent(), new MImageGetter(holder.tv, context), null));
             holder.tijiao.setVisibility(View.INVISIBLE);
             if (optSize > 1) {
-                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent()));
-                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent()));
+                holder.rbA.setText(Html.fromHtml(opts.get(0).getContent(), new MImageGetter(holder.rbA, context), null));
+                holder.rbB.setText(Html.fromHtml(opts.get(1).getContent(), new MImageGetter(holder.rbB, context), null));
             }
             holder.rbC.setVisibility(View.INVISIBLE);
             holder.rbD.setVisibility(View.INVISIBLE);
@@ -335,7 +336,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             // 小题的题干
             String childContent = childrenList.get(mChildPosition).getContent();
             String content = list.get(position).getContent() + "<br />" + (mChildPosition + 1) + "、" + childContent;
-            holder.questionTitleTv.setText(Html.fromHtml(content));
+            holder.questionTitleTv.setText(Html.fromHtml(content, new MImageGetter(holder.questionTitleTv, context), null));
             holder.answerEt.setHint("请输入主观案例题答案");
             mChildPosition++;
         } else if (quesType == 5) { //客观案例
@@ -365,11 +366,11 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             String content = list.get(position).getContent();
             StringBuilder sb = new StringBuilder();
             sb.append(content).append("<br />").append(type).append("<br />").append(mKePosition + 1).append("、").append(childContent);
-            holder.tv.setText(Html.fromHtml(sb.toString()));
+            holder.tv.setText(Html.fromHtml(sb.toString(), new MImageGetter(holder.tv, context), null));
             mKePosition++;
         } else if (quesType == 6) { //简答
             holder.questionTypeTv.setText("[" + "简答题" + "]");
-            holder.questionTitleTv.setText(Html.fromHtml(list.get(position).getContent()));
+            holder.questionTitleTv.setText(Html.fromHtml(list.get(position).getContent(), new MImageGetter(holder.questionTitleTv, context), null));
             holder.answerEt.setHint("请输入简答题答案");
         }
 
@@ -467,7 +468,7 @@ public class TestContentAdapter extends RecyclerView.Adapter<TestContentAdapter.
             RadioButton rb = mSelectArr[i];
             if (i < optsList.size()) {
                 rb.setVisibility(View.VISIBLE);
-                rb.setText(Html.fromHtml(optsList.get(i).getContent()));
+                rb.setText(Html.fromHtml(optsList.get(i).getContent(), new MImageGetter(rb, context), null));
             } else {
                 rb.setVisibility(View.INVISIBLE);
                 rb.setText("");

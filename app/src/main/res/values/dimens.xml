@@ -10,4 +10,5 @@
     <dimen name="popmenu_width">100.0dip</dimen>
     <dimen name="popmenu_yoff">5.0dip</dimen>
     <dimen name="dip2pix">1.0dip</dimen>
+    <dimen name="dp_15_x">15dp</dimen>
 </resources>
