@@ -77,6 +77,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHodler
         }
         if (examBeanList.get(position).getIsExam().equals("0")) {//可以去考试，可看记录
             holder.exam.setText("去考试");
+            holder.exam.setEnabled(true);
             holder.exam_record.setText("考试记录");
             holder.exam.setBackground(mContext.getResources().getDrawable(R.mipmap.sel));
             holder.exam_record.setBackground(mContext.getResources().getDrawable(R.mipmap.sel));
@@ -91,12 +92,14 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ExamViewHodler
         } else if (examBeanList.get(position).getIsExam().equals("2")) {//合格可看记录
             holder.exam.setText("合格");
             holder.exam.setEnabled(false);
+            holder.exam.setBackground(mContext.getResources().getDrawable(R.mipmap.unsel));
             holder.exam_record.setText("考试记录");
             holder.exam_record.setBackground(mContext.getResources().getDrawable(R.mipmap.sel));
 
         } else if (examBeanList.get(position).getIsExam().equals("3")) { // 不可以考试但是可看记录(过期，次数用尽)
             holder.exam.setText("去考试");
             holder.exam.setEnabled(false);
+            holder.exam.setBackground(mContext.getResources().getDrawable(R.mipmap.unsel));
             holder.exam_record.setText("考试记录");
             holder.exam_record.setBackground(mContext.getResources().getDrawable(R.mipmap.sel));
         }
