@@ -33,6 +33,7 @@ import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.DataCleanManager;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -268,7 +269,7 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
                                         //initAppVersionDialog();
                                         initAppVersionDialog1();
                                     }else{
-                                        Toast.makeText(ResetActivity.this,"当前是最新版本",Toast.LENGTH_SHORT);
+                                        ToastUtils.showLongInfo("当前是最新版本");
                                     }
 
                                 }

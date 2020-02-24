@@ -22,7 +22,6 @@ import com.alibaba.fastjson.JSON;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.PracticeStickyGridAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestPracticeAdapter;
-import com.example.administrator.zahbzayxy.beans.DaoMaster;
 import com.example.administrator.zahbzayxy.beans.GridItem;
 import com.example.administrator.zahbzayxy.beans.OptsBean;
 import com.example.administrator.zahbzayxy.beans.QuesListBean;
@@ -32,6 +31,7 @@ import com.example.administrator.zahbzayxy.beans.SaveUserErrorPrcticeBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.TestPracticeBean;
 import com.example.administrator.zahbzayxy.beans.TestResultBean;
+import com.example.administrator.zahbzayxy.databases.DaoMaster;
 import com.example.administrator.zahbzayxy.databases.SaveListDBManager;
 import com.example.administrator.zahbzayxy.interfacecommit.PracticeInterface;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
@@ -102,6 +102,7 @@ public class TestPracticeAcivity extends BaseActivity {
         initView();
         initFinish();
         initRecyClerView();
+        //处理数据库不一样的时候，先把表删除，然后在创建
         try {
             initDb();
         } catch (Exception e) {
