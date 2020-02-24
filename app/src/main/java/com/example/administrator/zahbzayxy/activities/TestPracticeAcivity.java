@@ -22,10 +22,12 @@ import com.alibaba.fastjson.JSON;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.PracticeStickyGridAdapter;
 import com.example.administrator.zahbzayxy.adapters.TestPracticeAdapter;
+import com.example.administrator.zahbzayxy.beans.DaoMaster;
 import com.example.administrator.zahbzayxy.beans.GridItem;
 import com.example.administrator.zahbzayxy.beans.OptsBean;
 import com.example.administrator.zahbzayxy.beans.QuesListBean;
 import com.example.administrator.zahbzayxy.beans.QuesListBean2;
+import com.example.administrator.zahbzayxy.beans.QuesListBeanDao;
 import com.example.administrator.zahbzayxy.beans.SaveUserErrorPrcticeBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.TestPracticeBean;
@@ -38,9 +40,11 @@ import com.example.administrator.zahbzayxy.myviews.MyRecyclerView;
 import com.example.administrator.zahbzayxy.stickheadgv.StickyGridHeadersGridView;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.greendao.database.Database;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,7 +102,29 @@ public class TestPracticeAcivity extends BaseActivity {
         initView();
         initFinish();
         initRecyClerView();
-        initDb();
+        try {
+            initDb();
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                Database db = new DaoMaster.DevOpenHelper(TestPracticeAcivity.this, "saveList").getWritableDb();
+                if (db != null) {
+                    QuesListBeanDao.dropTable(db, true);
+                    saveDb = SaveListDBManager.getInstance(getApplicationContext());
+                    if (saveDb != null) {
+                        initDownLoadData();
+                        return;
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                ToastUtils.showLongInfo("数据异常，请稍后重试");
+                finish();
+                return;
+            }
+            ToastUtils.showLongInfo("数据初始化失败，请稍后重试");
+            finish();
+        }
     }
 
     @Override
