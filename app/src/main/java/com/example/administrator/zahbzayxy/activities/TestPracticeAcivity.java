@@ -110,7 +110,8 @@ public class TestPracticeAcivity extends BaseActivity {
                 Database db = new DaoMaster.DevOpenHelper(TestPracticeAcivity.this, "saveList").getWritableDb();
                 if (db != null) {
                     QuesListBeanDao.dropTable(db, true);
-                    saveDb = SaveListDBManager.getInstance(getApplicationContext());
+                    QuesListBeanDao.createTable(db, false);
+                    saveDb = new SaveListDBManager(getApplicationContext());
                     if (saveDb != null) {
                         initDownLoadData();
                         return;
@@ -199,7 +200,12 @@ public class TestPracticeAcivity extends BaseActivity {
                             @Override
                             public void run() {
                                 List<QuesListBean2> dataList = body.getData().getQuesList();
-                                id = saveDb.queryAll().size();
+                                try {
+                                    id = saveDb.queryAll().size();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    id = 0;
+                                }
                                 if (saveUserErrorDbBeen.size() < 1) {
                                     for (int i = 0; i < dataList.size(); i++) {
                                         QuesListBean2 item = dataList.get(i);
