@@ -68,7 +68,7 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
     private LoadingDialog mLoading;
     int user_id;
     boolean data;
-
+    int quesLibId;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -237,20 +237,9 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
 
     @Override
     public void onItemclick(int position) {
-        int id=notPassListBeans.get(position).getId();
-        isPerfectPersonInfo();
-        if(!data){
-            Intent intent = new Intent(mContext, TestContentActivity1.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("quesLibId", notPassListBeans.get(position).getQuesLibId());
-            bundle.putInt("userLibId", id);//正式考试题库id
-            bundle.putInt("examType", 0);
-            intent.putExtras(bundle);
-            mContext.startActivity(intent);
-        }else{
-            showUploadDialog();
-        }
-
+        user_id = notPassListBeans.get(position).getId();
+        quesLibId=notPassListBeans.get(position).getQuesLibId();
+        isPerfectPersonInfo(user_id,quesLibId);
     }
 
     private AlertDialog upLoadAlertDialog;
@@ -273,7 +262,7 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
         upLoadAlertDialog.show();
     }
 
-    private void isPerfectPersonInfo() {
+    private void isPerfectPersonInfo(int user_id,int queslib_id) {
         PersonGroupInterfac personGroupInterfac = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         personGroupInterfac.getPersonExam(token, user_id).enqueue(new Callback<PersonInfo>() {
             @Override
@@ -282,7 +271,18 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         data = (boolean) response.body().getData();
-                        Log.i("dfdfd", "zahb======data===" + data);
+                        if (!data) {
+                            Intent intent = new Intent(mContext, TestContentActivity1.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("quesLibId", queslib_id);
+                            bundle.putInt("userLibId",user_id);//正式考试题库id
+                            bundle.putInt("examType", 0);
+                            intent.putExtras(bundle);
+                            mContext.startActivity(intent);
+                        } else {
+                            showUploadDialog();
+                        }
+
                     }
                 }
             }
@@ -293,5 +293,4 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
             }
         });
     }
-
 }

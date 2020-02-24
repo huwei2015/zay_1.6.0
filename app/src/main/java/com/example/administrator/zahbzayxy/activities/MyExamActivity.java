@@ -52,6 +52,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
     private int currentPage = 1;
     private int pageSize = 10;
     int userQuesLibId;
+    int quesLibId;
     boolean data;
     private RelativeLayout rl_empty;
     private TextView tv_msg;
@@ -94,11 +95,11 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                         emptyLayout(true);
                         List<ExamBean.QuesLibsBean> beanList = response.body().getData().getQuesLibs();
 
-                        for (int i = 0; i < beanList.size(); i++) {
-                            //我的考试需要用上
-                            userQuesLibId=beanList.get(i).getUserQuesLibId();
-                            isPerfectPersonInfo();
-                        }
+//                        for (int i = 0; i < beanList.size(); i++) {
+//                            //我的考试需要用上
+//                            userQuesLibId=beanList.get(i).getUserQuesLibId();
+//                            isPerfectPersonInfo();
+//                        }
                         if (currentPage == 1) {
                             if (beanList == null || beanList.size() == 0) {
                                 emptyLayout(false);
@@ -132,7 +133,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
-    private void isPerfectPersonInfo() {
+    private void isPerfectPersonInfo(int userQuesLibId,int quesLibId) {
         PersonGroupInterfac personGroupInterfac = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         personGroupInterfac.getPersonExam(token, userQuesLibId).enqueue(new Callback<PersonInfo>() {
             @Override
@@ -141,7 +142,17 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                     String code = response.body().getCode();
                     if (code.equals("00000")) {
                         data = (boolean) response.body().getData();
-                        Log.i("dfdfd", "zahb======data===" + data);
+                        if(!data) {
+                            Intent intent = new Intent(MyExamActivity.this, TestContentActivity1.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("quesLibId", quesLibId);
+                            bundle.putInt("userLibId", userQuesLibId);
+                            bundle.putInt("examType", 0);
+                            intent.putExtras(bundle);
+                            MyExamActivity.this.startActivity(intent);
+                        }else{
+                            showUploadDialog();
+                        }
                     }
                 }
             }
@@ -231,17 +242,9 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(View view, int position) {
-        if(!data) {
-            Intent intent = new Intent(MyExamActivity.this, TestContentActivity1.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("quesLibId", examBeanList.get(position).getQuesLibId());
-            bundle.putInt("userLibId", examBeanList.get(position).getUserQuesLibId());
-            bundle.putInt("examType", 0);
-            intent.putExtras(bundle);
-            MyExamActivity.this.startActivity(intent);
-        }else{
-            showUploadDialog();
-        }
+        userQuesLibId =examBeanList.get(position).getUserQuesLibId();
+        quesLibId =examBeanList.get(position).getQuesLibId();
+        isPerfectPersonInfo(userQuesLibId,quesLibId);
     }
 
     private AlertDialog upLoadAlertDialog;
