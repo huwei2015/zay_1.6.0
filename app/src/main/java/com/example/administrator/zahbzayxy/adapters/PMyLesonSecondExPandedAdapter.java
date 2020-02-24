@@ -50,8 +50,9 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
     PMyLessonExpandedAdapter parentAdapter;
     public MyExpandableLV listview;
     int currentRootPosition;
+    private String mImagePath;
 
-    public PMyLesonSecondExPandedAdapter(MyExpandableLV listview, int currentRootPosition, PMyLessonExpandedAdapter parentAdapter, MyInterface.ItemClickedListener itemClickedListener, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> list, Context context, int selectionId, int courseId, String userCourseId) {
+    public PMyLesonSecondExPandedAdapter(MyExpandableLV listview, int currentRootPosition, PMyLessonExpandedAdapter parentAdapter, MyInterface.ItemClickedListener itemClickedListener, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> list, Context context, int selectionId, int courseId, String userCourseId, String imagePath) {
         this.listview = listview;
         this.currentRootPosition = currentRootPosition;
         this.parentAdapter = parentAdapter;
@@ -61,6 +62,7 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
         mInflater = LayoutInflater.from(context);
         this.courseId = courseId;
         this.userCourseId = userCourseId;
+        this.mImagePath = imagePath;
     }
 
     @Override
@@ -173,7 +175,7 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
                             Toast.makeText(context, "文件已存在", Toast.LENGTH_SHORT).show();
                             // return;
                         } else {
-                            DownloadController.insertDownloadInfo(title, title, selectionName, 0, Integer.parseInt(userCourseId), list.get(groupPosition).getSelectionList().get(childPosition).getSelectionId(), courseId);
+                            DownloadController.insertDownloadInfo(title, title, selectionName, 0, Integer.parseInt(userCourseId), list.get(groupPosition).getSelectionList().get(childPosition).getSelectionId(), courseId, mImagePath);
                             Toast.makeText(context, "文件已加入下载队列", Toast.LENGTH_SHORT).show();
                         }
 

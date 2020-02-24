@@ -43,13 +43,13 @@ public class DownloadController {
     }
 
     //新增下载信息
-    public static void insertDownloadInfo(String videoId, String title,String name,int userCourseId,int section_id,int coruseId) {
-       insertDownloadInfo(videoId, title,name, 0,userCourseId,section_id,coruseId);
+    public static void insertDownloadInfo(String videoId, String title,String name,int userCourseId,int section_id,int coruseId, String imagePath) {
+       insertDownloadInfo(videoId, title,name, 0,userCourseId,section_id,coruseId, imagePath);
     }
 
     //新增下载信息
-    public static void insertDownloadInfo(String videoId, String title,String name, int definition,int userCourseId,int section_id,int coruseId) {
-        DownloadInfo info = new DownloadInfo(videoId, title, name, Downloader.WAIT, 0, 0, new Date(),userCourseId,section_id,coruseId);
+    public static void insertDownloadInfo(String videoId, String title,String name, int definition,int userCourseId,int section_id,int coruseId, String imagePath) {
+        DownloadInfo info = new DownloadInfo(videoId, title, name, Downloader.WAIT, 0, 0, new Date(),userCourseId,section_id,coruseId, imagePath);
         info.setDefinition(definition);
         DownloaderWrapper wrapper = new DownloaderWrapper(info);
         downloadingList.add(wrapper);

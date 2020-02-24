@@ -39,6 +39,7 @@ public class PLessonDirectoryFragment extends Fragment {
     private int courseId;
     private int userCourseId;
     private String token;
+    private String mImagePath;
     ArrayList<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> listsize = new ArrayList<>();
 
     MyInterface.ItemClickedListener itemClickedListener;
@@ -46,9 +47,10 @@ public class PLessonDirectoryFragment extends Fragment {
     public PLessonDirectoryFragment() {
     }
 
-    public PLessonDirectoryFragment(MyInterface.ItemClickedListener itemClickedListener) {
+    public PLessonDirectoryFragment(MyInterface.ItemClickedListener itemClickedListener, String imagePath) {
         // Required empty public constructor
         this.itemClickedListener = itemClickedListener;
+        this.mImagePath = imagePath;
     }
 
     @Override
@@ -132,7 +134,7 @@ public class PLessonDirectoryFragment extends Fragment {
                         public void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String selectionName, int backSelectionId, int startPlayTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean>list) {
                             itemClickedListener.onMyItemClickedListener(vidioId, videoIndex, selectionId, playPercent, selectionName, backSelectionId, startPlayTime,list);
                         }
-                    }, context, totalList, selectionId, courseId, String.valueOf(userCourseId));
+                    }, context, totalList, selectionId, courseId, String.valueOf(userCourseId), mImagePath);
                     expandLv.setAdapter(adapter);
                     //禁止刷新列表
                     adapter.notifyDataSetChanged();

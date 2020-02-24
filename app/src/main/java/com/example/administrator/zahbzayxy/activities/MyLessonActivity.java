@@ -230,6 +230,7 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
         final int userCourseId = msg.getData().getInt("userCourseId", 0);
         final int courseId = msg.getData().getInt("coruseId", 0);
         final String token = msg.getData().getString("token");
+        final String imagePath = msg.getData().getString("imagePath");
 
         //wifi相关内容
         //先检查一下设置提醒按钮wifi开关是否打开,
@@ -239,7 +240,7 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
             boolean wifiEnabled = NetworkUtils.getWifiEnabled(this);
             if (wifiEnabled == true) {
                 if (mWhat == 0) {
-                    gotoMediaPlayActivity(userCourseId, courseId, token);
+                    gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
                 } else if (mWhat == 2) {
                     gotoFaceRecognitionActivity(userCourseId, courseId, token);
                 }
@@ -248,7 +249,7 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mWhat == 0) {
-                                    gotoMediaPlayActivity(userCourseId, courseId, token);
+                                    gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
                                 } else if (mWhat == 2) {
                                     gotoFaceRecognitionActivity(userCourseId, courseId, token);
                                 }
@@ -259,7 +260,7 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
             }
         } else {
             if (mWhat == 0) {
-                gotoMediaPlayActivity(userCourseId, courseId, token);
+                gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
             } else if (mWhat == 2) {
                 gotoFaceRecognitionActivity(userCourseId, courseId, token);
             }
@@ -273,13 +274,14 @@ public class MyLessonActivity extends BaseActivity implements  MyCouseFragment.O
      * @param coruseId
      * @param token
      */
-    private void gotoMediaPlayActivity(int userCourseId, int coruseId, String token) {
+    private void gotoMediaPlayActivity(int userCourseId, int coruseId, String token, String imagePath) {
         Intent intent = new Intent(this, MediaPlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("userCourseId", userCourseId);
         bundle.putInt("coruseId", coruseId);
         bundle.putString("token", token);
         bundle.putBoolean("isLocalPlay", false);
+        bundle.putString("imagePath", imagePath);
         intent.putExtras(bundle);
         startActivity(intent);
     }

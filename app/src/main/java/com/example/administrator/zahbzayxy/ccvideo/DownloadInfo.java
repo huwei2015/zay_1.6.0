@@ -38,6 +38,7 @@ public class DownloadInfo {
 	private int sectionId;
 
 	private int coruseId;
+	private String imagePath;
 
 	public int getUserCourseId() {
 		return userCourseId;
@@ -66,7 +67,7 @@ public class DownloadInfo {
 	public DownloadInfo() {
 	}
 
-	public DownloadInfo(String videoId, String title,String name, int status, long start, long end, Date createTime,int userCourseId,int sectionId,int coruseId) {
+	public DownloadInfo(String videoId, String title,String name, int status, long start, long end, Date createTime,int userCourseId,int sectionId,int coruseId, String imagePath) {
 		this.videoId = videoId;
 		this.title = title;
 		this.name=name;
@@ -78,10 +79,11 @@ public class DownloadInfo {
 		this.userCourseId = userCourseId;
 		this.sectionId =sectionId;
 		this.coruseId = coruseId;
+		this.imagePath = imagePath;
 	}
 	
-	public DownloadInfo(String videoId, String title, String name,int status, long start, long end, Date createTime, int definition,int userCourseId,int sectionId,int coruseId) {
-		this(videoId, title,name, status, start, end, createTime,userCourseId,sectionId,coruseId);
+	public DownloadInfo(String videoId, String title, String name,int status, long start, long end, Date createTime, int definition,int userCourseId,int sectionId,int coruseId, String imagePath) {
+		this(videoId, title,name, status, start, end, createTime,userCourseId,sectionId,coruseId, imagePath);
 		this.definition = definition;
 	}
 	
@@ -135,6 +137,14 @@ public class DownloadInfo {
 	
 	public long getStart() {
 		return start;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public DownloadInfo setStart(long start) {

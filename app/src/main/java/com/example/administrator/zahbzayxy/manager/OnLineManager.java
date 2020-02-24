@@ -186,7 +186,7 @@ public class OnLineManager {
                 }
                 int userCourseId = coursesBean.getUserCourseId();
                 int courseId = coursesBean.getMainCourseId();
-                isPerfectPersonInfo(userCourseId, courseId);
+                isPerfectPersonInfo(userCourseId, courseId, coursesBean.getImagePath());
             }
         });
 
@@ -587,7 +587,7 @@ public class OnLineManager {
     }
 
 
-    private void isPerfectPersonInfo(int userCourse_Id, int coruse_Id) {
+    private void isPerfectPersonInfo(int userCourse_Id, int coruse_Id, String imagePath) {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         PersonGroupInterfac personGroupInterfac = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
@@ -601,7 +601,7 @@ public class OnLineManager {
                         if (!data) {
                             //获取用户信息
                             ExecutorService threadPool = ThreadPoolUtils.getThreadPoolExecutor();
-                            GetUserInfoRunnable task = new GetUserInfoRunnable(mContext, userCourse_Id, coruse_Id, token, mHandler);
+                            GetUserInfoRunnable task = new GetUserInfoRunnable(mContext, userCourse_Id, coruse_Id, token, mHandler, imagePath);
                             threadPool.submit(task);
                         } else {
                             showUploadDialog();
@@ -670,6 +670,7 @@ public class OnLineManager {
         final int userCourseId = msg.getData().getInt("userCourseId", 0);
         final int courseId = msg.getData().getInt("coruseId", 0);
         final String token = msg.getData().getString("token");
+        final String imagePath = msg.getData().getString("imagePath");
 
         //wifi相关内容
         //先检查一下设置提醒按钮wifi开关是否打开,
@@ -679,7 +680,7 @@ public class OnLineManager {
             boolean wifiEnabled = NetworkUtils.getWifiEnabled(mContext);
             if (wifiEnabled == true) {
                 if (mWhat == 0) {
-                    gotoMediaPlayActivity(userCourseId, courseId, token);
+                    gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
                 } else if (mWhat == 2) {
                     gotoFaceRecognitionActivity(userCourseId, courseId, token);
                 }
@@ -688,7 +689,7 @@ public class OnLineManager {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mWhat == 0) {
-                                    gotoMediaPlayActivity(userCourseId, courseId, token);
+                                    gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
                                 } else if (mWhat == 2) {
                                     gotoFaceRecognitionActivity(userCourseId, courseId, token);
                                 }
@@ -699,7 +700,7 @@ public class OnLineManager {
             }
         } else {
             if (mWhat == 0) {
-                gotoMediaPlayActivity(userCourseId, courseId, token);
+                gotoMediaPlayActivity(userCourseId, courseId, token, imagePath);
             } else if (mWhat == 2) {
                 gotoFaceRecognitionActivity(userCourseId, courseId, token);
             }
@@ -734,12 +735,13 @@ public class OnLineManager {
      * @param coruseId
      * @param token
      */
-    private void gotoMediaPlayActivity(int userCourseId, int coruseId, String token) {
+    private void gotoMediaPlayActivity(int userCourseId, int coruseId, String token, String imagePath) {
         Intent intent = new Intent(mContext, MediaPlayActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("userCourseId", userCourseId);
         bundle.putInt("coruseId", coruseId);
         bundle.putString("token", token);
+        bundle.putString("imagePath", imagePath);
         bundle.putBoolean("isLocalPlay", false);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
@@ -753,13 +755,15 @@ public class OnLineManager {
         int mCourseId;
         String mToken;
         Handler runHandler;
+        private String mImagePath;
 
-        GetUserInfoRunnable(Context context, int userCourseId, int coruseId, String token, Handler handler) {
+        GetUserInfoRunnable(Context context, int userCourseId, int coruseId, String token, Handler handler, String imagePath) {
             mContext = context;
             mUserCourseId = userCourseId;
             mCourseId = coruseId;
             mToken = token;
             runHandler = handler;
+            this.mImagePath = imagePath;
         }
 
         @Override
@@ -811,6 +815,7 @@ public class OnLineManager {
             bundle.putInt("userCourseId", userCourseId);
             bundle.putInt("coruseId", coruseId);
             bundle.putString("token", token);
+            bundle.putString("imagePath", mImagePath);
 //            bundle.putBoolean("isLocalPlay",false);
             msg.setData(bundle);
 

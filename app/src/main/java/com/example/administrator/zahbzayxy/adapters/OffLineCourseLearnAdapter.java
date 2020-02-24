@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bokecc.sdk.mobile.download.Downloader;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.ccvideo.DownloaderWrapper;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +89,7 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
             holder.titleView.setText(wrapper.getDownloadInfo().getName());
             holder.statusView.setText(getStatusStr(wrapper.getStatus()) + "");
             holder.typeTv.setText("下载中");
+            Picasso.with(context).load(wrapper.getDownloadInfo().getImagePath()).placeholder(R.mipmap.loading_png).into(holder.mDownloadingImg);
             if (wrapper.getStatus() == Downloader.DOWNLOAD) {
 //                holder.speedView.setText(wrapper.getSpeed(context));
                 holder.progressView.setText(wrapper.getDownloadProgressText(context));
@@ -104,6 +107,7 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
         } else {
             holder.titleView.setText(wrapper.getDownloadInfo().getName());
             holder.typeTv.setText("已完成");
+            Picasso.with(context).load(wrapper.getDownloadInfo().getImagePath()).placeholder(R.mipmap.loading_png).into(holder.mDownloadedImg);
             holder.mDownedRootLayout.setOnClickListener(v -> {
                 if (mDownloadedListener != null) {
                     mDownloadedListener.onClick(position);
@@ -148,6 +152,7 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
         TextView typeTv;
         View downedLineView, downingLineView;
         private LinearLayout mDownedRootLayout, mDownloadingRootLayout;
+        private ImageView mDownloadingImg, mDownloadedImg;
 
         public OffLineCourseViewHolder(View itemView, int type) {
             super(itemView);
@@ -159,6 +164,7 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
                 typeTv = itemView.findViewById(R.id.off_line_course_type_tv);
                 mDownedRootLayout = itemView.findViewById(R.id.off_line_downloaded_layout);
                 downedLineView = itemView.findViewById(R.id.downloaded_line_view);
+                mDownloadedImg = itemView.findViewById(R.id.download_item_course_img);
                 downedLineView.setVisibility(View.VISIBLE);
             } else {
                 titleView = (TextView) itemView.findViewById(R.id.download_title);
@@ -170,6 +176,7 @@ public class OffLineCourseLearnAdapter extends RecyclerView.Adapter<OffLineCours
                 typeLayout = itemView.findViewById(R.id.off_line_course_type_layout);
                 typeTv = itemView.findViewById(R.id.off_line_course_type_tv);
                 downingLineView = itemView.findViewById(R.id.downloading_line_view);
+                mDownloadingImg = itemView.findViewById(R.id.download_item_course_img);
                 downingLineView.setVisibility(View.VISIBLE);
                 downloadProgressBar.setMax(100);
             }

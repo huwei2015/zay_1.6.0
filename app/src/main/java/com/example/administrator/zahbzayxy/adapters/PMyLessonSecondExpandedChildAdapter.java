@@ -37,18 +37,20 @@ public class PMyLessonSecondExpandedChildAdapter extends BaseAdapter {
     String userCourseId;
     int selectionId;
     int courseId;
+    private String mImagePath;
     public void setSelectorPos(int selectorPos) {
         this.selectorPos = selectorPos;
     }
 
     private int selectorPos;
 
-    public PMyLessonSecondExpandedChildAdapter( List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list, Context mContext,int getSelectionId,int courseId, String userCourseId) {
+    public PMyLessonSecondExpandedChildAdapter( List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list, Context mContext,int getSelectionId,int courseId, String userCourseId, String imagePath) {
         this.selectionList =list;
         this.mContext = mContext;
         inflater=LayoutInflater.from(mContext);
         this.getSelectionId=getSelectionId;
         this.userCourseId = userCourseId;
+        this.mImagePath = imagePath;
     }
 
     @Override
@@ -115,7 +117,7 @@ public class PMyLessonSecondExpandedChildAdapter extends BaseAdapter {
                                 Toast.makeText(mContext, "文件已存在", Toast.LENGTH_SHORT).show();
                                 // return;
                             }else {
-                                DownloadController.insertDownloadInfo(title, title,selectionName,0, Integer.parseInt(userCourseId), selectionId, courseId);
+                                DownloadController.insertDownloadInfo(title, title,selectionName,0, Integer.parseInt(userCourseId), selectionId, courseId, mImagePath);
                                 Toast.makeText(mContext, "文件已加入下载队列", Toast.LENGTH_SHORT).show();
                             }
 

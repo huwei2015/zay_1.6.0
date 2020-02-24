@@ -163,7 +163,7 @@ public class PMyLessonAdapter extends BaseAdapter {
 //                mOnItemClickListener.onItemClick(v,position);
                 userCourse_Id = userCourseId;
                 coruse_Id = coruseId;
-                isPerfectPersonInfo();
+                isPerfectPersonInfo(list.get(position).getLogo());
             }
         });
         return convertView;
@@ -183,13 +183,15 @@ public class PMyLessonAdapter extends BaseAdapter {
         int mCourseId;
         String mToken;
         Handler runHandler;
+        private String mImagePath;
 
-        GetUserInfoRunnable(Context context, int userCourseId, int coruseId, String token, Handler handler) {
+        GetUserInfoRunnable(Context context, int userCourseId, int coruseId, String token, Handler handler, String imagePath) {
             mContext = context;
             mUserCourseId = userCourseId;
             mCourseId = coruseId;
             mToken = token;
             runHandler = handler;
+            this.mImagePath = imagePath;
         }
 
         @Override
@@ -241,6 +243,7 @@ public class PMyLessonAdapter extends BaseAdapter {
             bundle.putInt("userCourseId", userCourseId);
             bundle.putInt("coruseId", coruseId);
             bundle.putString("token", token);
+            bundle.putString("imagePath", mImagePath);
 //            bundle.putBoolean("isLocalPlay",false);
             msg.setData(bundle);
 
@@ -260,7 +263,7 @@ public class PMyLessonAdapter extends BaseAdapter {
         }
     }
 
-    private void isPerfectPersonInfo() {
+    private void isPerfectPersonInfo(String imagePath) {
         PersonGroupInterfac personGroupInterfac = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
         personGroupInterfac.getPersonInfo(token, userCourse_Id).enqueue(new Callback<PersonInfo>() {
             @Override
@@ -272,7 +275,7 @@ public class PMyLessonAdapter extends BaseAdapter {
                         if (!data) {
                             //获取用户信息
                             ExecutorService threadPool = ThreadPoolUtils.getThreadPoolExecutor();
-                            GetUserInfoRunnable task = new GetUserInfoRunnable(context, userCourse_Id, coruse_Id, token, mHandler);
+                            GetUserInfoRunnable task = new GetUserInfoRunnable(context, userCourse_Id, coruse_Id, token, mHandler, imagePath);
                             threadPool.submit(task);
                         } else {
                             showUploadDialog();

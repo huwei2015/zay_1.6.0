@@ -194,6 +194,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     //当前播放时间
     int current_time;
     public static volatile WeakReference<MediaPlayActivity> mediaPlayWeakReference;
+    private String mImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,6 +281,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         this.currentPosition = getIntent().getIntExtra("currentPosition", 0);
         posIndex = getIntent().getIntExtra("posIndex", 0);
         getSelectionName = getIntent().getStringExtra("getSelectionName");
+        mImagePath = getIntent().getStringExtra("imagePath");
         ArrayList list = (ArrayList<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean>) getIntent().getSerializableExtra("listsize");
         if (list != null && list.size() > 0) {
             listsize = list;
@@ -413,7 +415,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                     Log.e("onMyItemClickedListener", StringUtil.getExceptionMessage(e));
                 }
             }
-        });
+        }, mImagePath);
         PLessonDetailFragment titleFragment = new PLessonDetailFragment();
         LesssonTestLiberyFragment lesssonTestLiberyFragment = new LesssonTestLiberyFragment();
         fragmentList.add(directoryFragment);
@@ -1293,7 +1295,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
             return;
         }
 
-        DownloadController.insertDownloadInfo(videoId, videoId, getSelectionName, userCourseId, sectionId, courseId);
+        DownloadController.insertDownloadInfo(videoId, videoId, getSelectionName, userCourseId, sectionId, courseId, mImagePath);
         Toast.makeText(this, "文件已加入下载队列", Toast.LENGTH_SHORT).show();
     }
 

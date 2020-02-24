@@ -36,8 +36,9 @@ public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
     public int getSelectionId;
     private int courseId;
     private String userCourseId;
+    private String mImagePath;
 
-    public PMyLessonExpandedAdapter(MyInterface.ItemClickedListener itemClickedListener, Context context, List<PMyLessonPlayBean.DataBean.ChildCourseListBean> list, int selectionId, int courseId, String userCourseId) {
+    public PMyLessonExpandedAdapter(MyInterface.ItemClickedListener itemClickedListener, Context context, List<PMyLessonPlayBean.DataBean.ChildCourseListBean> list, int selectionId, int courseId, String userCourseId, String imagePath) {
         this.context = context;
         this.list = list;
         this.itemClickedListener = itemClickedListener;
@@ -45,6 +46,7 @@ public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
         getSelectionId = selectionId;
         this.courseId = courseId;
         this.userCourseId = userCourseId;
+        this.mImagePath = imagePath;
     }
 
     @Override
@@ -123,7 +125,7 @@ public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
                 //切换视频点击事件
                 itemClickedListener.onMyItemClickedListener(vidioId, videoIndex, selectionId, playPercent, lessonName, selectionIdack, startPlaytTime, list);
             }
-        }, chapterList, context, getSelectionId, courseId, userCourseId);
+        }, chapterList, context, getSelectionId, courseId, userCourseId, mImagePath);
 
 //        final PMyLesonSecondExPandedAdapter adapter=new PMyLesonSecondExPandedAdapter(new MyInterface.ItemClickedListener() {
 //            @Override
