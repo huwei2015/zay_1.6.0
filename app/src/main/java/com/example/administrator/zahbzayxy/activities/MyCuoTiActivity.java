@@ -1,6 +1,7 @@
 package com.example.administrator.zahbzayxy.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.example.administrator.zahbzayxy.beans.PCuoTiJiLuBean;
 import com.example.administrator.zahbzayxy.event.ErrorDataEvent;
 import com.example.administrator.zahbzayxy.interfacecommit.PracticeInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -46,6 +48,7 @@ public class MyCuoTiActivity extends BaseActivity {
     private RelativeLayout rl_empty;
     private LinearLayout ll_list;
     private TextView tv_msg;
+    private ProgressBarLayout mLoadingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,7 @@ public class MyCuoTiActivity extends BaseActivity {
     }
 
     private void initPullToRefershLv() {
-//        myError_plv.setMode(PullToRefreshBase.Mode.BOTH);
+        myError_plv.setMode(PullToRefreshBase.Mode.BOTH);
         downLoadData(pager);
         myError_plv.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -81,11 +84,13 @@ public class MyCuoTiActivity extends BaseActivity {
     }
 
     private void downLoadData(int pager) {
+        mLoadingBar.show();
         PracticeInterface aClass = RetrofitUtils.getInstance().createClass(PracticeInterface.class);
         aClass.lookErrorData(pager,10,token).enqueue(new Callback<PCuoTiJiLuBean>() {
             @Override
             public void onResponse(Call<PCuoTiJiLuBean> call, Response<PCuoTiJiLuBean> response) {
                 if (response!=null && response.body() !=null && response.body().getData() != null) {
+                    mLoadingBar.hide();
                     PCuoTiJiLuBean body = response.body();
                     String errMsg = (String) response.body().getErrMsg();
                     if (body.getCode().equals("00003")) {
@@ -121,6 +126,7 @@ public class MyCuoTiActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<PCuoTiJiLuBean> call, Throwable t) {
+                mLoadingBar.hide();
                 isVisible(false);
                 Toast.makeText(MyCuoTiActivity.this,t.getMessage(),Toast.LENGTH_SHORT).show();
 
@@ -155,6 +161,7 @@ public class MyCuoTiActivity extends BaseActivity {
         Log.e("danWeiToken",token);
         back_iv= (ImageView) findViewById(R.id.myCuoTiBack_iv);
         rl_empty= (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        mLoadingBar= (ProgressBarLayout) findViewById(R.id.progressBar);
         ll_list= (LinearLayout) findViewById(R.id.ll_list);
         tv_msg= (TextView) findViewById(R.id.tv_msg);
         back_iv.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +197,16 @@ public class MyCuoTiActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);//反注册EventBus
 
     }
+    public void showLoadingBar(boolean transparent) {
+        mLoadingBar.setBackgroundColor(transparent ? Color.TRANSPARENT : getResources().getColor(R.color.main_bg));
+        mLoadingBar.show();
+    }
+
+    public void hideLoadingBar() {
+        mLoadingBar.hide();
+    }
+
+
     private void isVisible(boolean flag){
         if(flag){
             ll_list.setVisibility(View.VISIBLE);

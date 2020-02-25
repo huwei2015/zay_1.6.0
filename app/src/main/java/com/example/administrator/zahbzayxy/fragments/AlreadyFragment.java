@@ -75,7 +75,7 @@ public class AlreadyFragment extends Fragment {
         initView();
         mLoadView = true;
         mIsHasData = true;
-        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setRefreshing(false);
         initEvent();
         initData();
         return view;
@@ -91,7 +91,7 @@ public class AlreadyFragment extends Fragment {
             mIsHasData = true;
             notPassListBeans.clear();
             alreadyAdapter.setList(notPassListBeans);
-            mRefreshLayout.setRefreshing(true);
+            mRefreshLayout.setRefreshing(false);
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -99,6 +99,7 @@ public class AlreadyFragment extends Fragment {
 
     private void initData(){
         if (!isVisible) return;
+        mLoading.show();
         SharedPreferences sharedPreferences =mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);

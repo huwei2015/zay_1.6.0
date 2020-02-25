@@ -91,7 +91,7 @@ android {
             keyAlias "zayxy"
             keyPassword "123456"
             //禁用v2签名方式
-            v2SigningEnabled false
+//            v2SigningEnabled false
         }
         release {
             storeFile file("../keyStorePath.jks")
@@ -99,7 +99,7 @@ android {
             keyAlias "zayxy"
             keyPassword "123456"
             //禁用v2签名方式
-            v2SigningEnabled false
+//            v2SigningEnabled false
         }
     }
     compileOptions {

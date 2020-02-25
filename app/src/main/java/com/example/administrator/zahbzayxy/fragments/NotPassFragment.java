@@ -84,7 +84,7 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
         initView();
         mLoadView = true;
         mIsHasData = true;
-        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setRefreshing(false);//默认不显示刷新
         initEvent();
         initData();
         return view;
@@ -100,7 +100,7 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
             mIsHasData = true;
             notPassListBeans.clear();
             notPassAdapter.setList(notPassListBeans);
-            mRefreshLayout.setRefreshing(true);
+            mRefreshLayout.setRefreshing(false);
             initData();
         }
         super.setUserVisibleHint(isVisibleToUser);
@@ -108,6 +108,7 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
 
     private void initData() {
         if (!isVisible) return;
+        mLoading.show();
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);

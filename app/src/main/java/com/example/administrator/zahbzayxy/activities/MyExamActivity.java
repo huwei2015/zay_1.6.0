@@ -75,6 +75,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
 
 
     private void getExamList() {
+        mLoading.show();
         SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("token", "");
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
@@ -94,12 +95,6 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
                     if (code.equals("00000")) {
                         emptyLayout(true);
                         List<ExamBean.QuesLibsBean> beanList = response.body().getData().getQuesLibs();
-
-//                        for (int i = 0; i < beanList.size(); i++) {
-//                            //我的考试需要用上
-//                            userQuesLibId=beanList.get(i).getUserQuesLibId();
-//                            isPerfectPersonInfo();
-//                        }
                         if (currentPage == 1) {
                             if (beanList == null || beanList.size() == 0) {
                                 emptyLayout(false);
@@ -171,9 +166,6 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         Utils.setRefreshViewColor(mRefreshLayout);
         mLayoutManager = new LinearLayoutManager(MyExamActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-
-
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
         token = tokenDb.getString("token", "");
         img_back = (ImageView) findViewById(R.id.nb_order_return);
@@ -190,7 +182,7 @@ public class MyExamActivity extends BaseActivity implements View.OnClickListener
         mRecyclerView.setAdapter(examAdapter);
 
         mIsHasData = true;
-        mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setRefreshing(false);
         initEvent();
     }
 

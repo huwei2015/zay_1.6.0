@@ -26,7 +26,12 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
-
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="visible"/>
     <LinearLayout
         android:id="@+id/ll_list"
         android:layout_width="match_parent"
