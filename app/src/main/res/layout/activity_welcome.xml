@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/welcome"
     tools:context="com.example.administrator.zahbzayxy.activities.WelcomeActivity">
 <ImageView
     android:id="@+id/welcome_iv"
     android:src="@mipmap/icon_big"
-    android:layout_marginTop="140dp"
+    android:layout_marginTop="120dp"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
     android:layout_width="wrap_content"
