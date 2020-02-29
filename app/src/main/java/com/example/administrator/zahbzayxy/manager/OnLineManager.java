@@ -287,6 +287,9 @@ public class OnLineManager {
         }
     }
 
+    /**
+     * 线下课导航
+     */
     private void loadOffLineTitleData(){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
@@ -324,6 +327,9 @@ public class OnLineManager {
         });
     }
 
+    /**
+     * 在线课导航
+     */
     private void loadOnLineTitleData(){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
@@ -387,11 +393,15 @@ public class OnLineManager {
         }
     }
 
+    /**
+     * 线下卡接口
+     * @param position
+     * @param isAchieve
+     */
     private void offLineCourseList(int position, int isAchieve) {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
-
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
         mOffLineCall = aClass.getOffLineCourseList(mPage, 10, cateId, isAchieve, token);
         mOffLineCall.enqueue(new Callback<OfflineCourseLearnBean>() {
@@ -454,6 +464,11 @@ public class OnLineManager {
         });
     }
 
+    /**
+     * 在线课接口
+     * @param position
+     * @param isAchieve
+     */
     private void onLineCourseList(int position, int isAchieve){
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
@@ -586,7 +601,12 @@ public class OnLineManager {
         });
     }
 
-
+    /**
+     * 是否需要完善个人信息
+     * @param userCourse_Id
+     * @param coruse_Id
+     * @param imagePath
+     */
     private void isPerfectPersonInfo(int userCourse_Id, int coruse_Id, String imagePath) {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
