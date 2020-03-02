@@ -28,6 +28,7 @@ import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.FaceRecognitionActivity;
+import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.adapters.LearnOfflineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnLineTitleAdapter;
@@ -128,12 +129,13 @@ public class OnLineManager {
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    public void setEmptyView(RelativeLayout emptyView, RelativeLayout filterLayout){
+    public void setEmptyView(RelativeLayout emptyView, RelativeLayout filterLayout) {
         rl_empty = emptyView;
         this.mFilterLayout = filterLayout;
     }
 
     private boolean mLoad = false;
+
     private void setView() {
         if (mLoad) return;
         mLoad = true;
@@ -147,7 +149,7 @@ public class OnLineManager {
         mFilterCb.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
             if (mLoadingData) {
                 ToastUtils.showLongInfo("正在加载数据，请稍后");
-                Log.i("====mFilterCb===","mFilterCb");
+                Log.i("====mFilterCb===", "mFilterCb");
                 mFilterCb.setChecked(!isChecked);
                 return;
             }
@@ -174,7 +176,7 @@ public class OnLineManager {
         }
     }
 
-    private void initEvent(){
+    private void initEvent() {
         mCourseAdapter.setOnLearnOnlineItemClickListener(position -> {
             // 在线课点击事件处理
             OnlineCourseBean.UserCoursesBean coursesBean = mCoursesList.get(position);
@@ -199,7 +201,7 @@ public class OnLineManager {
         });
     }
 
-    private void initLoadingEvent(){
+    private void initLoadingEvent() {
         mRefreshLayout.setOnRefreshListener(() -> {
             mLoadingData = true;
             mLoadType = 1;
@@ -214,7 +216,7 @@ public class OnLineManager {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 // 没有更多的数据了
                 if (!mIsHasData) return;
-                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                int lastVisibleItem =((LinearLayoutManager)(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
                 int itemCount = 0;
                 if (mCourseType == 0) {
                     itemCount = mCourseAdapter.getItemCount();
@@ -223,9 +225,10 @@ public class OnLineManager {
                 }
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == itemCount && !mIsLoading) {
                     mLoading.show();
-                    mIsLoading = true;
+                    mIsLoading = false;
                     mLoadType = 2;
                     mPage++;
+                    Log.i("zahb", "zahb===============" + mPage);
                     setCourseList(mPosition, mIsAchieve);
                 }
 
@@ -243,7 +246,7 @@ public class OnLineManager {
         this.mLoadingBar = loadingView;
     }
 
-    private void clearList(){
+    private void clearList() {
         mCoursesList.clear();
         mBeforeList.clear();
         mOneWeekList.clear();
@@ -262,10 +265,11 @@ public class OnLineManager {
 
     /**
      * 加载数据
+     *
      * @param type 0，在线课程  1，线下课程
      */
     public void loadDAta(int type) {
-        mRefreshLayout.setEnabled(true);
+        mRefreshLayout.setEnabled(true);//上拉加载
         mCourseType = type;
         mPosition = 0;
         initLoadingEvent();
@@ -290,12 +294,12 @@ public class OnLineManager {
     /**
      * 线下课导航
      */
-    private void loadOffLineTitleData(){
+    private void loadOffLineTitleData() {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         Log.i("token", token);
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getOffLinTitle(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
+        aClass.getOffLinTitle(mFilterCb.isChecked() ? 1 : 0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
                 if (response != null && response.body() != null && response.body().getData() != null) {
@@ -310,7 +314,7 @@ public class OnLineManager {
                             isVisible(true);
                         }
                         setTitle();
-                        setCourseList(mPosition, mFilterCb.isChecked()?1:0);
+                        setCourseList(mPosition, mFilterCb.isChecked() ? 1 : 0);
                         return;
                     }
                 }
@@ -330,11 +334,11 @@ public class OnLineManager {
     /**
      * 在线课导航
      */
-    private void loadOnLineTitleData(){
+    private void loadOnLineTitleData() {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        aClass.getLearnNavigationData(mFilterCb.isChecked()?1:0, token).enqueue(new Callback<LearnNavigationBean>() {
+        aClass.getLearnNavigationData(mFilterCb.isChecked() ? 1 : 0, token).enqueue(new Callback<LearnNavigationBean>() {
             @Override
             public void onResponse(Call<LearnNavigationBean> call, Response<LearnNavigationBean> response) {
                 if (response != null && response.body() != null && response.body().getData() != null) {
@@ -349,7 +353,7 @@ public class OnLineManager {
                             isVisible(true);
                         }
                         setTitle();
-                        setCourseList(mPosition, mFilterCb.isChecked()?1:0);
+                        setCourseList(mPosition, mFilterCb.isChecked() ? 1 : 0);
                         return;
                     }
                 }
@@ -380,7 +384,7 @@ public class OnLineManager {
     }
 
     private void setCourseList(int position, int isAchieve) {
-        if (mLearnList == null || mLearnList.size() == 0){
+        if (mLearnList == null || mLearnList.size() == 0) {
             hindLoading();
             return;
         }
@@ -394,7 +398,8 @@ public class OnLineManager {
     }
 
     /**
-     * 线下卡接口
+     * 线下课接口
+     *
      * @param position
      * @param isAchieve
      */
@@ -466,14 +471,14 @@ public class OnLineManager {
 
     /**
      * 在线课接口
+     *
      * @param position
      * @param isAchieve
      */
-    private void onLineCourseList(int position, int isAchieve){
+    private void onLineCourseList(int position, int isAchieve) {
         SharedPreferences tokenDb = mContext.getSharedPreferences("tokenDb", mContext.MODE_PRIVATE);
         String token = tokenDb.getString("token", "");
         int cateId = NumberFormatUtils.parseInt(mLearnList.get(position).getCateId());
-
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
         mOnLineCall = aClass.getOnLineCourseList(mPage, 10, cateId, isAchieve, token);
         mOnLineCall.enqueue(new Callback<OnlineCourseBean>() {
@@ -579,6 +584,7 @@ public class OnLineManager {
     }
 
     private void hindLoading() {
+        mIsLoading = false;//刷新问题
         mLoadingData = false;
         mRefreshLayout.setRefreshing(false);
         mLoading.dismiss();
@@ -603,6 +609,7 @@ public class OnLineManager {
 
     /**
      * 是否需要完善个人信息
+     *
      * @param userCourse_Id
      * @param coruse_Id
      * @param imagePath
@@ -633,8 +640,8 @@ public class OnLineManager {
 
             @Override
             public void onFailure(Call<PersonInfo> call, Throwable t) {
-                String msg= t.getMessage();
-                Toast.makeText(mContext,"网络异常",Toast.LENGTH_SHORT).show();
+                String msg = t.getMessage();
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
             }
         });
     }

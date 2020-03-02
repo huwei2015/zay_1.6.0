@@ -75,7 +75,7 @@ public class RetrofitUtils{
                                     }).build();
         builder.client(httpClient);
         mRetrofit = builder.baseUrl(BASE_URL)
-        .addConverterFactory(MyGsonConverterFactory.create())
+        .addConverterFactory(MyGsonConverterFactory.create())//统一错误处理
             .build();
 }
 
