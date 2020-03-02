@@ -186,19 +186,22 @@ public class MyOnLineManager {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 // 没有更多的数据了
+                Log.i("zahbcc", "zahb===============" + newState+"======"+mIsHasData+"===="+mPage);
                 if (!mIsHasData) return;
-                int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                int lastVisibleItem = ((LinearLayoutManager)(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
                 int itemCount = 0;
                 if (mCourseType == 0) {
                     itemCount = mCourseAdapter.getItemCount();
                 } else {
                     itemCount = mOffLineAdapter.getItemCount();
                 }
+                //Log.i("zahbcc", "zahb===============" + newState+"=="+lastVisibleItem+"==="+itemCount+"===="+mIsLoading);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == itemCount && !mIsLoading) {
                     mLoading.show();
-                    mIsLoading = true;
+                    mIsLoading = false;
                     mLoadType = 2;
                     mPage++;
+                    //Log.i("zahbcc", "zahb===============" + mPage);
                     setCourseList(mPosition, mIsAchieve);
                 }
 
@@ -234,18 +237,18 @@ public class MyOnLineManager {
      * @param type 0，在线课程  1，线下课程
      */
     public void loadDAta(int type) {
+        mRefreshLayout.setEnabled(true);//上拉加载
+        mIsHasData=true;
         mCourseType = type;
-        setView();
-        initLoadingEvent();
         mPosition = 0;
-
+        initLoadingEvent();
         mLoadType = 0;
         mPage = 1;
         clearList();
-        mLoading.show();
         mLoadingData = true;
+        mLoading.show();
+        setView();
         initNavigationData();
-
     }
 
     private void initNavigationData() {
@@ -381,6 +384,7 @@ public class MyOnLineManager {
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
                             mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         }
                         if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
@@ -392,12 +396,14 @@ public class MyOnLineManager {
                             isVisible(true);
                         }
                         beanList = setOfflineDataList(beanList);
-                        mOfflineList.clear();
+                        //mOfflineList.clear();
                         mOfflineList.addAll(beanList);
                         mOffLineAdapter.setData(mOfflineList);
                         if (mPage == 1) {
                             mRecyclerView.scrollToPosition(0);
                         }
+                        mLoadingData = false;
+                        mLoading.dismiss();
                         return;
                     }
                 }
@@ -442,21 +448,26 @@ public class MyOnLineManager {
                             mIsHasData = false;
                             ToastUtils.showShortInfo("数据加载完毕");
                             mPage--;
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         }
                         if (mPage == 1 && (beanList == null || beanList.size() == 0)) {
                             isVisible(false);
+                            mLoadingData = false;
+                            mLoading.dismiss();
                             return;
                         } else {
                             isVisible(true);
                         }
                         beanList = setDataList(beanList);
-                        mCoursesList.clear();
                         mCoursesList.addAll(beanList);
                         mCourseAdapter.setData(mCoursesList);
                         if (mPage == 1) {
                             mRecyclerView.scrollToPosition(0);
                         }
+                        mLoadingData = false;
+                        mLoading.dismiss();
                         return;
                     }
                 }
@@ -498,7 +509,7 @@ public class MyOnLineManager {
         List<OnlineCourseBean.UserCoursesBean> list = new ArrayList<>();
         list.addAll(mOneWeekList);
         list.addAll(mBeforeList);
-        return list;
+        return data;
     }
 
     private List<OfflineCourseLearnBean.UserCoursesBean> setOfflineDataList(List<OfflineCourseLearnBean.UserCoursesBean> data) {
@@ -518,10 +529,11 @@ public class MyOnLineManager {
         List<OfflineCourseLearnBean.UserCoursesBean> list = new ArrayList<>();
         list.addAll(mOfflineNewList);
         list.addAll(mOfflineMoreList);
-        return list;
+        return data;
     }
 
     private void hindLoading() {
+        mIsLoading = false;//刷新问题
         mLoadingData = false;
         mRefreshLayout.setRefreshing(false);
         mLoading.dismiss();
