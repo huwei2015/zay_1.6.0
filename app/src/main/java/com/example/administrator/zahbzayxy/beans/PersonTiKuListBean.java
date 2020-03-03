@@ -141,6 +141,15 @@ public class PersonTiKuListBean {
             private int packageId;
             private int state;
             private String msg_cont;
+            private int limitSign;
+
+            public int getLimitSign() {
+                return limitSign;
+            }
+
+            public void setLimitSign(int limitSign) {
+                this.limitSign = limitSign;
+            }
 
             public String getMsg_cont() {
                 return msg_cont;

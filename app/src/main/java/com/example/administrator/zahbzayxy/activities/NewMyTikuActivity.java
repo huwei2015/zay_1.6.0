@@ -66,6 +66,7 @@ public class NewMyTikuActivity extends BaseActivity {
     int remainingTime;//剩余时间
     int tiku_state;
     String msg_cont;//未完成提示
+    int limitSign;//过期次数限制
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,12 +219,24 @@ public class NewMyTikuActivity extends BaseActivity {
         myNewTest_sp_tv.setText(quesLibsEntity.getQuesLibName() + "");
         String packageName = quesLibsEntity.getPackageName();
         newMyTestType_tv.setText(packageName + "");
-        remainingTime = quesLibsEntity.getRemainingTime();
+        remainingTime = quesLibsEntity.getRemainingTime();//剩余时间
+        examNum = quesLibsEntity.getExamNum();//考试次数
+        limitSign =quesLibsEntity.getLimitSign();//考试状态
+        if(limitSign == 1){
+            myNewTestRemainDays_tv.setText("无限期");
+            myNewTestRemainNums_tv.setText("剩余" + examNum + "次");
+        }else if(limitSign == 2){
         myNewTestRemainDays_tv.setText(remainingTime + "天");
+            myNewTestRemainNums_tv.setText("无限次");
+        }else if(limitSign == 3){
+            myNewTestRemainDays_tv.setText("无限期");
+            myNewTestRemainNums_tv.setText("无限次");
+        }
+//        myNewTestRemainDays_tv.setText(remainingTime + "天");
 //        int parsing = quesLibsEntity.isParsing();
 //        if (parsing == 1) {
-        examNum = quesLibsEntity.getExamNum();
-        myNewTestRemainNums_tv.setText("剩余" + examNum + "次");
+//        examNum = quesLibsEntity.getExamNum();
+//        myNewTestRemainNums_tv.setText("剩余" + examNum + "次");
 //        }
 //        else {
 //            myNewTestRemainNums_tv.setText("不限次数");
@@ -234,6 +247,7 @@ public class NewMyTikuActivity extends BaseActivity {
         quesLibName = quesLibsEntity.getQuesLibName();
         tiku_state = quesLibsEntity.getState();
         msg_cont=quesLibsEntity.getMsg_cont();
+        limitSign=quesLibsEntity.getLimitSign();
     }
 
 
