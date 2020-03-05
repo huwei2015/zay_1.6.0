@@ -30,6 +30,11 @@ android {
             exclude 'lib/mips64/*.so'
             exclude 'lib/mips/*.so'
         }
+        repositories {
+            flatDir {
+                dirs 'libs'
+            }
+        }
     }
 //    productFlavors {
 //        default_channel {}
@@ -122,7 +127,9 @@ dependencies {
     implementation project(':androidautoscrollviewpager')
     implementation project(':pullToRefresh_Library')
 //    compile files('C:/Youxun/MyApplication/eventbus-3.0.0.jar')
-    implementation files('libs/alipaySdk-20170309.jar')
+//    implementation files('libs/alipaySdk-20170309.jar')
+    implementation (name: 'alipaySdk-15.6.8-20191021122455', ext: 'aar')
+
 //    compile files('libs/eventbus-3.0.0.jar')
     compile files('libs/SocialSDK_QQ_Simplify.jar')
     compile files('libs/SocialSDK_Sina_Simplify.jar')

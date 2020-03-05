@@ -1,5 +1,4 @@
 package com.example.administrator.zahbzayxy.adapters;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,30 +17,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.beans.BookBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
-import com.example.administrator.zahbzayxy.beans.QueslibBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myviews.ImageRadiusView;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
-import com.example.administrator.zahbzayxy.utils.TextAndPictureUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.ta.utdid2.android.utils.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
