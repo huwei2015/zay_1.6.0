@@ -16,6 +16,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.BinaryCastUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -74,26 +75,24 @@ public class MyAccountPayActivity extends BaseActivity {
                 if (body!=null){
                     String code = body.getCode();
                     if (code.equals("00031")){
-                        Toast.makeText(MyAccountPayActivity.this, "余额不足", Toast.LENGTH_SHORT).show();
-
+                        ToastUtils.showLongInfo("余额不足");
                     }else if (code.equals("00032")){
-                        Toast.makeText(MyAccountPayActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
-
+                        ToastUtils.showLongInfo("密码错误");
                     }else if (code.equals("00000")){
                         boolean data = body.getData();
                         if (data==true){
-                            Toast.makeText(MyAccountPayActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                            ToastUtils.showLongInfo("支付成功");
                             Intent intent=new Intent(MyAccountPayActivity.this,PaySuccessActivity.class);
                             if (!TextUtils.isEmpty(orderPrice)){
                                 intent.putExtra("orderPrice",orderPrice);
                             }
                             startActivity(intent);
                         }else {
-                            Toast.makeText(MyAccountPayActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                            ToastUtils.showLongInfo("支付失败");
                         }
                     }else {
                         Object errMsg = body.getErrMsg();
-                        Toast.makeText(MyAccountPayActivity.this, errMsg.toString(), Toast.LENGTH_SHORT).show();
+                        ToastUtils.showLongInfo(errMsg.toString());
                     }
                 }
             }

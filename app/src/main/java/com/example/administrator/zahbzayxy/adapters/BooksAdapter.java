@@ -134,7 +134,7 @@ public class BooksAdapter extends BaseAdapter {
             Picasso.with(context).load(courseListBean.getImageUrl()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic1);
         }
 
-        if(!StringUtils.isEmpty(courseListBean.getUpdateTime())){
+        if(!TextUtils.isEmpty(courseListBean.getUpdateTime())){
             String[] arrs=courseListBean.getUpdateTime().split("-");
             String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
             SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
@@ -163,7 +163,7 @@ public class BooksAdapter extends BaseAdapter {
                 Picasso.with(context).load(courseListBean.getImageUrl1()).placeholder(R.mipmap.loading_png).into(myViewHold.recPic2);
             }
 
-            if(!StringUtils.isEmpty(courseListBean.getUpdateTime1())){
+            if(!TextUtils.isEmpty(courseListBean.getUpdateTime1())){
                 String[] arrs=courseListBean.getUpdateTime1().split("-");
                 String newDate=(Integer.valueOf(arrs[0])+1)+arrs[1]+arrs[2];
                 SimpleDateFormat srtFormat = new SimpleDateFormat("yyyyMMdd");
