@@ -31,6 +31,7 @@ import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
 import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 
@@ -118,23 +119,23 @@ public class NotPassFragment extends Fragment implements NotPassAdapter.onItemCl
                 closeSwipeRefresh();
                 mLoading.dismiss();
                 mIsLoading = false;
-                if (response != null && response.body() != null && response.body().getData() != null) {
-                    NotPassBean.NotPassListBean data1 = response.body().getData();
-                    List<NotPassBean.NotListData> listData = null;
-                    if (data1 != null) {
-                        NotPassBean.NotDataBean notDataBean = data1.getqLibs();
-                        if (notDataBean != null) {
-                            listData = notDataBean.getData();
-                        }
-                    }
-                    if (currentPage == 1 && listData != null && listData.size() == 0) {
-                        emptyLayout(false);
-                    } else {
-                        emptyLayout(true);
-                    }
-                    if (listData == null) {
-                        return;
-                    }
+                if (response != null && response.body() != null && response.body().getData() != null && response.body().getData().getqLibs() != null) {
+//                    NotPassBean.NotPassListBean data1 = response.body().getData();
+//                    List<NotPassBean.NotListData> listData = null;
+//                    if (data1 != null) {
+//                        NotPassBean.NotDataBean notDataBean = data1.getqLibs();
+//                        if (notDataBean != null) {
+//                            listData = notDataBean.getData();
+//                        }
+//                    }
+//                    if (currentPage == 1 && listData != null && listData.size() == 0) {
+//                        emptyLayout(false);
+//                    } else {
+//                        emptyLayout(true);
+//                    }
+//                    if (listData == null) {
+//                        return;
+//                    }
                     String code = response.body().getCode();
                     List<NotPassBean.NotListData> data = response.body().getData().getqLibs().getData();
                     if (code.equals("00000")) {
