@@ -362,79 +362,80 @@ public class TestContentActivity1 extends BaseActivity {
         testCommit_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isCommit) {
-                    int size = listToPost.size();
-                    int doNum = 0;
-                    for (int i = 0; i < size; i++) {
-                        int isRight = listToPost.get(i).getIsRight();
-                        String userAnswerIds = listToPost.get(i).getUserAnswerIds();
-                        if (!TextUtils.isEmpty(userAnswerIds)) {
-                            doNum++;
-                        }
-                        if (isRight == 1) {
-                            rightNum++;
-                        } else {
-                            rongNum++;
-                        }
-                    }
-                    //   correctRate = (int) ((rightNum/(size))*100);
-
-                    popView = LayoutInflater.from(TestContentActivity1.this).inflate(R.layout.tanchukuang, null, false);
-                    TextView tvtvtv1 = popView.findViewById(R.id.tvtvtv1);
-                    TextView zuoti = popView.findViewById(R.id.zuoti);
-                    tijiao = popView.findViewById(R.id.tijiao);
-
-                    if (doNUm == TestContentActivity1.this.size) {
-                        tvtvtv1.setText("您已完成全部试卷");
-                    } else {
-                        double shengYuNum = size - doNUm;
-                        if (shengYuNum > 0) {
-                            tvtvtv1.setText("您还有" + (size - doNum) + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
-                        } else {
-                            tvtvtv1.setText("您还剩" + 0 + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
-                        }
-                    }
-                    useTime = test(examTime * 60 - shengyu);
-                    popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
-                    popupWindow.setTouchable(true);
-                    // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
-                    popupWindow.setOutsideTouchable(true);
-                    // 配合 点击外部区域消失使用 否则 没有效果
-                    zuoti.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popupWindow.dismiss();
-                        }
-                    });
-                    //点击提交按钮时
-                    tijiao.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            isCommit = true;
-                            Log.e("iscommit", isCommit + "");
-                            try {
-                                if (isFreeTest == true) {
-                                    initFreeTestDialog();
-                                    popupWindow.dismiss();
-
-                                } else {
-                                    //上传做题结果
-                                    initToPostJsonData();
-                                    // madapter.setRightNum(0);
-                                    //  madapter.setRongNum(0);
-                                    //  finish();
-                                    popupWindow.dismiss();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            //做题个数
-                        }
-
-                    });
-
-                    popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                }
+                showDialog();
+//                if (!isCommit) {
+//                    int size = listToPost.size();
+//                    int doNum = 0;
+//                    for (int i = 0; i < size; i++) {
+//                        int isRight = listToPost.get(i).getIsRight();
+//                        String userAnswerIds = listToPost.get(i).getUserAnswerIds();
+//                        if (!TextUtils.isEmpty(userAnswerIds)) {
+//                            doNum++;
+//                        }
+//                        if (isRight == 1) {
+//                            rightNum++;
+//                        } else {
+//                            rongNum++;
+//                        }
+//                    }
+//                    //   correctRate = (int) ((rightNum/(size))*100);
+//
+//                    popView = LayoutInflater.from(TestContentActivity1.this).inflate(R.layout.tanchukuang, null, false);
+//                    TextView tvtvtv1 = popView.findViewById(R.id.tvtvtv1);
+//                    TextView zuoti = popView.findViewById(R.id.zuoti);
+//                    tijiao = popView.findViewById(R.id.tijiao);
+//
+//                    if (doNUm == TestContentActivity1.this.size) {
+//                        tvtvtv1.setText("您已完成全部试卷");
+//                    } else {
+//                        double shengYuNum = size - doNUm;
+//                        if (shengYuNum > 0) {
+//                            tvtvtv1.setText("您还有" + (size - doNum) + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
+//                        } else {
+//                            tvtvtv1.setText("您还剩" + 0 + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
+//                        }
+//                    }
+//                    useTime = test(examTime * 60 - shengyu);
+//                    popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
+//                    popupWindow.setTouchable(true);
+//                    // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
+//                    popupWindow.setOutsideTouchable(true);
+//                    // 配合 点击外部区域消失使用 否则 没有效果
+//                    zuoti.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            popupWindow.dismiss();
+//                        }
+//                    });
+//                    //点击提交按钮时
+//                    tijiao.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            isCommit = true;
+//                            Log.e("iscommit", isCommit + "");
+//                            try {
+//                                if (isFreeTest == true) {
+//                                    initFreeTestDialog();
+//                                    popupWindow.dismiss();
+//
+//                                } else {
+//                                    //上传做题结果
+//                                    initToPostJsonData();
+//                                    // madapter.setRightNum(0);
+//                                    //  madapter.setRongNum(0);
+//                                    //  finish();
+//                                    popupWindow.dismiss();
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            //做题个数
+//                        }
+//
+//                    });
+//
+//                    popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//                }
             }
         });
     }
@@ -1234,21 +1235,79 @@ public class TestContentActivity1 extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    private void showDialog(){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(TestContentActivity1.this);
-        dialog.setTitle("提示");
-        dialog.setMessage("确定退出考试吗？");
-        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                finish();
+    private void showDialog() {
+        if (!isCommit) {
+            int size = listToPost.size();
+            int doNum = 0;
+            for (int i = 0; i < size; i++) {
+                int isRight = listToPost.get(i).getIsRight();
+                String userAnswerIds = listToPost.get(i).getUserAnswerIds();
+                if (!TextUtils.isEmpty(userAnswerIds)) {
+                    doNum++;
+                }
+                if (isRight == 1) {
+                    rightNum++;
+                } else {
+                    rongNum++;
+                }
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            //   correctRate = (int) ((rightNum/(size))*100);
+
+            popView = LayoutInflater.from(TestContentActivity1.this).inflate(R.layout.tanchukuang, null, false);
+            TextView tvtvtv1 = popView.findViewById(R.id.tvtvtv1);
+            TextView zuoti = popView.findViewById(R.id.zuoti);
+            tijiao = popView.findViewById(R.id.tijiao);
+
+            if (doNUm == TestContentActivity1.this.size) {
+                tvtvtv1.setText("您已完成全部试卷");
+            } else {
+                double shengYuNum = size - doNUm;
+                if (shengYuNum > 0) {
+                    tvtvtv1.setText("您还有" + (size - doNum) + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
+                } else {
+                    tvtvtv1.setText("您还剩" + 0 + "道题未做,还剩" + (shengyu / 60) + "分钟,是否确认提交?");
+                }
             }
-        }).show();
+            useTime = test(examTime * 60 - shengyu);
+            popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
+            popupWindow.setTouchable(true);
+            // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
+            popupWindow.setOutsideTouchable(true);
+            // 配合 点击外部区域消失使用 否则 没有效果
+            zuoti.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
+            //点击提交按钮时
+            tijiao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isCommit = true;
+                    Log.e("iscommit", isCommit + "");
+                    try {
+                        if (isFreeTest == true) {
+                            initFreeTestDialog();
+                            popupWindow.dismiss();
+
+                        } else {
+                            //上传做题结果
+                            initToPostJsonData();
+                            // madapter.setRightNum(0);
+                            //  madapter.setRongNum(0);
+                            //  finish();
+                            popupWindow.dismiss();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //做题个数
+                }
+
+            });
+
+            popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
     }
 }

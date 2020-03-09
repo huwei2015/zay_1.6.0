@@ -28,7 +28,9 @@ public interface BuyCarGroupInterface {
 
     //添加购物车课程
     @GET(value = buyCarAddCourse)
-    Call<SuccessBean> buyCarAddCourseData(@Query("mainCourseId") Integer mainCourseId, @Query("subCourseIds") String[] subCourseIds, @Query("token") String token);
+    Call<SuccessBean> buyCarAddCourseData(@Query("mainCourseId") Integer mainCourseId,
+                                          @Query("subCourseIds") String[] subCourseIds,
+                                          @Query("token") String token);
 
     //购物车列表展示
     @GET(value = buyCarListCourse)
