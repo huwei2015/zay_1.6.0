@@ -446,7 +446,7 @@ public class TestDetailActivity extends BaseActivity {
         startActivity(intent);
 
     }
-//点击进入考试模式
+//点击进入免费考试模式
     public void testOnclick(View view) {
         String startTime = DateUtil.getNow(DateUtil.DEFAULTPATTERN);
         Log.e("currentTime",startTime);

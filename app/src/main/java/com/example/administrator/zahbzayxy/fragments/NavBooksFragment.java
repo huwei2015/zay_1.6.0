@@ -48,7 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * HYY 在线课
+ * HYY 书籍
  */
 public class NavBooksFragment extends Fragment{
     private View view;

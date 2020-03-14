@@ -30,11 +30,15 @@ public interface BuyCarGroupInterface {
     @GET(value = buyCarAddCourse)
     Call<SuccessBean> buyCarAddCourseData(@Query("mainCourseId") Integer mainCourseId,
                                           @Query("subCourseIds") String[] subCourseIds,
-                                          @Query("token") String token);
+                                          @Query("token") String token,
+                                          @Query("courseType") int courseType);
+//    @Query("courseType") int courseType
 
     //购物车列表展示
     @GET(value = buyCarListCourse)
-    Call<BuyCarListBean> buyCarListData(@Query("currentPage") Integer currentPage, @Query("pageSize") Integer pageSize, @Query("token") String token);
+    Call<BuyCarListBean> buyCarListData(@Query("currentPage") Integer currentPage,
+                                        @Query("pageSize") Integer pageSize,
+                                        @Query("token") String token);
 
     //删除购物车条目
     @FormUrlEncoded

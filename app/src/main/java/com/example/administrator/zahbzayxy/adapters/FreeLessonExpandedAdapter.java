@@ -2,7 +2,6 @@ package com.example.administrator.zahbzayxy.adapters;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +14,15 @@ import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.myinterface.MyInterface;
 import com.example.administrator.zahbzayxy.myviews.MyExpandableLV;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by ${ZWJ} on 2017/4/10 0010.
- * 视频一级菜单
+ * Created by huwei.
+ * Data 2020-03-13.
+ * Time 18:15.
  */
-public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
-    public PMyLesonSecondExPandedAdapter currentAdapter;//记录当前选中的适配器
+public class FreeLessonExpandedAdapter extends BaseExpandableListAdapter {
+    public FreeLesonSecondExPandedAdapter currentAdapter;//记录当前选中的适配器
     public int currentGroupPosition = 0;//记录当前选中的适配器位置
     public int currentChildPosition = 0;//记录当前选中的适配器位置
     public int currentRootPosition = 0;//最顶层位置
@@ -38,7 +35,7 @@ public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
     private String userCourseId;
     private String mImagePath;
 
-    public PMyLessonExpandedAdapter(MyInterface.ItemClickedListener itemClickedListener, Context context, List<PMyLessonPlayBean.DataBean.ChildCourseListBean> list, int selectionId, int courseId, String userCourseId, String imagePath) {
+    public FreeLessonExpandedAdapter(MyInterface.ItemClickedListener itemClickedListener, Context context, List<PMyLessonPlayBean.DataBean.ChildCourseListBean> list, int selectionId, int courseId, String userCourseId, String imagePath) {
         this.context = context;
         this.list = list;
         this.itemClickedListener = itemClickedListener;
@@ -113,7 +110,7 @@ public class PMyLessonExpandedAdapter extends BaseExpandableListAdapter {
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         MyExpandableLV listView = new MyExpandableLV(context);
         final List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> chapterList = list.get(groupPosition).getChapterList();
-        final PMyLesonSecondExPandedAdapter adapter = new PMyLesonSecondExPandedAdapter(listView, groupPosition, this, new MyInterface.ItemClickedListener() {
+        final FreeLesonSecondExPandedAdapter adapter = new FreeLesonSecondExPandedAdapter(listView, groupPosition, this, new MyInterface.ItemClickedListener() {
             @Override
             public void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String lessonName, int selectionIdack, int startPlaytTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list) {
                 //切换视频点击事件

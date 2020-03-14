@@ -45,7 +45,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+    //线下课
 public class OfflineCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
 
     private TextView recommedn_back_iv;

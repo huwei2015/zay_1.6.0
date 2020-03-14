@@ -78,6 +78,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="客运企业主要负责人"
                 android:textColor="#404040"
                 android:textSize="18sp" />

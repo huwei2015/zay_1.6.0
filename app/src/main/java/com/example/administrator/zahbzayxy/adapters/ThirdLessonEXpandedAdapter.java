@@ -27,6 +27,7 @@ import retrofit2.Response;
 
 /**
  * Created by ${ZWJ} on 2017/2/6 0006.
+ * 添加课程购物车
  */
 public class ThirdLessonEXpandedAdapter extends BaseExpandableListAdapter {
     private int mainCourseId;
@@ -34,14 +35,22 @@ public class ThirdLessonEXpandedAdapter extends BaseExpandableListAdapter {
     LayoutInflater mInflater;
     Context context;
     private String token;
+    private String isDatacenter;
+    int courseType;
+    private OnItemClickListener mOnItemClickListener;
     public void setToken(String token) {
         this.token = token;
     }
     public void setMainCourseId(int mainCourseId) {
         this.mainCourseId = mainCourseId;
     }
-
-    public ThirdLessonEXpandedAdapter(Context context,List<LessonThiredBean.DataBean.CourseDescBean.ChildListBean>list) {
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+    public ThirdLessonEXpandedAdapter(Context context, List<LessonThiredBean.DataBean.CourseDescBean.ChildListBean>list) {
         this.list=list;
         this.context = context;
         mInflater = LayoutInflater.from(context);
@@ -108,47 +117,58 @@ public class ThirdLessonEXpandedAdapter extends BaseExpandableListAdapter {
         //子课程id
         final int subCourseIds= list.get(groupPosition).getId();
         final String[] cIds=new String[]{String.valueOf(subCourseIds)};
+//        if(isDatacenter.equals("yes")){
+//            courseType = 0;
+//        }else if(isDatacenter.equals("no")){
+//            courseType = 1;
+//        }
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BuyCarGroupInterface aClass = RetrofitUtils.getInstance().createClass(BuyCarGroupInterface.class);
-                Log.e("getFromFragment",token+","+mainCourseId);
-                Call<SuccessBean> successBeanCall = aClass.buyCarAddCourseData(mainCourseId,cIds, token);
-                successBeanCall.enqueue(new Callback<SuccessBean>() {
-                    @Override
-                    public void onResponse(Call<SuccessBean> call, Response<SuccessBean> response) {
-                        SuccessBean body = response.body();
-                        if (body!=null) {
-                            String code = body.getCode();
-                            boolean data = body.getData();
-                            if (body != null) {
-                                if (code.equals("00003")) {
-                                    Toast.makeText(context, "用户未登录", Toast.LENGTH_SHORT).show();
-                                    SharedPreferences sp = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
-                                    SharedPreferences.Editor edit = sp.edit();
-                                    edit.putBoolean("isLogin", false);
-                                    edit.commit();
-                                } else if (dbIsLogin() == false) {
-                                    Toast.makeText(context, "用户未登录", Toast.LENGTH_SHORT).show();
-                                } else if (data == true) {
-                                    Toast.makeText(context, "加入购物车成功", Toast.LENGTH_SHORT).show();
-                                } else if (code.equals("99999")) {
-                                    Toast.makeText(context, "系统异常", Toast.LENGTH_SHORT).show();
-                                } else if (code.equals("00012")) {
-                                    Toast.makeText(context, "该课程已加入购物车", Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<SuccessBean> call, Throwable t) {
-                        Toast.makeText(context,"请求服务器失败",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                mOnItemClickListener.onItemClick(v,groupPosition);
             }
         });
-
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                BuyCarGroupInterface aClass = RetrofitUtils.getInstance().createClass(BuyCarGroupInterface.class);
+//                Log.e("getFromFragment",token+","+mainCourseId);
+//                Call<SuccessBean> successBeanCall = aClass.buyCarAddCourseData(mainCourseId,cIds, token,courseType);
+//                successBeanCall.enqueue(new Callback<SuccessBean>() {
+//                    @Override
+//                    public void onResponse(Call<SuccessBean> call, Response<SuccessBean> response) {
+//                        SuccessBean body = response.body();
+//                        if (body!=null) {
+//                            String code = body.getCode();
+//                            boolean data = body.getData();
+//                            if (body != null) {
+//                                if (code.equals("00003")) {
+//                                    Toast.makeText(context, "用户未登录", Toast.LENGTH_SHORT).show();
+//                                    SharedPreferences sp = context.getSharedPreferences("tokenDb", context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor edit = sp.edit();
+//                                    edit.putBoolean("isLogin", false);
+//                                    edit.commit();
+//                                } else if (dbIsLogin() == false) {
+//                                    Toast.makeText(context, "用户未登录", Toast.LENGTH_SHORT).show();
+//                                } else if (data == true) {
+//                                    Toast.makeText(context, "加入购物车成功", Toast.LENGTH_SHORT).show();
+//                                } else if (code.equals("99999")) {
+//                                    Toast.makeText(context, "系统异常", Toast.LENGTH_SHORT).show();
+//                                } else if (code.equals("00012")) {
+//                                    Toast.makeText(context, "该课程已加入购物车", Toast.LENGTH_SHORT).show();
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                    @Override
+//                    public void onFailure(Call<SuccessBean> call, Throwable t) {
+//                        Toast.makeText(context,"请求服务器失败",Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//
         return view;
     }
 

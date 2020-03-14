@@ -46,7 +46,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/**
+ * HYY 首页在线课列表
+ */
 public class OnlineCourseActivity extends BaseActivity implements Lv1CateAdapter.OnClickListener{
 
     private TextView recommedn_back_iv;

@@ -53,6 +53,7 @@ public class BuyCarBuyFragment extends Fragment {
     int pager=1;
     private Button jieSuan_bt;
     String price;
+    int courseType;
     public BuyCarBuyFragment() {
         // Required empty public constructor
     }
@@ -103,6 +104,7 @@ public class BuyCarBuyFragment extends Fragment {
                             String substring = zIdString1.substring(0, zIdString1.length() - 1);
                             jsonObject.put("mainCourseId", id);
                             jsonObject.put("subCourseId", substring);
+                            jsonObject.put("courseType",courseType);//新添加的字段 //TODO
                             jsonArray.put(jsonObject);
                         }
                    // }
@@ -118,6 +120,7 @@ public class BuyCarBuyFragment extends Fragment {
                 buyCarPrice.put("token", token);
                 BuyCarGroupInterface aClass = RetrofitUtils.getInstance().createClass(BuyCarGroupInterface.class);
                 if (jsonArray != null) {
+                    Log.i("ynf","ynf======"+buyCarPrice.toString());
                     aClass.buyCarGetPriceData(buyCarPrice).enqueue(new Callback<LessonPriceBean>() {
                         @Override
                         public void onResponse(Call<LessonPriceBean> call, Response<LessonPriceBean> response) {
@@ -217,7 +220,7 @@ public class BuyCarBuyFragment extends Fragment {
         });
         downLoadData(pager);
     }
-
+    //获取购物车列表
     private void downLoadData(int pager) {
         adapter = new BuyCarListAdapter(context, coursesBeanList);
         buyCar_lv.setAdapter(adapter);
@@ -252,6 +255,10 @@ public class BuyCarBuyFragment extends Fragment {
                           List<BuyCarListBean.DataBean.CoursesBean> courses = body.getData().getCourses();
                           if (courses != null) {
                              // coursesBeanList.clear();
+                              for (int i =0; i < courses.size(); i++){
+                                  courseType = courses.get(i).getCourseType();
+                                  Log.i("ynf","ynf==========="+courseType);
+                              }
                               coursesBeanList.addAll(courses);
                               adapter.notifyDataSetChanged();
                           }

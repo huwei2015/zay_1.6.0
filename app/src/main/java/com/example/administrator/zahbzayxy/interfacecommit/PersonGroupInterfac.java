@@ -2,6 +2,7 @@ package com.example.administrator.zahbzayxy.interfacecommit;
 import android.app.Person;
 
 import com.example.administrator.zahbzayxy.beans.ExamBean;
+import com.example.administrator.zahbzayxy.beans.FreePlayBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiListBean;
 import com.example.administrator.zahbzayxy.beans.OrderIsOutOfDateBean;
@@ -41,6 +42,12 @@ public interface PersonGroupInterfac {
     Call<PMyLessonPlayBean> getPMyLessonPlayData(@Query("courseId") Integer courseId,
                                                  @Query("token") String token,
                                                  @Query("userCourseId") Integer userCourseId);
+    //获取免费课程目录列表
+    static final String freePlayPath = "CoursePlayController/freeCourseplay";
+    @POST(value = freePlayPath)
+    Call<PMyLessonPlayBean> getFreePlayData(@Query("courseId") Integer courseId,
+                                            @Query("courseType") Integer courseType);
+
     //记录我的课程播放时长
     static final String myLessonPlayTimePath="CoursePlayController/writePlayRecord";
     @GET(value =myLessonPlayTimePath)

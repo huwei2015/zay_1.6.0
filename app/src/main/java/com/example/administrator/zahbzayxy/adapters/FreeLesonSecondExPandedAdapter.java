@@ -7,35 +7,32 @@ import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.beans.GridItem;
 import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadController;
+import com.example.administrator.zahbzayxy.ccvideo.FreePlayActivity;
 import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
 import com.example.administrator.zahbzayxy.myinterface.MyInterface;
 import com.example.administrator.zahbzayxy.myviews.MyExpandableLV;
-import com.example.administrator.zahbzayxy.myviews.MyListView;
 import com.example.administrator.zahbzayxy.utils.DateUtil;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ${ZWJ} on 2017/4/11 0011.
- * 视频菜单第二节adapter
+ * Created by huwei.
+ * Data 2020-03-13.
+ * Time 18:18.
  */
-public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
+public class FreeLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
     private List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> list;
     Context context;
     MyInterface.ItemClickedListener itemClickedListener;
@@ -47,12 +44,12 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
     int courseId;
     int videoIndex;
     String userCourseId;
-    PMyLessonExpandedAdapter parentAdapter;
+    FreeLessonExpandedAdapter parentAdapter;
     public MyExpandableLV listview;
     int currentRootPosition;
     private String mImagePath;
 
-    public PMyLesonSecondExPandedAdapter(MyExpandableLV listview, int currentRootPosition, PMyLessonExpandedAdapter parentAdapter, MyInterface.ItemClickedListener itemClickedListener, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> list, Context context, int selectionId, int courseId, String userCourseId, String imagePath) {
+    public FreeLesonSecondExPandedAdapter(MyExpandableLV listview, int currentRootPosition, FreeLessonExpandedAdapter parentAdapter, MyInterface.ItemClickedListener itemClickedListener, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> list, Context context, int selectionId, int courseId, String userCourseId, String imagePath) {
         this.listview = listview;
         this.currentRootPosition = currentRootPosition;
         this.parentAdapter = parentAdapter;
@@ -123,9 +120,9 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        PMyLessonSecondExpandedChildAdapter.LessonChidViewHold lessonChidViewHold;
+        FreeLessonSecondExpandedChildAdapter.LessonChidViewHold lessonChidViewHold;
         if (convertView == null) {
-            lessonChidViewHold = new PMyLessonSecondExpandedChildAdapter.LessonChidViewHold();
+            lessonChidViewHold = new FreeLessonSecondExpandedChildAdapter.LessonChidViewHold();
             convertView = mInflater.inflate(R.layout.item_chid_lesson_chapt_layout, parent, false);
             lessonChidViewHold.item_lesson_chaptName_tv = convertView.findViewById(R.id.item_lesson_chaptName_tv);
             lessonChidViewHold.item_lesson_time_tv = convertView.findViewById(R.id.item_lesson_time_tv);
@@ -133,7 +130,7 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
             lessonChidViewHold.icon_download_big = convertView.findViewById(R.id.item_lessson_chapt_downLoad_iv);
             convertView.setTag(lessonChidViewHold);
         } else {
-            lessonChidViewHold = (PMyLessonSecondExpandedChildAdapter.LessonChidViewHold) convertView.getTag();
+            lessonChidViewHold = (FreeLessonSecondExpandedChildAdapter.LessonChidViewHold) convertView.getTag();
         }
 
         PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean = list.get(groupPosition).getSelectionList().get(childPosition);
@@ -219,11 +216,11 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
         BigDecimal bd = new BigDecimal(prePercent * 100);
         BigDecimal bigDecimal = bd.setScale(0, BigDecimal.ROUND_HALF_UP);
         Log.e("gxj-precent", bd.doubleValue() + "");
-        double playingPercent = ((MediaPlayActivity) context).getPercent();
+        double playingPercent = ((FreePlayActivity) context).getPercent();
         if (!TextUtils.isEmpty(String.valueOf(bigDecimal)) && bd.doubleValue() < 100 && prePercent < playingPercent) {
             Log.e("gxj-precent", "重新改变进度");
             parentAdapter.list.get(parentAdapter.currentRootPosition).getChapterList().get(parentAdapter.currentGroupPosition).getSelectionList().get(parentAdapter.currentChildPosition).setPlayPercent(((MediaPlayActivity) context).getPercent());
-            Log.e("gxj-playPercent", ((MediaPlayActivity) context).getPercent() + "");
+            Log.e("gxj-playPercent", ((FreePlayActivity) context).getPercent() + "");
         }
 
         parentAdapter.getSelectionId = selectionId;
@@ -275,7 +272,7 @@ public class PMyLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
      */
     public void automChangeItem() {
         parentAdapter.list.get(parentAdapter.currentRootPosition).getChapterList().get(parentAdapter.currentGroupPosition).getSelectionList().get(parentAdapter.currentChildPosition).setPlayPercent(1);
-        Log.e("gxj-playPercent", ((MediaPlayActivity) context).getPercent() + "");
+        Log.e("gxj-playPercent", ((FreePlayActivity) context).getPercent() + "");
         if (parentAdapter.currentAdapter != null) {//上一个选中的adapter
             parentAdapter.currentAdapter.notifyDataSetChanged();
             //刷新

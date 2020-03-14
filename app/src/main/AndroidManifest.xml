@@ -236,6 +236,11 @@
             android:label="@string/play"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ccvideo.FreePlayActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/play"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ccvideo.DownloadListActivity"
             android:label="@string/download_list"
             android:screenOrientation="portrait" />
@@ -275,7 +280,7 @@
         <activity android:name=".activities.jobsActivity" />
         <activity android:name=".activities.FaceRecognitionForOfflineActivity" />
         <activity android:name=".activities.ExamRecordActivity" />
-        <activity android:name=".activities.ExamResultActivity" />
+        <activity android:name=".activities.ExamResultActivity"/>
         <activity android:name=".activities.MsgListActivity" />
         <activity android:name=".activities.MySignUpActivity" />
         <activity android:name=".activities.ServiceActivity" />

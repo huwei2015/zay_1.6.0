@@ -137,6 +137,16 @@ public class BuyCarListBean {
 
             private String courseName;
             private String courseImage;
+            private int courseType;
+
+            public int getCourseType() {
+                return courseType;
+            }
+
+            public void setCourseType(int courseType) {
+                this.courseType = courseType;
+            }
+
             private int id;
             private double sPrice;
             /**

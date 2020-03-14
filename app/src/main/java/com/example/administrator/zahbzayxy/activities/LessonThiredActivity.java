@@ -23,6 +23,8 @@ import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
 import com.example.administrator.zahbzayxy.beans.BuyInstanceBean;
 import com.example.administrator.zahbzayxy.beans.LessonThiredBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
+import com.example.administrator.zahbzayxy.ccvideo.FreePlayActivity;
+import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
 import com.example.administrator.zahbzayxy.fragments.DetailFragment;
 import com.example.administrator.zahbzayxy.fragments.DirectoryFragment;
 import com.example.administrator.zahbzayxy.fragments.LesssonTestLiberyFragment;
@@ -31,6 +33,7 @@ import com.example.administrator.zahbzayxy.interfaceserver.LessonGroupInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -44,7 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *课程详情购物车
+ *在线课课程详情购物车
  */
 public class LessonThiredActivity extends BaseActivity {
     @BindView(R.id.load_bar_layout_evaluating)
@@ -87,13 +90,15 @@ public class LessonThiredActivity extends BaseActivity {
     RelativeLayout buy_rl;
     @BindView(R.id.suggestBuy_tv)
     TextView sugget_tv;
+    @BindView(R.id.tv_watch)
+    TextView tv_watch;
     private static int  mainCourseId;
     String token;
     private int courseId;
     private int userCourseId;
     private SharedPreferences tokenDb;
     private String isDatacenter;
-
+    int courseType;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_thired);
@@ -128,6 +133,7 @@ public class LessonThiredActivity extends BaseActivity {
         buyCarOnClickListenner();
     }
 
+    //描述接口
     private void initHeadView() {
         showLoadingBar(false);
         int courseId = getIntent().getIntExtra("courseId",0);
@@ -151,6 +157,8 @@ public class LessonThiredActivity extends BaseActivity {
                             hideLoadingBar();
                             String courseName = courseDesc.getCourseName();
                             int courseHours = courseDesc.getCourseHours();
+                            int id=courseDesc.getId();
+                            Log.i("ynf","ynf============"+id);
                             String courseImagePath = courseDesc.getCourseImagePath();
                             if (!TextUtils.isEmpty(courseName) && !TextUtils.isEmpty(String.valueOf(courseHours))) {
                                 thiredLessonName_tv.setText(courseName);
@@ -171,6 +179,23 @@ public class LessonThiredActivity extends BaseActivity {
                                     price_tv.setText("" + devidePrice);
                                 }
                             }
+                            if(devidePrice.equals("0.00")){
+                                tv_watch.setVisibility(View.VISIBLE);
+                                sugget_tv.setVisibility(View.GONE);
+                                buy_rl.setVisibility(View.GONE);
+                            }
+                            tv_watch.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(LessonThiredActivity.this, FreePlayActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("coruseId",id);
+                                    bundle.putInt("courseType",courseType);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    ToastUtils.showLongInfo("点击了立即观看");
+                                }
+                            });
                             if (courseImagePath != null) {
 
                                 Picasso.with(LessonThiredActivity.this).load(courseImagePath).placeholder(R.mipmap.loading_png)
@@ -226,7 +251,7 @@ public class LessonThiredActivity extends BaseActivity {
         });
     }
 
-
+    //加入购物车
     private void buyCarOnClickListenner() {
         buyCar_bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,8 +261,13 @@ public class LessonThiredActivity extends BaseActivity {
                     int id = beanList.get(i).getId();
                     cIds[i]=(String.valueOf(id));
                 }
+                if(isDatacenter.equals("yes")){
+                    courseType = 0;
+                }else if(isDatacenter.equals("no")){
+                    courseType = 1;
+                }
                 BuyCarGroupInterface aClass = RetrofitUtils.getInstance().createClass(BuyCarGroupInterface.class);
-                aClass.buyCarAddCourseData(mainCourseId, cIds,token).enqueue(new Callback<SuccessBean>() {
+                aClass.buyCarAddCourseData(mainCourseId, cIds,token,courseType).enqueue(new Callback<SuccessBean>() {
                     @Override
                     public void onResponse(Call<SuccessBean> call, Response<SuccessBean> response) {
                         SuccessBean body = response.body();
@@ -246,22 +276,23 @@ public class LessonThiredActivity extends BaseActivity {
                         if (response!=null&&body!=null){
                             boolean data = body.getData();
                             String code = body.getCode();
+                            String errMsg= (String) body.getErrMsg();
                             if (code.equals("99999")){
-                                Toast.makeText(LessonThiredActivity.this,"系统异常",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LessonThiredActivity.this,errMsg,Toast.LENGTH_SHORT).show();
                             }
                             else if (code.equals("00003")){
-                                Toast.makeText(LessonThiredActivity.this,"用户未登录",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LessonThiredActivity.this,errMsg,Toast.LENGTH_SHORT).show();
                                 SharedPreferences sp = getSharedPreferences("tokenDb",MODE_PRIVATE);
                                 SharedPreferences.Editor edit = sp.edit();
                                 edit.putBoolean("isLogin",false);
                                 edit.commit();
                             }else if (dbIsLogin()==false){
-                                Toast.makeText(LessonThiredActivity.this,"用户未登录", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LessonThiredActivity.this,errMsg, Toast.LENGTH_SHORT).show();
                             }
                             else if (code.equals("00012")){
-                                Toast.makeText(LessonThiredActivity.this,"该课程已加入购物车",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LessonThiredActivity.this,errMsg,Toast.LENGTH_SHORT).show();
                             }
-                            else if (code.equals("00000")&data==true){
+                            else if (code.equals("00000")){
                                 Toast.makeText(LessonThiredActivity.this,"加入购物车成功",Toast.LENGTH_SHORT).show();
                             }
 
@@ -278,7 +309,7 @@ public class LessonThiredActivity extends BaseActivity {
             }
         });
     }
-
+    //加入购物车
     private void buyOnClickListenner() {
         buy_bt.setOnClickListener(new View.OnClickListener() {
             @Override

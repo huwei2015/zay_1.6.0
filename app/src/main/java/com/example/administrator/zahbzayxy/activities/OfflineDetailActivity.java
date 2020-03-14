@@ -24,17 +24,11 @@ import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
 import com.example.administrator.zahbzayxy.adapters.OfflineCourseDetailAdapter;
 import com.example.administrator.zahbzayxy.beans.BuyInstanceBean;
-import com.example.administrator.zahbzayxy.beans.LessonThiredBean;
-import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCoursePOBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
-import com.example.administrator.zahbzayxy.fragments.DetailFragment;
-import com.example.administrator.zahbzayxy.fragments.DirectoryFragment;
-import com.example.administrator.zahbzayxy.fragments.LesssonTestLiberyFragment;
 import com.example.administrator.zahbzayxy.fragments.OfflineDetailFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.BuyCarGroupInterface;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
-import com.example.administrator.zahbzayxy.interfaceserver.LessonGroupInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
@@ -48,13 +42,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.objectbox.annotation.Index;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- *课程详情购物车
+ *线下课课程详情购物车
  */
 public class OfflineDetailActivity extends BaseActivity {
     @BindView(R.id.load_bar_layout_evaluating)
@@ -214,9 +207,10 @@ public class OfflineDetailActivity extends BaseActivity {
         buyCar_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int courseType = -1;
                 String []cIds= new String[0];
                 BuyCarGroupInterface aClass = RetrofitUtils.getInstance().createClass(BuyCarGroupInterface.class);
-                aClass.buyCarAddCourseData(mainCourseId, cIds,token).enqueue(new Callback<SuccessBean>() {
+                aClass.buyCarAddCourseData(mainCourseId, cIds,token,courseType).enqueue(new Callback<SuccessBean>() {
                     @Override
                     public void onResponse(Call<SuccessBean> call, Response<SuccessBean> response) {
                         SuccessBean body = response.body();

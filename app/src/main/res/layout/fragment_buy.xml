@@ -12,7 +12,7 @@
         android:layout_marginTop="10dp"
         android:focusable="false"
         android:background="@android:color/white"
-        android:id="@+id/buyCarBuy_lv"></com.handmark.pulltorefresh.library.PullToRefreshListView>
+        android:id="@+id/buyCarBuy_lv"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
