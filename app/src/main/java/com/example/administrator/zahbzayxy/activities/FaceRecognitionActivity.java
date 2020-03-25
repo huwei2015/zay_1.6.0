@@ -22,12 +22,14 @@ import android.widget.Toast;
 import com.baidu.idl.face.platform.FaceStatusEnum;
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity;
 import com.baidu.idl.face.platform.utils.Base64Utils;
+import com.baidu.idl.face.platform.utils.BitmapUtils;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.PLessonPlayTimeBean;
 import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.Constant;
+import com.example.administrator.zahbzayxy.utils.ImageUtils;
 import com.example.administrator.zahbzayxy.utils.NetworkUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
@@ -59,6 +61,7 @@ public class FaceRecognitionActivity extends FaceLivenessActivity {
 
     private DefaultDialog mDefaultDialog;
     private byte[] mImage;
+    private byte[] fact_img;
     int courseId;
     int userCourseId;
     int playTime;
@@ -94,6 +97,11 @@ public class FaceRecognitionActivity extends FaceLivenessActivity {
             super.onLivenessCompletion(status, message, base64ImageMap);
             if (status == FaceStatusEnum.OK && mIsCompletion) {
                 mImage = convertBitMapToFile(base64ImageMap);
+                Bitmap bitmap = ImageUtils.getBitmapFromByte(mImage);
+                //质量压缩
+                Bitmap scaledBitmap = ImageUtils.compressImage(bitmap);
+                fact_img= ImageUtils.getBitmapByte(scaledBitmap);
+                Log.i("ynf---","ynf========"+scaledBitmap.getWidth()+"======="+scaledBitmap.getHeight());
                 setMessageWhat(0);
                 //上传图片到服务器
                 ExecutorService threadPool = ThreadPoolUtils.getThreadPoolExecutor();
@@ -177,7 +185,7 @@ public class FaceRecognitionActivity extends FaceLivenessActivity {
                 selectionId = getIntent().getIntExtra("selectionId",selectionId);
                 userCourseId = getIntent().getIntExtra("userCourseId",0);
                 playTime = getIntent().getIntExtra("playTime",playTime);
-                if(mImage==null){
+                if(fact_img==null){
                     setMessageWhat(1);
                     showMessageToast("本次人脸对比失败，请点击“开始学习”重新进行人脸识别");
                     finishByVideo(false);
@@ -187,7 +195,7 @@ public class FaceRecognitionActivity extends FaceLivenessActivity {
                             .connectTimeout(5, TimeUnit.SECONDS)
                             .readTimeout(8,TimeUnit.SECONDS)
                             .build();
-                    RequestBody img = RequestBody.create(MediaType.parse("image/png"),mImage);
+                    RequestBody img = RequestBody.create(MediaType.parse("image/png"),fact_img);
                     Log.d("UploadFaceRecognition","token="+token+"   courseId="+courseId+"    userCourseId="+userCourseId+"   playTime="+playTime+"   selectioId="+selectionId+"   ");
                     RequestBody requestBody = new MultipartBody.Builder()
                             .addFormDataPart(Constant.TOKEN_PARAM, token)

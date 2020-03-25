@@ -2022,10 +2022,10 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                             PLessonPlayTimeBean body = response.body();
                             if (body != null) {
                                 if (body.getErrMsg() == null && body.getCode().equals("00000")) {
-//                                    Toast.makeText(MediaPlayActivity.this, "保存播放时长成功" + getBackSelectionId, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MediaPlayActivity.this, "保存播放时长成功" + getBackSelectionId, Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-//                                Toast.makeText(MediaPlayActivity.this, "保存播放时长失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MediaPlayActivity.this, "保存播放时长失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

@@ -2,7 +2,9 @@ package com.example.administrator.zahbzayxy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -43,6 +45,7 @@ import com.example.administrator.zahbzayxy.fragments.UserFragment;
 import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -435,13 +438,33 @@ public class MainActivity extends BaseActivity {
     }
 
     public void exit() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(getApplicationContext(), "再按一次退出程序",
-                    Toast.LENGTH_SHORT).show();
-            exitTime = System.currentTimeMillis();
-        } else {
-            finish();
-            System.exit(0);
-        }
+        showDialog();
+
+//        if ((System.currentTimeMillis() - exitTime) > 2000) {
+//            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+//                    Toast.LENGTH_SHORT).show();
+//            exitTime = System.currentTimeMillis();
+//        } else {
+//            finish();
+//            System.exit(0);
+//        }
+    }
+    private void showDialog(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle("退出提示");
+        dialog.setMessage("确定要退出中安云教育吗？");
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+//                System.exit(0);
+            }
+        }).show();
     }
 }

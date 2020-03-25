@@ -115,4 +115,5 @@ public class SPUtils {
         public static final String DEVICE_TOKEN = "device_token";
         public static final String WECHATLOGIN="wechatLogin";
     }
+
 }

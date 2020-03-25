@@ -219,7 +219,7 @@ public class FreeLesonSecondExPandedAdapter extends BaseExpandableListAdapter {
         double playingPercent = ((FreePlayActivity) context).getPercent();
         if (!TextUtils.isEmpty(String.valueOf(bigDecimal)) && bd.doubleValue() < 100 && prePercent < playingPercent) {
             Log.e("gxj-precent", "重新改变进度");
-            parentAdapter.list.get(parentAdapter.currentRootPosition).getChapterList().get(parentAdapter.currentGroupPosition).getSelectionList().get(parentAdapter.currentChildPosition).setPlayPercent(((MediaPlayActivity) context).getPercent());
+            parentAdapter.list.get(parentAdapter.currentRootPosition).getChapterList().get(parentAdapter.currentGroupPosition).getSelectionList().get(parentAdapter.currentChildPosition).setPlayPercent(((FreePlayActivity) context).getPercent());
             Log.e("gxj-playPercent", ((FreePlayActivity) context).getPercent() + "");
         }
 

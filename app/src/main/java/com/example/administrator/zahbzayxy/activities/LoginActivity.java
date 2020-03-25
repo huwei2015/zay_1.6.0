@@ -37,6 +37,8 @@ import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import org.greenrobot.eventbus.EventBus;
+import org.w3c.dom.Text;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -71,7 +73,6 @@ public class LoginActivity extends BaseActivity{
     private int type;
     private static final String TAG = "LoginActivity";
 //    private MaterialDialog materialDialog;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -464,6 +465,7 @@ public class LoginActivity extends BaseActivity{
                                         isForce = data.get(i).getIsForce();
                                         if (isForce == 1) {
                                             String verNum = data.get(i).getVerNum();
+                                            String verInfo = data.get(i).getVerInfo();
                                             String verNumString1 = verNum.replace(".", "");
                                             Integer verNumInteager1 = Integer.valueOf(verNumString1);
                                             if (versionNameInteger - verNumInteager1 < 0) {
@@ -500,8 +502,8 @@ public class LoginActivity extends BaseActivity{
 
     private void initAppVersionDialog1() {
         View popView= LayoutInflater.from(LoginActivity.this).inflate(R.layout.app_update_pop, null, false);
-        TextView cancel = (TextView) popView.findViewById(R.id.myquestion_cancel);
-        TextView downLoad_tv= (TextView) popView.findViewById(R.id.downLoadNow_tv);
+        TextView cancel = popView.findViewById(R.id.myquestion_cancel);
+        TextView downLoad_tv= popView.findViewById(R.id.downLoadNow_tv);
         popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
         popupWindow.setTouchable(true);
         popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);

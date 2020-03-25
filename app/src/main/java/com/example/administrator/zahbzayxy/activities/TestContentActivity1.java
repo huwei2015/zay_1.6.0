@@ -1,10 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -12,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +16,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +29,6 @@ import com.example.administrator.zahbzayxy.adapters.TestContentAdapter;
 import com.example.administrator.zahbzayxy.beans.GridItem;
 import com.example.administrator.zahbzayxy.beans.NewTestContentBean;
 import com.example.administrator.zahbzayxy.beans.TestCommitBean;
-import com.example.administrator.zahbzayxy.beans.TestContentBean;
 import com.example.administrator.zahbzayxy.beans.TestResultBean;
 import com.example.administrator.zahbzayxy.interfaceserver.TestGroupInterface;
 import com.example.administrator.zahbzayxy.myinterface.UpPx;
@@ -170,6 +163,7 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("ynf","ynf========onResume===");
     //避免提交一次重复提交
         if (isCommit == true) {
             tijiao.setEnabled(false);
@@ -180,14 +174,17 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        timeDialog();
-        continueTest = false;
-        if(popupWindow == null && popupWindow.isShowing()){
-            Log.i("huwei","huwei=======if=====");
+        Log.i("ynf","ynf=======onPause=====");
+        if(popupWindow != null && popupWindow.isShowing()){
+           //提交试卷不会走这里
+            timeDialog();
+            continueTest = false;
+        }else{
+            //提交试卷不会走这里
+            timeDialog();
+            continueTest = false;
         }
     }
-
-
 
     private void initDownLoadData() {
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
@@ -445,7 +442,6 @@ public class TestContentActivity1 extends BaseActivity {
                         }
 
                     });
-
                     popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 }
             }
@@ -997,12 +993,13 @@ public class TestContentActivity1 extends BaseActivity {
         super.onStop();
 //        shengyu = 0;
 //        stopThread = true;
-        Log.e("isdestroy", shengyu + "stop," + shengyu);
+        Log.e("ynf", shengyu + "stop," + shengyu);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("ynf","ynf======onDestroy====");
         if (popupWindow != null) {
             if (popupWindow.isShowing()) {
                 popupWindow.dismiss();

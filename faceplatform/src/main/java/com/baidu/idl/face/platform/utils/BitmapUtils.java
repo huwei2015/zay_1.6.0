@@ -772,4 +772,27 @@ public final class BitmapUtils {
         }
         return transformed;
     }
+    public Bitmap bmpTopath(String path) {
+        //先得到图片的参数类的对象Options
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //第一次，目的得到图片边缘区域的外宽和外高
+        options.inJustDecodeBounds = true;
+        //第一次解码得到图片的边界不加载图片的内容到内存
+        BitmapFactory.decodeFile(path, options);
+        //原图的宽和高
+        int w = options.outWidth;
+        int h = options.outHeight;
+        //把原图的宽和高跟自己指定的宽和高进行对比得到缩放比例
+        //假设缩小1/2
+        options.inSampleSize = 1;
+        //设置图片的每个颜色基数在内存所占的字节数（ARGB_8888：32）
+        //ARGB_4444:16位
+        //RGB_565:16位，推荐
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        //第二次,得到缩小之后的图片进行加载
+        options.inJustDecodeBounds = false;
+        //第二次解码加载整个缩小图片的内容到内存
+        return BitmapFactory.decodeFile(path, options);
+    }
+
 }

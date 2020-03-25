@@ -236,7 +236,7 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-
+    //更新版本
     public void appVersionOnClick(View view) {
         MyLessonInterface aClass = RetrofitUtils.getInstance().createClass(MyLessonInterface.class);
         aClass.getAppVersionData(1).enqueue(new Callback<AppVersionBean>() {

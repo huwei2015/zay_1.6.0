@@ -193,7 +193,6 @@ public class LessonThiredActivity extends BaseActivity {
                                     bundle.putInt("courseType",courseType);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
-                                    ToastUtils.showLongInfo("点击了立即观看");
                                 }
                             });
                             if (courseImagePath != null) {
