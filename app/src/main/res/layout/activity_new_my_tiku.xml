@@ -126,7 +126,7 @@
                 android:id="@+id/myNewTestRemainDays_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="模考题库"
+                android:text=""
                 android:textColor="@color/testBlueTv"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -155,7 +155,7 @@
                 android:id="@+id/myNewTestRemainNums_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="模考题库"
+                android:text=""
                 android:textColor="@color/testBlueTv"
                 android:textSize="16sp"
                 android:textStyle="bold" />

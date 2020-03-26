@@ -12,8 +12,8 @@ android {
         applicationId "com.example.administrator.zahbzayxy"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 170
-        versionName "2.0.0"
+        versionCode 171
+        versionName "2.1.0"
         multiDexEnabled true
         //打包添加时间
         def time = new SimpleDateFormat("yyyyMMdd").format(new Date())

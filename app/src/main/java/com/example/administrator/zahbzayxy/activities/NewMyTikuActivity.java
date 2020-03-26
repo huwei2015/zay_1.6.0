@@ -231,6 +231,9 @@ public class NewMyTikuActivity extends BaseActivity {
         }else if(limitSign == 3){
             myNewTestRemainDays_tv.setText("无限期");
             myNewTestRemainNums_tv.setText("无限次");
+        }else if(limitSign == 0){
+            myNewTestRemainNums_tv.setText(examNum + "次");
+            myNewTestRemainDays_tv.setText(remainingTime + "天");
         }
 //        myNewTestRemainDays_tv.setText(remainingTime + "天");
 //        int parsing = quesLibsEntity.isParsing();
