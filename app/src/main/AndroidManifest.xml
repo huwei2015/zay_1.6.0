@@ -319,7 +319,9 @@
         <activity android:name=".activities.OfflineCourseActivity" /> <!-- 线下课详情页 -->
         <activity android:name=".activities.OfflineDetailActivity" /> <!-- 直播课列表页 -->
         <activity android:name=".activities.LiveCourseActivity" /> <!-- 直播课播放页 -->
-        <activity android:name=".activities.LivePlayActivity" /> <!-- 题库列表页 -->
+        <activity android:name=".activities.LivePlayActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"/> <!-- 题库列表页 -->
         <activity android:name=".activities.QueslibActivity" /> <!-- 书籍列表页 -->
         <activity android:name=".activities.BooksActivity" /> <!-- h5首页扫码签到页 -->
         <activity android:name=".activities.SignInActivity" android:launchMode="singleTop"/> <!-- 签到成功页 -->

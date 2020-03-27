@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rl_web_content"
 >
+
 
     <RelativeLayout
         android:id="@+id/header_top"
@@ -33,11 +35,15 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
+
+
     <WebView
         android:id="@+id/play_wv"
         android:layout_below="@+id/header_top"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </WebView>
+
+
 
 </RelativeLayout>
