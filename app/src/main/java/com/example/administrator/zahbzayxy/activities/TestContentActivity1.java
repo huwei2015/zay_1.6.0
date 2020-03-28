@@ -1215,6 +1215,7 @@ public class TestContentActivity1 extends BaseActivity {
         stickyGridAdapter = new StickyGridAdapter(TestContentActivity1.this, mGirdList, recyclerview, popUpWindow1, madapter, size, dijige);
         gridView.setAdapter(stickyGridAdapter);
     }
+    //弹框考试次数已经用完
     private void initPopUpWindow1() {
         View view = View.inflate(TestContentActivity1.this, R.layout.test_pop_layout, null);
         TextView cancel = (TextView) view.findViewById(R.id.myquestion_cancel);
