@@ -13,7 +13,6 @@ import android.widget.ExpandableListView;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.FreeLessonExpandedAdapter;
-import com.example.administrator.zahbzayxy.adapters.PMyLessonExpandedAdapter;
 import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myinterface.MyInterface;
@@ -91,7 +90,7 @@ public class FreeDirectoryFragment extends Fragment {
     private int posIndxe;
     private void downLoadData() {
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getFreePlayData(courseId,courseType).enqueue(new Callback<PMyLessonPlayBean>() {
+        aClass.getFreePlayData(courseId,courseType,token).enqueue(new Callback<PMyLessonPlayBean>() {
             int recordIndex = 0;
             private int selectionId;
             @Override

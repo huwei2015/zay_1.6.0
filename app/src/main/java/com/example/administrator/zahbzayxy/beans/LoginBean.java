@@ -1,5 +1,8 @@
 package com.example.administrator.zahbzayxy.beans;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by ${ZWJ} on 2017/3/9 0009.
  */
@@ -44,6 +47,15 @@ public class LoginBean {
 
     public static class DataBean {
         private String token;
+        private List<DataList> platform;
+
+        public List<DataList> getPlatform() {
+            return platform;
+        }
+
+        public void setPlatform(List<DataList> platform) {
+            this.platform = platform;
+        }
 
         public String getToken() {
             return token;
@@ -53,12 +65,25 @@ public class LoginBean {
             this.token = token;
         }
     }
-    //{"code":"00000","errMsg":null,"data":{"token":"kfkCCHn6kpaaNm8M7GDkC15tNGpp4osq9JNx/xRVsYt/AHkVOhY8d+yj/v6q2AsK"}}
-    //18848980064
 
+    public static class DataList implements Serializable {
+        private int platformId;
+        private String platformName;
 
-//{"code":"00000","errMsg":null,"data":{"token":"cYZ2JRd3Suo2PV9TENiz9w1SeAcD9R3IhlPwJvDhiXR/AHkVOhY8d+yj/v6q2AsK"}}
-//17743563592
+        public int getPlatformId() {
+            return platformId;
+        }
 
+        public void setPlatformId(int platformId) {
+            this.platformId = platformId;
+        }
 
+        public String getPlatformName() {
+            return platformName;
+        }
+
+        public void setPlatformName(String platformName) {
+            this.platformName = platformName;
+        }
+    }
 }

@@ -38,14 +38,11 @@ import com.example.administrator.zahbzayxy.ccvideo.DownloadController;
 import com.example.administrator.zahbzayxy.ccvideo.DownloadService;
 import com.example.administrator.zahbzayxy.fragments.ExamFragment;
 import com.example.administrator.zahbzayxy.fragments.LearningFragment;
-import com.example.administrator.zahbzayxy.fragments.LessonFragment;
 import com.example.administrator.zahbzayxy.fragments.NewHomeFragment;
-import com.example.administrator.zahbzayxy.fragments.NewTestFragment;
 import com.example.administrator.zahbzayxy.fragments.UserFragment;
 import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
-import com.example.administrator.zahbzayxy.utils.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -366,7 +363,6 @@ public class MainActivity extends BaseActivity {
         }
         mPagePosition = position;
         FragmentTransaction transaction = manager.beginTransaction();
-        Log.i("=======================","进来了....."+fragmentList.get(position).isAdded());
         if (fragmentList.get(position).isAdded()) {
             transaction.hide(fragmentList.get(prePosition)).show(fragmentList.get(position)).commit();
 
@@ -399,10 +395,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        //   DataSet.saveData();
-        Log.e("mainDestroy111111111", "qqqqqq");
-
-
     }
 
     @Override

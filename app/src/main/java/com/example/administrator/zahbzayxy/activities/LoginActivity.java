@@ -1,5 +1,8 @@
 package com.example.administrator.zahbzayxy.activities;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -18,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.administrator.zahbzayxy.MainActivity;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
@@ -32,12 +36,13 @@ import com.example.administrator.zahbzayxy.utils.BinaryCastUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.utils.UUID;
+import com.example.administrator.zahbzayxy.widget.CommonRadioDialog;
 import com.google.gson.Gson;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -45,6 +50,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,26 +59,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends BaseActivity{
+public class LoginActivity extends BaseActivity implements CommonRadioDialog.OnItemClickListener {
     @BindView(R.id.name_rg)
     EditText mName_et;
     @BindView(R.id.pw_rg)
     EditText mPw_et;
     @BindView(R.id.login_bt)
     Button login_bt;
-    String mPassWord ;
+    String mPassWord;
     private byte[] mDigest;
     private Unbinder mUnbinder;
     private String mPhone;
-
     private String downloadAdd;
     private String versionName;
     private int isForce;
     private PopupWindow popupWindow;
-    private String  uuid;
+    private String uuid;
     private int type;
-    private static final String TAG = "LoginActivity";
-//    private MaterialDialog materialDialog;
+    private AlertDialog.Builder dialog;
+    private int platformId = 0;
+    private String platformName;
+    List<LoginBean.DataList> list;
+
+    //    private MaterialDialog materialDialog;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -82,7 +91,7 @@ public class LoginActivity extends BaseActivity{
         initAppVersion();
     }
 
-    @OnClick({R.id.free_register_bt, R.id.login_bt, R.id.back_login,R.id.forgetPw_login,R.id.youke_tv,R.id.tv_yinsi,R.id.tv_xieyi})
+    @OnClick({R.id.free_register_bt, R.id.login_bt, R.id.back_login, R.id.forgetPw_login, R.id.youke_tv, R.id.tv_yinsi, R.id.tv_xieyi})
     public void onClick(View view) {
 //        KeyboardUtil.hideKeyBoardForAct(LoginActivity.this);
         switch (view.getId()) {
@@ -102,24 +111,24 @@ public class LoginActivity extends BaseActivity{
                 break;
             // 忘记密码
             case R.id.forgetPw_login:
-                RegisterActivity.startRegisActivity(this,RegisterActivity.FORGET_PW_FRAGMENT);
+                RegisterActivity.startRegisActivity(this, RegisterActivity.FORGET_PW_FRAGMENT);
                 break;
             case R.id.youke_tv:
                 //no登陆把isMechanism wei 0
                 SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                 SharedPreferences.Editor edit = sp.edit();
-                edit.putInt("isMechanism",0);
+                edit.putInt("isMechanism", 0);
                 edit.commit();
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                intent.putExtra("isLoginActivity","true");
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("isLoginActivity", "true");
                 startActivity(intent);
                 finish();
                 break;
             case R.id.tv_xieyi:
-                startActivity(new Intent(LoginActivity.this,ServiceActivity.class));
+                startActivity(new Intent(LoginActivity.this, ServiceActivity.class));
                 break;
             case R.id.tv_yinsi:
-                startActivity(new Intent(LoginActivity.this,PrivacyActivity.class));
+                startActivity(new Intent(LoginActivity.this, PrivacyActivity.class));
                 break;
             default:
                 break;
@@ -128,17 +137,18 @@ public class LoginActivity extends BaseActivity{
 
     /**
      * 检查信息
+     *
      * @return 检查信息是否正确，正确返回true
      */
     private boolean checkInfo() {
         mPhone = mName_et.getText().toString();
         mPassWord = mPw_et.getText().toString();
-        Log.e("LoginmPassWord ",mPassWord);
-        if (TextUtils.isEmpty(mPhone)){
+        Log.e("LoginmPassWord ", mPassWord);
+        if (TextUtils.isEmpty(mPhone)) {
             Toast.makeText(LoginActivity.this, "账户名不能为空！", Toast.LENGTH_SHORT).show();
-        }else if (TextUtils.isEmpty(mPassWord)){
+        } else if (TextUtils.isEmpty(mPassWord)) {
             Toast.makeText(LoginActivity.this, "密码不能为空！", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             return true;
         }
         return false;
@@ -155,59 +165,70 @@ public class LoginActivity extends BaseActivity{
             e.printStackTrace();
         }
         String sPW = BinaryCastUtils.parseByte2HexStr(mDigest);
-        Log.e("LoginMd5Password",sPW);
+        Log.e("LoginMd5Password", sPW);
 
         final LoginService loginService = RetrofitUtils.getInstance().createClass(LoginService.class);
-        Call<LoginBean> call = loginService.login(uuid, sPW, mPhone);
+        Call<LoginBean> call = loginService.login(uuid, sPW, mPhone, platformId);
         call.enqueue(new Callback<LoginBean>() {
             private String token;
+
             @Override
             public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
                 LoginBean body1 = response.body();
                 int code1 = response.code();
-                Log.e("responseCode",String.valueOf(code1));
-                if (response != null&&body1!=null) {
+                Log.e("responseCode", String.valueOf(code1));
+                if (response != null && body1 != null) {
                     LoginBean body = response.body();
                     String s = new Gson().toJson(body);
-                    Log.e("loginbody",s);
+                    Log.e("loginbody", s);
                     String code = body.getCode();
                     if (code.equals("00005")) {
                         Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
                     } else if (code.equals("00009")) {
                         Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_SHORT).show();
+                    } else if (code.equals("00003")) {
+                        Object errMsg = response.body().getErrMsg();
+                        ToastUtils.showLongInfo(String.valueOf(errMsg));
                     } else if (code.equals("99999")) {
                         Object errMsg = response.body().getErrMsg();
                         Toast.makeText(LoginActivity.this, String.valueOf(errMsg), Toast.LENGTH_SHORT).show();
                     } else if (code.equals("00000") && body != null) {
                         LoginBean loginBean = response.body();
+                        if (loginBean.getData().getToken() == null) {
+                            list = loginBean.getData().getPlatform();
+                            for (int i = 0; i < list.size(); i++) {
+                                platformId = list.get(i).getPlatformId();
+                                platformName = list.get(i).getPlatformName();
+                            }
+                            ShowDialog();
+                        }
                         // TODO 拿到token 判断登陆是否成功
                         token = loginBean.getData().getToken();
                         Object errMsg = loginBean.getErrMsg();
                         if (errMsg == null && !TextUtils.isEmpty(token)) {
                             Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-
                             //登陆成功之后把token存在本地
                             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                             SharedPreferences.Editor edit = sp.edit();
-                            edit.putString("token",token );
+                            edit.putString("token", token);
                             edit.putString("passWord", mPassWord);
-                            edit.putBoolean("isLogin",true);
-                            edit.putString("phone",mPhone);
-                            edit.putBoolean("wechatLogin",false);
+                            edit.putBoolean("isLogin", true);
+                            edit.putString("phone", mPhone);
+                            edit.putBoolean("wechatLogin", false);
                             edit.commit();
                             EventBus.getDefault().post("login");
                             String loginMethod = getIntent().getStringExtra("loginMethod");
                             EventBus.getDefault().post(UserFragment.FLUSH_USER_INFO_MINE_PAGE);
-                            if (!TextUtils.isEmpty(loginMethod)){
-                            if (loginMethod.equals("home")) {
-                                initToHome(token);
-                                Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
-                                Bundle bundle=new Bundle();
-                                bundle.putInt("isMechanism",type);
-                                intent1.putExtras(bundle);
-                                startActivity(intent1);
-                            }
-                            }else {
+                            if (!TextUtils.isEmpty(loginMethod)) {
+                                if (loginMethod.equals("home")) {
+                                    initToHome(token);
+                                    Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("isMechanism", type);
+                                    intent1.putExtras(bundle);
+                                    startActivity(intent1);
+                                }
+                            } else {
                                 initToHome(token);
                                 //把用户信息返回到用户中心显示到已登录界面
                                 Intent intent = getIntent();
@@ -219,9 +240,10 @@ public class LoginActivity extends BaseActivity{
                     }
                 }
             }
+
             public void onFailure(Call<LoginBean> call, Throwable t) {
                 String message = t.getMessage();
-               Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -232,26 +254,26 @@ public class LoginActivity extends BaseActivity{
         userInfoData.enqueue(new Callback<UserInfoBean>() {
             @Override
             public void onResponse(Call<UserInfoBean> call, Response<UserInfoBean> response) {
-                if (response!=null){
+                if (response != null) {
                     UserInfoBean body = response.body();
-                    if (body!=null) {
+                    if (body != null) {
                         Object errMsg = body.getErrMsg();
-                        if (errMsg==null){
+                        if (errMsg == null) {
                             UserInfoBean.DataBean data = body.getData();
                             type = data.getType();
-                            if (Integer.valueOf(type)!=null){
+                            if (Integer.valueOf(type) != null) {
                                 //登陆成功之后把token存在本地
                                 SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                                 SharedPreferences.Editor edit = sp.edit();
-                                edit.putInt("isMechanism",type);
+                                edit.putInt("isMechanism", type);
                                 edit.commit();
-                                Log.e("isMechanism",type+"");
+                                Log.e("isMechanism", type + "");
 
                                 EventBus.getDefault().post(66);
                                 finish();
                             }
-                        }else {
-                            Toast.makeText(LoginActivity.this, ""+errMsg, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "" + errMsg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -268,35 +290,38 @@ public class LoginActivity extends BaseActivity{
 
     private void initUUID() {
         SharedPreferences tokenDb = getSharedPreferences("tokenDb", MODE_PRIVATE);
-        uuid = tokenDb.getString("uuid","");
-        if (TextUtils.isEmpty(uuid)){
+        uuid = tokenDb.getString("uuid", "");
+        if (TextUtils.isEmpty(uuid)) {
             uuid = UUID.getUUID();
-            Log.e("uid",uuid);
+            Log.e("uid", uuid);
             SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
             SharedPreferences.Editor edit = sp.edit();
-            edit.putString("uuid",uuid);
+            edit.putString("uuid", uuid);
             edit.commit();
-        }else {
+        } else {
             SharedPreferences tokenDb1 = getSharedPreferences("tokenDb", MODE_PRIVATE);
-            uuid = tokenDb1.getString("uuid","");
+            uuid = tokenDb1.getString("uuid", "");
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUnbinder!=null) {
+        if (mUnbinder != null) {
             mUnbinder.unbind();
         }
-        if (popupWindow!=null){
-               popupWindow.dismiss();
+        if (popupWindow != null) {
+            popupWindow.dismiss();
         }
     }
-//微信登录
+
+    //微信登录
     public void weChatOnClick(View view) {
         authorization(SHARE_MEDIA.WEIXIN);
         //Toast.makeText(LoginActivity.this,"wechat",Toast.LENGTH_LONG).show();
 
     }
+
     //授权
     private void authorization(SHARE_MEDIA share_media) {
         UMShareAPI.get(this).getPlatformInfo(this, share_media, new UMAuthListener() {
@@ -307,14 +332,14 @@ public class LoginActivity extends BaseActivity{
             @Override
             public void onStart(SHARE_MEDIA share_media) {
                 Log.d("TAG", "onStart " + "授权开始");
-                Log.e("wechat","授权开始");
+                Log.e("wechat", "授权开始");
             }
 
 
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
                 Log.d("TAG", "onComplete " + "授权完成");
-                Log.e("wechat","授权完成");
+                Log.e("wechat", "授权完成");
 
                 //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
                 uid = map.get("uid");
@@ -326,7 +351,7 @@ public class LoginActivity extends BaseActivity{
                 wechatName = map.get("name");
                 String gender = map.get("gender");
                 wechatHeadImg = map.get("iconurl");
-                Log.e("wechatBack,headImg",wechatHeadImg);
+                Log.e("wechatBack,headImg", wechatHeadImg);
                 byte[] bytes = uid.getBytes();
 
                 requestWechatLogin();
@@ -337,7 +362,7 @@ public class LoginActivity extends BaseActivity{
                 String a1 = a.get(0);
                 String a2 = a.get(1);
                 String a3 = a.get(2);
-                Log.e("aaabbb",a1+","+a2+","+a3);
+                Log.e("aaabbb", a1 + "," + a2 + "," + a3);
 
                 //  Toast.makeText(getApplicationContext(), "name=" + wechatName + ",gender=" + gender+",uid"+uid+",uidlenth"+length, Toast.LENGTH_SHORT).show();
 
@@ -346,57 +371,57 @@ public class LoginActivity extends BaseActivity{
 
             private void requestWechatLogin() {
                 LoginService aClass = RetrofitUtils.getInstance().createClass(LoginService.class);
-                Log.e("login0000","11111");
+                Log.e("login0000", "11111");
                 if (!TextUtils.isEmpty(uid)) {
                     aClass.weChatLogin(uid).enqueue(new Callback<LoginBean>() {
                         @Override
                         public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
-                            Log.e("login0000","2222:"+uid);
+                            Log.e("login0000", "2222:" + uid);
                             int code1 = response.code();
-                            Log.e("wechatCode",code1+"");
-                            if (response.code()==200){
-                                Log.e("login0000",response.code()+"");
+                            Log.e("wechatCode", code1 + "");
+                            if (response.code() == 200) {
+                                Log.e("login0000", response.code() + "");
                                 LoginBean body = response.body();
                                 String code = body.getCode();
-                                Log.e("login0000",code+"");
-                                if (code.equals("00000")){
+                                Log.e("login0000", code + "");
+                                if (code.equals("00000")) {
                                     Toast.makeText(LoginActivity.this, "微信登录成功", Toast.LENGTH_SHORT).show();
                                     LoginBean.DataBean data = body.getData();
                                     String token = data.getToken();
-                                    if (!TextUtils.isEmpty(token)){
+                                    if (!TextUtils.isEmpty(token)) {
                                         SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
                                         SharedPreferences.Editor edit = sp.edit();
-                                        edit.putString("token",token );
+                                        edit.putString("token", token);
                                         edit.putString("passWord", mPassWord);
-                                        edit.putString("weChatHeadImg",wechatHeadImg);
-                                        edit.putString("weChatName",wechatName);
-                                        edit.putBoolean("isLogin",true);
-                                        edit.putString("phone",mPhone);
-                                        edit.putBoolean("wechatLogin",true);
+                                        edit.putString("weChatHeadImg", wechatHeadImg);
+                                        edit.putString("weChatName", wechatName);
+                                        edit.putBoolean("isLogin", true);
+                                        edit.putString("phone", mPhone);
+                                        edit.putBoolean("wechatLogin", true);
                                         edit.commit();
                                         //把用户信息返回到用户中心显示到已登录界面
                                         Intent intent = getIntent();
                                         intent.putExtra("weChatHeadImg", wechatHeadImg);
-                                        intent.putExtra("weChatName",wechatName);
-                                        intent.putExtra("token",token);
+                                        intent.putExtra("weChatName", wechatName);
+                                        intent.putExtra("token", token);
                                         LoginActivity.this.setResult(RESULT_OK, intent);
                                         LoginActivity.this.finish();
-                                        Log.e("wechatBack","11111"+wechatHeadImg+"w"+wechatName);
+                                        Log.e("wechatBack", "11111" + wechatHeadImg + "w" + wechatName);
                                         String loginMethod = getIntent().getStringExtra("loginMethod");
-                                        if (!TextUtils.isEmpty(loginMethod)){
-                                            if (loginMethod.equals("home")){
-                                                Intent intent1=new Intent(LoginActivity.this,MainActivity.class);
+                                        if (!TextUtils.isEmpty(loginMethod)) {
+                                            if (loginMethod.equals("home")) {
+                                                Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
                                                 startActivity(intent1);
                                                 finish();
                                             }
                                         }
                                     }
-                                }else if (code.equals("00039")){
+                                } else if (code.equals("00039")) {
                                     Toast.makeText(LoginActivity.this, "用户未绑定手机号,请先绑定", Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(LoginActivity.this,BindingWechatLoginActivity.class);
-                                    intent.putExtra("uid",uid);
-                                    intent.putExtra("weChatHeadImg",wechatHeadImg);
-                                    intent.putExtra("weChatName",wechatName);
+                                    Intent intent = new Intent(LoginActivity.this, BindingWechatLoginActivity.class);
+                                    intent.putExtra("uid", uid);
+                                    intent.putExtra("weChatHeadImg", wechatHeadImg);
+                                    intent.putExtra("weChatName", wechatName);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -415,14 +440,14 @@ public class LoginActivity extends BaseActivity{
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
                 Log.d("TAG", "onError " + "授权失败");
-                Log.e("wechat","授权失败"+throwable.getMessage());
-                Toast.makeText(LoginActivity.this, "授权失败"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("wechat", "授权失败" + throwable.getMessage());
+                Toast.makeText(LoginActivity.this, "授权失败" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
                 Log.d("TAG", "onCancel " + "授权取消");
-                Log.e("wechat","授权取消");
+                Log.e("wechat", "授权取消");
             }
         });
 
@@ -432,21 +457,22 @@ public class LoginActivity extends BaseActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        Log.e("wechat",data+"resyult");
+        Log.e("wechat", data + "resyult");
     }
+
     private void initAppVersion() {
         MyLessonInterface aClass = RetrofitUtils.getInstance().createClass(MyLessonInterface.class);
         aClass.getAppVersionData(1).enqueue(new Callback<AppVersionBean>() {
             @Override
             public void onResponse(Call<AppVersionBean> call, Response<AppVersionBean> response) {
                 int code = response.code();
-                if (code==200){
+                if (code == 200) {
                     AppVersionBean body = response.body();
-                    if (body!=null){
+                    if (body != null) {
                         String code1 = body.getCode();
-                        if (code1.equals("00000")){
+                        if (code1.equals("00000")) {
                             List<AppVersionBean.DataEntity> data = body.getData();
-                            if (data!=null) {
+                            if (data != null) {
                                 try {
                                     //此app版本
                                     versionName = getVersionName(LoginActivity.this);
@@ -459,7 +485,7 @@ public class LoginActivity extends BaseActivity{
                                 String versionNameString = versionName.replace(".", "");
                                 Integer versionNameInteger = Integer.valueOf(versionNameString);
                                 Integer verNumInteger = Integer.valueOf(verNumString);
-                                downloadAdd=data.get(size1-1).getDownloadAdd();
+                                downloadAdd = data.get(size1 - 1).getDownloadAdd();
                                 if (versionNameInteger - verNumInteger < 0) {
                                     for (int i = 0; i < size1; i++) {
                                         isForce = data.get(i).getIsForce();
@@ -469,9 +495,9 @@ public class LoginActivity extends BaseActivity{
                                             String verNumString1 = verNum.replace(".", "");
                                             Integer verNumInteager1 = Integer.valueOf(verNumString1);
                                             if (versionNameInteger - verNumInteager1 < 0) {
-                                                isForce=1;
-                                            }else {
-                                                isForce=0;
+                                                isForce = 1;
+                                            } else {
+                                                isForce = 0;
                                             }
                                         }
                                     }
@@ -501,12 +527,12 @@ public class LoginActivity extends BaseActivity{
     }
 
     private void initAppVersionDialog1() {
-        View popView= LayoutInflater.from(LoginActivity.this).inflate(R.layout.app_update_pop, null, false);
+        View popView = LayoutInflater.from(LoginActivity.this).inflate(R.layout.app_update_pop, null, false);
         TextView cancel = popView.findViewById(R.id.myquestion_cancel);
-        TextView downLoad_tv= popView.findViewById(R.id.downLoadNow_tv);
+        TextView downLoad_tv = popView.findViewById(R.id.downLoadNow_tv);
         popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
         popupWindow.setTouchable(true);
-        popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         downLoad_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -514,7 +540,7 @@ public class LoginActivity extends BaseActivity{
                 Uri uri = Uri.parse(downloadAdd);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-                if (popupWindow!=null){
+                if (popupWindow != null) {
                     popupWindow.dismiss();
                 }
             }
@@ -524,15 +550,44 @@ public class LoginActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 // isForce=0;
-                if (isForce!=1) {
-                    if (popupWindow!=null) {
+                if (isForce != 1) {
+                    if (popupWindow != null) {
                         popupWindow.dismiss();
                     }
-                }else {
+                } else {
                     Toast.makeText(LoginActivity.this, "升级之后才可以使用", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    CommonRadioDialog commonRadioDialog;
+
+    private void ShowDialog() {
+        commonRadioDialog = new CommonRadioDialog(this, list);
+        commonRadioDialog.setOnItemClickListener(this);
+        commonRadioDialog.setCancelable(true);
+        commonRadioDialog.setCanceledOnTouchOutside(false);
+        commonRadioDialog.show();
+        commonRadioDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                platformId = 0;
+            }
+        });
+
+    }
+    //点击事件
+    @Override
+    public void onClick(int postion) {
+        platformId = postion;
+        requestLogin();
+    }
+    //对话框关闭事件
+    @Override
+    public void onClose(View view) {
+        commonRadioDialog.dismiss();
+        platformId = 0;
     }
 
 }

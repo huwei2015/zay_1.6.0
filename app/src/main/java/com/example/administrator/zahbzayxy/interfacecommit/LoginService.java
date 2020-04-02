@@ -16,7 +16,10 @@ public interface LoginService {
 
     //   登陆
     @GET(value = LOGIN_URL)
-    Call<LoginBean> login(@Query("deviceNumber") String deviceNumber, @Query("password") String password, @Query("phone") String phone);
+    Call<LoginBean> login(@Query("deviceNumber") String deviceNumber,
+                          @Query("password") String password,
+                          @Query("phone") String phone,
+                          @Query("platformId") int platformId);
 
 
     String WECHAT_LOGIN_URL = "v1/users/security/wechatUidLogin?";

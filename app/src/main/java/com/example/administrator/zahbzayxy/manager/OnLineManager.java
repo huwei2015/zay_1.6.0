@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -23,12 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.FaceRecognitionActivity;
-import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.adapters.LearnOfflineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.OnLineTitleAdapter;
@@ -55,8 +50,6 @@ import com.example.administrator.zahbzayxy.utils.Utils;
 import com.example.administrator.zahbzayxy.vo.UserInfo;
 import com.example.administrator.zahbzayxy.widget.LoadingDialog;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +96,7 @@ public class OnLineManager {
     private boolean mLoadingData = false;
     private boolean mIsHasData = true;
     private boolean mIsLoading;
+    private int userCourseId;
     private Call<OfflineCourseLearnBean> mOffLineCall;
     private Call<OnlineCourseBean> mOnLineCall;
 
@@ -186,7 +180,7 @@ public class OnLineManager {
                     ToastUtils.showLongInfo(coursesBean.getMsg_cont() + "");
                     return;
                 }
-                int userCourseId = coursesBean.getUserCourseId();
+                userCourseId = coursesBean.getUserCourseId();
                 int courseId = coursesBean.getMainCourseId();
                 isPerfectPersonInfo(userCourseId, courseId, coursesBean.getImagePath());
             }
@@ -861,4 +855,5 @@ public class OnLineManager {
             }
         }
     }
+
 }

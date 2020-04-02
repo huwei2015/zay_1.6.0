@@ -15,6 +15,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -56,9 +57,10 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 //考试提交试卷
 public class TestContentActivity1 extends BaseActivity {
-    View popView,popDialog;
+    View popView, popDialog;
     PopupWindow popupWindow;
     MyRecyclerView recyclerview;
     LinearLayoutManager linearLayoutManager;
@@ -111,7 +113,7 @@ public class TestContentActivity1 extends BaseActivity {
     View freeTestpopView;
     PopupWindow freeTestpopupWindow;
     private boolean isCommit = false;
-    TextView tijiao;
+    TextView tijiao, zuoti;
     private boolean stopThread = false;
     private int putNewExamScoreId;
     private int examType;
@@ -163,8 +165,8 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("ynf","ynf========onResume===");
-    //避免提交一次重复提交
+        Log.i("ynf", "ynf========onResume===");
+        //避免提交一次重复提交
         if (isCommit == true) {
             tijiao.setEnabled(false);
             testCommit_bt.setEnabled(false);
@@ -174,12 +176,12 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("ynf","ynf=======onPause=====");
-        if(popupWindow != null && popupWindow.isShowing()){
-           //提交试卷不会走这里
+        Log.i("ynf", "ynf=======onPause=====");
+        if (popupWindow != null && popupWindow.isShowing()) {
+            //提交试卷不会走这里
             timeDialog();
             continueTest = false;
-        }else{
+        } else {
             //提交试卷不会走这里
             timeDialog();
             continueTest = false;
@@ -188,7 +190,7 @@ public class TestContentActivity1 extends BaseActivity {
 
     private void initDownLoadData() {
         TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
-        Call<NewTestContentBean> testContentData = aClass.getNewTestContentData(userLibId, quesLibId, token,examType);
+        Call<NewTestContentBean> testContentData = aClass.getNewTestContentData(userLibId, quesLibId, token, examType);
         testContentData.enqueue(new Callback<NewTestContentBean>() {
             private int quesId;
             private int passScore;
@@ -393,7 +395,7 @@ public class TestContentActivity1 extends BaseActivity {
 
                     popView = LayoutInflater.from(TestContentActivity1.this).inflate(R.layout.tanchukuang, null, false);
                     TextView tvtvtv1 = popView.findViewById(R.id.tvtvtv1);
-                    TextView zuoti = popView.findViewById(R.id.zuoti);
+                    zuoti = popView.findViewById(R.id.zuoti);
                     tijiao = popView.findViewById(R.id.tijiao);
 
                     if (doNUm == TestContentActivity1.this.size) {
@@ -472,6 +474,7 @@ public class TestContentActivity1 extends BaseActivity {
     private void initToPostJsonData() throws JSONException {
         if (madapter == null) {
             ToastUtils.showLongInfo("数据提交失败，请稍后重试");
+            finish();
             return;
         }
         //从adapter中获得做题所获得的总分数
@@ -498,7 +501,7 @@ public class TestContentActivity1 extends BaseActivity {
                     rightMultiNum++;
                 } else if (questionType == 3) {
                     rightJungleNum++;
-                }  else if (questionType == 6) {
+                } else if (questionType == 6) {
                     rightShortNum++;
                 }
             }
@@ -509,7 +512,7 @@ public class TestContentActivity1 extends BaseActivity {
                     JSONObject json = new JSONObject(userAnswer);
                     NewTestContentBean.DataBean.QuesDataBean quesDataBean = dataList.get(j);
                     boolean factIsRight = true;
-                    for (int m = 0; m < quesDataBean.getChildren().size(); m++){
+                    for (int m = 0; m < quesDataBean.getChildren().size(); m++) {
                         String ans = json.optString(String.valueOf(m));
                         if (TextUtils.isEmpty(ans)) {
                             factIsRight = false;
@@ -527,7 +530,7 @@ public class TestContentActivity1 extends BaseActivity {
                     JSONObject json = new JSONObject(userAnswer);
                     NewTestContentBean.DataBean.QuesDataBean quesDataBean = dataList.get(j);
                     boolean factIsRight = true;
-                    for (int m = 0; m < quesDataBean.getChildren().size(); m++){
+                    for (int m = 0; m < quesDataBean.getChildren().size(); m++) {
                         JSONObject itemJson = json.optJSONObject(String.valueOf(m));
                         if (itemJson == null) {
                             factIsRight = false;
@@ -546,7 +549,7 @@ public class TestContentActivity1 extends BaseActivity {
             }
         }
         newTotalScore = rightSingleNum * singleScore + rightMultiNum * multipleScore + rightJungleNum * judgeScore
-            + rightFactNum * factScore + rightNotFactNUm * notFactScore + rightShortNum * shortScore;
+                + rightFactNum * factScore + rightNotFactNUm * notFactScore + rightShortNum * shortScore;
         int totalRightNum = rightSingleNum + rightMultiNum + rightJungleNum + rightFactNum + rightNotFactNUm + rightShortNum;
         if (size1 > 0) {
             correctRate = (int) (totalRightNum * 100 / size1);
@@ -604,10 +607,11 @@ public class TestContentActivity1 extends BaseActivity {
                                     childAnswerId += optsBean.getId() + ",";
                                 }
                             }
-                            if (!TextUtils.isEmpty(childAnswerId)) childAnswerId = childAnswerId.substring(0, childAnswerId.length() - 1);
+                            if (!TextUtils.isEmpty(childAnswerId))
+                                childAnswerId = childAnswerId.substring(0, childAnswerId.length() - 1);
                             childJson.put("userAnswerIds", childAnswerId);
                             int right = 0;
-                            if (itemAnswer != null) right= itemAnswer.optInt("is_right");
+                            if (itemAnswer != null) right = itemAnswer.optInt("is_right");
                             childJson.put("isRight", right);
                         }
                         childArr.put(childJson);
@@ -640,7 +644,7 @@ public class TestContentActivity1 extends BaseActivity {
                             JSONObject json = new JSONObject(userAnswer);
                             NewTestContentBean.DataBean.QuesDataBean quesDataBean1 = dataList.get(i);
                             boolean factIsRight = true;
-                            for (int m = 0; m < quesDataBean1.getChildren().size(); m++){
+                            for (int m = 0; m < quesDataBean1.getChildren().size(); m++) {
                                 JSONObject itemJson = json.optJSONObject(String.valueOf(m));
                                 if (itemJson == null) {
                                     factIsRight = false;
@@ -672,7 +676,7 @@ public class TestContentActivity1 extends BaseActivity {
             Log.e("currentTime", stopTime);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userLibId", userLibId);
-            jsonObject.put("examType",examType);
+            jsonObject.put("examType", examType);
             jsonObject.put("quesLibId", quesLibId);
             jsonObject.put("examScoreId", putNewExamScoreId);
             jsonObject.put("paperName", paperName);
@@ -686,8 +690,8 @@ public class TestContentActivity1 extends BaseActivity {
             Map<String, String> saveScore = new HashMap<>();
             saveScore.put("examScore", s);
             saveScore.put("token", token);
-            saveScore.put("examType",String.valueOf(examType));
-            Log.i("dfdf","test======"+examType);
+            saveScore.put("examType", String.valueOf(examType));
+            Log.i("dfdf", "test======" + examType);
             TestGroupInterface aClass = RetrofitUtils.getInstance().createClass(TestGroupInterface.class);
             aClass.getExamScoreData1New(saveScore).enqueue(new Callback<TestCommitBean>() {
                 @Override
@@ -738,9 +742,9 @@ public class TestContentActivity1 extends BaseActivity {
             EventBus.getDefault().postSticky(listResult);
         }
         Log.e("postResultData", listResult + "");
-        if(examType == 1){
-            intent = new Intent(TestContentActivity1.this,ResultActivity.class);
-        }else if(examType == 0){
+        if (examType == 1) {
+            intent = new Intent(TestContentActivity1.this, ResultActivity.class);
+        } else if (examType == 0) {
             intent = new Intent(TestContentActivity1.this, ExamResultActivity.class);
         }
         //模拟考试跳转结果页 examResultActivity
@@ -768,7 +772,7 @@ public class TestContentActivity1 extends BaseActivity {
         beginTime = DateUtil.getNow(DateUtil.DEFAULTPATTERN);
         quesLibId = getIntent().getIntExtra("quesLibId", 0);
         userLibId = getIntent().getIntExtra("userLibId", 0);
-        examType =  getIntent().getIntExtra("examType",examType);
+        examType = getIntent().getIntExtra("examType", examType);
         isFreeTest = getIntent().getBooleanExtra("isFreeTest", false);
         Log.e("quesLibId", quesLibId + ",,," + userLibId);
         back_tset_iv = (ImageView) findViewById(R.id.back_test_iv);
@@ -789,8 +793,8 @@ public class TestContentActivity1 extends BaseActivity {
         shijian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                continueTest = false;
-                timeDialog();
+//                continueTest = false;
+//                timeDialog();
 
             }
         });
@@ -804,6 +808,13 @@ public class TestContentActivity1 extends BaseActivity {
         popupWindow.setTouchable(true);
         // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
         popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
         // 配合 点击外部区域消失使用 否则 没有效果
         tv_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -828,6 +839,7 @@ public class TestContentActivity1 extends BaseActivity {
 //                }).show();
 
     }
+
     private void initRecyClerView() {
         recyclerview.setUp(new UpPx() {
             @Override
@@ -841,7 +853,7 @@ public class TestContentActivity1 extends BaseActivity {
                         position = position - 1;
                         int childPosition = madapter.getChildPosition();
                         if (childPosition >= 0) {
-                            if (childPosition == 1){
+                            if (childPosition == 1) {
                                 madapter.setChildPosition(-1);
                             } else {
                                 madapter.setChildPosition(childPosition - 2);
@@ -850,7 +862,7 @@ public class TestContentActivity1 extends BaseActivity {
                         }
                         int kePosition = madapter.getKeChildPosition();
                         if (kePosition >= 0) {
-                            if (kePosition == 1){
+                            if (kePosition == 1) {
                                 madapter.setKeChildPosition(-1);
                             } else {
                                 madapter.setKeChildPosition(kePosition - 2);
@@ -871,7 +883,7 @@ public class TestContentActivity1 extends BaseActivity {
                         Log.i("=====adapter====", "rightButton setUp");
                         int childPosition = madapter.getChildPosition();
                         if (childPosition >= 0) {
-                            if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                            if (childPosition >= totalList.get(position - 1).getChildren().size()) {
                                 madapter.setChildPosition(-1);
                             } else {
                                 position -= 1;
@@ -879,7 +891,7 @@ public class TestContentActivity1 extends BaseActivity {
                         }
                         int kePosition = madapter.getKeChildPosition();
                         if (kePosition >= 0) {
-                            if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                            if (kePosition >= totalList.get(position - 1).getChildren().size()) {
                                 madapter.setKeChildPosition(-1);
                             } else {
                                 position -= 1;
@@ -905,7 +917,7 @@ public class TestContentActivity1 extends BaseActivity {
                 position = position - 1;
                 int childPosition = madapter.getChildPosition();
                 if (childPosition >= 0) {
-                    if (childPosition == 1){
+                    if (childPosition == 1) {
                         madapter.setChildPosition(-1);
                     } else {
                         madapter.setChildPosition(childPosition - 2);
@@ -914,7 +926,7 @@ public class TestContentActivity1 extends BaseActivity {
                 }
                 int kePosition = madapter.getKeChildPosition();
                 if (kePosition >= 0) {
-                    if (kePosition == 1){
+                    if (kePosition == 1) {
                         madapter.setKeChildPosition(-1);
                     } else {
                         madapter.setKeChildPosition(kePosition - 2);
@@ -943,7 +955,7 @@ public class TestContentActivity1 extends BaseActivity {
                 position = position + 1;
                 int childPosition = madapter.getChildPosition();
                 if (childPosition >= 0) {
-                    if (childPosition >= totalList.get(position - 1).getChildren().size()){
+                    if (childPosition >= totalList.get(position - 1).getChildren().size()) {
                         madapter.setChildPosition(-1);
                     } else {
                         position -= 1;
@@ -951,7 +963,7 @@ public class TestContentActivity1 extends BaseActivity {
                 }
                 int kePosition = madapter.getKeChildPosition();
                 if (kePosition >= 0) {
-                    if (kePosition >= totalList.get(position - 1).getChildren().size()){
+                    if (kePosition >= totalList.get(position - 1).getChildren().size()) {
                         madapter.setKeChildPosition(-1);
                     } else {
                         position -= 1;
@@ -1049,6 +1061,7 @@ public class TestContentActivity1 extends BaseActivity {
         popUpWindow1.setTouchable(true);
         // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
         popUpWindow1.setOutsideTouchable(true);
+        popUpWindow1.setFocusable(true);
         popUpWindow1.setAnimationStyle(R.style.take_photo_anim);
         // 配合 点击外部区域消失使用 否则 没有效果
         ColorDrawable colorDrawable = new ColorDrawable(0x3cffffff);
@@ -1338,4 +1351,5 @@ public class TestContentActivity1 extends BaseActivity {
             popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         }
     }
+
 }

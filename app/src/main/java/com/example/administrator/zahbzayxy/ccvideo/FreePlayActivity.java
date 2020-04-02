@@ -180,6 +180,8 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
     private int courseId;
     private int sectionId;//自课程id
     private int userCourseId;
+    //TODO 免费课程需要记录时长，新加的字段
+    private String user_CourseId;
     private String token;
     private String getSelectionName;
 
@@ -307,7 +309,7 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
     int posIndex = 0;
     private void initDownLoadData() {
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getFreePlayData(courseId,courseType).enqueue(new Callback<PMyLessonPlayBean>() { // courseType =0 是中安云  1是saas平台
+        aClass.getFreePlayData(courseId,courseType,token).enqueue(new Callback<PMyLessonPlayBean>() { // courseType =0 是中安云  1是saas平台
             @Override
             public void onResponse(Call<PMyLessonPlayBean> call, Response<PMyLessonPlayBean> response) {
                 PMyLessonPlayBean body = response.body();
@@ -317,6 +319,7 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
                 if (body != null) {
                     if (body.getErrMsg() == null) {
                         List<PMyLessonPlayBean.DataBean.ChildCourseListBean> childCourseList = body.getData().getChildCourseList();//总课程数
+                        user_CourseId=body.getData().getUserCourseId();
                         int size = childCourseList.size();
                         if (size > 0) {
                             for (int i = 0; i < size; i++) {
@@ -2014,17 +2017,17 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
                 videoPositionDBHelper.updateVideoPosition(lastVideoPosition);
                 Log.e("selecIdTest", "444,seconds:+" + playTime + "selectionIdGet:" + selectionIdGet + "userCourseId:" + userCourseId + "post," + videoId);
                 PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-                aClass.getPMyLessonPlayTimeData(playTime, getBackSelectionId, token, userCourseId).enqueue(new Callback<PLessonPlayTimeBean>() {
+                aClass.getPMyLessonPlayTimeData(playTime, getBackSelectionId, token, Integer.parseInt(user_CourseId)).enqueue(new Callback<PLessonPlayTimeBean>() {
                     @Override
                     public void onResponse(Call<PLessonPlayTimeBean> call, Response<PLessonPlayTimeBean> response) {
                         if (response != null) {
                             PLessonPlayTimeBean body = response.body();
                             if (body != null) {
                                 if (body.getErrMsg() == null && body.getCode().equals("00000")) {
-//                                    Toast.makeText(MediaPlayActivity.this, "保存播放时长成功" + getBackSelectionId, Toast.LENGTH_SHORT).show();
+//                                    ToastUtils.showLongInfo("保存播放时长成功"+getBackSelectionId +"=======userCourseId"+Integer.parseInt(user_CourseId));
                                 }
                             } else {
-//                                Toast.makeText(MediaPlayActivity.this, "保存播放时长失败", Toast.LENGTH_SHORT).show();
+//                                ToastUtils.showLongInfo("保存播放时长失败");
                             }
                         }
                     }

@@ -1,8 +1,6 @@
 package com.example.administrator.zahbzayxy.interfacecommit;
-import android.app.Person;
-
 import com.example.administrator.zahbzayxy.beans.ExamBean;
-import com.example.administrator.zahbzayxy.beans.FreePlayBean;
+import com.example.administrator.zahbzayxy.beans.IsShowAgreement;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiBean;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiListBean;
 import com.example.administrator.zahbzayxy.beans.OrderIsOutOfDateBean;
@@ -16,6 +14,7 @@ import com.example.administrator.zahbzayxy.beans.PMyTestGradBean;
 import com.example.administrator.zahbzayxy.beans.PMyTestOrderBean;
 import com.example.administrator.zahbzayxy.beans.PersonInfo;
 import com.example.administrator.zahbzayxy.beans.PersonTiKuListBean;
+import com.example.administrator.zahbzayxy.beans.SaveArgeement;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.YouHuiJuanBean;
 
@@ -46,7 +45,8 @@ public interface PersonGroupInterfac {
     static final String freePlayPath = "CoursePlayController/freeCourseplay";
     @POST(value = freePlayPath)
     Call<PMyLessonPlayBean> getFreePlayData(@Query("courseId") Integer courseId,
-                                            @Query("courseType") Integer courseType);
+                                            @Query("courseType") Integer courseType,
+                                            @Query("token") String token);
 
     //记录我的课程播放时长
     static final String myLessonPlayTimePath="CoursePlayController/writePlayRecord";
@@ -151,9 +151,30 @@ public interface PersonGroupInterfac {
     Call<PersonInfo> getPersonInfo(@Query("token") String token,
                                    @Query("userCourseId") int userCourseId);
 
-
+    //是否完善个人信息
     String isPersonExam = "/CourseController/isNeedPerfectUserInfo";
     @POST(value = isPersonExam)
     Call<PersonInfo> getPersonExam(@Query("token") String token,
                                    @Query("userQuesLibId") int userQuesLibId );
+
+    //是否展示人脸采集协议
+    String isShow ="/face/agreement/isShow";
+    @POST(value = isShow)
+    Call<IsShowAgreement> isShowAgreement(@Query("userCourseId") int userCourseId,
+                                          @Query("token") String token);
+
+    //保存人脸采集协议
+    String saveAgreement ="/face/agreement/save";
+    @POST(value = saveAgreement)
+    Call<SaveArgeement> getSaveAgreement(@Query("userCourseId") int userCourseId,
+                                         @Query("token") String token);
+
+    //自动采集人脸上传
+//    String autoFace =" /verify/face";
+//    @Multipart
+//    @POST(value = autoFace)
+//    Call<SaveArgeement> getAutoFace(@Query("sectionId") int sectionId,
+//                       @Query("userCourseId") int userCourseId,
+//                       @Query("playTime") int playTime,
+//                       @Part MultipartBody.Part autoFace);
 }

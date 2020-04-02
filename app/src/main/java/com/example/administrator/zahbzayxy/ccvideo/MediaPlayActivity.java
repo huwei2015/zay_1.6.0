@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,19 +18,23 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -40,6 +45,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -51,13 +57,14 @@ import com.bokecc.sdk.mobile.exception.DreamwinException;
 import com.bokecc.sdk.mobile.exception.ErrorCode;
 import com.bokecc.sdk.mobile.play.DWMediaPlayer;
 import com.bokecc.sdk.mobile.play.OnDreamWinErrorListener;
-import com.bokecc.sdk.mobile.play.PlayInfo;
 import com.example.administrator.zahbzayxy.DemoApplication;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.FaceRecognitionActivity;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
+import com.example.administrator.zahbzayxy.beans.IsShowAgreement;
 import com.example.administrator.zahbzayxy.beans.PLessonPlayTimeBean;
 import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
+import com.example.administrator.zahbzayxy.beans.SaveArgeement;
 import com.example.administrator.zahbzayxy.fragments.LesssonTestLiberyFragment;
 import com.example.administrator.zahbzayxy.fragments.PLessonDetailFragment;
 import com.example.administrator.zahbzayxy.fragments.PLessonDirectoryFragment;
@@ -66,11 +73,10 @@ import com.example.administrator.zahbzayxy.myinterface.MyInterface;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.DateUtil;
 import com.example.administrator.zahbzayxy.utils.FaceRecognitionUtils;
-import com.example.administrator.zahbzayxy.utils.NetworkUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +94,6 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.objectbox.annotation.BaseEntity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -156,6 +161,8 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     private RelativeLayout rlBelow, rlPlay;
     private WindowManager wm;
     private ImageView ivFullscreen;
+    private final int WRITE_PERMISSION_REQ_CODE = 100;
+    boolean bPermission = false;
     // 隐藏界面的线程
     private Runnable hidePlayRunnable = new Runnable() {
         @Override
@@ -215,8 +222,9 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
 
         initView();
         initMyView();
+//        initShow();
         initPlayHander();
-        //initPlayInfo();
+//        initPlayInfo(); TODO 不需要
         //切换视频
         initFragment();
 
@@ -226,16 +234,138 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                 //下载视频信息
                 initDownLoadData();
             }
-
-            /*****************FHS START********************/
+//            /*****************FHS START********************/
             if (isNeedVerify()) {
                 //设置识别间隔时间
                 setRecognizedIntervalTime();
             }
-//            isNeedSaveTime = true;
-            /*****************FHS END********************/
+//           isNeedSaveTime = true; TODO 不需要
+//            /*****************FHS END********************/
         }
 
+    }
+
+    //是否显示人脸协议
+    private void initShow() {
+        PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
+        aClass.isShowAgreement(userCourseId, token).enqueue(new Callback<IsShowAgreement>() {
+            @Override
+            public void onResponse(Call<IsShowAgreement> call, Response<IsShowAgreement> response) {
+                boolean data = response.body().getData().isData();
+                if (!data) {
+                    View popView = LayoutInflater.from(MediaPlayActivity.this).inflate(R.layout.dialog_face_server, null, false);
+                    TextView tv_no = popView.findViewById(R.id.tv_No_agreed);
+                    TextView tv_agreed = popView.findViewById(R.id.tv_agreed);
+                    PopupWindow popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
+                    popupWindow.setTouchable(true);
+                    // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
+                    popupWindow.setOutsideTouchable(true);
+                    tv_no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popupWindow.dismiss();
+                            finish();
+                        }
+                    });
+                    tv_agreed.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showLongInfo("点击了同意");
+                            popupWindow.dismiss();
+                            isShowFace();
+                        }
+                    });
+                    popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IsShowAgreement> call, Throwable t) {
+                ToastUtils.showLongInfo("失败");
+            }
+        });
+    }
+
+    private void isShowFace() {
+        PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
+        aClass.getSaveAgreement(userCourseId, token).enqueue(new Callback<SaveArgeement>() {
+            @Override
+            public void onResponse(Call<SaveArgeement> call, Response<SaveArgeement> response) {
+                if (response != null && response.body() != null) {
+                    boolean data = response.body().isData();
+                    if (!data) {
+                        ToastUtils.showLongInfo("协议保存成功");
+                        checkPublishPermission();
+                        initPlayHander();
+//                            //切换视频
+                        initFragment();
+                        if (!isLocalPlay) {
+                            initNetworkTimerTask();
+                            if (initLastVideoInfo()) {
+                                //下载视频信息
+                                initDownLoadData();
+                            }
+
+                            /*****************FHS START********************/
+                            if (isNeedVerify()) {
+                                //设置识别间隔时间
+                                setRecognizedIntervalTime();
+                            }
+                            /*****************FHS END********************/
+                        }
+                    } else {
+                        ToastUtils.showLongInfo("失败");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SaveArgeement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    /**
+     * 检查权限
+     *
+     * @return
+     */
+    private boolean checkPublishPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            List<String> permissions = new ArrayList<>();
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)) {
+                permissions.add(android.Manifest.permission.CAMERA);
+            }
+
+            if (permissions.size() != 0) {
+                ActivityCompat.requestPermissions(this,
+                        (String[]) permissions.toArray(new String[0]),
+                        WRITE_PERMISSION_REQ_CODE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case WRITE_PERMISSION_REQ_CODE:
+                for (int ret : grantResults) {
+                    if (ret != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+                bPermission = true;
+                break;
+            default:
+                break;
+        }
     }
 
     private boolean initLastVideoInfo() {
@@ -274,9 +404,9 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     private void initMyView() {
         courseId = getIntent().getIntExtra("coruseId", 0);
         userCourseId = getIntent().getIntExtra("userCourseId", 0);
-        sectionId = getIntent().getIntExtra("selectionId",0);
+        sectionId = getIntent().getIntExtra("selectionId", 0);
         selectionIdGet = sectionId;
-        Log.i("hw","============initMyView========="+sectionId);
+        Log.i("hw", "============initMyView=========" + sectionId);
         isLocalPlay = getIntent().getBooleanExtra("isLocalPlay", false);
         this.currentPosition = getIntent().getIntExtra("currentPosition", 0);
         posIndex = getIntent().getIntExtra("posIndex", 0);
@@ -2110,6 +2240,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     }
 
     private void startFaceRecognition() {
+        ToastUtils.showLongInfo("定时器进来了");
         int mSeconds = 0;
         if (playDuration != null) {
             CharSequence text = playDuration.getText();
@@ -2185,5 +2316,4 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         Log.e("gxj-getPercent", currentPlayPosition + "|" + duration + "|" + pos);
         return (pos);
     }
-
 }

@@ -113,13 +113,11 @@ public class H5MsgDetailActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                Log.i("hw", "==========onPageStarted=========" + url + "|" + view);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Log.i("hw", "=====onPageFinished======" + Thread.currentThread().getName() + "i" + Thread.currentThread().getId());
             }
         });
 

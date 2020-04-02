@@ -106,7 +106,9 @@ public interface UserInfoInterface {
     //查看用户错题记录
     static final String accountFlowPath = "user/account/flow";
     @GET(value = accountFlowPath)
-    Call<MyAccountFlowBean> MyAccountFlowData(@Query("currentPage") Integer currentPage, @Query("pageSize") Integer pageSize, @Query("token") String token);
+    Call<MyAccountFlowBean> MyAccountFlowData(@Query("currentPage") Integer currentPage,
+                                              @Query("pageSize") Integer pageSize,
+                                              @Query("token") String token);
    //账户余额支付
     static final String accountPayPath = "accountPay/toPay";
 

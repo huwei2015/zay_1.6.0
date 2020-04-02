@@ -1,7 +1,5 @@
 package com.example.administrator.zahbzayxy.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -24,7 +22,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -43,7 +40,6 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.Runnables.UserInfoRunnable;
 import com.example.administrator.zahbzayxy.activities.BooksActivity;
 import com.example.administrator.zahbzayxy.activities.BuyActivity;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
@@ -61,7 +57,6 @@ import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.activities.PayUiActivity;
 import com.example.administrator.zahbzayxy.activities.QueslibActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendCourseActivity;
-//import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.activities.RecommendQueslibActivity;
 import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 import com.example.administrator.zahbzayxy.activities.TestDetailActivity;
@@ -81,6 +76,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+//import com.example.administrator.zahbzayxy.activities.ScanQRCodeActivity;
 
 public class NavIndexFragment extends Fragment {
     Context mContext;
@@ -169,9 +166,7 @@ public class NavIndexFragment extends Fragment {
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setBlockNetworkImage(false);
         webSettings.setJavaScriptEnabled(true);
-        Log.i("=======================", "进来了.....");
         mwebView.loadUrl(RetrofitUtils.getBaseUrl() + AppUrls.INDEX_URL + "?token=" + token);
-//        mwebView.loadUrl(RetrofitUtils.getBaseUrl()+"/static/html/zayh5index.html"+"?token="+token);
         mwebView.getSettings().setJavaScriptEnabled(true);
 
         appInterface = new WebAppInterface(mContext);
@@ -264,7 +259,6 @@ public class NavIndexFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Log.i("hw", "=====onPageFinished======" + Thread.currentThread().getName() + "i" + Thread.currentThread().getId());
                 hideLoadingBar();
                 //
                 int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
