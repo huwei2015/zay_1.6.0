@@ -1,8 +1,7 @@
 package com.example.administrator.zahbzayxy.interfacecommit;
 
-import android.app.Person;
-
 import com.example.administrator.zahbzayxy.beans.AuthStateBean;
+import com.example.administrator.zahbzayxy.beans.AutoFaceBean;
 import com.example.administrator.zahbzayxy.beans.HasAuthorBean;
 import com.example.administrator.zahbzayxy.beans.MyAccountFlowBean;
 import com.example.administrator.zahbzayxy.beans.MyAmountBean;
@@ -193,4 +192,13 @@ public interface UserInfoInterface {
                                   @Query("isScorePass") int isScorePass,
                                   @Query("token") String token);
 
+    //采集人脸接口
+    static final String auto_face ="/verify/face";
+    @Multipart
+    @POST(value = auto_face)
+    Call<AutoFaceBean> getAutoFace(@Query("sectionId") int sectionId,
+                                   @Query("userCourseId") int userCourseId,
+                                   @Query("playTime") int playTime,
+                                   @Query("token") String token,
+                                   @Part MultipartBody.Part recognitionImg);
 }

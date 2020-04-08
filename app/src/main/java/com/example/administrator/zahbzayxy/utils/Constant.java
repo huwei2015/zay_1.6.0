@@ -34,7 +34,6 @@ public class Constant {
     public static final String DEFAULT_DESP_TEXT = "";
 
     /*************************FHS Start********************************/
-//    public static final String  GET_USER_INFO_URL           = "http://app.test.zayxy.com/userCenter/getUserInfo";
     public static final String  GET_USER_INFO_URL           = RetrofitUtils.getBaseUrl()+"/userCenter/getUserInfo";
     public static final String  TOKEN_PARAM                 = "token";
     public static final String  USER_INFO                   = "userInfo";
@@ -48,7 +47,6 @@ public class Constant {
 
     public static final int     NEED_VERIFY                 = 1;        //需要进行人脸识别
     public static final String  SUCCESS_CODE                = "00000";
-//    public static final String  FACE_RECOGNITION_IMG_UIL    ="http://app.test.zayxy.com/verify/face/recognition/img";
     public static final String  FACE_RECOGNITION_IMG_UIL    =RetrofitUtils.getBaseUrl()+"/verify/face/recognition/img";
     public static final String  SECTION_ID                  = "sectionId";
     public static final String  USER_COURSE_ID              = "userCourseId";

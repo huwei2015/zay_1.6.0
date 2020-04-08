@@ -253,7 +253,6 @@ public class NavIndexFragment extends Fragment {
 //                }else{
 //                    indexNav.setVisibility(View.GONE);
 //                }
-                Log.i("hw", "==========onPageStarted=========" + url + "|" + view);
             }
 
             @Override

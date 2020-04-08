@@ -764,6 +764,7 @@ public class OnLineManager {
         bundle.putString("token", token);
         bundle.putString("imagePath", imagePath);
         bundle.putBoolean("isLocalPlay", false);
+        bundle.putBoolean("isFace",true);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }

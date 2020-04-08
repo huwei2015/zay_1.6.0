@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,10 +22,8 @@ import android.widget.Toast;
 import com.baidu.idl.face.platform.FaceStatusEnum;
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity;
 import com.baidu.idl.face.platform.utils.Base64Utils;
-import com.baidu.idl.face.platform.utils.BitmapUtils;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.PLessonPlayTimeBean;
-import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.utils.Constant;
@@ -42,7 +40,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -101,7 +98,6 @@ public class FaceRecognitionActivity extends FaceLivenessActivity {
                 //质量压缩
                 Bitmap scaledBitmap = ImageUtils.compressImage(bitmap);
                 fact_img= ImageUtils.getBitmapByte(scaledBitmap);
-                Log.i("ynf---","ynf========"+scaledBitmap.getWidth()+"======="+scaledBitmap.getHeight());
                 setMessageWhat(0);
                 //上传图片到服务器
                 ExecutorService threadPool = ThreadPoolUtils.getThreadPoolExecutor();

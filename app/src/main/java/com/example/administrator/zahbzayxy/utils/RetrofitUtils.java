@@ -11,7 +11,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Administrator on 2016/10/25.
@@ -35,8 +34,8 @@ public class RetrofitUtils{
 //   private  static String BASE_URL = "http://120.55.73.36:8181/" ;
 
     //线上测试地址
-       private  static String BASE_URL = "http://app.test.zayxy.com";
-//         private  static String BASE_URL = "http://app1.zayxy.com";
+//       private  static String BASE_URL = "http://app.test.zayxy.com";
+         private  static String BASE_URL = "http://app1.zayxy.com";
     private static RetrofitUtils mInstance;
     private static Retrofit mRetrofit;
 

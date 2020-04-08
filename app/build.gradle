@@ -8,10 +8,10 @@ android {
     buildToolsVersion "26.0.3"
     defaultConfig {
         applicationId "com.example.administrator.zahbzayxy"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 28
-        versionCode 171
-        versionName "2.1.0"
+        versionCode 172
+        versionName "2.2.0"
         multiDexEnabled true
         //打包添加时间
         def time = new SimpleDateFormat("yyyyMMdd").format(new Date())

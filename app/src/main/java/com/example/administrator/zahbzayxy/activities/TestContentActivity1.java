@@ -177,15 +177,11 @@ public class TestContentActivity1 extends BaseActivity {
     protected void onPause() {
         super.onPause();
         Log.i("ynf", "ynf=======onPause=====");
-        if (popupWindow != null && popupWindow.isShowing()) {
-            //提交试卷不会走这里
-            timeDialog();
-            continueTest = false;
-        } else {
-            //提交试卷不会走这里
-            timeDialog();
-            continueTest = false;
+        if(popupWindow !=null && popupWindow.isShowing()){
+            popupWindow.dismiss();
         }
+        timeDialog();
+        continueTest = false;
     }
 
     private void initDownLoadData() {
@@ -1000,13 +996,6 @@ public class TestContentActivity1 extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        shengyu = 0;
-//        stopThread = true;
-        Log.e("ynf", shengyu + "stop," + shengyu);
-    }
 
     @Override
     protected void onDestroy() {
@@ -1271,6 +1260,9 @@ public class TestContentActivity1 extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(popupWindow !=null && popupWindow.isShowing()){
+                popupWindow.dismiss();
+            }
             showDialog();
             return false;
         }
@@ -1311,6 +1303,7 @@ public class TestContentActivity1 extends BaseActivity {
             }
             useTime = test(examTime * 60 - shengyu);
             popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//多加这一句，问题就解决了！这句的官方文档解释是：让窗口背景后面的任何东西变暗
             popupWindow.setTouchable(true);
             // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
             popupWindow.setOutsideTouchable(true);
