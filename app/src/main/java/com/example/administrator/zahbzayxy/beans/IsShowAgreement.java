@@ -38,14 +38,14 @@ public class IsShowAgreement {
     }
 
     public static class Agreement implements Serializable{
-        private boolean data;
+        private boolean show;
 
-        public boolean isData() {
-            return data;
+        public boolean isShow() {
+            return show;
         }
 
-        public void setData(boolean data) {
-            this.data = data;
+        public void setShow(boolean show) {
+            this.show = show;
         }
     }
 }

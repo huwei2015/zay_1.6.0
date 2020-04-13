@@ -1,5 +1,6 @@
 package com.example.administrator.zahbzayxy.ccvideo;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -75,7 +76,6 @@ import com.example.administrator.zahbzayxy.fragments.LesssonTestLiberyFragment;
 import com.example.administrator.zahbzayxy.fragments.PLessonDetailFragment;
 import com.example.administrator.zahbzayxy.fragments.PLessonDirectoryFragment;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
-import com.example.administrator.zahbzayxy.interfacecommit.UserInfoInterface;
 import com.example.administrator.zahbzayxy.myinterface.MyInterface;
 import com.example.administrator.zahbzayxy.utils.Constant;
 import com.example.administrator.zahbzayxy.utils.DateUtil;
@@ -236,26 +236,27 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         detector = new GestureDetector(this, new MyGesture());
-
+        checkPublishPermission();
         initView();
         initMyView();
-        if(!isFace){
+        if (!isFace) {
+            Log.i("ynf", "ynf===========进来了");
             initShow();
         }
-//        initShow();
         initPlayHander();
 //        initPlayInfo(); TODO 不需要
         //切换视频
-        if(isFace) {
+        if (isFace) {
             initFragment();
         }
+        Log.i("ynf", "ynf==============isLocalPlay");
 
         if (!isLocalPlay) {
             initNetworkTimerTask();
             if (initLastVideoInfo()) {
                 Log.i("ynf", "ynf==============initLastVideoInfo");
                 //下载视频信息
-                if(isFace) {
+                if (isFace) {
                     initDownLoadData();
                 }
             }
@@ -277,38 +278,62 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         aClass.isShowAgreement(userCourseId, token).enqueue(new Callback<IsShowAgreement>() {
             @Override
             public void onResponse(Call<IsShowAgreement> call, Response<IsShowAgreement> response) {
-                boolean data = response.body().getData().isData();
-                if (data) {
-                    View popView = LayoutInflater.from(MediaPlayActivity.this).inflate(R.layout.dialog_face_server, null, false);
-                    TextView tv_no = popView.findViewById(R.id.tv_No_agreed);
-                    TextView tv_agreed = popView.findViewById(R.id.tv_agreed);
-                    PopupWindow popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
-                    popupWindow.setTouchable(true);
-                    // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
-                    popupWindow.setOutsideTouchable(true);
-                    tv_no.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popupWindow.dismiss();
-                            finish();
+                if (response != null && response.body() != null) {
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        boolean data = response.body().getData().isShow();
+                        if (data) {
+                            View popView = LayoutInflater.from(MediaPlayActivity.this).inflate(R.layout.dialog_face_server, null, false);
+                            TextView tv_no = popView.findViewById(R.id.tv_No_agreed);
+                            TextView tv_agreed = popView.findViewById(R.id.tv_agreed);
+                            PopupWindow popupWindow = new PopupWindow(popView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, false);
+                            popupWindow.setTouchable(true);
+                            // 设置该属性 点击 popUpWindow外的 区域 弹出框会消失
+                            popupWindow.setOutsideTouchable(true);
+                            tv_no.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    popupWindow.dismiss();
+                                    finish();
+                                }
+                            });
+                            tv_agreed.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    popupWindow.dismiss();
+                                    isShowFace();
+                                }
+                            });
+                            popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        } else {
+                            initPlayHander();
+                            //切换视频
+                            initFragment();
+                            Log.i("ynf", "ynf=======isLocalPlay===" + isLocalPlay);
+                            if (!isLocalPlay) {
+                                initNetworkTimerTask();
+                                if (initLastVideoInfo()) {
+                                    //下载视频信息
+                                    initDownLoadData();
+//                                sensorManager.registerListener(MediaPlayActivity.this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
+                                }
+
+                                /*****************FHS START********************/
+//                            if (isNeedVerify()) {
+//                                //设置识别间隔时间
+//                                setRecognizedIntervalTime();
+//                            }
+                                /*****************FHS END********************/
+                            }
                         }
-                    });
-                    tv_agreed.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popupWindow.dismiss();
-                            isShowFace();
-                        }
-                    });
-                    popupWindow.showAtLocation(popView, Gravity.CENTER, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                } else {
-                    isShowFace();
+                    }
                 }
+
             }
 
             @Override
             public void onFailure(Call<IsShowAgreement> call, Throwable t) {
-                ToastUtils.showLongInfo("失败");
+                ToastUtils.showLongInfo(t.getMessage());
             }
         });
     }
@@ -319,36 +344,42 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
             @Override
             public void onResponse(Call<SaveArgeement> call, Response<SaveArgeement> response) {
                 if (response != null && response.body() != null) {
-                    boolean data = response.body().isData();
-                    if (data) {
-                        checkPublishPermission();
-                        initPlayHander();
-                        //切换视频
-                        initFragment();
-                        if (!isLocalPlay) {
-                            initNetworkTimerTask();
-                            if (initLastVideoInfo()) {
-                                //下载视频信息
-                                initDownLoadData();
+                    String code = response.body().getCode();
+                    if (code.equals("00000")) {
+                        boolean data = response.body().isData();
+                        Log.i("ynf", "ynf=======isShowFace===" + data);
+                        if (data) {
+                            initPlayHander();
+                            //切换视频
+                            initFragment();
+                            Log.i("ynf", "ynf=======isLocalPlay===" + isLocalPlay);
+                            if (!isLocalPlay) {
+                                initNetworkTimerTask();
+                                if (initLastVideoInfo()) {
+                                    //下载视频信息
+                                    initDownLoadData();
 //                                sensorManager.registerListener(MediaPlayActivity.this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
-                            }
+                                }
 
-                            /*****************FHS START********************/
+                                /*****************FHS START********************/
 //                            if (isNeedVerify()) {
 //                                //设置识别间隔时间
 //                                setRecognizedIntervalTime();
 //                            }
-                            /*****************FHS END********************/
+                                /*****************FHS END********************/
+                            }
                         }
-                    } else {
-                        ToastUtils.showLongInfo("失败");
                     }
+//                    else if (code.equals("99999")) {
+//                        String errMsg = response.body().getErrMsg();
+//                        ToastUtils.showLongInfo(errMsg);
+//                    }
                 }
             }
 
             @Override
             public void onFailure(Call<SaveArgeement> call, Throwable t) {
-
+                ToastUtils.showLongInfo(t.getMessage());
             }
         });
     }
@@ -361,13 +392,13 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     private boolean checkPublishPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             List<String> permissions = new ArrayList<>();
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    && (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE))
+                    && (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA))) {
                 permissions.add(android.Manifest.permission.CAMERA);
+                permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
-
             if (permissions.size() != 0) {
                 ActivityCompat.requestPermissions(this,
                         (String[]) permissions.toArray(new String[0]),
@@ -433,13 +464,12 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         userCourseId = getIntent().getIntExtra("userCourseId", 0);
         sectionId = getIntent().getIntExtra("selectionId", 0);
         selectionIdGet = sectionId;
-        Log.i("hw", "============initMyView=========" + sectionId);
         isLocalPlay = getIntent().getBooleanExtra("isLocalPlay", false);
         this.currentPosition = getIntent().getIntExtra("currentPosition", 0);
         posIndex = getIntent().getIntExtra("posIndex", 0);
         getSelectionName = getIntent().getStringExtra("getSelectionName");
         mImagePath = getIntent().getStringExtra("imagePath");
-         isFace = getIntent().getBooleanExtra("isFace",false);
+        isFace = getIntent().getBooleanExtra("isFace", false);
         ArrayList list = (ArrayList<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean>) getIntent().getSerializableExtra("listsize");
         if (list != null && list.size() > 0) {
             listsize = list;
@@ -457,7 +487,9 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        mSurfaceHolder = mSurfaceView.getHolder();
+        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mSurfaceHolder.addCallback(new NewSurfaceHoler());
     }
 
     ArrayList<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> listsize = new ArrayList<>();
@@ -857,9 +889,6 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         lockView = (ImageView) findViewById(R.id.iv_lock);
         lockView.setSelected(false);
         lockView.setOnClickListener(onClickListener);
-        mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mSurfaceHolder.addCallback(new NewSurfaceHoler());
     }
 
     @SuppressLint("HandlerLeak")
@@ -2024,9 +2053,12 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         Log.i("ynf", "" + "---> onDestroy");
 
         mediaPlayWeakReference = null;
-
+        mCamera = null;
         if (timerTask != null) {
             timerTask.cancel();
+        }
+        if(mHandler !=null){
+            mHandler.removeCallbacksAndMessages(null);
         }
         playerHandler.removeCallbacksAndMessages(null);
         playerHandler = null;
@@ -2052,11 +2084,9 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         }
         getBackSelectionId = selectionIdGet;
 
-
         if (bind != null) {
             bind.unbind();
         }
-
         needRecognized = false;
         recognizeSuccess = false;
         if (isLocalPlay) {
@@ -2295,6 +2325,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
             recognizeSuccess = true;
             needRecognized = true;
 //            recognizeHandler.postDelayed(recognizeRunnable,1000);
+
         }
     }
 
@@ -2316,6 +2347,28 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         return (pos);
     }
 
+    Handler mHandler = new Handler();
+    private void initCamera(){
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mCamera != null) {
+                    mCamera.takePicture(null, null, new Camera.PictureCallback() {
+                        @Override
+                        public void onPictureTaken(byte[] data, Camera camera) {
+                            Bitmap source = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            int degree = ImageUtils.readPictureDegree(getFilePath());
+                            Log.i("hw", "hw==========" + getFilePath());
+                            Bitmap bitmap = ImageUtils.rotaingImageView(degree, source);
+                            ImageUtils.Image = bitmap;
+                            saveBitmap(bitmap, new File(getFilePath()));
+                        }
+                    });
+                }
+            }
+        },2000);
+    }
+
     class NewSurfaceHoler implements SurfaceHolder.Callback {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
@@ -2329,24 +2382,29 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                         mCamera.setPreviewDisplay(holder);
                         mCamera.setDisplayOrientation(getPreviewDegree(MediaPlayActivity.this));
                         mCamera.startPreview();
+                        initCamera();
                         /**
                          * 相机开启需要时间 延时takePicture
                          */
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mCamera.takePicture(null, null, new Camera.PictureCallback() {
-                                    @Override
-                                    public void onPictureTaken(byte[] data, Camera camera) {
-                                        Bitmap source = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                        int degree = ImageUtils.readPictureDegree(getFilePath());
-                                        Bitmap bitmap = ImageUtils.rotaingImageView(degree, source);
-                                        ImageUtils.Image = bitmap;
-                                        saveBitmap(bitmap, new File(getFilePath()));
-                                    }
-                                });
-                            }
-                        }, 5000);
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (mCamera != null) {
+//                                    mCamera.takePicture(null, null, new Camera.PictureCallback() {
+//                                        @Override
+//                                        public void onPictureTaken(byte[] data, Camera camera) {
+//                                            Bitmap source = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                                            int degree = ImageUtils.readPictureDegree(getFilePath());
+//                                            Log.i("hw", "hw==========" + getFilePath());
+//                                            Bitmap bitmap = ImageUtils.rotaingImageView(degree, source);
+//                                            ImageUtils.Image = bitmap;
+//                                            saveBitmap(bitmap, new File(getFilePath()));
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        }, 2000);
+//
                     }
                 }
 
@@ -2355,7 +2413,6 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                 Log.i("ynf", "ynf========" + e);
             }
         }
-
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Camera.Parameters parameters = mCamera.getParameters(); // 获取各项参数
@@ -2376,14 +2433,20 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-            mCamera.stopPreview();
-            mCamera.unlock();
-            mCamera.release();
+            try {
+                if (mCamera != null) {
+                    mCamera.stopPreview();
+                    mCamera.unlock();
+                    mCamera.release();
+                    mCamera = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
     public String getFilePath() {
-        return getFileDir(MediaPlayActivity.this) + "/";
+        return getFileDir(MediaPlayActivity.this) + "/123.jpg";
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -2475,8 +2538,8 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), face);
         MultipartBody.Part body = MultipartBody.Part.createFormData("recognitionImg", "recognitionImg.jpg", requestBody);
         Log.i("ynf", "ynf===========" + body);
-        UserInfoInterface userInfoInterface = RetrofitUtils.getInstance().createClass(UserInfoInterface.class);
-        userInfoInterface.getAutoFace(selectionIdGet, userCourseId, playTime, token, body).enqueue(new Callback<AutoFaceBean>() {
+        PersonGroupInterfac personGroupInterfac = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
+        personGroupInterfac.getAutoFace(selectionIdGet, userCourseId, playTime, token, body).enqueue(new Callback<AutoFaceBean>() {
             @Override
             public void onResponse(Call<AutoFaceBean> call, Response<AutoFaceBean> response) {
                 if (response != null && response.body() != null) {
@@ -2485,7 +2548,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                     if (code.equals("00000")) {
                         boolean data = response.body().isData();
                         if (data) {
-                            Log.i("hw","成功");
+                            Log.i("hw", "成功");
                         }
                     } else if (code.equals("00088")) {
                         ToastUtils.showLongInfo(errMsg);

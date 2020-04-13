@@ -20,8 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.FaceRecognitionForOfflineActivity;
@@ -49,7 +47,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import static android.content.Context.MODE_PRIVATE;
-
+    //我的课程Manager
 public class MyOffLineCourseManager implements DownloadController.Observer {
 
     private Context mContext;
@@ -210,7 +208,8 @@ public class MyOffLineCourseManager implements DownloadController.Observer {
         bundle.putInt("coruseId", coruseId);
         bundle.putInt("selectId", wrapper.getDownloadInfo().getSectionId());
         bundle.putString("token", token);
-        bundle.putBoolean("isLocalPlay", true);
+        bundle.putBoolean("isLocalPlay", false);
+        bundle.putBoolean("isFace",true);
         intent.putExtra("currentPosition", sharedPreferences.getInt("currentPosition" + wrapper.getDownloadInfo().getTitle(), 0));
         bundle.putInt("selectionId", wrapper.getDownloadInfo().getSectionId());
         intent.putExtras(bundle);

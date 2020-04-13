@@ -14,24 +14,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.EditMessageActivity;
 import com.example.administrator.zahbzayxy.activities.FaceRecognitionActivity;
-import com.example.administrator.zahbzayxy.adapters.LearnOfflineCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
+import com.example.administrator.zahbzayxy.activities.LoginActivity;
 import com.example.administrator.zahbzayxy.adapters.MyLearnOfflineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.MyLearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.adapters.MyOfflineTitleAdapter;
 import com.example.administrator.zahbzayxy.adapters.MyOnLineTitleAdapter;
-import com.example.administrator.zahbzayxy.adapters.OnLineTitleAdapter;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCourseLearnBean;
 import com.example.administrator.zahbzayxy.beans.OnTransitionTextListener;
@@ -46,7 +40,6 @@ import com.example.administrator.zahbzayxy.utils.FaceRecognitionUtils;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.NetworkUtils;
 import com.example.administrator.zahbzayxy.utils.NumberFormatUtils;
-import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.StringUtil;
 import com.example.administrator.zahbzayxy.utils.ThreadPoolUtils;
@@ -69,7 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
-
+    //我的课程点击事件
 public class MyOnLineManager {
 
     private Context mContext;
@@ -99,7 +92,7 @@ public class MyOnLineManager {
     private boolean mLoadingData = false;
     private boolean mIsHasData = true;
     private boolean mIsLoading;
-    private Call<OfflineCourseLearnBean> mOffLineCall;
+        private Call<OfflineCourseLearnBean> mOffLineCall;
     private Call<OnlineCourseBean> mOnLineCall;
 
     public MyOnLineManager(Context context, FixedIndicatorView fixedIndicatorView, View view) {
@@ -148,21 +141,20 @@ public class MyOnLineManager {
     }
 
     private void initEvent(){
-        mCourseAdapter.setOnLearnOnlineItemClickListener(position -> {
-            // 在线课点击事件处理
-            OnlineCourseBean.UserCoursesBean coursesBean = mCoursesList.get(position);
-            if (coursesBean != null) {
-                boolean isPlay = coursesBean.isPlay();
-                if (!isPlay) {
-                    ToastUtils.showLongInfo(coursesBean.getMsg_cont() + "");
-                    return;
-                }
-                int userCourseId = coursesBean.getUserCourseId();
-                int courseId = coursesBean.getMainCourseId();
-                isPerfectPersonInfo(userCourseId, courseId);
-            }
-        });
-
+                mCourseAdapter.setOnLearnOnlineItemClickListener(position -> {
+                    // 在线课点击事件处理
+                    OnlineCourseBean.UserCoursesBean coursesBean = mCoursesList.get(position);
+                    if (coursesBean != null) {
+                        boolean isPlay = coursesBean.isPlay();
+                        if (!isPlay) {
+                            ToastUtils.showLongInfo(coursesBean.getMsg_cont() + "");
+                            return;
+                        }
+                        int userCourseId = coursesBean.getUserCourseId();
+                        int courseId = coursesBean.getMainCourseId();
+                        isPerfectPersonInfo(userCourseId, courseId);
+                    }
+                });
         mOffLineAdapter.setOnLearnOfflineItemClickListener(position -> {
             // 线下课点击事件处理
 //            OfflineCourseLearnBean.UserCoursesBean coursesBean = mOfflineList.get(position);
@@ -590,6 +582,9 @@ public class MyOnLineManager {
                             showUploadDialog();
                         }
 
+                    }else if(code.equals("00003")){
+                        ToastUtils.showLongInfo(response.body().getErrMsg());
+                        mContext.startActivity(new Intent(mContext, LoginActivity.class));
                     }
                 }
             }
@@ -705,6 +700,7 @@ public class MyOnLineManager {
         bundle.putInt("coruseId", coruseId);
         bundle.putString("token", token);
         bundle.putBoolean("isLocalPlay", false);
+        bundle.putBoolean("isFace",false);
         bundle.putInt("rootIn", 1);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
@@ -724,6 +720,7 @@ public class MyOnLineManager {
         bundle.putInt("coruseId", coruseId);
         bundle.putString("token", token);
         bundle.putBoolean("isLocalPlay", false);
+        bundle.putBoolean("isFace",true);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }

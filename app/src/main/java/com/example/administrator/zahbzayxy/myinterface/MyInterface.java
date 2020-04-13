@@ -10,11 +10,11 @@ import java.util.List;
 public class MyInterface {
     //视频播放传递三级里面的子viewId时调用
     public interface ItemClickedListener{
-        public void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String lessonName, int selectionIdack, int startPlaytTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list);
+         void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String lessonName, int selectionIdack, int startPlaytTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list);
     }
 
     //错题详情时把adapter中位置和qustionId传到activity
     public interface ErrorOnClickedListenner{
-        public void onMyItemClickedListenner(int questionId, int postion);
+        void onMyItemClickedListenner(int questionId, int postion);
     }
 }

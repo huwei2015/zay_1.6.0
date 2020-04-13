@@ -30,7 +30,6 @@
     <!-- 允许相机对焦 -->
     <uses-permission android:name="android.hardware.camera.autofocus" /> <!-- HYY 添加 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -295,13 +294,13 @@
         <activity android:name=".activities.ContacActivity" />
         <activity
             android:name=".activities.FaceRecognitionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.FaceCollectActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.PortraitDisplayActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.TestActivity" /> <!-- HYY 添加 start -->
         <!-- 课程推荐（只有在线课）列表页 -->
         <activity android:name=".activities.RecommendCourseActivity" />
@@ -334,23 +333,15 @@
             android:name=".activities.ScanQRCodeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity> <!-- 原生跳H5  常见问题、使用手册 -->
+            android:windowSoftInputMode="stateAlwaysHidden"/> <!-- 原生跳H5  常见问题、使用手册 -->
         <activity android:name=".activities.H5PageActivity" /> <!-- HYY 添加 end -->
         <activity
             android:name=".activities.ShowPdfActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.ShowImgActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.H5MsgDetailActivity"/>
-
-        <receiver android:name=".PhoneReceiver">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
-                <action android:name="android.intent.action.PHONE_STATE"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

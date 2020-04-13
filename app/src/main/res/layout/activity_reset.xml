@@ -34,324 +34,335 @@
                 android:textSize="20sp" />
         </RelativeLayout>
 
-        <!--个人信息-->
-        <RelativeLayout
-            android:id="@+id/rl_info"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_marginStart="16dp"
-                android:text="个人信息"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@mipmap/right_back" />
-        </RelativeLayout>
+                android:orientation="vertical">
+                <!--个人信息-->
+                <RelativeLayout
+                    android:id="@+id/rl_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="个人信息"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--账号安全-->
-        <RelativeLayout
-            android:id="@+id/rl_account"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@mipmap/right_back" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="账户安全"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@mipmap/right_back" />
-        </RelativeLayout>
+                <!--账号安全-->
+                <RelativeLayout
+                    android:id="@+id/rl_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="账户安全"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--消息提醒-->
-        <RelativeLayout
-            android:id="@+id/rl_msg"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@mipmap/right_back" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="消息提醒"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <Switch
-                android:id="@+id/switch_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:checked="true"
-                android:clickable="true" />
-        </RelativeLayout>
+                <!--消息提醒-->
+                <RelativeLayout
+                    android:id="@+id/rl_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="消息提醒"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--开课提醒-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <Switch
+                        android:id="@+id/switch_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:checked="true"
+                        android:clickable="true" />
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/lessonSuggest"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="开课提醒"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <Switch
-                android:id="@+id/lessonStart_st"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:checked="true"
-                android:clickable="true" />
-        </RelativeLayout>
+                <!--开课提醒-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:id="@+id/lessonSuggest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="开课提醒"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--仅Wifi模式下观看-->
-        <RelativeLayout
-            android:id="@+id/wifi"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <Switch
+                        android:id="@+id/lessonStart_st"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="16dp"
+                        android:checked="true"
+                        android:clickable="true" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="仅Wifi模式下观看"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <Switch
-                android:id="@+id/onlyWifi_st"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:checked="true"
-                android:clickable="true" />
-        </RelativeLayout>
+                <!--仅Wifi模式下观看-->
+                <RelativeLayout
+                    android:id="@+id/wifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="仅Wifi模式下观看"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--清除缓存-->
-        <RelativeLayout
-            android:id="@+id/clearCache_rl"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <Switch
+                        android:id="@+id/onlyWifi_st"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:checked="true"
+                        android:clickable="true" />
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/clearSave"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="清除缓存"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <TextView
-                android:id="@+id/showCache_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
-                android:gravity="center" />
-        </RelativeLayout>
+                <!--清除缓存-->
+                <RelativeLayout
+                    android:id="@+id/clearCache_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:id="@+id/clearSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="清除缓存"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--服务协议-->
-        <RelativeLayout
-            android:id="@+id/rl_service"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <TextView
+                        android:id="@+id/showCache_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="服务协议"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@mipmap/right_back" />
-        </RelativeLayout>
+                <!--服务协议-->
+                <RelativeLayout
+                    android:id="@+id/rl_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="服务协议"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--隐私协议-->
-        <RelativeLayout
-            android:id="@+id/rl_privacy"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@mipmap/right_back" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="隐私协议"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@mipmap/right_back" />
-        </RelativeLayout>
+                <!--隐私协议-->
+                <RelativeLayout
+                    android:id="@+id/rl_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="隐私协议"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--关于我们-->
-        <RelativeLayout
-            android:id="@+id/aboutUs_rl"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@mipmap/right_back" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="关于我们"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <ImageView
-                android:id="@+id/us_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:src="@mipmap/right_back" />
-        </RelativeLayout>
+                <!--关于我们-->
+                <RelativeLayout
+                    android:id="@+id/aboutUs_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="关于我们"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--更新版本-->
-        <RelativeLayout
-            android:id="@+id/app_version_rl"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white"
-            android:onClick="appVersionOnClick">
+                    <ImageView
+                        android:id="@+id/us_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@mipmap/right_back" />
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/update"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="更新版本"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <TextView
-                android:id="@+id/curenntClass"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:text=""
-                android:textSize="18sp" />
-        </RelativeLayout>
+                <!--更新版本-->
+                <RelativeLayout
+                    android:id="@+id/app_version_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white"
+                    android:onClick="appVersionOnClick">
 
-        <include layout="@layout/divid_line_layout" />
+                    <TextView
+                        android:id="@+id/update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="更新版本"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-        <!--注销账号-->
-        <RelativeLayout
-            android:id="@+id/rl_households"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/white"
-            android:onClick="appVersionOnClick">
+                    <TextView
+                        android:id="@+id/curenntClass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="18sp" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:gravity="center"
-                android:text="注销账户"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                <include layout="@layout/divid_line_layout" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:textSize="18sp" />
-        </RelativeLayout>
+                <!--注销账号-->
+                <RelativeLayout
+                    android:id="@+id/rl_households"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@color/white"
+                    android:onClick="appVersionOnClick">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center"
+                        android:text="注销账户"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <Button
         android:id="@+id/existLogin_bt"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="@color/bg"
         android:text="退出登录"
-        android:layout_alignParentBottom="true"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />

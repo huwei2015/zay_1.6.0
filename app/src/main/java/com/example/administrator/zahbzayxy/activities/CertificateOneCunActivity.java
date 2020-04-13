@@ -36,15 +36,9 @@ import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ImageUtils;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
-import com.google.gson.Gson;
-import com.sina.weibo.sdk.api.TextObject;
 import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.MediaType;

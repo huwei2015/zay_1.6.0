@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/textview_border"
-                    android:text=""
+                    android:text="模考记录"
                     android:textColor="#2c77f3" />
 
                 <TextView
@@ -193,6 +193,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center"
+                android:paddingTop="6dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -237,7 +238,7 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:text="表现不错，继续加油哦！"
-                android:layout_marginBottom="6dp"
+                android:paddingBottom="6dp"
                 android:textSize="16sp" />
 
             <View

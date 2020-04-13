@@ -6,22 +6,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.androidkun.PullToRefreshRecyclerView;
-import com.androidkun.callback.PullToRefreshListener;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.activities.ChooseTopicActivity;
-import com.example.administrator.zahbzayxy.activities.QueslibActivity;
+import com.example.administrator.zahbzayxy.activities.OnlineCourseActivity;
 import com.example.administrator.zahbzayxy.adapters.LearnNavigationAdapter;
 import com.example.administrator.zahbzayxy.adapters.LearnOnlineCourseAdapter;
 import com.example.administrator.zahbzayxy.beans.LearnNavigationBean;
@@ -30,7 +25,6 @@ import com.example.administrator.zahbzayxy.manager.OffLineCourseManager;
 import com.example.administrator.zahbzayxy.manager.OnLineManager;
 import com.example.administrator.zahbzayxy.utils.FixedIndicatorView;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
-import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,8 +151,8 @@ public class OnLineCourseFragment extends Fragment implements View.OnClickListen
             case R.id.tv_chooseTopic://选择题库
                 startActivity(new Intent(getActivity(), ChooseTopicActivity.class));
                 break;
-            case R.id.img_add://添加题库
-                startActivity(new Intent(getActivity(), QueslibActivity.class));
+            case R.id.img_add://添加课程
+                startActivity(new Intent(getActivity(), OnlineCourseActivity.class));
                 break;
         }
     }

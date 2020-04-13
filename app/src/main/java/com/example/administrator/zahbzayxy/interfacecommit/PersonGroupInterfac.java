@@ -1,4 +1,6 @@
 package com.example.administrator.zahbzayxy.interfacecommit;
+
+import com.example.administrator.zahbzayxy.beans.AutoFaceBean;
 import com.example.administrator.zahbzayxy.beans.ExamBean;
 import com.example.administrator.zahbzayxy.beans.IsShowAgreement;
 import com.example.administrator.zahbzayxy.beans.NewMyChengJiBean;
@@ -18,11 +20,14 @@ import com.example.administrator.zahbzayxy.beans.SaveArgeement;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.beans.YouHuiJuanBean;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 /**
  * Created by Administrator on 2017/4/3.
@@ -169,12 +174,13 @@ public interface PersonGroupInterfac {
     Call<SaveArgeement> getSaveAgreement(@Query("userCourseId") int userCourseId,
                                          @Query("token") String token);
 
-    //自动采集人脸上传
-//    String autoFace =" /verify/face";
-//    @Multipart
-//    @POST(value = autoFace)
-//    Call<SaveArgeement> getAutoFace(@Query("sectionId") int sectionId,
-//                       @Query("userCourseId") int userCourseId,
-//                       @Query("playTime") int playTime,
-//                       @Part MultipartBody.Part autoFace);
+    //采集人脸接口
+    static final String auto_face ="/verify/face";
+    @Multipart
+    @POST(value = auto_face)
+    Call<AutoFaceBean> getAutoFace(@Query("sectionId") int sectionId,
+                                   @Query("userCourseId") int userCourseId,
+                                   @Query("playTime") int playTime,
+                                   @Query("token") String token,
+                                   @Part MultipartBody.Part recognitionImg);
 }
