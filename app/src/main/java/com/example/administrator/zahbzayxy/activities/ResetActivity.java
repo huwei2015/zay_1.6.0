@@ -10,11 +10,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,7 +22,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.administrator.zahbzayxy.DemoApplication;
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
 import com.example.administrator.zahbzayxy.beans.LogoutBean;
@@ -34,20 +30,11 @@ import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.DataCleanManager;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ToastUtils;
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -155,17 +142,6 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(ResetActivity.this, "退出登录成功", Toast.LENGTH_SHORT).show();
                     EventBus.getDefault().post(66);
                     ResetActivity.this.finish();
-
-                    UMShareAPI umShareAPI = DemoApplication.getInstance().getUmShareAPI();
-                    umShareAPI.deleteOauth(ResetActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE, new DefaultAuthListener() {
-                        public void onDone() {
-
-                        }
-
-                        public void onStart(SHARE_MEDIA share_media) {
-
-                        }
-                    });
                 }
                 break;
             //wifi设置
@@ -330,25 +306,6 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
         PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
         String version = packInfo.versionName;
         return version;
-    }
-
-    abstract class DefaultAuthListener implements UMAuthListener {
-        public abstract void onDone();
-
-        @Override
-        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-            onDone();
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-            onDone();
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA share_media, int i) {
-            onDone();
-        }
     }
 
     @Override

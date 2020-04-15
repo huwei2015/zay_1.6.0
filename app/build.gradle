@@ -56,7 +56,7 @@ android {
         }
     }
     lintOptions {
-        disable "ResourceType"
+        disable "GoogleAppIndexingWarning"
     }
 
     //配置keystore签名
@@ -92,7 +92,6 @@ android {
     }
 
 }
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':androidautoscrollviewpager')
@@ -100,10 +99,6 @@ dependencies {
     implementation project(':faceplatform-ui')
     implementation (name: 'alipaySdk-15.6.8-20191021122455', ext: 'aar')
     compile files('libs/SocialSDK_WeChat_Simplify.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_shareview.jar')
-    compile files('libs/umeng_social_tool.jar')
     compile files('libs/libs/hellocharts-library-1.5.8.jar')
     compile files('libs/libs/achartengine-1.0.0.jar')
     compile files('libs/ijkjava.jar')

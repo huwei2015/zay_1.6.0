@@ -1,4 +1,5 @@
 package com.example.administrator.zahbzayxy;
+
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
@@ -8,9 +9,6 @@ import com.example.administrator.zahbzayxy.ccvideo.DataSet;
 import com.example.administrator.zahbzayxy.ccvideo.MyObjectBox;
 import com.example.administrator.zahbzayxy.utils.CrashHandler;
 import com.example.administrator.zahbzayxy.utils.SPUtils;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 
 import io.objectbox.BoxStore;
 
@@ -20,7 +18,6 @@ import io.objectbox.BoxStore;
 public class DemoApplication extends MultiDexApplication {
 
     private DRMServer drmServer;
-    private UMShareAPI umShareAPI;
     public static DemoApplication instance;
 
     private BoxStore boxStore;
@@ -36,7 +33,6 @@ public class DemoApplication extends MultiDexApplication {
         //HYY崩溃日志监控 并保存到后台
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
-        initUmengShare();
         if (instance == null) {
             instance = this;
         }
@@ -49,12 +45,6 @@ public class DemoApplication extends MultiDexApplication {
 
     }
 
-    private void initUmengShare() {
-        umShareAPI = UMShareAPI.get(this);
-        // Config. = false;;
-        Config.DEBUG = false;
-        Config.isJumptoAppStore = true;
-    }
     public String getToken() {
         return token;
     }
@@ -62,19 +52,14 @@ public class DemoApplication extends MultiDexApplication {
     public void setToken(String token) {
         this.token = token;
     }
+
     public static DemoApplication getInstance() {
         return instance;
     }
 
-    public UMShareAPI getUmShareAPI() {
-        return umShareAPI;
-    }
-
-
     public BoxStore getBoxStore() {
         return boxStore;
     }
-
 
 
     // 启动DRMServer
@@ -115,18 +100,6 @@ public class DemoApplication extends MultiDexApplication {
         return drmServer;
     }
 
-
-
     {
-        //微信
-        //c65edc0749c84c505c5a686e4ac6ca53
-        PlatformConfig.setWeixin("wx0dff7a26ddc49530", "c65edc0749c84c505c5a686e4ac6ca53");
-       // PlatformConfig.setWeixin("wxdf45b0a4e53ed1dd", "c65edc0749c84c505c5a686e4ac6ca53");
-        //新浪微博(第三个参数为回调地址)
-
-
-        PlatformConfig.setSinaWeibo("2490795475", "0db73383054e3a51e061407b4de2dea8", "http://sns.whalecloud.com/sina2/callback");
-        //QQ
-        PlatformConfig.setQQZone("1106091830", "SKld8JidHFJYWOBi");
     }
 }

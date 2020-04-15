@@ -38,18 +38,13 @@ import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.utils.UUID;
 import com.example.administrator.zahbzayxy.widget.CommonRadioDialog;
 import com.google.gson.Gson;
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -315,148 +310,10 @@ public class LoginActivity extends BaseActivity implements CommonRadioDialog.OnI
         }
     }
 
-    //微信登录
-    public void weChatOnClick(View view) {
-        authorization(SHARE_MEDIA.WEIXIN);
-        //Toast.makeText(LoginActivity.this,"wechat",Toast.LENGTH_LONG).show();
-
-    }
-
-    //授权
-    private void authorization(SHARE_MEDIA share_media) {
-        UMShareAPI.get(this).getPlatformInfo(this, share_media, new UMAuthListener() {
-            private String wechatHeadImg;
-            private String wechatName;
-            private String uid;
-
-            @Override
-            public void onStart(SHARE_MEDIA share_media) {
-                Log.d("TAG", "onStart " + "授权开始");
-                Log.e("wechat", "授权开始");
-            }
-
-
-            @Override
-            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                Log.d("TAG", "onComplete " + "授权完成");
-                Log.e("wechat", "授权完成");
-
-                //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
-                uid = map.get("uid");
-                String openid = map.get("openid");//微博没有
-                String unionid = map.get("unionid");//微博没有
-                String access_token = map.get("access_token");
-                String refresh_token = map.get("refresh_token");//微信,qq,微博都没有获取到
-                String expires_in = map.get("expires_in");
-                wechatName = map.get("name");
-                String gender = map.get("gender");
-                wechatHeadImg = map.get("iconurl");
-                Log.e("wechatBack,headImg", wechatHeadImg);
-                byte[] bytes = uid.getBytes();
-
-                requestWechatLogin();
-                ArrayList<String> a = new ArrayList<String>();
-                a.add(uid);
-                a.add("1111");
-                a.add("2222");
-                String a1 = a.get(0);
-                String a2 = a.get(1);
-                String a3 = a.get(2);
-                Log.e("aaabbb", a1 + "," + a2 + "," + a3);
-
-                //  Toast.makeText(getApplicationContext(), "name=" + wechatName + ",gender=" + gender+",uid"+uid+",uidlenth"+length, Toast.LENGTH_SHORT).show();
-
-                //拿到信息去请求登录接口。。。
-            }
-
-            private void requestWechatLogin() {
-                LoginService aClass = RetrofitUtils.getInstance().createClass(LoginService.class);
-                Log.e("login0000", "11111");
-                if (!TextUtils.isEmpty(uid)) {
-                    aClass.weChatLogin(uid).enqueue(new Callback<LoginBean>() {
-                        @Override
-                        public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
-                            Log.e("login0000", "2222:" + uid);
-                            int code1 = response.code();
-                            Log.e("wechatCode", code1 + "");
-                            if (response.code() == 200) {
-                                Log.e("login0000", response.code() + "");
-                                LoginBean body = response.body();
-                                String code = body.getCode();
-                                Log.e("login0000", code + "");
-                                if (code.equals("00000")) {
-                                    Toast.makeText(LoginActivity.this, "微信登录成功", Toast.LENGTH_SHORT).show();
-                                    LoginBean.DataBean data = body.getData();
-                                    String token = data.getToken();
-                                    if (!TextUtils.isEmpty(token)) {
-                                        SharedPreferences sp = getSharedPreferences("tokenDb", MODE_PRIVATE);
-                                        SharedPreferences.Editor edit = sp.edit();
-                                        edit.putString("token", token);
-                                        edit.putString("passWord", mPassWord);
-                                        edit.putString("weChatHeadImg", wechatHeadImg);
-                                        edit.putString("weChatName", wechatName);
-                                        edit.putBoolean("isLogin", true);
-                                        edit.putString("phone", mPhone);
-                                        edit.putBoolean("wechatLogin", true);
-                                        edit.commit();
-                                        //把用户信息返回到用户中心显示到已登录界面
-                                        Intent intent = getIntent();
-                                        intent.putExtra("weChatHeadImg", wechatHeadImg);
-                                        intent.putExtra("weChatName", wechatName);
-                                        intent.putExtra("token", token);
-                                        LoginActivity.this.setResult(RESULT_OK, intent);
-                                        LoginActivity.this.finish();
-                                        Log.e("wechatBack", "11111" + wechatHeadImg + "w" + wechatName);
-                                        String loginMethod = getIntent().getStringExtra("loginMethod");
-                                        if (!TextUtils.isEmpty(loginMethod)) {
-                                            if (loginMethod.equals("home")) {
-                                                Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
-                                                startActivity(intent1);
-                                                finish();
-                                            }
-                                        }
-                                    }
-                                } else if (code.equals("00039")) {
-                                    Toast.makeText(LoginActivity.this, "用户未绑定手机号,请先绑定", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this, BindingWechatLoginActivity.class);
-                                    intent.putExtra("uid", uid);
-                                    intent.putExtra("weChatHeadImg", wechatHeadImg);
-                                    intent.putExtra("weChatName", wechatName);
-                                    startActivity(intent);
-                                    finish();
-                                }
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LoginBean> call, Throwable t) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-                Log.d("TAG", "onError " + "授权失败");
-                Log.e("wechat", "授权失败" + throwable.getMessage());
-                Toast.makeText(LoginActivity.this, "授权失败" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media, int i) {
-                Log.d("TAG", "onCancel " + "授权取消");
-                Log.e("wechat", "授权取消");
-            }
-        });
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+//        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         Log.e("wechat", data + "resyult");
     }
 
