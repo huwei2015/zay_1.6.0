@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <com.example.administrator.zahbzayxy.utils.ProgressBarLayout
+        android:id="@+id/load_bar_layout_index"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/header_top"
+        android:layout_width="match_parent"
+        android:background="@mipmap/header_bg"
+        android:gravity="bottom"
+        android:paddingBottom="12dp"
+        android:layout_height="45dp"><!-- 70-->
+        <TextView
+            android:id="@+id/backPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:drawableLeft="@mipmap/s_back"
+            android:text=" "
+            android:textSize="18sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            />
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="直播详情"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/live_webviwe"
+        android:layout_below="@+id/header_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </WebView>
+
+</RelativeLayout>
