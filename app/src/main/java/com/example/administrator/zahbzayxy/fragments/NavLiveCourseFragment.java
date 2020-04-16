@@ -1,16 +1,12 @@
 package com.example.administrator.zahbzayxy.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,19 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.activities.LiveCourseActivity;
-import com.example.administrator.zahbzayxy.activities.SelectClassifyActivity;
 import com.example.administrator.zahbzayxy.adapters.LiveCourseAdapter;
-import com.example.administrator.zahbzayxy.adapters.Lv1CateAdapter;
-import com.example.administrator.zahbzayxy.adapters.OfflineCourseAdapter;
-import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
-import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ScreenUtil;
-import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -51,7 +40,7 @@ import retrofit2.Response;
 /**
  * HYY 直播课
  */
-public class NavLiveCourseFragment extends Fragment{
+public class NavLiveCourseFragment extends Fragment {
     private View view;
     private ProgressBarLayout mLoadingBar;
     private Context mContext;
@@ -70,7 +59,9 @@ public class NavLiveCourseFragment extends Fragment{
     private TextView lveingTV;
     private TextView lveingyyTV;
     private TextView lveingendTV;
-    private static final int LIVECOURSE_SIGN=5;
+    private TextView lveingAll;
+    private TextView lveingPlayBack;
+    private static final int LIVECOURSE_SIGN = 5;
 
     private RelativeLayout rl_empty;
 
@@ -79,6 +70,7 @@ public class NavLiveCourseFragment extends Fragment{
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
 
     private RelativeLayout top_layout;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -88,16 +80,16 @@ public class NavLiveCourseFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.activity_live_course,container,false);
+        view = inflater.inflate(R.layout.activity_live_course, container, false);
         initView();
         getSP();
         adapter = new LiveCourseAdapter(totalList, mContext, token);
         recLv.setAdapter(adapter);
-        isInit=true;//设置已经
+        isInit = true;//设置已经
         return view;
     }
 
-    public void getData(){
+    public void getData() {
         if (!isVisible) return;
         initPullToRefreshLv();
     }
@@ -131,14 +123,14 @@ public class NavLiveCourseFragment extends Fragment{
     private void downLoadData(int pager) {
         showLoadingBar(true);
         IndexInterface aClass = RetrofitUtils.getInstance().createClass(IndexInterface.class);
-        aClass.liveCourseList(pager,pageSize,token,status,1).enqueue(new Callback<LiveCourseBean>() {
+        aClass.liveCourseList(pager, pageSize, token, status, 1).enqueue(new Callback<LiveCourseBean>() {
             @Override
             public void onResponse(Call<LiveCourseBean> call, Response<LiveCourseBean> response) {
                 int code1 = response.code();
                 LiveCourseBean body = response.body();
                 String s = new Gson().toJson(body);
                 Log.e("lessonSSss", s);
-                if (body != null && body.getData() !=null && body.getData().size() > 0) {
+                if (body != null && body.getData() != null && body.getData().size() > 0) {
                     String code = body.getCode();
                     if (!TextUtils.isEmpty(code)) {
                         if (code.equals("00003")) {
@@ -167,12 +159,12 @@ public class NavLiveCourseFragment extends Fragment{
                             }
                         }
                     }
-                }else{
+                } else {
                     Object errMsg = body.getErrMsg();
                     if (errMsg != null) {
                         Toast.makeText(mContext, "" + errMsg, Toast.LENGTH_SHORT).show();
                     }
-                    if(totalList==null || totalList.size()==0) {
+                    if (totalList == null || totalList.size() == 0) {
                         initViewVisible(false);
                     }
                 }
@@ -209,47 +201,57 @@ public class NavLiveCourseFragment extends Fragment{
     }
 
 
-    private boolean v1Flag=true;
-    private boolean v2Flag=true;
-    private boolean v3Flag=true;
+    private boolean v1Flag = true;
+    private boolean v2Flag = true;
+    private boolean v3Flag = true;
+    private boolean v4Flag = true;
+    private boolean v5Flag = true;
+
     private void initView() {
-        mLoadingBar= view. findViewById(R.id.load_bar_layout_live);
+        mLoadingBar = view.findViewById(R.id.load_bar_layout_live);
         back_index_iv = view.findViewById(R.id.back_index_iv);
         recLv = view.findViewById(R.id.recLv);
         rl_empty = view.findViewById(R.id.rl_empty_layout);
-        top_layout=view.findViewById(R.id.top_layout);
+        top_layout = view.findViewById(R.id.top_layout);
         top_layout.setVisibility(View.GONE);
         //直播中
-        lveingTV= view.findViewById(R.id.lveingTV);
+        lveingTV = view.findViewById(R.id.lveingTV);
         lveingTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v1Flag){
+                if (v1Flag) {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.liveing);
                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    v1Flag=false;
+                    v1Flag = false;
                     totalList.clear();
-                    status="1";
+                    status = "1";
 
 
                     Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live_yy);
                     lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
                     lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v2Flag=true;
+                    v2Flag = true;
                     Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_end);
                     lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
                     lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v3Flag=true;
-
-                }else{
+                    v3Flag = true;
+                    Drawable drawableLeft3 = getResources().getDrawable(R.mipmap.all);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft3, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v4Flag = true;
+                    Drawable drawableLeft4 = getResources().getDrawable(R.mipmap.playback);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft4, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v5Flag = true;
+                } else {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live);
                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
 
-                    v1Flag=true;
+                    v1Flag = true;
                     totalList.clear();
-                    status=null;
+                    status = null;
                 }
                 downLoadData(1);
             }
@@ -257,79 +259,180 @@ public class NavLiveCourseFragment extends Fragment{
 
 
         //预约直播
-        lveingyyTV= view.findViewById(R.id.lveingyyTV);
-        if("2".equals(status)){
+        lveingyyTV = view.findViewById(R.id.lveingyyTV);
+        if ("2".equals(status)) {
             Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy_sel);
             lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
             lveingyyTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-            v2Flag=false;
+            v2Flag = false;
         }
         lveingyyTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v2Flag){
+                if (v2Flag) {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy_sel);
                     lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingyyTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    v2Flag=false;
+                    v2Flag = false;
                     totalList.clear();
-                    status="2";
+                    status = "2";
 
                     Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
                     lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v1Flag=true;
+                    v1Flag = true;
                     Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_end);
                     lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
                     lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v3Flag=true;
-                }else{
+                    v3Flag = true;
+                    Drawable drawableLeft3 = getResources().getDrawable(R.mipmap.all);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft3, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v4Flag = true;
+                    Drawable drawableLeft4 = getResources().getDrawable(R.mipmap.playback);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft4, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v5Flag = true;
+                } else {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_yy);
                     lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v2Flag=true;
+                    v2Flag = true;
                     totalList.clear();
-                    status=null;
+                    status = null;
                 }
                 downLoadData(1);
             }
         });
         //直播结束
-        lveingendTV= view.findViewById(R.id.liveingendTV);
+        lveingendTV = view.findViewById(R.id.liveingendTV);
         lveingendTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v3Flag){
+                if (v3Flag) {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end_sel);
                     lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-                    v3Flag=false;
+                    v3Flag = false;
                     totalList.clear();
-                    status="[3,4,5]";
+                    status = "[3,4,5]";
 
                     Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
                     lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
                     lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v1Flag=true;
+                    v1Flag = true;
                     Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_yy);
                     lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
                     lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v2Flag=true;
-                }else{
+                    v2Flag = true;
+                    Drawable drawableLeft3 = getResources().getDrawable(R.mipmap.all);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft3, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v4Flag = true;
+                    Drawable drawableLeft4 = getResources().getDrawable(R.mipmap.playback);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft4, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v5Flag = true;
+                } else {
                     Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end);
                     lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
                     lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
-                    v3Flag=true;
+                    v3Flag = true;
                     totalList.clear();
-                    status=null;
+                    status = null;
                 }
                 downLoadData(1);
             }
         });
+        //全部
+        lveingAll = view.findViewById(R.id.tv_all);
+        lveingAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v4Flag) {
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.allact);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    v4Flag = false;
+                    totalList.clear();
+                    status = "4";
 
+                    //直播
+                    Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
+                    lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                    lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v1Flag = true;
+                    //预约中
+                    Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_yy);
+                    lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v2Flag = true;
+                    //回放
+                    Drawable drawableLeft3 = getResources().getDrawable(R.mipmap.playback);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft3, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v5Flag = true;
+                    //已结束
+                    Drawable drawableLeft4 = getResources().getDrawable(R.mipmap.live_end);
+                    lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft4, null);
+                    lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v3Flag = true;
+                } else {
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.all);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v4Flag = true;
+                    totalList.clear();
+                    status = null;
+                }
+                downLoadData(1);
+            }
+        });
+        lveingPlayBack=view.findViewById(R.id.tv_back);
+        lveingPlayBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v5Flag){
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.playbackact);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.shikan_text_color));
+                    v5Flag = false;
+                    totalList.clear();
+                    status = "5";
 
+                    //直播
+                    Drawable drawableLeft1 = getResources().getDrawable(R.mipmap.live);
+                    lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft1, null);
+                    lveingTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v1Flag = true;
+                    //预约中
+                    Drawable drawableLeft2 = getResources().getDrawable(R.mipmap.live_yy);
+                    lveingyyTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft2, null);
+                    lveingyyTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v2Flag = true;
+                    //全部
+                    Drawable drawableLeft3 = getResources().getDrawable(R.mipmap.all);
+                    lveingAll.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft3, null);
+                    lveingAll.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v4Flag = true;
+                    //已结束
+                    Drawable drawableLeft4 = getResources().getDrawable(R.mipmap.live_end);
+                    lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft4, null);
+                    lveingendTV.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v3Flag = true;
+                }else{
+                    Drawable drawableLeft = getResources().getDrawable(R.mipmap.playback);
+                    lveingPlayBack.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
+                    lveingPlayBack.setTextColor(getResources().getColor(R.color.zx_text_color));
+                    v5Flag = true;
+                    totalList.clear();
+                    status = null;
+                }
+                downLoadData(1);
+            }
+        });
         //返回顶部
-        back_top=view.findViewById(R.id.back_top);
+        back_top = view.findViewById(R.id.back_top);
         back_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -380,18 +483,18 @@ public class NavLiveCourseFragment extends Fragment{
             }
         });
 
-        if(status!=null && "[3,4,5]".equals(status)){
+        if (status != null && "[3,4,5]".equals(status)) {
             Drawable drawableLeft = getResources().getDrawable(R.mipmap.live_end_sel);
             lveingendTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
             lveingendTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-            v3Flag=false;
+            v3Flag = false;
         }
 
-        if(status!=null && "1".equals(status)){
+        if (status != null && "1".equals(status)) {
             Drawable drawableLeft = getResources().getDrawable(R.mipmap.liveing);
             lveingTV.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableLeft, null);
             lveingTV.setTextColor(getResources().getColor(R.color.shikan_text_color));
-            v1Flag=false;
+            v1Flag = false;
         }
     }
 
@@ -417,12 +520,12 @@ public class NavLiveCourseFragment extends Fragment{
         mLoadingBar.hide();
     }
 
-    private void initViewVisible(boolean isviable){
-        Log.i("===",""+isviable);
-        if(isviable){
+    private void initViewVisible(boolean isviable) {
+        Log.i("===", "" + isviable);
+        if (isviable) {
             recLv.setVisibility(View.VISIBLE);
             rl_empty.setVisibility(View.GONE);
-        }else{
+        } else {
             rl_empty.setVisibility(View.VISIBLE);
             recLv.setVisibility(View.GONE);
         }
@@ -435,12 +538,13 @@ public class NavLiveCourseFragment extends Fragment{
         onCreate(null);
     }
 
-    private static boolean isInit=false;
+    private static boolean isInit = false;
     private boolean isVisible;
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         isVisible = isVisibleToUser;
-        if (isVisibleToUser  && isInit){
+        if (isVisibleToUser && isInit) {
             totalList.clear();
             getData();
         }

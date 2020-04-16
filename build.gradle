@@ -30,7 +30,14 @@ allprojects {
         maven { url "http://objectbox.net/beta-repo/" }
     }
 }
-
+ext{
+    androidBuildToolsVersion = "26.0.2"
+    androidMinSdkVersion = 19
+    androidTargetSdkVersion = 28
+    androidCompileSdkVersion = 28
+    androidSupportVersion = "27.1.1"
+    multidexVersion = "1.0.3"
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

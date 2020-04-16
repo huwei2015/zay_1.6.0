@@ -51,9 +51,8 @@
                     android:id="@+id/tv_all"
                     android:layout_width="wrap_content"
                     android:textColor="@color/zx_text_color"
-                    android:drawableRight="@mipmap/live"
+                    android:drawableRight="@mipmap/all"
                     android:text="全部 "
-                    android:paddingStart="20dp"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
 
@@ -77,15 +76,17 @@
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
 
+
                 <TextView
                     android:id="@+id/tv_back"
                     android:layout_width="wrap_content"
                     android:textColor="@color/zx_text_color"
-                    android:drawableEnd="@mipmap/live_end"
+                    android:drawableRight="@mipmap/playback"
                     android:text="回放 "
-                    android:paddingStart="15dp"
+                    android:paddingLeft="15dp"
                     android:textSize="14sp"
                     android:layout_height="wrap_content" />
+
 
                 <TextView
                     android:id="@+id/liveingendTV"

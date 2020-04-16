@@ -29,7 +29,6 @@ import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.ScreenUtil;
-import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -63,8 +62,6 @@ public class LiveCourseActivity extends BaseActivity{
     private TextView lveingTV;
     private TextView lveingyyTV;
     private TextView lveingendTV;
-    private TextView tv_all;
-    private TextView tv_back;
     private static final int LIVECOURSE_SIGN=5;
 
     private RelativeLayout rl_empty;
@@ -196,18 +193,18 @@ public class LiveCourseActivity extends BaseActivity{
     private boolean v2Flag=true;
     private boolean v3Flag=true;
     private void initView() {
-        mLoadingBar= (ProgressBarLayout) findViewById(R.id.load_bar_layout_live);
-        back_index_iv = (TextView) findViewById(R.id.back_index_iv);
+        mLoadingBar= findViewById(R.id.load_bar_layout_live);
+        back_index_iv = findViewById(R.id.back_index_iv);
         back_index_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        recLv = (PullToRefreshListView) findViewById(R.id.recLv);
-        rl_empty = (RelativeLayout) findViewById(R.id.rl_empty_layout);
+        recLv = findViewById(R.id.recLv);
+        rl_empty = findViewById(R.id.rl_empty_layout);
         //直播中
-        lveingTV= (TextView)findViewById(R.id.lveingTV);
+        lveingTV= findViewById(R.id.lveingTV);
         lveingTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,7 +279,7 @@ public class LiveCourseActivity extends BaseActivity{
             }
         });
         //直播结束
-        lveingendTV= (TextView)findViewById(R.id.liveingendTV);
+        lveingendTV= findViewById(R.id.liveingendTV);
         lveingendTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -313,24 +310,6 @@ public class LiveCourseActivity extends BaseActivity{
                 downLoadData(1);
             }
         });
-        //全部
-        tv_all= (TextView) findViewById(R.id.tv_all);
-        tv_all.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LiveCourseActivity.this, "点击了全部", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        //回放
-        tv_back= (TextView) findViewById(R.id.tv_back);
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LiveCourseActivity.this, "点击了回放", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         //返回顶部
         back_top=(ImageView) findViewById(R.id.back_top);
         back_top.setOnClickListener(new View.OnClickListener() {

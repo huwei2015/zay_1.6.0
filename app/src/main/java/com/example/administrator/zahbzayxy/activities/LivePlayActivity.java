@@ -4,15 +4,11 @@ import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -42,15 +38,15 @@ public class LivePlayActivity extends BaseActivity{
         Utils.setFullScreen(LivePlayActivity.this,getWindow());
         webinar_id = getIntent().getIntExtra("webinar_id",0);
         setContentView(R.layout.activity_live_play);
-        mwebView=(WebView)findViewById(R.id.play_wv);
+        mwebView=findViewById(R.id.play_wv);
         mwebView.requestFocus(View.FOCUS_DOWN);
-        rlContent = (RelativeLayout)findViewById(R.id.rl_web_content);
-        header_top = (RelativeLayout)findViewById(R.id.header_top);
+        rlContent = findViewById(R.id.rl_web_content);
+        header_top = findViewById(R.id.header_top);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
 
-        backLive=(TextView)findViewById(R.id.backLive);
+        backLive=findViewById(R.id.backLive);
         backLive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
