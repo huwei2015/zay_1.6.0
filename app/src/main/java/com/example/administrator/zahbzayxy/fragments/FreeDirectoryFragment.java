@@ -17,6 +17,7 @@ import com.example.administrator.zahbzayxy.beans.PMyLessonPlayBean;
 import com.example.administrator.zahbzayxy.interfacecommit.PersonGroupInterfac;
 import com.example.administrator.zahbzayxy.myinterface.MyInterface;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
+import com.example.administrator.zahbzayxy.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,57 +118,31 @@ public class FreeDirectoryFragment extends Fragment {
                                 if (currPlay == true) {
                                     PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean = selectionList.get(h);
                                     selectionId = selectionListBean.getSelectionId();
-                                    posIndxe=selectionListBean1.getVideoIndex();
+                                    posIndxe = selectionListBean1.getVideoIndex();
                                     posIndxe = recordIndex;
                                 }
                                 recordIndex++;
                             }
                         }
                     }
-
-
-//                    adapter = new PMyLessonExpandedAdapter(new MyInterface.ItemClickedListener() {
-//                        @Override
-//                        public void onMyItemClickedListener(String vidioId, int selectionId, double playPercent, String selectionName, int backSelectionId) {
-//                            itemClickedListener.onMyItemClickedListener(vidioId, videoIndex,selectionId, playPercent, selectionName, backSelectionId,startPlayTime);
-//                        }
-//                    }, context, totalList, selectionId);
                     adapter = new FreeLessonExpandedAdapter(new MyInterface.ItemClickedListener() {
                         @Override
-                        public void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String selectionName, int backSelectionId, int startPlayTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean>list) {
-                            itemClickedListener.onMyItemClickedListener(vidioId, videoIndex, selectionId, playPercent, selectionName, backSelectionId, startPlayTime,list);
+                        public void onMyItemClickedListener(String vidioId, int videoIndex, int selectionId, double playPercent, String selectionName, int backSelectionId, int startPlayTime, List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> list) {
+                            itemClickedListener.onMyItemClickedListener(vidioId, videoIndex, selectionId, playPercent, selectionName, backSelectionId, startPlayTime, list);
                         }
                     }, context, totalList, selectionId, courseId, String.valueOf(userCourseId), mImagePath);
                     expandLv.setAdapter(adapter);
                     //禁止刷新列表
                     adapter.notifyDataSetChanged();
-
-//                    Log.e("directoryViedioId",videoId);
                 }
             }
 
             @Override
             public void onFailure(Call<PMyLessonPlayBean> call, Throwable t) {
+                String errMsg = t.getMessage();
+                ToastUtils.showLongInfo(errMsg);
             }
         });
 
-    }
-
-    public void updatePlayerProgess(int selectionID, double porgess, int currentTime) {
-        for (int i = 0; i < totalList.size(); i++) {
-            for (int j = 0; j < totalList.get(i).getChapterList().size(); j++) {
-                for (int k = 0; k < totalList.get(i).getChapterList().get(j).getSelectionList().size(); k++) {
-                    PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean item = totalList.get(i).getChapterList().get(j).getSelectionList().get(k);
-                    if (item.getSelectionId() == selectionID && item.getPlayTime() < currentTime) {
-                        item.setPlayPercent(porgess / item.getTotalPlayTime());
-                        item.setPlayTime(currentTime);
-//                        adapter.notifyDataSetChanged();
-                        Log.i("33", "");
-                        return;
-                    }
-
-                }
-            }
-        }
     }
 }

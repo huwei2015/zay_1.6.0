@@ -1,6 +1,5 @@
 package com.example.administrator.zahbzayxy.ccvideo;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -25,11 +24,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -236,7 +237,6 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         detector = new GestureDetector(this, new MyGesture());
-        checkPublishPermission();
         initView();
         initMyView();
         if (!isFace) {
@@ -392,13 +392,16 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
     private boolean checkPublishPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             List<String> permissions = new ArrayList<>();
-            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    && (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE))
-                    && (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA))) {
-                permissions.add(android.Manifest.permission.CAMERA);
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)) {
+                permissions.add(android.Manifest.permission.CAMERA);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+
             if (permissions.size() != 0) {
                 ActivityCompat.requestPermissions(this,
                         (String[]) permissions.toArray(new String[0]),
@@ -407,6 +410,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
             }
         }
         return true;
+
     }
 
     @Override
@@ -416,6 +420,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
             case WRITE_PERMISSION_REQ_CODE:
                 for (int ret : grantResults) {
                     if (ret != PackageManager.PERMISSION_GRANTED) {
+                        showTipsDialog(MediaPlayActivity.this);
                         return;
                     }
                 }
@@ -425,6 +430,32 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
                 break;
         }
     }
+
+    /**
+     * 显示提示对话框
+     */
+    public static void showTipsDialog(final Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("提示信息")
+                .setMessage("当前应用缺少必要权限，该功能暂时无法使用。如若需要，请单击【确定】按钮前往设置中心进行权限授权。")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings(context);
+                    }
+                }).show();
+    }
+
+    /**
+     * 启动当前应用设置页面
+     */
+    private static void startAppSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        context.startActivity(intent);
+    }
+
 
     private boolean initLastVideoInfo() {
         try {
@@ -1962,6 +1993,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
 //        boolean isConnected = NetworkUtils.isConnected(MediaPlayActivity.this);
         // || isLocalPlay && !isConnected  //加在判断里面
         //开启人脸识别定时器
+        checkPublishPermission();
         if (needRecognized) {
             startFaceRecognitionTimer();
         }
@@ -2415,20 +2447,24 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         }
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Camera.Parameters parameters = mCamera.getParameters(); // 获取各项参数
-            parameters.setPictureFormat(PixelFormat.JPEG); // 设置图片格式
-            parameters.setJpegQuality(100); // 设置照片质量
+            try{
+                Camera.Parameters parameters = mCamera.getParameters(); // 获取各项参数
+                parameters.setPictureFormat(PixelFormat.JPEG); // 设置图片格式
+                parameters.setJpegQuality(100); // 设置照片质量
 
-            /**
-             * 以下不设置在某些机型上报错
-             */
-            int mPreviewHeight = parameters.getPreviewSize().height;
-            int mPreviewWidth = parameters.getPreviewSize().width;
-            parameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
-            parameters.setPictureSize(mPreviewWidth, mPreviewHeight);
+                /**
+                 * 以下不设置在某些机型上报错
+                 */
+                int mPreviewHeight = parameters.getPreviewSize().height;
+                int mPreviewWidth = parameters.getPreviewSize().width;
+                parameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
+                parameters.setPictureSize(mPreviewWidth, mPreviewHeight);
 
-            mCamera.setParameters(parameters);
-            mCamera.startPreview();
+                mCamera.setParameters(parameters);
+                mCamera.startPreview();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -2446,7 +2482,7 @@ public class MediaPlayActivity extends AppCompatActivity implements DWMediaPlaye
         }
     }
     public String getFilePath() {
-        return getFileDir(MediaPlayActivity.this) + "/123.jpg";
+        return getFileDir(MediaPlayActivity.this) +System.currentTimeMillis()+ "/123.jpg";
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)

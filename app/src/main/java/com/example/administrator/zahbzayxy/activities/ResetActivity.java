@@ -1,7 +1,6 @@
 package com.example.administrator.zahbzayxy.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -10,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.beans.AppVersionBean;
-import com.example.administrator.zahbzayxy.beans.LogoutBean;
 import com.example.administrator.zahbzayxy.myinterface.MyLessonInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.DataCleanManager;
@@ -191,24 +188,24 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
             case R.id.rl_account:
                 startActivity(new Intent(ResetActivity.this,AccountSecurityActivity.class));
                 break;
-            case R.id.rl_households://注销账户
-                AlertDialog.Builder dialog = new AlertDialog.Builder(ResetActivity.this);
-                dialog.setTitle("提示");
-                dialog.setMessage("确定注销账号吗？");
-                dialog.setCancelable(true);
-                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getLogout();
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-                break;
+//            case R.id.rl_households://注销账户
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(ResetActivity.this);
+//                dialog.setTitle("提示");
+//                dialog.setMessage("确定注销账号吗？");
+//                dialog.setCancelable(true);
+//                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        getLogout();
+//                        dialog.dismiss();
+//                    }
+//                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                }).show();
+//                break;
         }
     }
 
@@ -341,30 +338,30 @@ public class ResetActivity extends BaseActivity implements View.OnClickListener 
         }
         return versionName;
     }
-    private void getLogout(){
-       SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
-        MyLessonInterface aClass = RetrofitUtils.getInstance().createClass(MyLessonInterface.class);
-        aClass.getLogout(token).enqueue(new Callback<LogoutBean>() {
-            @Override
-            public void onResponse(Call<LogoutBean> call, Response<LogoutBean> response) {
-                if(response !=null && response.body()!=null){
-                    String code = response.body().getCode();
-                    if(code.equals("00000")){
-                        boolean data = response.body().isData();
-                        if(data){
-                            Toast.makeText(ResetActivity.this,"注销成功",Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(ResetActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LogoutBean> call, Throwable t) {
-                Toast.makeText(ResetActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    private void getLogout(){
+//       SharedPreferences sharedPreferences =getSharedPreferences("tokenDb", MODE_PRIVATE);
+//        String token = sharedPreferences.getString("token", "");
+//        MyLessonInterface aClass = RetrofitUtils.getInstance().createClass(MyLessonInterface.class);
+//        aClass.getLogout(token).enqueue(new Callback<LogoutBean>() {
+//            @Override
+//            public void onResponse(Call<LogoutBean> call, Response<LogoutBean> response) {
+//                if(response !=null && response.body()!=null){
+//                    String code = response.body().getCode();
+//                    if(code.equals("00000")){
+//                        boolean data = response.body().isData();
+//                        if(data){
+//                            Toast.makeText(ResetActivity.this,"注销成功",Toast.LENGTH_LONG).show();
+//                            Intent intent = new Intent(ResetActivity.this,LoginActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<LogoutBean> call, Throwable t) {
+//                Toast.makeText(ResetActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 }

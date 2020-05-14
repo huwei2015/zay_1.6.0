@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 /**
  * Created by Administrator on 2016/10/25.
  */
-public class RetrofitUtils{
+public class RetrofitUtils {
 //宁波微信screat
 //817b1ce692d74eb257432a445af8aa0b
 
@@ -25,17 +25,17 @@ public class RetrofitUtils{
 
     //登录友盟appkey:	59e5aab76e27a41290001478
     //线下内网
-  // private static String BASE_URL = "http://192.168.2.233";
+    // private static String BASE_URL = "http://192.168.2.233";
     //线下外网
-   // private final static String BASE_URL = "http://124.193.134.226:9100/";
+    // private final static String BASE_URL = "http://124.193.134.226:9100/";
     //线上
 //   private  static String BASE_URL = "http://app1.zayxy.com/";
     //中安云测试
 //   private  static String BASE_URL = "http://120.55.73.36:8181/" ;
 
     //线上测试地址
-       private  static String BASE_URL = "http://app.test.zayxy.com";
-//         private  static String BASE_URL = "http://app1.zayxy.com";
+//    private static String BASE_URL = "http://app.test.zayxy.com";
+             private  static String BASE_URL = "http://app1.zayxy.com";
     private static RetrofitUtils mInstance;
     private static Retrofit mRetrofit;
 
@@ -47,8 +47,9 @@ public class RetrofitUtils{
         BASE_URL = baseUrl;
     }
 
-    private int eventNum=0;
-    private RetrofitUtils(){
+    private int eventNum = 0;
+
+    private RetrofitUtils() {
         Retrofit.Builder builder = new Retrofit.Builder();
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -62,30 +63,31 @@ public class RetrofitUtils{
                         connectTimeout(30, TimeUnit.SECONDS).
                         readTimeout(30, TimeUnit.SECONDS).
                         writeTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(new Interceptor(){
-                                    @Override
-                                    public Response intercept(Chain chain) throws IOException {
-                                        Request request = chain.request()
-                                                .newBuilder()
-                                                .addHeader("User-Agent", "Zayxy Android")
-                                                .build();
-                                        return chain.proceed(request);
-                                    }
-                                    }).build();
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request()
+                                .newBuilder()
+                                .addHeader("User-Agent", "Zayxy Android")
+                                .build();
+                        return chain.proceed(request);
+                    }
+                }).build();
         builder.client(httpClient);
         mRetrofit = builder.baseUrl(BASE_URL)
-        .addConverterFactory(MyGsonConverterFactory.create())//统一错误处理
-            .build();
-}
+                .addConverterFactory(MyGsonConverterFactory.create())//统一错误处理
+                .build();
+    }
 
     // 单例获取
-    public static RetrofitUtils getInstance(){
-        if (mInstance == null){
+    public static RetrofitUtils getInstance() {
+        if (mInstance == null) {
             mInstance = new RetrofitUtils();
         }
         return mInstance;
     }
-    public <T> T createClass(Class<T> tClass){
-         return (T) mRetrofit.create(tClass);
+
+    public <T> T createClass(Class<T> tClass) {
+        return (T) mRetrofit.create(tClass);
     }
 }

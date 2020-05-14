@@ -11,8 +11,8 @@ android {
         applicationId "com.example.administrator.zahbzayxy"
         minSdkVersion ext.androidMinSdkVersion
         targetSdkVersion ext.androidTargetSdkVersion
-        versionCode 173
-        versionName "2.2.1"
+        versionCode 174
+        versionName "2.2.2"
         multiDexEnabled true
         //打包添加时间
         def time = new SimpleDateFormat("yyyyMMdd").format(new Date())
@@ -47,7 +47,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled false //true:打混淆包  false:不混淆
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

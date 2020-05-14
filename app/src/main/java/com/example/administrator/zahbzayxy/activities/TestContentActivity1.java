@@ -208,12 +208,12 @@ public class TestContentActivity1 extends BaseActivity {
             @Override
             @SuppressLint("HandlerLeak")
             public void onResponse(Call<NewTestContentBean> call, Response<NewTestContentBean> response) {
-                String s = new Gson().toJson(response);
-                Log.e("response", s);
+//                String s = new Gson().toJson(response);
+//                Log.e("response", s);
                 NewTestContentBean body = response.body();
                 if (response != null & body != null) {
-                    String s2 = new Gson().toJson(response.toString());
-                    Log.e("testContent", s);
+//                    String s2 = new Gson().toJson(response.toString());
+//                    Log.e("testContent", s);
                     NewTestContentBean.DataBean data = body.getData();
                     String code = body.getCode();
                     if (code.equals("99999")) {

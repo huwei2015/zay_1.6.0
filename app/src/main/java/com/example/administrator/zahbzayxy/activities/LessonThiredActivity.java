@@ -18,13 +18,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.administrator.zahbzayxy.R;
 import com.example.administrator.zahbzayxy.adapters.LessonFragmentPageAdapter;
 import com.example.administrator.zahbzayxy.beans.BuyInstanceBean;
 import com.example.administrator.zahbzayxy.beans.LessonThiredBean;
 import com.example.administrator.zahbzayxy.beans.SuccessBean;
 import com.example.administrator.zahbzayxy.ccvideo.FreePlayActivity;
-import com.example.administrator.zahbzayxy.ccvideo.MediaPlayActivity;
 import com.example.administrator.zahbzayxy.fragments.DetailFragment;
 import com.example.administrator.zahbzayxy.fragments.DirectoryFragment;
 import com.example.administrator.zahbzayxy.fragments.LesssonTestLiberyFragment;
@@ -33,12 +33,13 @@ import com.example.administrator.zahbzayxy.interfaceserver.LessonGroupInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
 import com.example.administrator.zahbzayxy.utils.ProgressBarLayout;
 import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
-import com.example.administrator.zahbzayxy.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -137,7 +138,7 @@ public class LessonThiredActivity extends BaseActivity {
     private void initHeadView() {
         showLoadingBar(false);
         int courseId = getIntent().getIntExtra("courseId",0);
-        String isDatacenter =getIntent().getStringExtra("isDatacenter");
+        isDatacenter =getIntent().getStringExtra("isDatacenter");
         Log.e("courseId",String.valueOf(courseId));
         LessonGroupInterface aClass = RetrofitUtils.getInstance().createClass(LessonGroupInterface.class);
         aClass.getLessonDetailData(courseId,isDatacenter).enqueue(new Callback<LessonThiredBean>() {
@@ -190,6 +191,11 @@ public class LessonThiredActivity extends BaseActivity {
                                     Intent intent = new Intent(LessonThiredActivity.this, FreePlayActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putInt("coruseId",id);
+                                    if(isDatacenter.equals("yes")){
+                                        courseType = 0;
+                                    }else if(isDatacenter.equals("no")){
+                                        courseType = 1;
+                                    }
                                     bundle.putInt("courseType",courseType);
                                     intent.putExtras(bundle);
                                     startActivity(intent);

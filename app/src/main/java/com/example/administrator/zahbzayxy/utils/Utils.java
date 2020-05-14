@@ -1,18 +1,13 @@
 package com.example.administrator.zahbzayxy.utils;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import java.security.MessageDigest;
-import java.util.Map;
 
 /**
  * Created by ${ZWJ} on 2017/6/19 0019.

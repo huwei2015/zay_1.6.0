@@ -1,8 +1,10 @@
 package com.example.administrator.zahbzayxy.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
@@ -59,7 +61,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -917,6 +918,7 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
             case WRITE_PERMISSION_REQ_CODE:
                 for (int ret : grantResults) {
                     if (ret != PackageManager.PERMISSION_GRANTED) {
+                       showTipsDialog(EditMessageActivity.this);
                         return;
                     }
                 }
@@ -925,6 +927,30 @@ public class EditMessageActivity extends BaseActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+    /**
+     * 显示提示对话框
+     */
+    public static void showTipsDialog(final Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("提示信息")
+                .setMessage("当前应用缺少必要权限，该功能暂时无法使用。如若需要，请单击【确定】按钮前往设置中心进行权限授权。")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings(context);
+                    }
+                }).show();
+    }
+
+    /**
+     * 启动当前应用设置页面
+     */
+    private static void startAppSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        context.startActivity(intent);
     }
 
     @Override

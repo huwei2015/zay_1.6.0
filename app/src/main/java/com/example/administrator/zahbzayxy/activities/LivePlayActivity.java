@@ -18,9 +18,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.zahbzayxy.R;
-import com.example.administrator.zahbzayxy.utils.AppUrls;
+import com.example.administrator.zahbzayxy.beans.LiveDetailBean;
+import com.example.administrator.zahbzayxy.interfacecommit.IndexInterface;
 import com.example.administrator.zahbzayxy.utils.BaseActivity;
+import com.example.administrator.zahbzayxy.utils.RetrofitUtils;
 import com.example.administrator.zahbzayxy.utils.Utils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 直播课跳转h5播放页面
@@ -53,13 +59,37 @@ public class LivePlayActivity extends BaseActivity{
                 finish();
             }
         });
-        initWebView();
+        initView();
+//        initWebView();
+    }
+
+    private void initView() {
+        SharedPreferences tokenDb = getApplicationContext().getSharedPreferences("tokenDb", getApplicationContext().MODE_PRIVATE);
+        String token = tokenDb.getString("token","");
+        IndexInterface indexInterface = RetrofitUtils.getInstance().createClass(IndexInterface.class);
+        indexInterface.getDeatil(token,webinar_id).enqueue(new Callback<LiveDetailBean>() {
+            @Override
+            public void onResponse(Call<LiveDetailBean> call, Response<LiveDetailBean> response) {
+                if(response.body() !=null){
+                    String code = response.body().getCode();
+                    if(code.equals("00000")){
+                        String data = (String) response.body().getData();
+                        initWebView(data);
+                        Log.i("hw","hw=============="+data);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LiveDetailBean> call, Throwable t) {
+
+            }
+        });
     }
 
 
-    private void initWebView() {
-        SharedPreferences tokenDb = getApplicationContext().getSharedPreferences("tokenDb", getApplicationContext().MODE_PRIVATE);
-        String token = tokenDb.getString("token","");
+    private void initWebView(String img_url) {
+
         webSettings = mwebView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
@@ -73,9 +103,10 @@ public class LivePlayActivity extends BaseActivity{
 
 
         Log.i("=======================","进来了.....");
-        String url=AppUrls.LIVE_URL+webinar_id;
+        String url= RetrofitUtils.getBaseUrl() +"/CourseController/getImplant"+"?webinarId="+webinar_id;
+        Log.i("=======================","进来了.....="+webinar_id);
         Log.i("=======================","进来了....."+url);
-        mwebView.loadUrl(url);
+        mwebView.loadUrl(img_url);
         mwebView.getSettings().setJavaScriptEnabled(true);
 
 

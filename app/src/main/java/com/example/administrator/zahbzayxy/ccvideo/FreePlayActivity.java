@@ -198,6 +198,7 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
     public static volatile WeakReference<FreePlayActivity> mediaPlayWeakReference;
     private String mImagePath;
     int courseType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,11 +276,11 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
 
     private void initMyView() {
         courseId = getIntent().getIntExtra("coruseId", 0);
-        courseType=getIntent().getIntExtra("courseType",0);
+        courseType = getIntent().getIntExtra("courseType", 0);
         userCourseId = getIntent().getIntExtra("userCourseId", 0);
-        sectionId = getIntent().getIntExtra("selectionId",0);
+        sectionId = getIntent().getIntExtra("selectionId", 0);
         selectionIdGet = sectionId;
-        Log.i("hw","============initMyView========="+sectionId);
+        Log.i("hw", "============initMyView=========" + sectionId);
         isLocalPlay = getIntent().getBooleanExtra("isLocalPlay", false);
         this.currentPosition = getIntent().getIntExtra("currentPosition", 0);
         posIndex = getIntent().getIntExtra("posIndex", 0);
@@ -307,9 +308,10 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
 
     ArrayList<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> listsize = new ArrayList<>();
     int posIndex = 0;
+
     private void initDownLoadData() {
         PersonGroupInterfac aClass = RetrofitUtils.getInstance().createClass(PersonGroupInterfac.class);
-        aClass.getFreePlayData(courseId,courseType,token).enqueue(new Callback<PMyLessonPlayBean>() { // courseType =0 是中安云  1是saas平台
+        aClass.getFreePlayData(courseId, courseType, token).enqueue(new Callback<PMyLessonPlayBean>() { // courseType =0 是中安云  1是saas平台
             @Override
             public void onResponse(Call<PMyLessonPlayBean> call, Response<PMyLessonPlayBean> response) {
                 PMyLessonPlayBean body = response.body();
@@ -319,44 +321,43 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
                 if (body != null) {
                     if (body.getErrMsg() == null) {
                         List<PMyLessonPlayBean.DataBean.ChildCourseListBean> childCourseList = body.getData().getChildCourseList();//总课程数
-                        user_CourseId=body.getData().getUserCourseId();
-                        int size = childCourseList.size();
-                        if (size > 0) {
-                            for (int i = 0; i < size; i++) {
-                                PMyLessonPlayBean.DataBean.ChildCourseListBean childCourseListBean = childCourseList.get(i);
-                                List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> chapterList = childCourseListBean.getChapterList();//每个课程是下面有几个章节
-                                int size1 = chapterList.size();
-                                if (size1 > 0) {
-                                    for (int j = 0; j < size1; j++) {
-                                        List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> selectionList = chapterList.get(j).getSelectionList();//每个章节下面有几个子课程
-                                        int size2 = selectionList.size();
-                                        for (int h = 0; h < size2; h++) {
-                                            //TODO添加自动播放
-                                            PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean1 = selectionList.get(h);
-                                            selectionListBean1.setVideoIndex(recordIndex);
-                                            listsize.add(selectionListBean1);
-                                            boolean currPlay = selectionList.get(h).isCurrPlay();
-                                            if (currPlay == true) {
-                                                PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean = selectionList.get(h);
-                                                videoId = selectionListBean.getVideoId();
-                                                selectionIdGet = selectionListBean.getSelectionId();
-                                                getPlayPercent = selectionListBean.getPlayPercent();
-                                                getSelectionName = selectionListBean.getSelectionName();
-                                                posIndex = selectionListBean1.getVideoIndex();//自动播放
-                                                Log.i("hw", "=============进来=================" + selectionIdGet);
+                            user_CourseId = body.getData().getUserCourseId();
+                                int size = childCourseList.size();
+                                if (size > 0) {
+                                    for (int i = 0; i < size; i++) {
+                                        PMyLessonPlayBean.DataBean.ChildCourseListBean childCourseListBean = childCourseList.get(i);
+                                        List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean> chapterList = childCourseListBean.getChapterList();//每个课程是下面有几个章节
+                                        int size1 = chapterList.size();
+                                        if (size1 > 0) {
+                                            for (int j = 0; j < size1; j++) {
+                                                List<PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean> selectionList = chapterList.get(j).getSelectionList();//每个章节下面有几个子课程
+                                                int size2 = selectionList.size();
+                                                for (int h = 0; h < size2; h++) {
+                                                    //TODO添加自动播放
+                                                    PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean1 = selectionList.get(h);
+                                                    selectionListBean1.setVideoIndex(recordIndex);
+                                                    listsize.add(selectionListBean1);
+                                                    boolean currPlay = selectionList.get(h).isCurrPlay();
+                                                    if (currPlay == true) {
+                                                        PMyLessonPlayBean.DataBean.ChildCourseListBean.ChapterListBean.SelectionListBean selectionListBean = selectionList.get(h);
+                                                        videoId = selectionListBean.getVideoId();
+                                                        selectionIdGet = selectionListBean.getSelectionId();
+                                                        getPlayPercent = selectionListBean.getPlayPercent();
+                                                        getSelectionName = selectionListBean.getSelectionName();
+                                                        posIndex = selectionListBean1.getVideoIndex();//自动播放
+                                                        Log.i("hw", "=============进来=================" + selectionIdGet);
 //                                                currentPosition = selectionListBean.getPlayTime()*1000;
-                                                posIndex = recordIndex;
-                                                Log.e("postPostion", h + "selectionIdGet:" + selectionIdGet + getSelectionName + "getdownload");
-                                                initPlayInfo();
+                                                        posIndex = recordIndex;
+                                                        Log.e("postPostion", h + "selectionIdGet:" + selectionIdGet + getSelectionName + "getdownload");
+                                                        initPlayInfo();
+                                                    }
+                                                    recordIndex++;
+                                                }
                                             }
-                                            recordIndex++;
+
                                         }
                                     }
-
                                 }
-                            }
-                        }
-
                     } else {
                         Object errMsg = body.getErrMsg();
                         Toast.makeText(FreePlayActivity.this, String.valueOf(errMsg), Toast.LENGTH_SHORT).show();
@@ -372,6 +373,7 @@ public class FreePlayActivity extends AppCompatActivity implements DWMediaPlayer
     }
 
     FreeDirectoryFragment directoryFragment;
+
     private void initFragment() {
         titlesList.add("目录");
         titlesList.add("详情");

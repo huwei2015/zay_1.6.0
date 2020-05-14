@@ -113,5 +113,30 @@
             android:layout_marginEnd="16dp"
             android:src="@mipmap/right_back" />
     </RelativeLayout>
+    <include layout="@layout/divid_line_layout" />
+    <!--注销账号-->
+    <RelativeLayout
+        android:id="@+id/rl_households"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/white"
+        android:onClick="appVersionOnClick">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:text="注销账户"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:textSize="18sp" />
+    </RelativeLayout>
 </LinearLayout>

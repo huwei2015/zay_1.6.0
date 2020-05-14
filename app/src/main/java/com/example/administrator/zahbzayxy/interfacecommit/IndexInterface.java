@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.administrator.zahbzayxy.beans.BookBean;
 import com.example.administrator.zahbzayxy.beans.CourseCatesBean;
 import com.example.administrator.zahbzayxy.beans.LiveCourseBean;
+import com.example.administrator.zahbzayxy.beans.LiveDetailBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCourseBean;
 import com.example.administrator.zahbzayxy.beans.OfflineCoursePOBean;
 import com.example.administrator.zahbzayxy.beans.AllOnlineCourseBean;
@@ -130,4 +131,9 @@ public interface IndexInterface {
                                    @Query("vendor") String vendor,
                                    @Query("model") String model
     );
+    //直播详情接口
+    static final String liveDetial = "/CourseController/getImplant";
+    @POST(value = liveDetial)
+    Call<LiveDetailBean> getDeatil(@Query("token") String token,
+                                   @Query("webinarId") int webinarId);
 }
